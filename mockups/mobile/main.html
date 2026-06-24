@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[APP] DMS Salesman — Main</title>
+<link rel="stylesheet" href="_shared/app-chrome.css"/>
+</head>
+<body class="app-hub">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar">
+      <span>15:15</span>
+      <span class="status-icons">
+        <a class="status-portal-link" href="../web/main.html" title="DMS Portal" aria-label="DMS Portal">🌐</a>
+        <span>📶 🔋 80%</span>
+      </span>
+    </div>
+
+    <div class="app-body">
+
+      <!-- ===== TAB: VIẾNG THĂM ===== -->
+      <div class="tab-panel active" id="tab-vieng-tham">
+        <div class="visit-top">
+          <div class="visit-top-row">
+            <div class="route-bar">
+              <span>24/06 - [GSKRT2659945341] Hwng_route_demo</span>
+              <span style="color:#94a3b8;flex:0 0 auto">›</span>
+            </div>
+            <button class="icon-btn" type="button" aria-label="Tìm kiếm">🔍</button>
+            <button class="icon-btn" type="button" aria-label="Lịch sử">🕐</button>
+          </div>
+          <div class="map-tabs">
+            <button class="map-tab" type="button">Bản đồ</button>
+            <button class="map-tab active" type="button">Danh sách</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span>☰ Bộ lọc</span>
+          <span style="color:#94a3b8">▼</span>
+        </div>
+        <div class="scroll-area" style="background:var(--neutral-50)">
+          <div class="section-hd">Tuyến hôm nay (8/10)</div>
+
+          <div class="visit-card">
+            <div class="visit-card-hd">
+              <span class="visit-pin">📍</span>
+              <span class="visit-name">FV_Ops_Kiều My_Test111</span>
+              <div class="visit-meta-r"><span>ⓘ</span><span>9m</span><span>📍</span></div>
+            </div>
+            <div class="visit-phone">0397470138</div>
+            <div class="visit-addr">34 Hoàng Việt, Phường Bình Hưng Hòa, Quận Bình Tân, Hồ Chí Minh</div>
+            <div class="visit-icons">⭐ 📋 🏪 👤</div>
+            <button class="btn-visit" type="button" onclick="location.href='vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'">Viếng thăm</button>
+          </div>
+
+          <div class="visit-card">
+            <div class="visit-card-hd">
+              <span class="visit-pin">📍</span>
+              <span class="visit-name">Hoàng Việt Restaurant</span>
+              <div class="visit-meta-r"><span>ⓘ</span><span>33m</span><span>📍</span></div>
+            </div>
+            <div class="visit-phone">0908706789</div>
+            <div class="visit-addr">34 Hoàng Việt, Phường 4, Quận Tân Bình, Tp. Hồ Chí Minh</div>
+            <div class="visit-icons">⭐ 📋 🏪</div>
+            <button class="btn-visit" type="button" onclick="location.href='vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'">Viếng thăm</button>
+          </div>
+
+          <div class="visit-card">
+            <div class="visit-card-hd">
+              <span class="visit-pin">📍</span>
+              <span class="visit-name">Lê Bình outlet</span>
+              <div class="visit-meta-r"><span>ⓘ</span><span>1h</span><span>📍</span></div>
+            </div>
+            <div class="visit-phone">0707777001</div>
+            <div class="visit-addr">40 Hoàng Việt, Phường 04, Quận Tân Bình, Hồ Chí Minh</div>
+            <div class="visit-icons">⭐ 📋 🏪 👤</div>
+            <button class="btn-visit" type="button" onclick="location.href='vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'">Viếng thăm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: BÁO CÁO ===== -->
+      <div class="tab-panel" id="tab-bao-cao">
+        <div class="scroll-area report-panel">
+          <div class="report-top">
+            <div class="period-tabs">
+              <button class="period-tab" type="button">Tuần</button>
+              <button class="period-tab active" type="button">Tháng</button>
+              <button class="period-tab" type="button">Quý</button>
+              <button class="period-tab" type="button">Năm</button>
+            </div>
+            <div class="gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 200 110">
+                <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="14" stroke-linecap="round"/>
+                <path d="M20 100 A80 80 0 0 1 60 35" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
+              </svg>
+              <div class="gauge-label">Doanh số</div>
+              <div class="gauge-pct">0%</div>
+              <div class="gauge-stats">
+                <span>0 đ<br/>Thực hiện</span>
+                <span>0 đ<br/>Kế hoạch</span>
+              </div>
+            </div>
+            <div class="summary-cards">
+              <div class="summary-card"><div class="val">0</div><div class="lbl">Đơn hàng</div></div>
+              <div class="summary-card"><div class="val">1</div><div class="lbl">Cửa hàng mới</div></div>
+            </div>
+            <div class="dots"><span class="dot active"></span><span class="dot"></span></div>
+          </div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-icon">📈</div><div class="kpi-text"><div class="title">Đánh giá KPI</div><div class="sub">0 %</div></div></div>
+            <div class="kpi-item"><div class="kpi-icon">📥</div><div class="kpi-text"><div class="title">Số lượng SKU</div><div class="sub">13 sku</div></div></div>
+            <div class="kpi-item"><div class="kpi-icon">📋</div><div class="kpi-text"><div class="title">Đơn hàng</div><div class="sub">1 đơn hàng</div></div></div>
+            <a class="kpi-item" href="bao-cao/vieng-tham/MS-A-BCVT00-bao-cao-vieng-tham-full-flow.html?from=vt" style="text-decoration:none;color:inherit">
+              <div class="kpi-icon">🏪</div>
+              <div class="kpi-text"><div class="title">Viếng thăm</div><div class="sub">3 cửa hàng · Báo cáo VT →</div></div>
+            </a>
+            <div class="kpi-item"><div class="kpi-icon">📦</div><div class="kpi-text"><div class="title">Ngành hàng</div><div class="sub">0 ngành hàng</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: ĐƠN HÀNG ===== -->
+      <div class="tab-panel" id="tab-don-hang">
+        <div class="order-header">
+          <div class="order-segments">
+            <button class="seg-btn active" type="button">Đang xử lý</button>
+            <button class="seg-btn" type="button">Thành công</button>
+            <button class="seg-btn" type="button">Thất bại</button>
+          </div>
+          <div class="order-search">
+            <span>🔍</span>
+            <input type="text" placeholder="Nhập mã đơn hàng, mã, tên, số điện thoại..." readonly/>
+            <span style="color:#94a3b8">▼</span>
+          </div>
+        </div>
+        <div class="scroll-area order-content">
+          <div class="date-divider">03/06/2026</div>
+          <div class="order-card">
+            <div class="order-card-top">
+              <span>📄 DS14646170</span>
+              <span class="badge-status">Khởi tạo</span>
+            </div>
+            <div class="store-row">
+              <div class="store-avatar">🏪</div>
+              <div>
+                <div class="store-name">Lê Bình outlet</div>
+                <div class="store-addr">40 Hoàng Việt, Phường 04, Quận Tân Bình, Hồ Chí Minh</div>
+              </div>
+            </div>
+            <div class="order-kv">Thời gian tạo đơn: <strong>11:16 - 03/06/2026</strong></div>
+            <div class="order-kv">Loại đơn: <strong>Đơn đặt</strong></div>
+            <div class="order-kv">Nguồn tạo: <strong>SALESMAN</strong></div>
+            <div class="order-kv">Giá trị đơn hàng: <strong>52,200 đ</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: KHÁC ===== -->
+      <div class="tab-panel" id="tab-khac">
+        <div class="scroll-area">
+          <div class="other-header">
+            <div class="other-date">Thứ 4, ngày 24 tháng 6</div>
+            <div class="other-timer">00:00:00</div>
+            <button class="btn-start-day" type="button">Bắt đầu ngày công</button>
+          </div>
+          <div class="profile-row">
+            <div class="profile-avatar"></div>
+            <div>
+              <div class="profile-name">[TB]_Sale 1</div>
+              <div class="profile-phone">0707777001</div>
+            </div>
+          </div>
+          <div class="menu-list">
+            <div class="menu-item"><span class="mi-icon">📈</span><span class="mi-label">Chỉ tiêu hàng ngày</span></div>
+            <a class="menu-item" href="khac/cua-hang/MS-A-CH02-danh-sach-cua-hang.html"><span class="mi-icon">🏪</span><span class="mi-label">Cửa hàng</span></a>
+            <div class="menu-item"><span class="mi-icon">🔔</span><span class="mi-label">Thông báo</span><span class="mi-badge">46</span></div>
+            <div class="menu-item"><span class="mi-icon">🎁</span><span class="mi-label">Danh sách khuyến mãi</span></div>
+            <div class="menu-item"><span class="mi-icon">📦</span><span class="mi-label">Thông tin sản phẩm</span></div>
+            <div class="menu-item"><span class="mi-icon">📋</span><span class="mi-label">Khảo sát</span></div>
+            <div class="menu-item"><span class="mi-icon">🌙</span><span class="mi-label">Nghỉ phép / Đi trễ</span></div>
+            <div class="menu-item"><span class="mi-icon">📰</span><span class="mi-label">Tin tức</span></div>
+            <div class="menu-item"><span class="mi-icon">💬</span><span class="mi-label">Tin nhắn</span></div>
+            <div class="menu-item"><span class="mi-icon">📄</span><span class="mi-label">Đăng ký dịch vụ</span></div>
+            <div class="menu-item"><span class="mi-icon">🛡️</span><span class="mi-label">Xác minh cửa hàng</span></div>
+            <div class="menu-item"><span class="mi-icon">🎧</span><span class="mi-label">Hỗ trợ</span><span class="mi-extra">📞</span></div>
+            <div class="menu-item"><span class="mi-icon">⚙️</span><span class="mi-label">Cài đặt ứng dụng</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /app-body -->
+
+    <nav class="bottom-nav" id="bottom-nav"></nav>
+  </div>
+</div>
+
+<div class="dev-bar">MAIN · <a href="../web/main.html">DMS Portal</a> · <a href="khac/cua-hang/MS-A-CH02-danh-sach-cua-hang.html">CH02</a> · <a href="khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html">CH03</a> · <a href="vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html">VT01</a> · <a href="vieng-tham/tai-san/MS-A-TS00-kiem-tra-tai-san-full-flow.html">TS00</a> · <a href="vieng-tham/ton-kho/MS-A-TK00-kiem-tra-ton-kho-full-flow.html">TK00</a> · <a href="bao-cao/vieng-tham/MS-A-BCVT00-bao-cao-vieng-tham-full-flow.html">BCVT00</a></div>
+
+<script src="_shared/mockup-fit.js"></script>
+<script src="menu-tree.js"></script>
+<script src="_shared/app-chrome.js"></script>
+</body>
+</html>
