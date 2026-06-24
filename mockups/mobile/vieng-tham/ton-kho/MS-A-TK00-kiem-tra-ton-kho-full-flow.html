@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-TK00 — Kiểm tra tồn kho (Full Flow)</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
+<style>
+:root {
+  --neutral-0:#FFF; --neutral-50:#f5f7fa; --neutral-100:#eef1f5;
+  --neutral-200:#E5E7EB; --neutral-500:#6B7280; --neutral-700:#374151;
+  --neutral-900:#111827; --success-50:#ECFDF5; --success-500:#10B981;
+  --success-700:#047857; --warning-50:#FFFBEB; --warning-500:#F59E0B;
+  --warning-700:#B45309;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+.status-bar{background:var(--primary-500);color:#fff}
+.app-header{background:var(--primary-500);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:56px;flex-shrink:0}
+.app-header .back{width:28px;font-size:22px;cursor:pointer;border:none;background:transparent;color:#fff;line-height:1}
+.app-header .htitle{flex:1}
+.app-header .htitle h1{font-size:17px;font-weight:600}
+.app-header .htitle p{font-size:12px;opacity:.85;margin-top:2px}
+.screen{display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;background:var(--neutral-50);padding-bottom:72px}
+.store-banner{background:var(--primary-600);padding:10px 16px 14px;color:#fff;flex-shrink:0}
+.store-banner .name{font-size:15px;font-weight:700}
+.store-banner .addr{font-size:12px;opacity:.85;margin-top:2px}
+.tabs{display:flex;gap:8px;padding:12px 16px 8px;background:#fff;border-bottom:1px solid var(--neutral-100)}
+.tab{flex:1;text-align:center;padding:8px 10px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid var(--neutral-200);background:#fff;color:var(--neutral-700);cursor:pointer}
+.tab.active{border-color:var(--primary-500);background:var(--primary-50);color:var(--primary-600)}
+.search-bar{margin:8px 16px;background:#fff;border:1px solid var(--neutral-200);border-radius:999px;padding:8px 12px;display:flex;gap:8px;align-items:center}
+.search-bar input{border:none;outline:none;flex:1;font-size:14px;background:transparent}
+.section-hd{padding:10px 16px 6px;display:flex;justify-content:space-between;align-items:center}
+.section-hd .t{font-size:14px;font-weight:600;color:var(--neutral-900)}
+.prod-card{background:#fff;margin:6px 16px;padding:12px;border-radius:12px;border:1px solid var(--neutral-100)}
+.prod-card .row{display:flex;gap:12px}
+.prod-card .av{width:44px;height:44px;border-radius:10px;background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.prod-card .title{font-size:14px;font-weight:600;color:var(--neutral-900)}
+.prod-card .meta{font-size:12px;color:var(--neutral-500);margin-top:2px}
+.prod-card .stock{font-size:12px;color:var(--neutral-700);margin-top:6px}
+.prod-card .stock strong{color:var(--neutral-900)}
+.btn-row{display:flex;gap:8px;margin-top:10px}
+.btn-sm{flex:1;border:1px solid var(--neutral-200);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;background:#fff;color:var(--neutral-700);cursor:pointer}
+.btn-sm.primary{background:var(--primary-500);border-color:var(--primary-500);color:#fff}
+.inline-form{margin-top:10px;padding:10px;border:1px solid var(--neutral-200);border-radius:8px;background:var(--neutral-50)}
+.inline-form .row2{display:flex;gap:8px;margin-top:8px}
+.inline-form .row2:first-child{margin-top:0}
+.inline-form input,.inline-form textarea{width:100%;padding:8px 10px;border:1px solid var(--neutral-200);border-radius:8px;font-size:13px;font-family:inherit}
+.inline-form textarea{min-height:56px;margin-top:8px;resize:vertical}
+.inline-form .qty{flex:0 0 64px;text-align:center}
+.inline-form .del{width:40px;flex:0 0 40px;padding:0}
+.detail-block{margin-top:10px;padding:10px;border:1px solid var(--neutral-200);border-radius:8px;background:var(--neutral-50)}
+.detail-line{padding:8px 0;border-top:1px solid var(--neutral-200);font-size:12px;color:var(--neutral-700)}
+.detail-line:first-child{border-top:none;padding-top:0}
+.link-btn{border:none;background:transparent;color:var(--primary-500);font-size:13px;font-weight:500;padding:4px 0;cursor:pointer}
+.empty-card{background:#fff;margin:12px 16px;padding:32px 20px;border-radius:12px;border:1px dashed var(--neutral-200);text-align:center}
+.empty-card .ico{font-size:36px;margin-bottom:10px}
+.empty-card .t{font-size:14px;font-weight:600;color:var(--neutral-900)}
+.empty-card .d{font-size:12px;color:var(--neutral-500);margin-top:8px;line-height:1.5}
+.bottom-msg{text-align:center;padding:16px;font-size:12px;color:var(--neutral-500)}
+.fab{position:absolute;left:28px;right:28px;bottom:20px;z-index:4;min-height:44px;border:none;border-radius:10px;background:var(--primary-500);color:#fff;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(26,154,214,.35)}
+.picker-item{background:#fff;margin:8px 16px;padding:12px;border-radius:12px;border:1.5px solid var(--neutral-200);display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.picker-item.selected{border-color:var(--primary-500);background:var(--primary-50)}
+.picker-item input{width:20px;height:20px;margin-top:12px;flex-shrink:0}
+.picker-item .av{width:40px;height:40px;border-radius:8px;background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.picker-item .title{font-size:14px;font-weight:600}
+.picker-item .meta{font-size:12px;color:var(--neutral-500);margin-top:2px}
+.picker-footer{padding:12px 16px 20px;background:#fff;border-top:1px solid var(--neutral-100);display:flex;gap:8px;flex-shrink:0}
+.picker-footer button{flex:1;min-height:44px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.picker-footer .cancel{background:#fff;border:1px solid var(--neutral-200);color:var(--neutral-700)}
+.picker-footer .confirm{background:var(--primary-500);border:none;color:#fff}
+.hist-card{background:#fff;margin:6px 16px;padding:12px;border-radius:10px;border:1px solid var(--neutral-100)}
+.hist-day{padding:10px 16px 4px;font-size:12px;font-weight:700;color:var(--neutral-500)}
+.toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(15,23,42,.88);color:#fff;padding:14px 20px;border-radius:12px;font-size:14px;z-index:100;display:none;text-align:center;max-width:280px}
+.toast.show{display:block}
+</style>
+</head>
+<body class="mockup-page">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar"><span>15:15</span><span>📶 🔋 80%</span></div>
+
+    <!-- 1. DANH SÁCH / LỊCH SỬ -->
+    <div class="screen active" id="scr-main">
+      <div class="app-header">
+        <button class="back" type="button" onclick="go(PATHS.back)">←</button>
+        <div class="htitle"><h1>Kiểm tra tồn kho</h1><p id="hdr-sub">Nhiệm vụ viếng thăm</p></div>
+      </div>
+      <div class="store-banner">
+        <div class="name" id="store-name">🏪 hellohuong</div>
+        <div class="addr" id="store-addr">34 Hoàng Việt, Phường 04, Quận Tân Bình, TP.HCM</div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tabProducts" type="button" onclick="switchTab('products')">Danh sách SP</button>
+        <button class="tab" id="tabHistory" type="button" onclick="switchTab('history')">Lịch sử</button>
+      </div>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input id="productSearch" type="text" placeholder="Tìm mã SKU, tên sản phẩm" oninput="renderCurrentTab()"/>
+        <span style="cursor:pointer" onclick="toast('Bộ lọc: Ngành hàng, nhóm SP, đơn vị tính')">☰</span>
+      </div>
+      <div class="scroll">
+        <div class="section-hd"><span class="t" id="sectionTitle">Danh sách sản phẩm</span></div>
+        <div id="productList"></div>
+        <div id="historyList" style="display:none"></div>
+        <div class="bottom-msg" id="bottomMsg">Đã hết thông tin</div>
+      </div>
+      <button class="fab" id="fabAdd" type="button" onclick="openPick()">+ Thêm sản phẩm</button>
+    </div>
+
+    <!-- 2. CHỌN SẢN PHẨM -->
+    <div class="screen" id="scr-pick">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-main')">←</button>
+        <div class="htitle"><h1>Thêm sản phẩm</h1><p id="hdr-pick">hellohuong</p></div>
+      </div>
+      <div class="search-bar" style="margin-top:8px">
+        <span>🔍</span>
+        <input id="popupSearch" type="text" placeholder="Tìm mã SKU, tên sản phẩm" oninput="renderPopup()"/>
+        <span>☰</span>
+      </div>
+      <div class="scroll" id="popupList" style="padding-bottom:0"></div>
+      <div class="picker-footer">
+        <button class="cancel" type="button" onclick="show('scr-main')">Hủy</button>
+        <button class="confirm" id="btnAddSelected" type="button" onclick="addSelected()">Thêm sản phẩm</button>
+      </div>
+    </div>
+
+    <!-- 3. CHI TIẾT TỒN KHO -->
+    <div class="screen" id="scr-detail">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-main')">←</button>
+        <div class="htitle"><h1>Chi tiết tồn kho</h1><p id="hdr-detail">hellohuong</p></div>
+      </div>
+      <div class="scroll">
+        <div class="prod-card" style="margin-top:12px">
+          <div class="title" id="detailName">—</div>
+          <div class="meta" id="detailSku">—</div>
+          <div class="stock" id="detailStock">Tồn kho gần nhất: <strong>—</strong></div>
+        </div>
+        <div class="section-hd"><span class="t">Lịch sử kiểm tra tồn kho sản phẩm</span></div>
+        <div id="detailRows"></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<div class="flow-bar" id="flow-bar">Bước 1/4 · Danh sách sản phẩm tại CH</div>
+<div class="dev-bar" id="dev-bar"></div>
+
+<script>
+var FLOW = (new URLSearchParams(location.search).get('from') || 'vt') === 'ch' ? 'ch' : 'vt';
+var STORE = FLOW === 'ch'
+  ? { name: 'Bidy', addr: '1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ' }
+  : { name: 'hellohuong', addr: '34 Hoàng Việt, Phường 04, Quận Tân Bình, TP.HCM' };
+var PATHS = {
+  main: '../../main.html',
+  back: FLOW === 'ch'
+    ? '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html'
+    : '../chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html',
+  ch02: '../../khac/cua-hang/MS-A-CH02-danh-sach-cua-hang.html',
+  ch03: '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html',
+  vt01: '../chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'
+};
+var steps = {
+  'scr-main': 'Bước 1/4 · Danh sách sản phẩm tại CH',
+  'scr-main-empty': 'Bước 1b/4 · Empty — chưa có SP',
+  'scr-pick': 'Bước 2/4 · Thêm sản phẩm',
+  'scr-detail': 'Bước 4/4 · Chi tiết tồn kho'
+};
+var activeTab = 'products';
+var forceEmpty = false;
+var detailSku = '';
+var selectedSkus = new Set();
+var inlineEntries = {};
+var expandedDetails = {};
+
+var products = [
+  { sku:'SKUP86805V225215', name:'Sữa chua Vinamilk Probeauty', unit:'Thùng', qty:24, exp:'30/09/2026', icon:'🥛', inList:true },
+  { sku:'SKUP96250V320906', name:'Nước cam Twister 320ml', unit:'Lon', qty:8, exp:'15/08/2026', icon:'🧃', inList:true },
+  { sku:'SKUP100516V284163', name:'Bánh quy bơ Cosy', unit:'Gói', qty:0, exp:'--', icon:'🍪', inList:true },
+  { sku:'SKUP86781V225107', name:'Kem đặc có đường Dutch Lady 380g', unit:'Lon', qty:18, exp:'20/11/2026', icon:'🥫', inList:true },
+  { sku:'SKUP121550V346082', name:'Nhân chà bông bơ 50g', unit:'Gói', qty:32, exp:'01/10/2026', icon:'🥐', inList:true },
+  { sku:'SKUP76321V104421', name:'Trà xanh không độ 455ml', unit:'Chai', qty:15, exp:'18/12/2026', icon:'🍵', inList:true },
+  { sku:'SKUP44210V220118', name:'Mì Hảo Hảo tôm chua cay', unit:'Thùng', qty:6, exp:'05/01/2027', icon:'🍜', inList:true },
+  { sku:'SKUP34567V567890', name:'Bột giặt OMO 3kg', unit:'Túi', qty:'', exp:'', icon:'🧼', inList:false },
+  { sku:'SKUP56789V908172', name:'Dầu ăn Tường An 1L', unit:'Chai', qty:'', exp:'', icon:'🛢️', inList:false },
+  { sku:'SKUP24680V135790', name:'Nước mắm Nam Ngư 500ml', unit:'Chai', qty:'', exp:'', icon:'🍶', inList:false }
+];
+var stockDetails = {
+  SKUP86805V225215:[
+    {date:'05/06/2026 08:45',hsd:'30/09/2026',sl:24,note:'Kệ sữa mát.'},
+    {date:'02/06/2026 16:20',hsd:'28/09/2026',sl:18,note:'Còn trong tủ lạnh.'}
+  ],
+  SKUP96250V320906:[{date:'02/06/2026 15:40',hsd:'15/08/2026',sl:8,note:'Kệ nước giải khát.'}],
+  SKUP100516V284163:[{date:'02/06/2026 16:20',hsd:'--',sl:0,note:'Hết hàng.'}],
+  SKUP86781V225107:[{date:'01/06/2026 10:25',hsd:'20/11/2026',sl:18,note:'Trưng bày kệ đầu.'}],
+  SKUP121550V346082:[{date:'05/06/2026 09:05',hsd:'01/10/2026',sl:32,note:'Còn đủ hàng.'}],
+  SKUP76321V104421:[{date:'01/06/2026 09:45',hsd:'18/12/2026',sl:15,note:''}],
+  SKUP44210V220118:[{date:'05/06/2026 09:12',hsd:'05/01/2027',sl:6,note:'Còn 6 thùng sau quầy.'}]
+};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  document.getElementById('flow-bar').textContent = steps[id] || steps['scr-main'];
+}
+function go(url){ window.location.href = url; }
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+function applyStore(){
+  document.getElementById('store-name').textContent = '🏪 ' + STORE.name;
+  document.getElementById('store-addr').textContent = STORE.addr;
+  ['hdr-pick','hdr-detail'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.textContent = STORE.name;
+  });
+  document.getElementById('hdr-sub').textContent = FLOW === 'ch' ? 'Chăm sóc cửa hàng' : 'Nhiệm vụ viếng thăm';
+}
+function switchTab(tab){
+  activeTab = tab;
+  var isProd = tab === 'products';
+  document.getElementById('tabProducts').className = isProd ? 'tab active' : 'tab';
+  document.getElementById('tabHistory').className = isProd ? 'tab' : 'tab active';
+  document.getElementById('productList').style.display = isProd ? 'block' : 'none';
+  document.getElementById('historyList').style.display = isProd ? 'none' : 'block';
+  document.getElementById('sectionTitle').textContent = isProd ? 'Danh sách sản phẩm' : 'Lịch sử kiểm tra tồn kho sản phẩm';
+  document.getElementById('productSearch').placeholder = isProd ? 'Tìm mã SKU, tên sản phẩm' : 'Tìm theo mã SKU, tên SKU, mã SPU, tên SPU';
+  document.getElementById('fabAdd').style.display = isProd ? 'block' : 'none';
+  document.getElementById('bottomMsg').textContent = isProd ? 'Đã hết thông tin' : '';
+  renderCurrentTab();
+}
+function renderCurrentTab(){
+  if (activeTab === 'history') renderHistory();
+  else renderProducts();
+}
+function renderProducts(){
+  var kw = (document.getElementById('productSearch').value || '').trim().toLowerCase();
+  var list = products.filter(function(p){
+    return p.inList && (p.sku + ' ' + p.name).toLowerCase().indexOf(kw) >= 0;
+  });
+  var el = document.getElementById('productList');
+  if (forceEmpty || !list.length) {
+    el.innerHTML = '<div class="empty-card"><div class="ico">📦</div><div class="t">' +
+      (forceEmpty ? 'Chưa có sản phẩm trong danh sách' : 'Không có sản phẩm phù hợp') +
+      '</div><div class="d">' + (forceEmpty
+        ? 'Nhấn "+ Thêm sản phẩm" để chọn một hoặc nhiều sản phẩm cần kiểm tra tồn kho.'
+        : 'Thử tìm bằng mã SKU hoặc tên sản phẩm khác.') + '</div></div>';
+    document.getElementById('bottomMsg').textContent = forceEmpty ? 'Chưa có dữ liệu kiểm tra tồn kho' : 'Đã hết thông tin';
+    if (forceEmpty) document.getElementById('flow-bar').textContent = steps['scr-main-empty'];
+    return;
+  }
+  document.getElementById('flow-bar').textContent = steps['scr-main'];
+  el.innerHTML = list.map(productCard).join('');
+}
+function productCard(p){
+  var qty = p.qty === '' ? '--' : p.qty;
+  var exp = p.exp || '--';
+  var editing = inlineEntries[p.sku];
+  var html = '<div class="prod-card"><div class="row"><div class="av">' + p.icon + '</div><div style="flex:1">' +
+    '<div class="title">' + p.name + '</div><div class="meta">' + p.sku + ' · ' + p.unit + '</div>' +
+    '<div class="stock">Tồn gần nhất: <strong>' + qty + '</strong> · HSD: <strong>' + exp + '</strong></div>';
+  if (!editing) {
+    html += '<div class="btn-row"><button class="btn-sm primary" type="button" onclick="openInline(\'' + p.sku + '\')">Nhập tồn kho</button></div>';
+  }
+  html += '</div></div>' + inlineMarkup(p.sku) + summaryMarkup(p.sku) + '</div>';
+  return html;
+}
+function inlineMarkup(sku){
+  var rows = inlineEntries[sku];
+  if (!rows) return '';
+  return '<div class="inline-form">' + rows.map(function(row, i){
+    return '<div class="row2"><div style="flex:2;position:relative"><input id="exp-' + sku + '-' + i + '" value="' + row.exp + '" placeholder="HSD dd/MM/yyyy"/></div>' +
+      '<input class="qty" id="qty-' + sku + '-' + i + '" type="number" value="' + row.qty + '" placeholder="SL"/>' +
+      '<button class="btn-sm del" type="button" onclick="removeRow(\'' + sku + '\',' + i + ')">🗑</button></div>' +
+      '<textarea id="note-' + sku + '-' + i + '" maxlength="500" placeholder="Ghi chú">' + row.note + '</textarea>';
+  }).join('') + '<div class="btn-row"><button class="btn-sm primary" type="button" onclick="saveInline(\'' + sku + '\')">Lưu</button>' +
+    '<button class="btn-sm" type="button" onclick="addRow(\'' + sku + '\')">Thêm HSD</button></div></div>';
+}
+function summaryMarkup(sku){
+  var details = stockDetails[sku] || [];
+  if (!details.length) return '';
+  if (!expandedDetails[sku]) {
+    return '<button class="link-btn" type="button" onclick="toggleDetail(\'' + sku + '\')">Chi tiết tồn kho</button>';
+  }
+  var rows = details.slice(0, 3).map(function(d){
+    return '<div class="detail-line">Ngày: ' + d.date + ' · HSD: <strong>' + d.hsd + '</strong> · SL: <strong>' + d.sl + '</strong><br/>Ghi chú: ' + (d.note || '--') + '</div>';
+  }).join('');
+  var more = details.length > 3 ? '<button class="link-btn" type="button" onclick="openDetail(\'' + sku + '\')">Xem thêm</button>' : '';
+  return '<div class="detail-block"><button class="link-btn" type="button" onclick="toggleDetail(\'' + sku + '\')">Chi tiết tồn kho ▲</button>' + rows + more + '</div>';
+}
+function toggleDetail(sku){ expandedDetails[sku] = !expandedDetails[sku]; renderProducts(); }
+function openInline(sku){
+  var p = products.find(function(x){ return x.sku === sku; });
+  if (!p) return;
+  inlineEntries[sku] = [{ exp: p.exp && p.exp !== '--' ? p.exp : '', qty: p.qty === '' ? '' : String(p.qty), note: '' }];
+  renderProducts();
+}
+function syncRows(sku){
+  var rows = inlineEntries[sku] || [];
+  inlineEntries[sku] = rows.map(function(_, i){
+    return {
+      exp: (document.getElementById('exp-' + sku + '-' + i) || {}).value || '',
+      qty: (document.getElementById('qty-' + sku + '-' + i) || {}).value || '',
+      note: (document.getElementById('note-' + sku + '-' + i) || {}).value || ''
+    };
+  });
+}
+function addRow(sku){ syncRows(sku); inlineEntries[sku].push({exp:'',qty:'',note:''}); renderProducts(); }
+function removeRow(sku, i){
+  syncRows(sku);
+  if (inlineEntries[sku].length <= 1) { delete inlineEntries[sku]; }
+  else { inlineEntries[sku].splice(i, 1); }
+  renderProducts();
+}
+function saveInline(sku){
+  syncRows(sku);
+  var p = products.find(function(x){ return x.sku === sku; });
+  var rows = inlineEntries[sku] || [];
+  if (!p || !rows.length) return;
+  for (var i = 0; i < rows.length; i++) {
+    if (!/^[1-9][0-9]{0,6}$/.test(String(rows[i].qty))) { toast('Số lượng tồn phải là số nguyên dương, tối đa 7 chữ số.'); return; }
+    if (!/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/.test(rows[i].exp)) { toast('Hạn sử dụng phải đúng định dạng dd/MM/yyyy.'); return; }
+  }
+  p.qty = rows.reduce(function(s, r){ return s + Number(r.qty); }, 0);
+  p.exp = rows.map(function(r){ return r.exp; }).join(', ');
+  p.inList = true;
+  stockDetails[sku] = stockDetails[sku] || [];
+  rows.slice().reverse().forEach(function(r){
+    stockDetails[sku].unshift({ date:'24/06/2026 15:20', hsd:r.exp, sl:Number(r.qty), note:r.note });
+  });
+  expandedDetails[sku] = true;
+  delete inlineEntries[sku];
+  forceEmpty = false;
+  renderProducts();
+  toast('Lưu kiểm tra tồn kho thành công.');
+}
+function renderHistory(){
+  var kw = (document.getElementById('productSearch').value || '').trim().toLowerCase();
+  var items = [];
+  products.forEach(function(p){
+    if (kw && (p.sku + ' ' + p.name).toLowerCase().indexOf(kw) < 0) return;
+    (stockDetails[p.sku] || []).forEach(function(d){ items.push({ p:p, d:d }); });
+  });
+  items.sort(function(a,b){ return b.d.date.localeCompare(a.d.date); });
+  var groups = {};
+  items.forEach(function(it){
+    var day = it.d.date.split(' ')[0];
+    groups[day] = groups[day] || [];
+    groups[day].push(it);
+  });
+  var el = document.getElementById('historyList');
+  var days = Object.keys(groups);
+  if (!days.length) {
+    el.innerHTML = '<div class="empty-card"><div class="t">Không có lịch sử phù hợp</div><div class="d">Thử tìm theo mã SKU hoặc tên sản phẩm khác.</div></div>';
+    return;
+  }
+  el.innerHTML = days.map(function(day){
+    return '<div class="hist-day">' + day + '</div>' + groups[day].map(function(it){
+      return '<div class="hist-card"><div class="title" style="font-size:13px;font-weight:600">' + it.p.sku + ' — ' + it.p.name + '</div>' +
+        '<div class="meta" style="margin-top:4px">Ngày nhập: ' + it.d.date + '</div>' +
+        '<div class="stock">HSD: <strong>' + it.d.hsd + '</strong> · SL: <strong>' + it.d.sl + '</strong></div>' +
+        '<div class="meta">Ghi chú: ' + (it.d.note || '--') + '</div></div>';
+    }).join('');
+  }).join('');
+}
+function openPick(){
+  selectedSkus.clear();
+  document.getElementById('popupSearch').value = '';
+  renderPopup();
+  show('scr-pick');
+  document.getElementById('flow-bar').textContent = steps['scr-pick'];
+}
+function renderPopup(){
+  var kw = (document.getElementById('popupSearch').value || '').trim().toLowerCase();
+  var list = products.filter(function(p){ return (p.sku + ' ' + p.name).toLowerCase().indexOf(kw) >= 0; });
+  document.getElementById('popupList').innerHTML = list.length ? list.map(function(p){
+    var sel = selectedSkus.has(p.sku);
+    var qty = p.qty === '' ? '--' : p.qty;
+    return '<div class="picker-item' + (sel ? ' selected' : '') + '" onclick="togglePick(\'' + p.sku + '\')">' +
+      '<input type="checkbox"' + (sel ? ' checked' : '') + ' onclick="event.stopPropagation();togglePick(\'' + p.sku + '\')"/>' +
+      '<div class="av">' + p.icon + '</div><div><div class="title">' + p.name + '</div>' +
+      '<div class="meta">' + p.sku + ' · ' + p.unit + ' · Tồn: ' + qty + '</div>' +
+      (p.inList ? '<div class="meta">Đã có trong danh sách</div>' : '') + '</div></div>';
+  }).join('') : '<div class="empty-card"><div class="t">Không tìm thấy sản phẩm</div></div>';
+  document.getElementById('btnAddSelected').textContent = selectedSkus.size ? 'Thêm ' + selectedSkus.size + ' sản phẩm' : 'Thêm sản phẩm';
+}
+function togglePick(sku){
+  if (selectedSkus.has(sku)) selectedSkus.delete(sku);
+  else selectedSkus.add(sku);
+  renderPopup();
+}
+function addSelected(){
+  if (!selectedSkus.size) { toast('Vui lòng chọn ít nhất 1 sản phẩm.'); return; }
+  var first = null;
+  selectedSkus.forEach(function(sku){
+    var p = products.find(function(x){ return x.sku === sku; });
+    if (p) { p.inList = true; if (!first) first = sku; }
+  });
+  selectedSkus.clear();
+  forceEmpty = false;
+  show('scr-main');
+  switchTab('products');
+  if (first) openInline(first);
+  toast('Đã thêm sản phẩm vào danh sách.');
+}
+function openDetail(sku){
+  detailSku = sku;
+  var p = products.find(function(x){ return x.sku === sku; });
+  var details = stockDetails[sku] || [];
+  if (!p) return;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailSku').textContent = 'Mã sản phẩm: ' + p.sku;
+  document.getElementById('detailStock').innerHTML = 'Tồn kho gần nhất: <strong>' + (p.qty === '' ? '--' : p.qty) + '</strong>';
+  document.getElementById('detailRows').innerHTML = details.length ? details.map(function(d){
+    return '<div class="hist-card"><div class="meta">Ngày nhập: ' + d.date + '</div>' +
+      '<div class="stock">HSD: <strong>' + d.hsd + '</strong> · SL: <strong>' + d.sl + '</strong></div>' +
+      '<div class="meta">Ghi chú: ' + (d.note || '--') + '</div></div>';
+  }).join('') : '<div class="empty-card"><div class="t">Chưa có chi tiết tồn kho</div></div>';
+  show('scr-detail');
+  document.getElementById('flow-bar').textContent = steps['scr-detail'];
+}
+function initFlow(){
+  applyStore();
+  var dev = document.getElementById('dev-bar');
+  if (FLOW === 'ch') {
+    dev.innerHTML = '<a href="' + PATHS.main + '#khac">main#khac</a> · <a href="' + PATHS.ch02 + '">CH02</a> · <a href="' + PATHS.ch03 + '">CH03</a> · TK00 (Flow B)';
+  } else {
+    dev.innerHTML = '<a href="' + PATHS.main + '">main</a> · <a href="' + PATHS.vt01 + '">VT01</a> · TK00 (Flow A)';
+  }
+  var p = new URLSearchParams(location.search);
+  if (p.get('screen') === 'empty') {
+    forceEmpty = true;
+    products.forEach(function(x){ x.inList = false; });
+  }
+  if (p.get('screen') === 'pick') openPick();
+  else if (p.get('screen') === 'detail') openDetail(p.get('sku') || 'SKUP86805V225215');
+  else { renderProducts(); renderHistory(); }
+}
+initFlow();
+</script>
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>
