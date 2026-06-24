@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>[APP] MS-A-DL03 - OCR đơn giao hàng</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
 <style>
   :root {
-    --primary: #1594cf;
-    --primary-dark: #087fb9;
-    --primary-soft: #eef8fd;
+    --primary: #1a9ad6;
+    --primary-dark: #1580b5;
+    --primary-soft: #e8f6fc;
     --ink: #272b3f;
     --muted: #6c7485;
     --line: #e8edf3;
@@ -24,16 +25,7 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background: #1b2033;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--ink);
-    padding: 28px;
-  }
+  body.mockup-page { color: var(--ink); }
 
   button,
   input {
@@ -45,38 +37,16 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .phone {
-    width: 390px;
-    background: #fff;
-    border-radius: 38px;
-    padding: 10px;
-    box-shadow:
-      0 0 0 10px #101827,
-      0 0 0 12px #374151,
-      0 30px 70px rgba(0, 0, 0, 0.42);
-  }
+  .phone { background: #fff; }
 
-  .screen {
-    position: relative;
-    height: 844px;
-    overflow: hidden;
-    border-radius: 28px;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-  }
+  .screen { background: var(--bg); }
 
   .status-bar {
-    height: 52px;
     background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 15px;
+    font-weight: 600;
     letter-spacing: 0;
-    color: #000;
+    color: #111827;
   }
 
   .status-icons {
@@ -1174,27 +1144,11 @@
   }
 
   @media (max-width: 480px) {
-    body {
-      padding: 0;
-      background: var(--bg);
-    }
-
-    .phone {
-      width: 100%;
-      min-height: 100vh;
-      border-radius: 0;
-      padding: 0;
-      box-shadow: none;
-    }
-
-    .screen {
-      height: 100vh;
-      border-radius: 0;
-    }
+    /* Giữ scale từ mockup-fit.js — không full-bleed để đồng nhất preview */
   }
 </style>
 </head>
-<body>
+<body class="mockup-page">
   <main class="phone">
     <section class="screen" aria-label="OCR đơn giao hàng">
       <div class="status-bar">
@@ -1878,5 +1832,6 @@
 
   getProductSummary();
 </script>
+<script src="../../_shared/mockup-fit.js"></script>
 </body>
 </html>

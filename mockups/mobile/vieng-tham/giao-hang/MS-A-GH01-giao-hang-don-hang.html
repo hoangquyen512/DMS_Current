@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>[APP] Giao hàng — Danh sách đơn &amp; Giao hàng</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -11,8 +12,8 @@
 /* ── Design tokens (driver_app.html) ── */
 :root {
   --c-bg: #F4F6FA; --c-surface: #FFFFFF;
-  --c-primary: #0D88CB; --c-primary-dk: #0A6FA8;
-  --c-primary-lt: #E8F4FA; --c-primary-ring: #B8DFF0;
+  --c-primary: #1a9ad6; --c-primary-dk: #1580b5;
+  --c-primary-lt: #e8f6fc; --c-primary-ring: #b8e4f7;
   --c-green: #10B981; --c-green-lt: #ECFDF5; --c-green-dk: #059669;
   --c-amber: #F79009; --c-amber-lt: #FFFAEB;
   --c-red: #F04438; --c-red-lt: #FEF3F2;
@@ -35,21 +36,11 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 input, select, button { font-family: inherit; font-size: inherit; }
 body {
-  font-family: var(--ff); background: #1A1D27; min-height: 100vh; padding: 24px;
-  display: flex; flex-direction: column; align-items: center;
+  font-family: var(--ff);
 }
-.phone {
-  width: 390px; background: var(--c-bg); border-radius: 44px; overflow: hidden;
-  position: relative;
-  box-shadow: 0 0 0 10px #111318, 0 0 0 12px #2A2D3A, var(--shadow-lg);
-}
-.phone::before {
-  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 120px; height: 34px; background: #111318; border-radius: 0 0 20px 20px; z-index: 100;
-}
-.phone-screen {
-  background: var(--c-bg); overflow: hidden; height: 844px; position: relative;
-  display: flex; flex-direction: column;
+.phone-screen,
+.phone > .screen {
+  background: var(--c-bg);
 }
 .view {
   position: absolute; inset: 0; display: none; flex-direction: column;
@@ -58,9 +49,9 @@ body {
 .view.active { display: flex; }
 
 .status-bar {
-  height: 50px; padding: 14px 24px 0; flex-shrink: 0;
+  height: 44px; padding: 0 20px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; font-weight: 600; background: var(--c-surface); color: var(--c-text);
+  font-size: 15px; font-weight: 600; background: var(--c-surface); color: var(--c-text);
   z-index: 2;
 }
 .status-bar.blue { background: var(--c-surface); color: var(--c-text); }
@@ -379,7 +370,7 @@ body {
 }
 .map-route-line {
   position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 400'%3E%3Cpath d='M60 340 Q120 280 100 200 T180 80' fill='none' stroke='%230D88CB' stroke-width='4' stroke-dasharray='8 6'/%3E%3Ccircle cx='60' cy='340' r='10' fill='%2310B981'/%3E%3Ccircle cx='180' cy='80' r='10' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 400'%3E%3Cpath d='M60 340 Q120 280 100 200 T180 80' fill='none' stroke='%231a9ad6' stroke-width='4' stroke-dasharray='8 6'/%3E%3Ccircle cx='60' cy='340' r='10' fill='%2310B981'/%3E%3Ccircle cx='180' cy='80' r='10' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 .map-pin-label {
   position: absolute; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: var(--r-sm);
@@ -395,7 +386,7 @@ body {
 .map-nav-card .store-addr { font-size: 12px; color: var(--c-sub); margin-top: 4px; line-height: 1.4; }
 .map-multi-pins {
   position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 360'%3E%3Cpath d='M160 300 Q100 220 80 160 T120 60 Q160 40 200 80 T240 180 T180 260' fill='none' stroke='%230D88CB' stroke-width='3' stroke-dasharray='6 5' opacity='0.5'/%3E%3Ccircle cx='160' cy='300' r='9' fill='%2310B981'/%3E%3Ccircle cx='120' cy='60' r='8' fill='%23F04438'/%3E%3Ccircle cx='200' cy='80' r='8' fill='%23F04438'/%3E%3Ccircle cx='240' cy='180' r='8' fill='%23F04438'/%3E%3Ccircle cx='180' cy='260' r='8' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 360'%3E%3Cpath d='M160 300 Q100 220 80 160 T120 60 Q160 40 200 80 T240 180 T180 260' fill='none' stroke='%231a9ad6' stroke-width='3' stroke-dasharray='6 5' opacity='0.5'/%3E%3Ccircle cx='160' cy='300' r='9' fill='%2310B981'/%3E%3Ccircle cx='120' cy='60' r='8' fill='%23F04438'/%3E%3Ccircle cx='200' cy='80' r='8' fill='%23F04438'/%3E%3Ccircle cx='240' cy='180' r='8' fill='%23F04438'/%3E%3Ccircle cx='180' cy='260' r='8' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 .map-store-list { margin: 0 16px 16px; }
 .map-store-item {
@@ -639,7 +630,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 .delivery-note-ocr span { font-size: 12px; color: var(--c-sub); line-height: 1.45; }
 </style>
 </head>
-<body>
+<body class="mockup-page">
 
 <div class="phone">
   <div class="phone-screen" id="phoneScreen">
@@ -1290,20 +1281,20 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         <div class="qr-box" id="qrBox">
           <div class="qr-image" aria-hidden="true">
             <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="8" y="8" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
-              <rect x="18" y="18" width="30" height="30" rx="2" fill="#0D88CB"/>
-              <rect x="82" y="8" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
-              <rect x="92" y="18" width="30" height="30" rx="2" fill="#0D88CB"/>
-              <rect x="8" y="82" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
-              <rect x="18" y="92" width="30" height="30" rx="2" fill="#0D88CB"/>
-              <rect x="82" y="82" width="8" height="8" fill="#0D88CB"/><rect x="94" y="82" width="8" height="8" fill="#0D88CB"/>
-              <rect x="106" y="82" width="8" height="8" fill="#0D88CB"/><rect x="118" y="82" width="14" height="8" fill="#0D88CB"/>
-              <rect x="82" y="94" width="8" height="8" fill="#0D88CB"/><rect x="106" y="94" width="8" height="8" fill="#0D88CB"/>
-              <rect x="82" y="106" width="8" height="8" fill="#0D88CB"/><rect x="94" y="106" width="20" height="8" fill="#0D88CB"/>
-              <rect x="118" y="106" width="14" height="8" fill="#0D88CB"/><rect x="82" y="118" width="20" height="14" fill="#0D88CB"/>
-              <rect x="106" y="118" width="8" height="14" fill="#0D88CB"/><rect x="66" y="8" width="8" height="8" fill="#0D88CB"/>
-              <rect x="66" y="20" width="8" height="8" fill="#0D88CB"/><rect x="66" y="44" width="8" height="8" fill="#0D88CB"/>
-              <rect x="66" y="56" width="8" height="20" fill="#0D88CB"/><rect x="66" y="82" width="8" height="8" fill="#0D88CB"/>
+              <rect x="8" y="8" width="50" height="50" rx="4" fill="none" stroke="#1a9ad6" stroke-width="4"/>
+              <rect x="18" y="18" width="30" height="30" rx="2" fill="#1a9ad6"/>
+              <rect x="82" y="8" width="50" height="50" rx="4" fill="none" stroke="#1a9ad6" stroke-width="4"/>
+              <rect x="92" y="18" width="30" height="30" rx="2" fill="#1a9ad6"/>
+              <rect x="8" y="82" width="50" height="50" rx="4" fill="none" stroke="#1a9ad6" stroke-width="4"/>
+              <rect x="18" y="92" width="30" height="30" rx="2" fill="#1a9ad6"/>
+              <rect x="82" y="82" width="8" height="8" fill="#1a9ad6"/><rect x="94" y="82" width="8" height="8" fill="#1a9ad6"/>
+              <rect x="106" y="82" width="8" height="8" fill="#1a9ad6"/><rect x="118" y="82" width="14" height="8" fill="#1a9ad6"/>
+              <rect x="82" y="94" width="8" height="8" fill="#1a9ad6"/><rect x="106" y="94" width="8" height="8" fill="#1a9ad6"/>
+              <rect x="82" y="106" width="8" height="8" fill="#1a9ad6"/><rect x="94" y="106" width="20" height="8" fill="#1a9ad6"/>
+              <rect x="118" y="106" width="14" height="8" fill="#1a9ad6"/><rect x="82" y="118" width="20" height="14" fill="#1a9ad6"/>
+              <rect x="106" y="118" width="8" height="14" fill="#1a9ad6"/><rect x="66" y="8" width="8" height="8" fill="#1a9ad6"/>
+              <rect x="66" y="20" width="8" height="8" fill="#1a9ad6"/><rect x="66" y="44" width="8" height="8" fill="#1a9ad6"/>
+              <rect x="66" y="56" width="8" height="20" fill="#1a9ad6"/><rect x="66" y="82" width="8" height="8" fill="#1a9ad6"/>
             </svg>
           </div>
           <div class="qr-amount">2.450.000 VNĐ</div>
@@ -2717,5 +2708,6 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   updatePhotoUI();
 })();
 </script>
+<script src="../../_shared/mockup-fit.js"></script>
 </body>
 </html>
