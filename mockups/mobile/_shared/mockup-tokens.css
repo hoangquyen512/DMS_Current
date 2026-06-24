@@ -1,0 +1,27 @@
+/**
+ * Brand tokens — đồng bộ với main.html / app-chrome.css
+ * Màu xanh chủ đạo Salesman App: #1a9ad6
+ */
+:root {
+  --app-primary: #1a9ad6;
+  --app-primary-dark: #1580b5;
+  --app-primary-light: #e8f6fc;
+  --app-gradient-start: #1a9ad6;
+  --app-gradient-end: #5ec4ef;
+
+  /* Alias cho mockup dùng --primary-* (TS00, TK00, BCVT00, CH01…) */
+  --primary-50: var(--app-primary-light);
+  --primary-100: #d4edf9;
+  --primary-500: var(--app-primary);
+  --primary-600: var(--app-primary-dark);
+  --primary-700: #12709a;
+
+  --success-50: #ecfdf5;
+  --success-500: #10b981;
+  --success-700: #047857;
+  --warning-50: #fffbeb;
+  --warning-500: #f59e0b;
+  --warning-700: #b45309;
+  --error-50: #fef2f2;
+  --error-500: #ef4444;
+}

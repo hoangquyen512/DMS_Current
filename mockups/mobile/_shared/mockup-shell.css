@@ -1,0 +1,138 @@
+/**
+ * Mockup shell — kích thước phone thống nhất toàn bộ Salesman App mockups
+ * Chuẩn: iPhone X logical 375 × 812 (viewport trong khung bezel)
+ */
+@import url("mockup-tokens.css");
+
+:root {
+  --mockup-phone-w: 375px;
+  --mockup-screen-h: 812px;
+  --mockup-status-h: 44px;
+  --mockup-bezel-pad: 12px;
+  --mockup-bezel-radius: 40px;
+  --mockup-screen-radius: 28px;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body.mockup-page,
+body.visit-page,
+body.sub-page,
+body.app-hub {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f172a;
+  margin: 0;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.mockup-viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mockup-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: center center;
+  flex-shrink: 0;
+}
+
+body.mockup-gallery {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  overflow: auto;
+}
+
+body.mockup-gallery .mockup-stage {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  max-width: 100%;
+}
+
+.phone {
+  width: var(--mockup-phone-w);
+  flex-shrink: 0;
+  background: var(--neutral-0, #fff);
+  border-radius: var(--mockup-bezel-radius);
+  padding: var(--mockup-bezel-pad);
+  box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0, 0, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-screen,
+.phone > .screen {
+  height: var(--mockup-screen-h);
+  border-radius: var(--mockup-screen-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--neutral-0, #fff);
+  position: relative;
+}
+
+.status-bar {
+  height: var(--mockup-status-h);
+  min-height: var(--mockup-status-h);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.flow-bar,
+.dev-bar,
+.hint-bar {
+  width: 100%;
+  max-width: var(--mockup-phone-w);
+  text-align: center;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px;
+}
+
+.flow-bar {
+  margin-top: 12px;
+  color: #94a3b8;
+}
+
+.dev-bar,
+.hint-bar {
+  margin-top: 6px;
+  color: #64748b;
+}
+
+.dev-bar a,
+.hint-bar a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.dev-bar a:hover,
+.hint-bar a:hover {
+  text-decoration: underline;
+}
