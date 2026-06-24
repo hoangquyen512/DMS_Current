@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-BCVT00 — Báo cáo viếng thăm cửa hàng (Full Flow)</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
+<style>
+:root {
+  --neutral-0:#FFF; --neutral-50:#f5f7fa; --neutral-100:#eef1f5;
+  --neutral-200:#E5E7EB; --neutral-500:#6B7280; --neutral-700:#374151;
+  --neutral-900:#111827; --success-500:#10B981; --warning-500:#F59E0B; --error-500:#EF4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+.status-bar{background:var(--primary-500);color:#fff}
+.app-header{background:var(--primary-500);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:56px;flex-shrink:0}
+.app-header .back{width:28px;font-size:22px;cursor:pointer;border:none;background:transparent;color:#fff;line-height:1}
+.app-header .htitle{flex:1;text-align:center}
+.app-header .htitle h1{font-size:17px;font-weight:600}
+.app-header .htitle p{font-size:12px;opacity:.85;margin-top:2px}
+.app-header .hdr-filter{width:36px;height:36px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.screen{display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;background:var(--neutral-50)}
+.ctx-banner{background:var(--primary-600);padding:8px 16px 10px;color:#fff;font-size:12px;line-height:1.4}
+.ctx-banner strong{font-weight:600}
+.sticky-filter{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--neutral-100);padding:12px 16px}
+.filter-line{display:flex;gap:8px;align-items:center}
+.date-pill{flex:1;border:1px solid var(--neutral-200);border-radius:999px;padding:8px 12px;text-align:center;font-size:13px;color:var(--neutral-700);background:#fff}
+.filter-btn{width:42px;height:36px;border:1px solid var(--primary-500);background:var(--primary-50);color:var(--primary-600);border-radius:10px;cursor:pointer;font-size:14px}
+.search-bar{margin-top:10px;background:#fff;border:1px solid var(--neutral-200);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.search-bar input{border:0;outline:0;flex:1;font-size:14px;background:transparent}
+.section-hd{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--neutral-900)}
+.section-hd .a{font-size:12px;color:var(--primary-500);font-weight:500}
+.metric-card{margin:6px 16px;padding:12px;background:#fff;border:1px solid var(--neutral-100);border-radius:12px}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric-box{background:var(--neutral-50);border:1px solid var(--neutral-100);border-radius:10px;padding:10px 6px;text-align:center}
+.metric-box .n{font-size:16px;font-weight:700;color:var(--neutral-900)}
+.metric-box .l{margin-top:3px;font-size:11px;color:var(--neutral-500)}
+.tabs{display:flex;gap:8px;padding:8px 16px 10px;background:#fff;border-bottom:1px solid var(--neutral-100)}
+.tab{flex:1;border:1px solid var(--neutral-200);background:#fff;color:var(--neutral-700);border-radius:999px;padding:8px 8px;font-size:11px;font-weight:600;line-height:1.25;cursor:pointer}
+.tab.active{border-color:var(--primary-500);background:var(--primary-50);color:var(--primary-600)}
+.day-row{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid var(--neutral-100);cursor:pointer}
+.day-row .t{font-size:14px;font-weight:600;color:var(--neutral-900)}
+.day-row .s{display:block;font-size:12px;font-weight:400;color:var(--neutral-500);margin-top:2px}
+.day-row .a{font-size:12px;color:var(--primary-500);font-weight:500}
+.store-card{margin:8px 16px;padding:12px;background:#fff;border:1px solid var(--neutral-100);border-radius:12px;display:flex;gap:12px;cursor:pointer}
+.store-card.dashed{border:1.5px dashed var(--neutral-300)}
+.store-card .av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#fde68a,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.store-card .title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.store-card .meta{font-size:12px;color:var(--neutral-500);margin-top:2px}
+.store-card .addr{font-size:12px;color:var(--neutral-700);margin-top:4px;line-height:1.4}
+.store-card .foot{display:flex;gap:16px;margin-top:8px;padding-top:8px;border-top:1px solid var(--neutral-100);font-size:12px;color:var(--neutral-700)}
+.store-card .link{margin-top:8px;font-size:12px;font-weight:600;color:var(--primary-600)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;color:#fff}
+.badge-ok{background:var(--success-500)}
+.badge-warn{background:var(--warning-500)}
+.badge-err{color:var(--error-500);font-weight:500;font-size:12px;margin-top:6px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 10px}
+.chip{border:1px solid var(--neutral-200);color:var(--neutral-700);background:#fff;border-radius:999px;padding:7px 12px;font-size:12px;cursor:pointer}
+.chip.active{border-color:var(--primary-500);color:var(--primary-600);background:var(--primary-50);font-weight:600}
+.list-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--neutral-100)}
+.list-row:last-child{border-bottom:0}
+.list-row .t{font-size:13px;font-weight:600;color:var(--neutral-900)}
+.list-row .m{margin-top:3px;font-size:12px;color:var(--neutral-500)}
+.list-row .v{text-align:right;font-size:13px;font-weight:600;color:var(--neutral-900);white-space:nowrap}
+.pill{display:inline-block;margin-left:4px;padding:2px 7px;border-radius:999px;color:#fff;font-size:11px;font-weight:600}
+.pill-w{background:var(--warning-500)}
+.pill-s{background:var(--success-500)}
+.pill-e{background:var(--error-500)}
+.filter-scroll{flex:1;min-height:0;overflow-y:auto}
+.filter-group{margin:12px 16px;background:#fff;border:1px solid var(--neutral-100);border-radius:12px;overflow:hidden}
+.filter-row{padding:13px 12px;border-bottom:1px solid var(--neutral-100)}
+.filter-row:last-child{border-bottom:0}
+.filter-label{margin-bottom:8px;font-size:13px;font-weight:600;color:var(--neutral-700)}
+.range-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.range-box{border:1px solid var(--neutral-200);border-radius:8px;padding:8px 10px;background:var(--neutral-50)}
+.range-box span{display:block;margin-bottom:4px;font-size:11px;color:var(--neutral-500)}
+.range-box strong{font-size:15px;color:var(--neutral-900)}
+.footer-actions{display:flex;gap:10px;padding:12px 16px 18px;background:#fff;border-top:1px solid var(--neutral-100);flex-shrink:0}
+.footer-actions button{flex:1;min-height:44px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-outline{background:#fff;border:1px solid var(--neutral-200);color:var(--neutral-700)}
+.btn-primary{background:var(--primary-500);border:none;color:#fff}
+.bottom-msg{text-align:center;padding:20px 16px;color:var(--neutral-500);font-size:12px}
+.toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(15,23,42,.88);color:#fff;padding:14px 20px;border-radius:12px;font-size:14px;z-index:100;display:none;text-align:center}
+.toast.show{display:block}
+</style>
+</head>
+<body class="mockup-page">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar"><span>15:15</span><span>📶 🔋 80%</span></div>
+
+    <!-- 1. DASHBOARD -->
+    <div class="screen active" id="scr-dashboard">
+      <div class="app-header">
+        <button class="back" type="button" onclick="go(PATHS.back)">←</button>
+        <div class="htitle"><h1>Báo cáo VT cửa hàng</h1><p id="hdr-sub">Báo cáo tuyến viếng thăm</p></div>
+        <button class="hdr-filter" type="button" onclick="show('scr-filter')" title="Bộ lọc">☰</button>
+      </div>
+      <div class="ctx-banner" id="ctx-banner">Phạm vi: <strong id="ctx-scope">Tuyến hôm nay</strong> · <span id="ctx-range">01/06 - 24/06/2026</span></div>
+      <div class="scroll">
+        <div class="sticky-filter">
+          <div class="filter-line">
+            <div class="date-pill" id="date-pill">📅 01/06/2026 - 24/06/2026</div>
+            <button class="filter-btn" type="button" onclick="show('scr-filter')">☰</button>
+          </div>
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="dash-search" placeholder="Tìm theo Tên, Mã, SĐT cửa hàng" oninput="renderDashboard()"/>
+          </div>
+        </div>
+        <div class="section-hd"><span>Dashboard Từ ngày - Đến ngày</span><span class="a" id="dash-range-label">01/06 - 24/06</span></div>
+        <div class="metric-card">
+          <div class="metric-grid" id="dash-metrics"></div>
+        </div>
+        <div class="tabs">
+          <button class="tab active" id="dash-tab-vt" type="button" onclick="switchDashTab('vt')">Chi tiết viếng thăm</button>
+          <button class="tab" id="dash-tab-orders" type="button" onclick="switchDashTab('orders')">Danh sách đơn hàng</button>
+        </div>
+        <div id="dash-panel-vt">
+          <div class="section-hd"><span>Chi tiết từng ngày</span><span class="a">01/06 - 24/06/2026</span></div>
+          <div id="day-groups"></div>
+        </div>
+        <div id="dash-panel-orders" style="display:none">
+          <div class="section-hd"><span>Trạng thái đơn hàng</span><span class="a">Mới nhất ↓</span></div>
+          <div class="chip-row" id="order-chips"></div>
+          <div class="metric-card" id="order-list"></div>
+        </div>
+        <div class="bottom-msg">Đã hết thông tin</div>
+      </div>
+    </div>
+
+    <!-- 2. BỘ LỌC -->
+    <div class="screen" id="scr-filter">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Bộ lọc</h1></div>
+        <span style="width:36px"></span>
+      </div>
+      <div class="filter-scroll">
+        <div class="filter-group">
+          <div class="filter-row">
+            <div class="filter-label">Nhân viên</div>
+            <div class="search-bar" style="margin:0"><span>🔍</span><input type="text" placeholder="Tìm theo tên, mã nhân viên" readonly/></div>
+            <div style="margin-top:10px;font-size:13px;color:var(--neutral-700);line-height:1.6">
+              <div style="font-weight:700">▾ Nhóm 1 <span style="font-weight:400;color:var(--neutral-500)">· Miền Đông</span></div>
+              <div style="padding-left:16px;margin-top:6px">☑ Trần Minh Đức · NV001</div>
+              <div style="padding-left:16px">☑ Lê Thị Hạnh · NV002</div>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-label">Thời gian</div>
+            <div class="range-row">
+              <div class="range-box"><span>Từ ngày</span><strong>01/06/2026</strong></div>
+              <div class="range-box"><span>Đến ngày</span><strong>24/06/2026</strong></div>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-label">Trạng thái VT</div>
+            <div class="chip-row" style="padding:0;margin:0"><span class="chip">Đã VT</span><span class="chip">Chưa VT</span></div>
+            <div style="margin-top:8px;font-size:12px;color:var(--neutral-500)">Không chọn = lọc tất cả trạng thái VT.</div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-label">Phát sinh đơn hàng</div>
+            <div class="chip-row" style="padding:0;margin:0"><span class="chip">Có</span><span class="chip">Không</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-actions">
+        <button class="btn-outline" type="button" onclick="toast('Đã đặt lại bộ lọc')">Đặt lại</button>
+        <button class="btn-primary" type="button" onclick="applyFilter()">Áp dụng</button>
+      </div>
+    </div>
+
+    <!-- 3. CHI TIẾT CỬA HÀNG -->
+    <div class="screen" id="scr-store">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Chi tiết VT cửa hàng</h1></div>
+        <span style="width:28px"></span>
+      </div>
+      <div class="scroll">
+        <div style="text-align:center;padding:12px 16px 4px"><div class="date-pill">📅 01/06/2026 - 24/06/2026</div></div>
+        <div class="store-card" style="cursor:default;margin-top:8px" id="store-hero"></div>
+        <div class="metric-card"><div class="metric-grid" id="store-metrics"></div></div>
+        <div class="tabs">
+          <button class="tab active" id="store-tab-vt" type="button" onclick="switchStoreTab('vt')">Chi tiết viếng thăm</button>
+          <button class="tab" id="store-tab-orders" type="button" onclick="switchStoreTab('orders')">Danh sách đơn hàng</button>
+        </div>
+        <div id="store-panel-vt"></div>
+        <div id="store-panel-orders" style="display:none">
+          <div class="section-hd"><span>Trạng thái đơn hàng</span><span class="a">Mới nhất ↓</span></div>
+          <div class="chip-row"><span class="chip active">Tất cả</span><span class="chip">Thành công</span><span class="chip">Đang xử lý</span></div>
+          <div class="metric-card" id="store-order-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<div class="flow-bar" id="flow-bar">Bước 1/5 · Dashboard báo cáo VT</div>
+<div class="dev-bar" id="dev-bar"></div>
+
+<script>
+var FLOW = (new URLSearchParams(location.search).get('from') || 'vt') === 'ch' ? 'ch' : 'vt';
+var ENTRY = new URLSearchParams(location.search).get('entry') || (FLOW === 'ch' ? 'ch03' : 'main');
+var PATHS = {
+  main: '../../main.html',
+  ch02: '../../khac/cua-hang/MS-A-CH02-danh-sach-cua-hang.html',
+  ch03: '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html',
+  vt01: '../../vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html',
+  back: FLOW === 'ch'
+    ? '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html'
+    : (ENTRY === 'vt01'
+      ? '../../vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'
+      : '../../main.html#bao-cao')
+};
+var steps = {
+  'scr-dashboard': 'Bước 1/5 · Dashboard báo cáo VT',
+  'scr-filter': 'Bước 2/5 · Bộ lọc',
+  'scr-store': 'Bước 3/5 · Chi tiết VT cửa hàng'
+};
+var dashTab = 'vt';
+var storeTab = 'vt';
+var orderFilter = 'all';
+var expandedDays = { '24/06/2026': true };
+
+var DATA = {
+  vt: {
+    scope: 'Tuyến hôm nay',
+    metrics: [{ n:'8', l:'CH viếng thăm' },{ n:'12', l:'Đơn hàng' },{ n:'18.2M', l:'Doanh số' }],
+    days: [
+      { date:'24/06/2026', visited:6, missed:2, stores:[
+        { id:'hellohuong', name:'hellohuong', code:'CH000421', phone:'0909555888', addr:'34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM', visited:true, vtCount:1, orders:1 },
+        { id:'lebinh', name:'Lê Bình outlet', code:'CH000318', phone:'0707777001', addr:'40 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM', visited:true, vtCount:1, orders:1 },
+        { id:'finviet', name:'Tạp hóa Finviet', code:'CH000128', phone:'0908706789', addr:'34 Hoàng Việt, P.4, Q. Tân Bình, TP.HCM', visited:false, vtCount:0, orders:0 }
+      ]},
+      { date:'23/06/2026', visited:5, missed:3, stores:[] }
+    ],
+    orders: [
+      { code:'DH260624-012', store:'hellohuong', date:'24/06/2026 11:16', status:'success', amount:'52,200 đ' },
+      { code:'DH260624-008', store:'Lê Bình outlet', date:'24/06/2026 09:42', status:'processing', amount:'920,000 đ' },
+      { code:'DH260623-031', store:'Hoàng Việt Restaurant', date:'23/06/2026 16:20', status:'success', amount:'1,480,000 đ' },
+      { code:'DH260622-008', store:'Tạp hóa Finviet', date:'22/06/2026 09:12', status:'failed', amount:'640,000 đ' }
+    ]
+  },
+  ch: {
+    scope: 'Cửa hàng chăm sóc',
+    metrics: [{ n:'5', l:'CH chăm sóc' },{ n:'7', l:'Đơn hàng' },{ n:'9.8M', l:'Doanh số' }],
+    days: [
+      { date:'24/06/2026', visited:3, missed:1, stores:[
+        { id:'bidy', name:'Bidy', code:'CH000512', phone:'0979494629', addr:'1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ', visited:true, vtCount:2, orders:2 },
+        { id:'tram', name:'Trâm Test', code:'CH000601', phone:'0901234567', addr:'12 Nguyễn Văn Cừ, Q. Ninh Kiều, Cần Thơ', visited:true, vtCount:1, orders:1 },
+        { id:'thungan', name:'Thu Ngân', code:'CH000702', phone:'0918765432', addr:'45 Lê Hồng Phong, Q. Ninh Kiều, Cần Thơ', visited:false, vtCount:0, orders:0 }
+      ]},
+      { date:'23/06/2026', visited:2, missed:2, stores:[] }
+    ],
+    orders: [
+      { code:'DH260624-021', store:'Bidy', date:'24/06/2026 14:22', status:'success', amount:'1,250,000 đ' },
+      { code:'DH260624-019', store:'Trâm Test', date:'24/06/2026 10:05', status:'processing', amount:'480,000 đ' },
+      { code:'DH260623-014', store:'Bidy', date:'23/06/2026 15:30', status:'success', amount:'2,100,000 đ' }
+    ]
+  }
+};
+
+var storeDetails = {
+  hellohuong: { visits:7, orders:9, revenue:'12.6M', timeline:[
+    { date:'24/06/2026', count:1, steps:[['Checkin','11:02:00'],['Tạo đơn hàng','11:16:42'],['Checkout','11:28:10']] },
+    { date:'20/06/2026', count:1, steps:[['Checkin','09:15:00'],['Checkout','09:45:22']] }
+  ], orders:[
+    { code:'DH260624-012', date:'24/06/2026 11:16', status:'success', amount:'52,200 đ' },
+    { code:'DH260620-009', date:'20/06/2026 09:28', status:'success', amount:'760,000 đ' }
+  ]},
+  bidy: { visits:5, orders:6, revenue:'8.4M', timeline:[
+    { date:'24/06/2026', count:2, steps:[['Checkin','14:00:00'],['Kiểm tra tồn kho','14:12:18'],['Tạo đơn hàng','14:22:42'],['Checkout','14:35:10']] },
+    { date:'22/06/2026', count:1, steps:[['Checkin','10:20:00'],['Checkout','10:48:00']] }
+  ], orders:[
+    { code:'DH260624-021', date:'24/06/2026 14:22', status:'success', amount:'1,250,000 đ' },
+    { code:'DH260622-003', date:'22/06/2026 10:35', status:'success', amount:'890,000 đ' }
+  ]}
+};
+
+var currentStoreId = 'hellohuong';
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  document.getElementById('flow-bar').textContent = steps[id] || steps['scr-dashboard'];
+}
+function go(url){ window.location.href = url; }
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+function applyFilter(){
+  toast('Đã áp dụng bộ lọc');
+  setTimeout(function(){ show('scr-dashboard'); }, 900);
+}
+function switchDashTab(tab){
+  dashTab = tab;
+  document.getElementById('dash-tab-vt').className = tab === 'vt' ? 'tab active' : 'tab';
+  document.getElementById('dash-tab-orders').className = tab === 'orders' ? 'tab active' : 'tab';
+  document.getElementById('dash-panel-vt').style.display = tab === 'vt' ? 'block' : 'none';
+  document.getElementById('dash-panel-orders').style.display = tab === 'orders' ? 'block' : 'none';
+}
+function switchStoreTab(tab){
+  storeTab = tab;
+  document.getElementById('store-tab-vt').className = tab === 'vt' ? 'tab active' : 'tab';
+  document.getElementById('store-tab-orders').className = tab === 'orders' ? 'tab active' : 'tab';
+  document.getElementById('store-panel-vt').style.display = tab === 'vt' ? 'block' : 'none';
+  document.getElementById('store-panel-orders').style.display = tab === 'orders' ? 'block' : 'none';
+}
+function toggleDay(date){
+  expandedDays[date] = !expandedDays[date];
+  renderDashboard();
+}
+function openStore(id){
+  currentStoreId = id;
+  renderStoreDetail();
+  show('scr-store');
+  document.getElementById('flow-bar').textContent = 'Bước 3/5 · Chi tiết VT · ' + id;
+}
+function renderDashboard(){
+  var d = DATA[FLOW];
+  document.getElementById('ctx-scope').textContent = d.scope;
+  document.getElementById('dash-metrics').innerHTML = d.metrics.map(function(m){
+    return '<div class="metric-box"><div class="n">' + m.n + '</div><div class="l">' + m.l + '</div></div>';
+  }).join('');
+  var kw = (document.getElementById('dash-search').value || '').trim().toLowerCase();
+  var html = '';
+  d.days.forEach(function(day){
+    var expanded = expandedDays[day.date];
+    html += '<div class="day-row" onclick="toggleDay(\'' + day.date + '\')"><span class="t">' + day.date +
+      '<span class="s">Đã VT ' + day.visited + ' · Chưa VT ' + day.missed + '</span></span>' +
+      '<span class="a">' + (expanded ? 'Thu gọn ↑' : 'Mở rộng ↓') + '</span></div>';
+    if (expanded) {
+      day.stores.filter(function(s){
+        return !kw || (s.name + s.code + s.phone).toLowerCase().indexOf(kw) >= 0;
+      }).forEach(function(s){
+        html += storeCardHtml(s);
+      });
+    }
+  });
+  document.getElementById('day-groups').innerHTML = html;
+  renderOrderList('order-list', d.orders);
+}
+function storeCardHtml(s){
+  var cls = s.visited ? '' : ' dashed';
+  var badge = s.visited
+    ? '<span class="badge badge-ok">Đã VT</span>'
+    : '<span class="badge badge-warn">Chưa VT</span>';
+  var foot = s.visited
+    ? '<div class="foot"><span>Số lần VT <strong>' + s.vtCount + '</strong></span><span>Đơn hàng <strong>' + s.orders + '</strong></span></div>'
+    : '<div class="badge-err">Chưa VT trong ngày</div>';
+  return '<div class="store-card' + cls + '" onclick="openStore(\'' + s.id + '\')">' +
+    '<div class="av">🏪</div><div style="flex:1;min-width:0">' +
+    '<div class="title">' + s.name + ' ' + badge + '</div>' +
+    '<div class="meta">' + s.code + ' · ' + s.phone + '</div>' +
+    '<div class="addr">' + s.addr + '</div>' + foot +
+    '<div class="link">Xem chi tiết →</div></div></div>';
+}
+function statusPill(st){
+  if (st === 'success') return '<span class="pill pill-s">Thành công</span>';
+  if (st === 'processing') return '<span class="pill pill-w">Đang xử lý</span>';
+  return '<span class="pill pill-e">Thất bại</span>';
+}
+function renderOrderList(elId, orders){
+  var chips = ['all','processing','success','failed'];
+  var labels = { all:'Tất cả', processing:'Đang xử lý', success:'Thành công', failed:'Thất bại' };
+  if (elId === 'order-list') {
+    document.getElementById('order-chips').innerHTML = chips.map(function(c){
+      return '<span class="chip' + (orderFilter === c ? ' active' : '') + '" onclick="setOrderFilter(\'' + c + '\')">' + labels[c] + '</span>';
+    }).join('');
+  }
+  var filtered = orders.filter(function(o){
+    return orderFilter === 'all' || o.status === orderFilter;
+  });
+  document.getElementById(elId).innerHTML = filtered.map(function(o){
+    return '<div class="list-row"><div><div class="t">' + o.code + ' · ' + o.store + '</div>' +
+      '<div class="m">' + o.date + ' ' + statusPill(o.status) + '</div></div>' +
+      '<div class="v">' + o.amount + '</div></div>';
+  }).join('') || '<div style="padding:16px;text-align:center;color:var(--neutral-500);font-size:13px">Không có đơn hàng</div>';
+}
+function setOrderFilter(f){ orderFilter = f; renderDashboard(); }
+function renderStoreDetail(){
+  var s = null;
+  DATA[FLOW].days.forEach(function(day){
+    day.stores.forEach(function(st){ if (st.id === currentStoreId) s = st; });
+  });
+  var detail = storeDetails[currentStoreId] || { visits:1, orders:1, revenue:'—', timeline:[], orders:[] };
+  if (!s) return;
+  document.getElementById('store-hero').innerHTML =
+    '<div class="av">🏪</div><div style="flex:1"><div class="title">' + s.name +
+    ' <span class="badge ' + (s.visited ? 'badge-ok">Đã VT' : 'badge-warn">Chưa VT') + '</span></div>' +
+    '<div class="meta">' + s.code + ' · ' + s.phone + '</div><div class="addr">' + s.addr + '</div></div>';
+  document.getElementById('store-metrics').innerHTML =
+    '<div class="metric-box"><div class="n">' + detail.visits + '</div><div class="l">Tổng lần VT</div></div>' +
+    '<div class="metric-box"><div class="n">' + detail.orders + '</div><div class="l">Tổng đơn hàng</div></div>' +
+    '<div class="metric-box"><div class="n">' + detail.revenue + '</div><div class="l">Tổng doanh số</div></div>';
+  document.getElementById('store-panel-vt').innerHTML = detail.timeline.map(function(block, i){
+    return '<div class="day-row" style="cursor:default"><span class="t">' + block.date + ' · Lượt VT ' + block.count + '</span>' +
+      '<span class="a">' + (i === 0 ? 'Thu gọn ↑' : 'Mở rộng ↓') + '</span></div>' +
+      (i === 0 ? '<div class="metric-card">' + block.steps.map(function(step){
+        return '<div class="list-row"><div class="t">' + step[0] + '</div><div class="v">' + step[1] + '</div></div>';
+      }).join('') + '</div>' : '');
+  }).join('');
+  document.getElementById('store-order-list').innerHTML = detail.orders.map(function(o){
+    return '<div class="list-row"><div><div class="t">' + o.code + '</div><div class="m">' + o.date + ' ' + statusPill(o.status) + '</div></div>' +
+      '<div class="v">' + o.amount + '</div></div>';
+  }).join('');
+  switchStoreTab('vt');
+}
+function initFlow(){
+  document.getElementById('hdr-sub').textContent = FLOW === 'ch' ? 'Báo cáo chăm sóc cửa hàng' : 'Báo cáo tuyến viếng thăm';
+  if (FLOW === 'ch') currentStoreId = 'bidy';
+  var dev = document.getElementById('dev-bar');
+  if (FLOW === 'ch') {
+    dev.innerHTML = '<a href="' + PATHS.main + '#khac">main#khac</a> · <a href="' + PATHS.ch02 + '">CH02</a> · <a href="' + PATHS.ch03 + '">CH03</a> · BCVT00 (Flow B)';
+  } else {
+    dev.innerHTML = '<a href="' + PATHS.main + '#bao-cao">main#bao-cao</a> · <a href="' + PATHS.vt01 + '">VT01</a> · BCVT00 (Flow A)';
+  }
+  renderDashboard();
+  var p = new URLSearchParams(location.search);
+  if (p.get('screen') === 'filter') show('scr-filter');
+  else if (p.get('screen') === 'orders') { show('scr-dashboard'); switchDashTab('orders'); }
+  else if (p.get('screen') === 'store') openStore(p.get('store') || currentStoreId);
+}
+initFlow();
+</script>
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>
