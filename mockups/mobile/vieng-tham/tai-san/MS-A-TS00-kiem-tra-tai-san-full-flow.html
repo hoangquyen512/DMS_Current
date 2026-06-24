@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-TS00 — Kiểm tra tài sản (Full Flow)</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
+<style>
+:root {
+  --neutral-0:#FFF; --neutral-50:#f5f7fa; --neutral-100:#eef1f5;
+  --neutral-200:#E5E7EB; --neutral-500:#6B7280; --neutral-700:#374151;
+  --neutral-900:#111827; --success-50:#ECFDF5; --success-500:#10B981;
+  --success-700:#047857; --warning-50:#FFFBEB; --warning-500:#F59E0B;
+  --warning-700:#B45309; --error-50:#FEF2F2; --error-500:#EF4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+.status-bar{background:var(--primary-500);color:#fff}
+.app-header{background:var(--primary-500);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:56px;flex-shrink:0}
+.app-header .back{width:28px;font-size:22px;cursor:pointer;border:none;background:transparent;color:#fff;line-height:1}
+.app-header .htitle{flex:1}
+.app-header .htitle h1{font-size:17px;font-weight:600}
+.app-header .htitle p{font-size:12px;opacity:.8;margin-top:2px}
+.screen{display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;background:var(--neutral-50)}
+.store-banner{background:var(--primary-600);padding:10px 16px 14px;color:#fff}
+.store-banner .name{font-size:15px;font-weight:700}
+.store-banner .addr{font-size:12px;opacity:.85;margin-top:2px}
+.stats-row{display:flex;gap:8px;padding:12px 16px}
+.stat-card{flex:1;background:#fff;border:1px solid var(--neutral-200);border-radius:10px;padding:10px 6px;text-align:center}
+.stat-card .n{font-size:22px;font-weight:700;color:var(--neutral-900)}
+.stat-card .l{font-size:11px;color:var(--neutral-500);margin-top:2px}
+.stat-card.p .n{color:var(--primary-600)}
+.stat-card.s .n{color:var(--success-700)}
+.quick-actions{display:flex;gap:8px;padding:0 16px 12px}
+.btn{flex:1;border:none;border-radius:10px;padding:12px 8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--primary-500);color:#fff}
+.btn-outline{background:#fff;color:var(--primary-600);border:1.5px solid var(--primary-500)}
+.section-hd{padding:12px 16px 6px;display:flex;justify-content:space-between;align-items:center}
+.section-hd .t{font-size:15px;font-weight:600;color:var(--neutral-900)}
+.section-hd .a{font-size:13px;color:var(--primary-500);font-weight:500;cursor:pointer;border:none;background:transparent}
+.grp-hd{padding:6px 16px;font-size:11px;font-weight:700;color:var(--neutral-500);text-transform:uppercase;background:var(--neutral-100);border-top:1px solid var(--neutral-200);border-bottom:1px solid var(--neutral-200)}
+.asset-row{background:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--neutral-100)}
+.asset-row .ico{font-size:20px}
+.asset-row .info{flex:1}
+.asset-row .code{font-size:11px;font-family:monospace;color:var(--primary-600)}
+.asset-row .name{font-size:13px;font-weight:500;margin-top:1px}
+.asset-row .qty{background:var(--primary-50);border:1px solid var(--primary-500);border-radius:6px;padding:3px 8px;font-size:13px;font-weight:700;color:var(--primary-600)}
+.order-card{background:#fff;margin:4px 16px;padding:12px;border-radius:10px;border:1px solid var(--neutral-100);cursor:pointer}
+.order-card .top{display:flex;justify-content:space-between;align-items:flex-start}
+.order-card .code{font-size:12px;font-family:monospace;color:var(--primary-600);font-weight:600}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-pending{background:var(--warning-50);color:var(--warning-700)}
+.badge-success{background:var(--success-50);color:var(--success-700)}
+.badge-error{background:var(--error-50);color:var(--error-500)}
+.order-card .meta{font-size:12px;color:var(--neutral-500);margin-top:4px}
+.search-bar{margin:8px 16px;background:#fff;border:1px solid var(--neutral-200);border-radius:999px;padding:8px 12px;display:flex;gap:8px;align-items:center}
+.search-bar input{border:none;outline:none;flex:1;font-size:14px;background:transparent}
+.tabs{display:flex;gap:8px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--neutral-100);overflow-x:auto}
+.tab{padding:8px 12px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--neutral-200);background:#fff;color:var(--neutral-700);white-space:nowrap;cursor:pointer}
+.tab.active{border-color:var(--primary-500);background:var(--primary-50);color:var(--primary-600)}
+.check-card{background:#fff;margin:8px 16px;padding:12px;border-radius:12px;border:1px solid var(--neutral-100);display:flex;gap:12px;cursor:pointer}
+.check-card.pending{border:1.5px dashed var(--neutral-300)}
+.check-card .av{width:44px;height:44px;border-radius:10px;background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.check-card .title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.check-card .meta{font-size:12px;color:var(--neutral-500);margin-top:2px}
+.check-card .hint{font-size:12px;color:var(--primary-500);font-weight:500;margin-top:6px}
+.card{background:#fff;margin:12px 16px;padding:14px;border-radius:12px;border:1px solid var(--neutral-100)}
+.form-label{font-size:12px;font-weight:600;color:var(--neutral-500);margin-bottom:8px;display:block;text-transform:uppercase}
+.radio-group{background:#fff;border:1px solid var(--neutral-200);border-radius:12px;padding:4px 12px;margin:0 16px 12px}
+.radio-group label{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;border-bottom:1px solid var(--neutral-100)}
+.radio-group label:last-child{border-bottom:none}
+.textarea-box{margin:0 16px 12px;background:#fff;border:1px solid var(--neutral-200);border-radius:12px;padding:12px;font-size:14px;line-height:1.45;color:var(--neutral-700);min-height:88px}
+.photo-row{display:flex;gap:8px;margin:8px 16px 12px}
+.photo-box{width:64px;height:64px;border-radius:10px;background:var(--neutral-200);display:flex;align-items:center;justify-content:center;font-size:24px}
+.photo-add{background:var(--neutral-100);color:var(--neutral-500);font-size:22px}
+.footer-btn{padding:12px 16px 20px;background:#fff;border-top:1px solid var(--neutral-100);flex-shrink:0}
+.footer-btn .btn{width:100%}
+.form-field{margin-bottom:14px}
+.form-field label{display:block;font-size:12px;font-weight:600;color:var(--neutral-500);margin-bottom:5px}
+.form-field label .req{color:var(--error-500)}
+.form-input{width:100%;padding:10px 12px;border:1px solid var(--neutral-200);border-radius:8px;font-size:14px;background:var(--neutral-50)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%236B7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.asset-line{display:flex;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--neutral-100)}
+.asset-line:last-child{border-bottom:none}
+.qty-input{width:56px;text-align:center;padding:6px;border:1px solid var(--neutral-200);border-radius:6px}
+.toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(15,23,42,.88);color:#fff;padding:14px 20px;border-radius:12px;font-size:14px;z-index:100;display:none;text-align:center}
+.toast.show{display:block}
+.phone-screen{position:relative}
+.detail-kv{font-size:13px;color:var(--neutral-700);margin-bottom:8px}
+.detail-kv strong{color:var(--neutral-900)}
+.picker-item{background:#fff;margin:8px 16px;padding:12px;border-radius:12px;border:1.5px solid var(--neutral-200);display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.picker-item.selected{border-color:var(--primary-500);background:var(--primary-50)}
+.picker-item .ck{width:20px;height:20px;border-radius:50%;border:2px solid var(--neutral-300);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.picker-item.selected .ck{border-color:var(--primary-500);background:var(--primary-500)}
+.picker-item .pi-title{font-size:14px;font-weight:600;color:var(--neutral-900)}
+.picker-item .pi-sub{font-size:12px;color:var(--neutral-500);margin-top:3px;line-height:1.4}
+.field-tap{cursor:pointer}
+.field-tap .form-input{display:flex;justify-content:space-between;align-items:center;background:#fff}
+.field-tap .form-input .placeholder{color:var(--neutral-500)}
+.field-tap .form-input .arrow{color:var(--neutral-400);font-size:18px}
+.field-tap.readonly .form-input{background:var(--neutral-50);cursor:default}
+.asset-empty{text-align:center;padding:28px 20px;color:var(--neutral-500);font-size:13px;line-height:1.5}
+.asset-empty .ico{font-size:32px;margin-bottom:8px}
+.add-asset-btn{display:block;text-align:center;padding:12px;border:1.5px dashed var(--primary-500);border-radius:10px;color:var(--primary-600);font-weight:600;cursor:pointer;margin:0 16px 12px;background:#fff;font-size:14px}
+.add-asset-btn.disabled{opacity:.55;border-color:var(--neutral-300);color:var(--neutral-500);cursor:not-allowed;pointer-events:none}
+.fab{position:absolute;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--primary-500);color:#fff;font-size:28px;border:none;box-shadow:0 4px 12px rgba(26,154,214,.4);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.select-all{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--neutral-700)}
+.grp-label{padding:8px 16px 4px;font-size:11px;font-weight:700;color:var(--neutral-500);text-transform:uppercase}
+</style>
+</head>
+<body class="mockup-page">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar"><span>15:15</span><span>📶 🔋 80%</span></div>
+
+    <!-- 1. DASHBOARD -->
+    <div class="screen active" id="scr-dashboard">
+      <div class="app-header">
+        <button class="back" type="button" onclick="go(PATHS.back)">←</button>
+        <div class="htitle"><h1>Quản lý tài sản</h1><p id="hdr-sub">Nhiệm vụ viếng thăm</p></div>
+      </div>
+      <div class="scroll">
+        <div class="store-banner">
+          <div class="name" id="store-name">🏪 hellohuong</div>
+          <div class="addr" id="store-addr">34 Hoàng Việt, Phường 04, Quận Tân Bình, TP.HCM</div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card p"><div class="n">4</div><div class="l">Loại TS</div></div>
+          <div class="stat-card s"><div class="n">11</div><div class="l">Tổng SL</div></div>
+          <div class="stat-card"><div class="n">3</div><div class="l">Đơn ĐK</div></div>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn-primary" type="button" onclick="startOrderCreate()">+ Đăng ký mới</button>
+          <button class="btn btn-outline" type="button" onclick="show('scr-check-list')">🔍 Kiểm tra TS</button>
+        </div>
+        <div class="quick-actions" style="padding-top:0">
+          <button class="btn btn-outline" type="button" style="flex:1" onclick="show('scr-giao-ts')">📤 Giao tài sản</button>
+        </div>
+        <div class="section-hd"><span class="t">Tài sản hiện tại</span><span class="a">11 tài sản</span></div>
+        <div class="grp-hd">🏷 Hàng định danh (2)</div>
+        <div class="asset-row"><span class="ico">❄️</span><div class="info"><div class="code">TS-TM-100L-00142</div><div class="name">Tủ mát Finviet 100L</div></div><span class="qty">×3</span></div>
+        <div class="asset-row"><span class="ico">☀️</span><div class="info"><div class="code">TS-ON-FV-00087</div><div class="name">Ô che nắng Finviet</div></div><span class="qty">×2</span></div>
+        <div class="grp-hd">📦 POSM (2)</div>
+        <div class="asset-row"><span class="ico">🪧</span><div class="info"><div class="code">POSM-KE-A4</div><div class="name">Kệ POSM A4</div></div><span class="qty">×5</span></div>
+        <div class="asset-row"><span class="ico">🪧</span><div class="info"><div class="code">POSM-BR-3X1</div><div class="name">Băng rôn treo 3×1m</div></div><span class="qty">×1</span></div>
+        <div class="section-hd">
+          <span class="t">Đơn gần đây</span>
+          <button class="a" type="button" onclick="show('scr-order-list')">Xem tất cả →</button>
+        </div>
+        <div class="order-card" onclick="show('scr-order-detail')">
+          <div class="top"><span class="code">DKTS190520263847</span><span class="badge badge-pending">⏳ Chờ duyệt</span></div>
+          <div class="meta">19/05/2026 · 3 tài sản</div>
+        </div>
+        <div class="order-card" onclick="show('scr-order-detail')">
+          <div class="top"><span class="code">DKTS120520261023</span><span class="badge badge-success">✅ Đã duyệt</span></div>
+          <div class="meta">12/05/2026 · 2 tài sản</div>
+        </div>
+        <div style="height:16px"></div>
+      </div>
+    </div>
+
+    <!-- 2. KIỂM TRA — DANH SÁCH -->
+    <div class="screen" id="scr-check-list">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Kiểm tra tình trạng</h1><p id="hdr-check-list">hellohuong</p></div>
+      </div>
+      <div class="scroll">
+        <div class="section-hd"><span class="t">Tài sản cần kiểm tra</span><span class="a" id="check-progress">3/5 đã kiểm</span></div>
+        <div class="search-bar"><span>🔍</span><input placeholder="Tìm theo mã, tên tài sản" readonly/></div>
+        <div class="tabs" style="background:var(--neutral-50)">
+          <button class="tab active" type="button">Tất cả</button>
+          <button class="tab" type="button">Định danh</button>
+          <button class="tab" type="button">Không định danh</button>
+        </div>
+        <div class="check-card">
+          <div class="av">▣</div>
+          <div>
+            <div class="title">Tủ mát Finviet 100L <span class="badge badge-success">Đã kiểm</span></div>
+            <div class="meta">Asset · TS001 · QR-TS001-002</div>
+            <div class="meta">Kiểm kê: 09:20 - 11/06/2026 · Quét QR · Hợp lệ</div>
+          </div>
+        </div>
+        <div class="check-card pending" id="card-posm-a4" onclick="show('scr-check-form')">
+          <div class="av">▦</div>
+          <div>
+            <div class="title">Kệ trưng bày POSM A4 <span class="badge badge-pending">Chưa kiểm</span></div>
+            <div class="meta">Posm · PS001 · Không định danh · SL: 12</div>
+            <div class="hint">Chạm để kiểm tra tình trạng →</div>
+          </div>
+        </div>
+        <div class="check-card">
+          <div class="av">▦</div>
+          <div>
+            <div class="title">Bảng rôn khai trương 3×1m <span class="badge badge-success">Đã kiểm</span></div>
+            <div class="meta">Posm · PS002 · Đang hoạt động · 2 ảnh</div>
+          </div>
+        </div>
+        <div class="check-card pending">
+          <div class="av">▦</div>
+          <div>
+            <div class="title">Decal dán cửa A3 <span class="badge badge-pending">Chưa kiểm</span></div>
+            <div class="meta">Posm · PS003 · SL: 20</div>
+          </div>
+        </div>
+        <div style="height:16px"></div>
+      </div>
+    </div>
+
+    <!-- 3. KIỂM TRA — FORM -->
+    <div class="screen" id="scr-check-form">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-check-list')">←</button>
+        <div class="htitle"><h1>Cập nhật tình trạng</h1><p>Kệ trưng bày POSM A4</p></div>
+      </div>
+      <div class="scroll">
+        <div class="card" style="border-color:var(--primary-500)">
+          <div class="title" style="font-weight:600;font-size:14px">Kệ trưng bày POSM A4</div>
+          <div class="meta" style="font-size:12px;color:var(--neutral-500);margin-top:4px">Posm · PS001 · Không định danh · SL tại CH: 12</div>
+        </div>
+        <div class="section-hd"><span class="t">* Tình trạng</span></div>
+        <div class="radio-group">
+          <label><input type="radio" name="st" checked/> Đang hoạt động</label>
+          <label><input type="radio" name="st"/> Cần sửa chữa</label>
+          <label><input type="radio" name="st"/> Hư hỏng</label>
+          <label><input type="radio" name="st"/> Mất</label>
+          <label><input type="radio" name="st"/> Cần thu hồi</label>
+        </div>
+        <div class="section-hd"><span class="t">Ghi chú</span></div>
+        <div class="textarea-box">Kệ còn sử dụng tốt, đã vệ sinh lại khu vực trưng bày.</div>
+        <div class="section-hd"><span class="t">* Hình ảnh</span></div>
+        <div class="photo-row">
+          <div class="photo-box">🖼</div>
+          <div class="photo-box">🖼</div>
+          <div class="photo-box photo-add">+</div>
+        </div>
+      </div>
+      <div class="footer-btn">
+        <button class="btn btn-primary" type="button" onclick="confirmCheck()">Xác nhận</button>
+      </div>
+    </div>
+
+    <!-- 4. DANH SÁCH ĐĂNG KÝ -->
+    <div class="screen" id="scr-order-list">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Đăng ký tài sản</h1><p id="hdr-order-list">hellohuong</p></div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" type="button">Tất cả (3)</button>
+        <button class="tab" type="button">Chờ duyệt (1)</button>
+        <button class="tab" type="button">Đã duyệt (2)</button>
+      </div>
+      <div class="scroll" style="position:relative">
+        <div class="section-hd" style="padding-top:8px"><span class="t" style="font-size:13px;color:var(--neutral-500);text-transform:uppercase">Hôm nay</span></div>
+        <div class="order-card" onclick="show('scr-order-detail')">
+          <div class="top"><span class="code">ĐKTS-20260624-0002</span><span class="badge badge-pending">Chờ duyệt</span></div>
+          <div class="meta">2 loại tài sản · 24/06/2026 08:32</div>
+        </div>
+        <div class="section-hd"><span class="t" style="font-size:13px;color:var(--neutral-500);text-transform:uppercase">Tuần trước</span></div>
+        <div class="order-card" onclick="show('scr-order-detail')">
+          <div class="top"><span class="code">DKTS120520261023</span><span class="badge badge-success">Đã duyệt</span></div>
+          <div class="meta">2 loại tài sản · 12/05/2026</div>
+        </div>
+        <div class="order-card" onclick="show('scr-order-detail')">
+          <div class="top"><span class="code">DKTS050520265421</span><span class="badge badge-success">Đã duyệt</span></div>
+          <div class="meta">3 loại tài sản · 05/05/2026</div>
+        </div>
+        <button class="fab" type="button" onclick="show('scr-order-create')" title="Tạo đơn mới">+</button>
+      </div>
+    </div>
+
+    <!-- 5. TẠO ĐĂNG KÝ -->
+    <div class="screen" id="scr-order-create">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Tạo đơn đăng ký</h1><p id="hdr-order-create">hellohuong</p></div>
+      </div>
+      <div class="scroll">
+        <div class="card">
+          <div class="form-field">
+            <label>* Công ty</label>
+            <input class="form-input" value="FINVIET" readonly/>
+          </div>
+          <div class="form-field field-tap" id="wrap-store-field" onclick="openPickStore()">
+            <label>* Cửa hàng</label>
+            <div class="form-input" id="field-store-display">
+              <span id="field-store-text">hellohuong — 34 Hoàng Việt, Q. Tân Bình</span>
+              <span class="arrow" id="field-store-arrow">›</span>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>* Loại đăng ký</label>
+            <select class="form-input form-select">
+              <option>Cấp phát tài sản mới</option>
+              <option>Thu hồi tài sản</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-hd"><span class="t">Danh sách tài sản</span><button class="a" type="button" onclick="openPickAsset()">+ Thêm</button></div>
+        <div class="asset-empty" id="asset-empty" style="display:none">
+          <div class="ico">📦</div>
+          Chọn cửa hàng trước để thêm tài sản
+        </div>
+        <div class="card" id="asset-lines-card">
+          <div class="asset-line">
+            <div style="flex:1"><div style="font-weight:600;font-size:14px">Tủ mát Finviet 100L</div><div style="font-size:12px;color:var(--neutral-500)">TS-TM-100L</div></div>
+            <input class="qty-input" type="number" value="2"/>
+          </div>
+          <div class="asset-line">
+            <div style="flex:1"><div style="font-weight:600;font-size:14px">Kệ POSM A4</div><div style="font-size:12px;color:var(--neutral-500)">POSM-KE-A4</div></div>
+            <input class="qty-input" type="number" value="5"/>
+          </div>
+        </div>
+        <button class="add-asset-btn" id="btn-add-asset" type="button" onclick="openPickAsset()">➕ Thêm tài sản</button>
+        <div class="card">
+          <div class="form-field">
+            <label>Ghi chú</label>
+            <textarea class="form-input" rows="3" style="resize:vertical">Đề nghị cấp phát bổ sung kệ trưng bày khu vực quầy thu ngân.</textarea>
+            <div style="text-align:right;font-size:11px;color:var(--neutral-500);margin-top:4px">72/500</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-btn">
+        <button class="btn btn-primary" type="button" onclick="saveOrder()">Lưu</button>
+      </div>
+    </div>
+
+    <!-- 5b. CHỌN CỬA HÀNG -->
+    <div class="screen" id="scr-pick-store">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-order-create')">←</button>
+        <div class="htitle"><h1>Chọn cửa hàng</h1><p>Đăng ký tài sản</p></div>
+      </div>
+      <div class="scroll">
+        <div class="search-bar"><span>🔍</span><input placeholder="Tìm theo mã, tên, SĐT cửa hàng" readonly/></div>
+        <div id="store-picker-list"></div>
+      </div>
+      <div class="footer-btn">
+        <button class="btn btn-primary" type="button" onclick="confirmPickStore()">Xác nhận</button>
+      </div>
+    </div>
+
+    <!-- 5c. THÊM TÀI SẢN -->
+    <div class="screen" id="scr-pick-asset">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-order-create')">←</button>
+        <div class="htitle"><h1>Thêm tài sản</h1><p id="hdr-pick-asset">hellohuong</p></div>
+      </div>
+      <div class="scroll">
+        <div class="search-bar"><span>🔍</span><input placeholder="Tìm theo mã, tên tài sản" readonly/></div>
+        <div class="select-all"><span class="ck" style="border-radius:4px;width:18px;height:18px;border:2px solid var(--primary-500);background:var(--primary-500);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center">✓</span> Chọn tất cả <span style="margin-left:auto;font-weight:400;color:var(--neutral-500)">6 tài sản</span></div>
+        <div class="grp-label">Nhóm Asset</div>
+        <div class="picker-item selected" data-asset="TS-TM-100L">
+          <div class="ck">✓</div>
+          <div><div class="pi-title">Tủ mát Finviet 100L</div><div class="pi-sub">TS001 · Đơn vị: Cái · Tồn kho: 15</div></div>
+        </div>
+        <div class="picker-item" data-asset="TS-TD-150L">
+          <div class="ck"></div>
+          <div><div class="pi-title">Tủ đông Finviet 150L</div><div class="pi-sub">TS002 · Đơn vị: Cái · Tồn kho: 8</div></div>
+        </div>
+        <div class="grp-label">Nhóm Posm</div>
+        <div class="picker-item selected" data-asset="POSM-KE-A4">
+          <div class="ck">✓</div>
+          <div><div class="pi-title">Kệ POSM A4</div><div class="pi-sub">PS001 · Đơn vị: Cái · Tồn kho: 50</div></div>
+        </div>
+        <div class="picker-item" data-asset="POSM-BR-3X1">
+          <div class="ck"></div>
+          <div><div class="pi-title">Băng rôn treo 3×1m</div><div class="pi-sub">PS002 · Đơn vị: Cái · Tồn kho: 20</div></div>
+        </div>
+        <div style="height:12px"></div>
+      </div>
+      <div class="footer-btn">
+        <button class="btn btn-primary" type="button" onclick="confirmPickAsset()">Thêm vào đơn (2)</button>
+      </div>
+    </div>
+
+    <!-- 6. CHI TIẾT ĐƠN -->
+    <div class="screen" id="scr-order-detail">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-order-list')">←</button>
+        <div class="htitle"><h1>Chi tiết đơn</h1><p>DKTS190520263847</p></div>
+      </div>
+      <div class="scroll">
+        <div class="card">
+          <div class="detail-kv">Mã đơn: <strong>DKTS190520263847</strong></div>
+          <div class="detail-kv">Trạng thái: <span class="badge badge-pending">Chờ duyệt</span></div>
+          <div class="detail-kv">Cửa hàng: <strong id="detail-store">hellohuong</strong></div>
+          <div class="detail-kv">Ngày tạo: <strong>19/05/2026 08:32</strong></div>
+          <div class="detail-kv">Loại đăng ký: <strong>Cấp phát tài sản mới</strong></div>
+        </div>
+        <div class="section-hd"><span class="t">Tài sản đăng ký (3)</span></div>
+        <div class="asset-row"><span class="ico">❄️</span><div class="info"><div class="name">Tủ mát Finviet 100L</div><div class="code">TS-TM-100L</div></div><span class="qty">×3</span></div>
+        <div class="asset-row"><span class="ico">🪧</span><div class="info"><div class="name">Kệ POSM A4</div><div class="code">POSM-KE-A4</div></div><span class="qty">×5</span></div>
+        <div class="asset-row"><span class="ico">☀️</span><div class="info"><div class="name">Ô che nắng Finviet</div><div class="code">TS-ON-FV</div></div><span class="qty">×2</span></div>
+        <div class="card">
+          <div class="form-label">Ghi chú</div>
+          <div style="font-size:14px;color:var(--neutral-700);line-height:1.45">Cửa hàng mở rộng khu vực trưng bày, cần bổ sung tủ mát và kệ POSM.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. GIAO TÀI SẢN -->
+    <div class="screen" id="scr-giao-ts">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-dashboard')">←</button>
+        <div class="htitle"><h1>Giao tài sản</h1><p id="hdr-giao">hellohuong</p></div>
+      </div>
+      <div class="scroll">
+        <div class="section-hd"><span class="t">Đơn chờ giao (2)</span></div>
+        <div class="order-card" onclick="show('scr-giao-form')">
+          <div class="top"><span class="code">GTTS-20260624-0012</span><span class="badge badge-pending">Chờ giao</span></div>
+          <div class="meta">Tủ mát Finviet 100L ×2 · DKTS120520261023</div>
+        </div>
+        <div class="order-card" onclick="show('scr-giao-form')">
+          <div class="top"><span class="code">GTTS-20260620-0008</span><span class="badge badge-pending">Chờ giao</span></div>
+          <div class="meta">Kệ POSM A4 ×5 · DKTS050520265421</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7b. XÁC NHẬN GIAO -->
+    <div class="screen" id="scr-giao-form">
+      <div class="app-header">
+        <button class="back" type="button" onclick="show('scr-giao-ts')">←</button>
+        <div class="htitle"><h1>Xác nhận giao TS</h1><p>GTTS-20260624-0012</p></div>
+      </div>
+      <div class="scroll">
+        <div class="card">
+          <div class="detail-kv">Tài sản: <strong>Tủ mát Finviet 100L</strong></div>
+          <div class="detail-kv">Số lượng giao: <strong>2</strong></div>
+          <div class="detail-kv">Cửa hàng nhận: <strong id="giao-store">hellohuong</strong></div>
+        </div>
+        <div class="section-hd"><span class="t">* Hình ảnh bàn giao</span></div>
+        <div class="photo-row">
+          <div class="photo-box">🖼</div>
+          <div class="photo-box photo-add">+</div>
+        </div>
+        <div class="card">
+          <div class="form-field">
+            <label>Ghi chú</label>
+            <textarea class="form-input" rows="3" style="resize:vertical">Đã bàn giao và lắp đặt tại khu vực quầy thu ngân.</textarea>
+            <div style="text-align:right;font-size:11px;color:var(--neutral-500);margin-top:4px">48/500</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-btn">
+        <button class="btn btn-primary" type="button" onclick="confirmGiao()">Xác nhận giao</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<div class="flow-bar" id="flow-bar">Bước 1/10 · Dashboard tài sản tại CH</div>
+<div class="dev-bar" id="dev-bar"></div>
+
+<script>
+var FLOW = (function() {
+  var p = new URLSearchParams(location.search);
+  return p.get('from') === 'ch' ? 'ch' : 'vt';
+})();
+var STORE = FLOW === 'ch'
+  ? { name: 'Bidy', short: 'Bidy — 1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ', addr: '1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ', picked: true }
+  : { name: 'hellohuong', short: 'hellohuong — 34 Hoàng Việt, Q. Tân Bình', addr: '34 Hoàng Việt, Phường 04, Quận Tân Bình, TP.HCM', picked: true };
+var STORE_OPTIONS = {
+  vt: [
+    { name: 'hellohuong', short: 'hellohuong — 34 Hoàng Việt, Q. Tân Bình', addr: '34 Hoàng Việt, Phường 04, Quận Tân Bình, TP.HCM', phone: '0909555888' },
+    { name: 'Hoàng Việt Restaurant', short: 'Hoàng Việt Restaurant — Q. Tân Bình', addr: '34 Hoàng Việt, Phường 4, Quận Tân Bình, TP.HCM', phone: '0908706789' },
+    { name: 'Lê Bình outlet', short: 'Lê Bình outlet — Q. Tân Bình', addr: '40 Hoàng Việt, Phường 04, Quận Tân Bình, Hồ Chí Minh', phone: '0707777001' }
+  ],
+  ch: [
+    { name: 'Bidy', short: 'Bidy — 1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ', addr: '1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ', phone: '0979494629' },
+    { name: 'Trâm Test', short: 'Trâm Test — Q. Ninh Kiều, Cần Thơ', addr: '12 Nguyễn Văn Cừ, Quận Ninh Kiều, Cần Thơ', phone: '0901234567' },
+    { name: 'Thu Ngân', short: 'Thu Ngân — Q. Ninh Kiều, Cần Thơ', addr: '45 Lê Hồng Phong, Quận Ninh Kiều, Cần Thơ', phone: '0918765432' }
+  ]
+};
+var pickStoreIdx = 0;
+var pickStoreDraft = 0;
+var PATHS = {
+  main: '../../main.html',
+  back: FLOW === 'ch'
+    ? '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html'
+    : '../chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html',
+  ch02: '../../khac/cua-hang/MS-A-CH02-danh-sach-cua-hang.html',
+  ch03: '../../khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html',
+  vt01: '../chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'
+};
+var steps = {
+  'scr-dashboard': 'Bước 1/10 · Dashboard tài sản tại CH',
+  'scr-check-list': 'Bước 2/10 · Danh sách kiểm tra tình trạng',
+  'scr-check-form': 'Bước 3/10 · Cập nhật tình trạng tài sản',
+  'scr-order-list': 'Bước 4/10 · Danh sách đơn đăng ký',
+  'scr-order-create': 'Bước 5/10 · Tạo đơn đăng ký',
+  'scr-pick-store': 'Bước 5b · Chọn cửa hàng',
+  'scr-pick-asset': 'Bước 5c · Thêm tài sản',
+  'scr-order-detail': 'Bước 6/10 · Chi tiết đơn đăng ký',
+  'scr-giao-ts': 'Bước 7/10 · Danh sách giao tài sản',
+  'scr-giao-form': 'Bước 8/10 · Xác nhận giao tài sản'
+};
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  document.getElementById('flow-bar').textContent = steps[id] || '';
+}
+function go(url) { window.location.href = url; }
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 1800);
+}
+function confirmCheck() {
+  var card = document.getElementById('card-posm-a4');
+  if (card) {
+    card.classList.remove('pending');
+    var badge = card.querySelector('.badge');
+    if (badge) { badge.className = 'badge badge-success'; badge.textContent = 'Đã kiểm'; }
+    var hint = card.querySelector('.hint');
+    if (hint) hint.textContent = 'Đang hoạt động · 2 ảnh · 15:18';
+    card.onclick = null;
+    card.style.cursor = 'default';
+    document.getElementById('check-progress').textContent = '4/5 đã kiểm';
+  }
+  toast('Đã lưu kiểm tra tình trạng');
+  setTimeout(function() { show('scr-check-list'); }, 1200);
+}
+function saveOrder() {
+  toast('Đã lưu đơn đăng ký thành công');
+  setTimeout(function() { show('scr-order-list'); }, 1200);
+}
+function confirmGiao() {
+  toast('Đã xác nhận giao tài sản thành công');
+  setTimeout(function() { show('scr-giao-ts'); }, 1200);
+}
+function startOrderCreate() {
+  show('scr-order-create');
+  if (FLOW === 'vt') openPickStore();
+}
+function openPickStore() {
+  renderStorePicker();
+  show('scr-pick-store');
+}
+function openPickAsset() {
+  if (!STORE.picked) {
+    toast('Vui lòng chọn cửa hàng trước khi thêm tài sản');
+    return;
+  }
+  var h = document.getElementById('hdr-pick-asset');
+  if (h) h.textContent = STORE.name;
+  show('scr-pick-asset');
+}
+function renderStorePicker() {
+  var list = document.getElementById('store-picker-list');
+  if (!list) return;
+  var opts = STORE_OPTIONS[FLOW];
+  pickStoreDraft = pickStoreIdx;
+  list.innerHTML = opts.map(function(s, i) {
+    var sel = i === pickStoreDraft ? ' selected' : '';
+    return '<div class="picker-item' + sel + '" data-idx="' + i + '" onclick="selectStoreDraft(' + i + ')">' +
+      '<div class="ck">' + (sel ? '✓' : '') + '</div>' +
+      '<div><div class="pi-title">' + s.name + '</div>' +
+      '<div class="pi-sub">' + s.phone + ' · ' + s.addr + '</div></div></div>';
+  }).join('');
+}
+function selectStoreDraft(i) {
+  pickStoreDraft = i;
+  renderStorePicker();
+}
+function confirmPickStore() {
+  var s = STORE_OPTIONS[FLOW][pickStoreDraft];
+  pickStoreIdx = pickStoreDraft;
+  STORE = { name: s.name, short: s.short, addr: s.addr, picked: true };
+  applyStoreUi();
+  toast('Đã chọn cửa hàng ' + STORE.name);
+  setTimeout(function() { show('scr-order-create'); }, 900);
+}
+function confirmPickAsset() {
+  toast('Đã thêm 2 tài sản vào đơn');
+  setTimeout(function() { show('scr-order-create'); }, 900);
+}
+function applyStoreUi() {
+  document.getElementById('store-name').textContent = '🏪 ' + STORE.name;
+  document.getElementById('store-addr').textContent = STORE.addr;
+  var ft = document.getElementById('field-store-text');
+  if (ft) ft.textContent = STORE.picked ? STORE.short : 'Chọn cửa hàng...';
+  if (ft && !STORE.picked) ft.className = 'placeholder';
+  else if (ft) ft.className = '';
+  ['hdr-check-list','hdr-order-list','hdr-order-create','hdr-giao','hdr-pick-asset'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = STORE.name;
+  });
+  var ds = document.getElementById('detail-store');
+  if (ds) ds.textContent = STORE.name;
+  var gs = document.getElementById('giao-store');
+  if (gs) gs.textContent = STORE.name;
+  updateOrderCreateState();
+}
+function updateOrderCreateState() {
+  var empty = document.getElementById('asset-empty');
+  var lines = document.getElementById('asset-lines-card');
+  var btn = document.getElementById('btn-add-asset');
+  if (!STORE.picked) {
+    if (empty) empty.style.display = 'block';
+    if (lines) lines.style.display = 'none';
+    if (btn) btn.classList.add('disabled');
+  } else {
+    if (empty) empty.style.display = 'none';
+    if (lines) lines.style.display = 'block';
+    if (btn) btn.classList.remove('disabled');
+  }
+}
+function initOrderCreateFlow() {
+  var wrap = document.getElementById('wrap-store-field');
+  if (FLOW === 'vt') {
+    wrap.classList.add('readonly');
+    STORE.picked = true;
+  } else {
+    wrap.classList.remove('readonly');
+    var p = new URLSearchParams(location.search);
+    if (p.get('screen') === 'dangky-empty') {
+      STORE = { name: '', short: '', addr: '', picked: false };
+      var ft = document.getElementById('field-store-text');
+      if (ft) { ft.textContent = 'Chọn cửa hàng...'; ft.className = 'placeholder'; }
+    }
+  }
+  updateOrderCreateState();
+  document.querySelectorAll('#scr-pick-asset .picker-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      el.classList.toggle('selected');
+      var ck = el.querySelector('.ck');
+      if (ck) ck.textContent = el.classList.contains('selected') ? '✓' : '';
+    });
+  });
+}
+function initFlow() {
+  var sub = FLOW === 'ch' ? 'Chăm sóc cửa hàng' : 'Nhiệm vụ viếng thăm';
+  document.getElementById('hdr-sub').textContent = sub;
+  applyStoreUi();
+  initOrderCreateFlow();
+  var dev = document.getElementById('dev-bar');
+  if (FLOW === 'ch') {
+    dev.innerHTML = '<a href="' + PATHS.main + '#khac">main#khac</a> · <a href="' + PATHS.ch02 + '">CH02</a> · <a href="' + PATHS.ch03 + '">CH03</a> · TS00 (Flow B)';
+  } else {
+    dev.innerHTML = '<a href="' + PATHS.main + '">main</a> · <a href="' + PATHS.vt01 + '">VT01</a> · TS00 (Flow A)';
+  }
+  var p = new URLSearchParams(location.search);
+  var screen = p.get('screen');
+  if (screen === 'giao') show('scr-giao-ts');
+  else if (screen === 'check') show('scr-check-list');
+  else if (screen === 'dangky') show('scr-order-list');
+  else if (screen === 'dangky-new') show('scr-order-create');
+  else if (screen === 'chon-ch') show('scr-pick-store');
+  else if (screen === 'them-ts') { show('scr-order-create'); openPickAsset(); }
+}
+initFlow();
+</script>
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>
