@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[APP] MS-A-DL03 - OCR đơn giao hàng</title>
+<style>
+  :root {
+    --primary: #1594cf;
+    --primary-dark: #087fb9;
+    --primary-soft: #eef8fd;
+    --ink: #272b3f;
+    --muted: #6c7485;
+    --line: #e8edf3;
+    --bg: #f6f7fa;
+    --white: #ffffff;
+    --success: #18a058;
+    --success-soft: #eaf8f0;
+    --warning: #f59e0b;
+    --warning-soft: #fff7e6;
+    --danger: #e5484d;
+    --shadow: 0 8px 22px rgba(28, 36, 52, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #1b2033;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    padding: 28px;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .phone {
+    width: 390px;
+    background: #fff;
+    border-radius: 38px;
+    padding: 10px;
+    box-shadow:
+      0 0 0 10px #101827,
+      0 0 0 12px #374151,
+      0 30px 70px rgba(0, 0, 0, 0.42);
+  }
+
+  .screen {
+    position: relative;
+    height: 844px;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status-bar {
+    height: 52px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: #000;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+  }
+
+  .signal span {
+    width: 4px;
+    border-radius: 4px;
+    background: #0b0b0b;
+  }
+
+  .signal span:nth-child(1) { height: 5px; }
+  .signal span:nth-child(2) { height: 8px; }
+  .signal span:nth-child(3) { height: 12px; }
+  .signal span:nth-child(4) { height: 15px; }
+
+  .wifi {
+    width: 18px;
+    height: 14px;
+    position: relative;
+  }
+
+  .wifi:before,
+  .wifi:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid #0b0b0b;
+    border-color: #0b0b0b transparent transparent transparent;
+    border-radius: 50%;
+  }
+
+  .wifi:before {
+    width: 20px;
+    height: 20px;
+    top: 1px;
+  }
+
+  .wifi:after {
+    width: 12px;
+    height: 12px;
+    top: 6px;
+  }
+
+  .wifi-dot {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #0b0b0b;
+    transform: translateX(-50%);
+  }
+
+  .battery {
+    min-width: 31px;
+    height: 20px;
+    border-radius: 6px;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    position: relative;
+    padding: 0 5px;
+  }
+
+  .battery:after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 6px;
+    width: 2px;
+    height: 8px;
+    background: #000;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .top-shell {
+    background: var(--white);
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    box-shadow: 0 4px 14px rgba(31, 44, 68, 0.12);
+    position: relative;
+    z-index: 3;
+  }
+
+  .route-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 22px 6px;
+  }
+
+  .route-pill {
+    min-width: 0;
+    flex: 1;
+    height: 44px;
+    border: 0;
+    border-radius: 5px;
+    padding: 0 10px 0 12px;
+    background: #f0f8fd;
+    color: #3a4558;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .route-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  .view-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 8px;
+  }
+
+  .view-tab {
+    border: 0;
+    background: transparent;
+    height: 44px;
+    color: #7d8aa0;
+    font-size: 15px;
+    font-weight: 800;
+    position: relative;
+  }
+
+  .view-tab.active {
+    color: var(--ink);
+  }
+
+  .view-tab.active:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--primary);
+  }
+
+  .content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 16px 88px;
+  }
+
+  .segment {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 0 8px 18px;
+  }
+
+  .segment-btn {
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--white);
+    color: #3d4353;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: 0 4px 14px rgba(31, 44, 68, 0.04);
+  }
+
+  .segment-btn.active {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: 0 8px 14px rgba(21, 148, 207, 0.22);
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2px 22px;
+    color: var(--ink);
+  }
+
+  .filter-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+  }
+
+  .section-title {
+    padding: 0 2px 18px;
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 900;
+    color: #303247;
+    position: relative;
+  }
+
+  .section-title:after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    bottom: 7px;
+    width: 74px;
+    height: 3px;
+    border-radius: 99px;
+    background: var(--primary);
+  }
+
+  .quick-card,
+  .order-card {
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+
+  .quick-card {
+    padding: 14px;
+    border: 1px solid rgba(21, 148, 207, 0.12);
+  }
+
+  .quick-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .scan-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+
+  .quick-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+
+  .quick-meta {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    min-height: 46px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: var(--white);
+  }
+
+  .btn-primary:active {
+    background: var(--primary-dark);
+  }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--primary);
+    border-color: #bfe5f6;
+  }
+
+  .btn-ghost {
+    background: #f8fafc;
+    color: #5f6b7d;
+    border-color: var(--line);
+  }
+
+  .full-btn {
+    width: 100%;
+  }
+
+  .filter-chips {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -10px 0 16px;
+  }
+
+  .filter-chips.show {
+    display: flex;
+  }
+
+  .chip {
+    border: 1px solid #d9e2ec;
+    background: var(--white);
+    border-radius: 999px;
+    color: #4d5869;
+    font-size: 12px;
+    font-weight: 750;
+    padding: 8px 11px;
+  }
+
+  .chip.active {
+    background: var(--primary-soft);
+    border-color: #9fd6ee;
+    color: var(--primary-dark);
+  }
+
+  .order-card {
+    padding: 16px 14px 14px;
+  }
+
+  .order-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 8px;
+  }
+
+  .store-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 1.2;
+    font-weight: 900;
+    color: #2c3045;
+  }
+
+  .store-name .icon {
+    width: 20px;
+    height: 20px;
+    color: #3b4257;
+    flex: 0 0 auto;
+  }
+
+  .info-btn {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+  }
+
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 0 8px 28px;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 11px;
+    font-weight: 850;
+  }
+
+  .tag-warning {
+    color: #a45b00;
+    background: var(--warning-soft);
+  }
+
+  .tag-success {
+    color: #146c3f;
+    background: var(--success-soft);
+  }
+
+  .tag-info {
+    color: #096d9d;
+    background: var(--primary-soft);
+  }
+
+  .card-line {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 6px;
+    color: var(--ink);
+    align-items: start;
+    padding: 2px 0;
+    font-size: 14px;
+  }
+
+  .card-line .icon {
+    width: 19px;
+    height: 19px;
+    color: #3c4358;
+    margin-left: 2px;
+  }
+
+  .line-value {
+    min-width: 0;
+    line-height: 1.35;
+  }
+
+  .line-side {
+    color: #6b7280;
+    white-space: nowrap;
+  }
+
+  .amount-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .amount-box {
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #edf1f5;
+    padding: 9px;
+  }
+
+  .amount-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .amount-value {
+    margin-top: 3px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .product-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #edf1f5;
+    padding: 9px 10px;
+    margin: 10px 0 12px;
+    color: var(--ink);
+  }
+
+  .product-summary-title {
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .product-summary-meta {
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .product-summary-value {
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .single-action {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 72px;
+    background: var(--white);
+    box-shadow: 0 -1px 12px rgba(31, 44, 68, 0.10);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    z-index: 5;
+  }
+
+  .nav-item {
+    border: 0;
+    background: transparent;
+    color: #7a8799;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .nav-item.active {
+    color: var(--primary);
+    font-weight: 850;
+  }
+
+  .nav-item .icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .sheet-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: none;
+    background: rgba(18, 24, 38, 0.42);
+  }
+
+  .sheet-layer.open {
+    display: block;
+  }
+
+  .bottom-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 91%;
+    min-height: 72%;
+    background: var(--white);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -20px 44px rgba(15, 23, 42, 0.24);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: sheetIn 0.18s ease-out;
+  }
+
+  @keyframes sheetIn {
+    from { transform: translateY(22px); opacity: 0.7; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .sheet-header {
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sheet-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+
+  .sheet-close {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #f3f5f8;
+    color: #4b5565;
+    display: grid;
+    place-items: center;
+  }
+
+  .sheet-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    background: var(--bg);
+    padding: 14px 16px;
+  }
+
+  .camera-view {
+    height: 330px;
+    border-radius: 18px;
+    background:
+      linear-gradient(140deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+      #111827;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 42px;
+    right: 42px;
+    top: 58px;
+    height: 2px;
+    background: var(--primary);
+    box-shadow: 0 0 16px rgba(21, 148, 207, 0.85);
+    animation: scanMove 2.2s linear infinite;
+  }
+
+  @keyframes scanMove {
+    0% { transform: translateY(0); opacity: 0.35; }
+    45% { transform: translateY(185px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 0.35; }
+  }
+
+  .doc-frame {
+    position: absolute;
+    left: 38px;
+    right: 38px;
+    top: 48px;
+    bottom: 44px;
+    border-radius: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.82);
+  }
+
+  .paper {
+    position: absolute;
+    left: 58px;
+    right: 58px;
+    top: 70px;
+    bottom: 66px;
+    border-radius: 8px;
+    background: #f9fafb;
+    transform: rotate(-2deg);
+    padding: 20px 18px;
+  }
+
+  .paper-line {
+    height: 8px;
+    border-radius: 99px;
+    background: #d5dce7;
+    margin-bottom: 12px;
+  }
+
+  .paper-line.short { width: 55%; }
+  .paper-line.mid { width: 78%; }
+
+  .paper-total {
+    margin-top: 18px;
+    height: 28px;
+    border-radius: 8px;
+    background: #eaf8f0;
+    border: 1px solid #bddfc9;
+  }
+
+  .camera-caption {
+    margin-top: 12px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    padding: 12px;
+  }
+
+  .caption-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+
+  .caption-text {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .sheet-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: var(--white);
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .sheet-actions.one {
+    grid-template-columns: 1fr;
+  }
+
+  .ocr-result {
+    display: none;
+  }
+
+  .ocr-result.active,
+  .ocr-camera.active {
+    display: block;
+  }
+
+  .ocr-camera {
+    display: none;
+  }
+
+  .result-summary {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px;
+    margin-bottom: 12px;
+  }
+
+  .result-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .result-code {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .confidence {
+    border-radius: 999px;
+    background: var(--success-soft);
+    color: #137041;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+
+  .field-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 106px 1fr;
+    gap: 8px;
+    min-height: 48px;
+    padding: 11px 12px;
+    border-bottom: 1px solid #eef2f6;
+    align-items: center;
+  }
+
+  .field-row:last-child {
+    border-bottom: 0;
+  }
+
+  .field-label {
+    color: #738096;
+    font-size: 12px;
+    font-weight: 750;
+  }
+
+  .field-value {
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .editable-note {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #fff7e6;
+    border: 1px solid #f5d58b;
+    color: #8a5700;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 750;
+  }
+
+  .edit-field {
+    width: 100%;
+    border: 1px solid #cbd8e6;
+    background: var(--white);
+    border-radius: 8px;
+    padding: 9px 10px;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 800;
+    text-align: right;
+    outline: none;
+    box-shadow: 0 2px 7px rgba(15, 23, 42, 0.06);
+  }
+
+  .edit-field:focus {
+    border-color: #80cbed;
+    box-shadow: 0 0 0 3px rgba(21, 148, 207, 0.12);
+    background: var(--white);
+  }
+
+  textarea.edit-field {
+    resize: vertical;
+    min-height: 64px;
+    line-height: 1.35;
+  }
+
+  .product-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .product-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px;
+    border-bottom: 1px solid #eef2f6;
+  }
+
+  .product-card-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+
+  .product-card-count {
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 11px;
+    font-weight: 900;
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+
+  .product-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 11px 12px;
+    border-bottom: 1px solid #eef2f6;
+  }
+
+  .product-item:last-child {
+    border-bottom: 0;
+  }
+
+  .product-name {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.35;
+  }
+
+  .product-meta {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .product-money {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 900;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .product-qty {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .product-total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-top: 1px solid #eef2f6;
+  }
+
+  .product-total-label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .product-total-value {
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 950;
+  }
+
+  .product-input {
+    width: 100%;
+    border: 1px solid #cbd8e6;
+    border-radius: 7px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    box-shadow: 0 2px 7px rgba(15, 23, 42, 0.06);
+  }
+
+  .product-input:focus {
+    border-color: #80cbed;
+    box-shadow: 0 0 0 3px rgba(21, 148, 207, 0.12);
+    background: var(--white);
+  }
+
+  .product-name-input {
+    padding: 8px 9px;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .product-code-input {
+    padding: 8px 9px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .product-meta-row {
+    display: grid;
+    grid-template-columns: 1fr 74px;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .product-meta-input {
+    padding: 7px 8px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 750;
+  }
+
+  .product-side-input {
+    padding: 8px 7px;
+    font-size: 12px;
+    font-weight: 900;
+    text-align: right;
+  }
+
+  .product-side-input + .product-side-input {
+    margin-top: 6px;
+  }
+
+  .product-field {
+    display: block;
+  }
+
+  .product-field + .product-field,
+  .product-calc-row {
+    margin-top: 7px;
+  }
+
+  .mini-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 850;
+  }
+
+  .product-calc-row {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 6px;
+  }
+
+  .product-total-side {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr 70px;
+    gap: 7px;
+    align-items: end;
+    padding: 9px;
+    border: 1px solid #e0e8f1;
+    border-radius: 9px;
+    background: #f8fafc;
+  }
+
+  .product-total-side .mini-label {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  .product-total-input {
+    background: #eef8fd;
+    border-color: #9fd6ee;
+  }
+
+  .remove-product-btn {
+    width: 100%;
+    min-height: 34px;
+    margin-top: 0;
+    border: 1px solid #f1c0c2;
+    border-radius: 7px;
+    background: #fff5f5;
+    color: var(--danger);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .product-add-row {
+    padding: 12px;
+    border-bottom: 1px solid #eef2f6;
+    background: #fbfdff;
+  }
+
+  .delivery-note {
+    background: var(--white);
+    border: 1px solid #bfe5f6;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+
+  .delivery-note-title {
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .delivery-note-text {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .toast {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 84px;
+    z-index: 40;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    border-radius: 12px;
+    background: #102032;
+    color: #fff;
+    padding: 12px 13px;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.28);
+    font-size: 13px;
+    font-weight: 750;
+  }
+
+  .toast.show {
+    display: flex;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 0;
+      background: var(--bg);
+    }
+
+    .phone {
+      width: 100%;
+      min-height: 100vh;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .screen {
+      height: 100vh;
+      border-radius: 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="phone">
+    <section class="screen" aria-label="OCR đơn giao hàng">
+      <div class="status-bar">
+        <span>08:41</span>
+        <div class="status-icons" aria-hidden="true">
+          <span class="signal"><span></span><span></span><span></span><span></span></span>
+          <span class="wifi"><span class="wifi-dot"></span></span>
+          <span class="battery">85</span>
+        </div>
+      </div>
+
+      <header class="top-shell">
+        <div class="route-row">
+          <button class="route-pill" type="button" aria-label="Chọn tuyến">
+            <span class="route-text">16/06 - [FVQRT2205109126] Tuyến Qin Test CKS</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Tìm kiếm">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.8-3.8"></path></svg>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Lịch sử">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 3v6h6"></path><path d="M12 7v5l3 2"></path></svg>
+          </button>
+        </div>
+        <div class="view-tabs" role="tablist" aria-label="Chế độ xem">
+          <button class="view-tab" type="button">Bản đồ</button>
+          <button class="view-tab active" type="button">Danh sách</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="segment" aria-label="Nhóm đơn">
+          <button class="segment-btn active" type="button" data-list-tab="ocr">Đơn OCR</button>
+          <button class="segment-btn" type="button" data-list-tab="created">Đã tạo đơn</button>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-label icon-btn" style="width:auto; height:auto;" type="button" id="filterToggle">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg>
+            <span>Bộ lọc</span>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Mở bộ lọc" id="filterIcon">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18l-7 8v6l-4 2v-8Z"></path></svg>
+          </button>
+        </div>
+
+        <div class="filter-chips" id="filterChips">
+          <button class="chip active" type="button">Tất cả</button>
+          <button class="chip" type="button">Chờ OCR</button>
+          <button class="chip" type="button">Cần kiểm tra</button>
+          <button class="chip" type="button">Đã tạo đơn</button>
+        </div>
+
+        <h1 class="section-title" id="listTitle">OCR đơn giao hàng (2)</h1>
+
+        <section class="quick-card" id="quickScanCard">
+          <div class="quick-head">
+            <div class="scan-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h4"></path><path d="M14 3h4"></path><path d="M6 21h4"></path><path d="M14 21h4"></path><path d="M3 6v4"></path><path d="M21 6v4"></path><path d="M3 14v4"></path><path d="M21 14v4"></path><path d="M8 8h8v8H8z"></path></svg>
+            </div>
+            <div>
+              <div class="quick-title">Quét PXK/Đơn hàng</div>
+              <div class="quick-meta">OCR thông tin đơn, sản phẩm và tự nhận giao.</div>
+            </div>
+          </div>
+          <button class="btn-primary full-btn" type="button" id="scanButton">Quét OCR</button>
+        </section>
+
+        <section id="orderList">
+          <article class="order-card" data-status="ocr">
+            <div class="order-top">
+              <div class="store-name">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+                <span>Hào Sữa Store</span>
+              </div>
+              <button class="info-btn" type="button" aria-label="Xem thông tin">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+              </button>
+            </div>
+            <div class="status-tag tag-warning">PXK chưa tạo đơn</div>
+            <div class="card-line">
+              <span></span>
+              <span class="line-value">0328839644</span>
+              <span class="line-side">7m</span>
+            </div>
+            <div class="card-line">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M3 12h18"></path><path d="M3 18h18"></path></svg>
+              <span class="line-value">34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh</span>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+            </div>
+            <div class="amount-row">
+              <div class="amount-box"><div class="amount-label">Mã chứng từ</div><div class="amount-value">PXK-09126</div></div>
+              <div class="amount-box"><div class="amount-label">Tiền thu hộ</div><div class="amount-value">1.850.000đ</div></div>
+            </div>
+            <div class="product-summary">
+              <div>
+                <div class="product-summary-title">Sản phẩm OCR</div>
+                <div class="product-summary-meta">3 dòng hàng · 38 đơn vị</div>
+              </div>
+              <div class="product-summary-value">1.850.000đ</div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-secondary" type="button" data-open-result>Xem OCR</button>
+              <button class="btn-primary" type="button" data-create-from-card>Tạo đơn</button>
+            </div>
+          </article>
+
+          <article class="order-card" data-status="review">
+            <div class="order-top">
+              <div class="store-name">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+                <span>CH ip 140</span>
+              </div>
+              <button class="info-btn" type="button" aria-label="Xem thông tin">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+              </button>
+            </div>
+            <div class="status-tag tag-info">Cần kiểm tra địa chỉ</div>
+            <div class="card-line">
+              <span></span>
+              <span class="line-value">0399988940</span>
+              <span class="line-side">7m</span>
+            </div>
+            <div class="card-line">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M3 12h18"></path><path d="M3 18h18"></path></svg>
+              <span class="line-value">12 Lê Lợi, Phường Bến Thành, TP. Hồ Chí Minh</span>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+            </div>
+            <div class="amount-row">
+              <div class="amount-box"><div class="amount-label">Mã chứng từ</div><div class="amount-value">SO-240616</div></div>
+              <div class="amount-box"><div class="amount-label">Tiền thu hộ</div><div class="amount-value">920.000đ</div></div>
+            </div>
+            <div class="product-summary">
+              <div>
+                <div class="product-summary-title">Sản phẩm OCR</div>
+                <div class="product-summary-meta">2 dòng hàng · 15 đơn vị</div>
+              </div>
+              <div class="product-summary-value">920.000đ</div>
+            </div>
+            <div class="card-actions single-action">
+              <button class="btn-primary" type="button" data-open-result>Kiểm tra OCR</button>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <nav class="bottom-nav" aria-label="Điều hướng">
+        <button class="nav-item" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 6-3 6 3 6-3v13l-6 3-6-3-6 3Z"></path><path d="M9 4v13"></path><path d="M15 7v13"></path></svg>
+          <span>Viếng thăm</span>
+        </button>
+        <button class="nav-item" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V9"></path><path d="M12 20V4"></path><path d="M19 20v-7"></path><path d="M3 20h18"></path></svg>
+          <span>Báo cáo</span>
+        </button>
+        <button class="nav-item active" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle><path d="M2 3h3l3 12h10l3-8H7"></path></svg>
+          <span>Đơn hàng</span>
+        </button>
+        <button class="nav-item" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>
+          <span>Khác</span>
+        </button>
+      </nav>
+
+      <div class="sheet-layer" id="ocrSheet">
+        <div class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+          <div class="sheet-header">
+            <div class="sheet-title" id="sheetTitle">OCR đơn giao hàng</div>
+            <button class="sheet-close" type="button" id="closeSheet" aria-label="Đóng">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+
+          <div class="sheet-body">
+            <section class="ocr-camera active" id="ocrCameraStep">
+              <div class="camera-view">
+                <div class="doc-frame"></div>
+                <div class="paper">
+                  <div class="paper-line short"></div>
+                  <div class="paper-line"></div>
+                  <div class="paper-line mid"></div>
+                  <div class="paper-line"></div>
+                  <div class="paper-line short"></div>
+                  <div class="paper-total"></div>
+                </div>
+                <div class="scan-line"></div>
+              </div>
+              <div class="camera-caption">
+                <div class="caption-title">Phiếu xuất kho / đơn hàng</div>
+                <div class="caption-text">Canh đủ 4 góc chứng từ, hệ thống sẽ đọc thông tin cửa hàng, địa chỉ, sản phẩm và số tiền thu hộ.</div>
+              </div>
+            </section>
+
+            <section class="ocr-result" id="ocrResultStep">
+              <div class="result-summary">
+                <div class="result-head">
+                  <div>
+                    <div class="result-code">PXK-240616-09126</div>
+                    <div class="quick-meta">Nguồn: OCR từ phiếu xuất kho · 3 sản phẩm</div>
+                  </div>
+                  <span class="confidence">Tin cậy 96%</span>
+                </div>
+              </div>
+
+              <div class="editable-note">Thông tin OCR có thể chỉnh lại trước khi tạo đơn giao.</div>
+
+              <div class="field-card">
+                <div class="field-row"><label class="field-label" for="ocrStoreInput">Cửa hàng</label><input class="edit-field" id="ocrStoreInput" value="Hào Sữa Store"></div>
+                <div class="field-row"><label class="field-label" for="ocrPhoneInput">Số điện thoại</label><input class="edit-field" id="ocrPhoneInput" value="0328839644"></div>
+                <div class="field-row"><label class="field-label" for="ocrAddressInput">Địa chỉ giao</label><textarea class="edit-field" id="ocrAddressInput">34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh</textarea></div>
+                <div class="field-row"><label class="field-label" for="ocrAmountInput">Tiền thu hộ</label><input class="edit-field" id="ocrAmountInput" value="1.850.000đ"></div>
+                <div class="field-row">
+                  <label class="field-label" for="ocrDriverSelect">Tài xế</label>
+                  <select class="edit-field" id="ocrDriverSelect">
+                    <option selected>TX001 - Nguyễn Văn Dũng</option>
+                    <option>TX006 - Lê Thanh Tùng</option>
+                    <option>TX014 - Trần Minh Khoa</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="product-card-head">
+                  <div class="product-card-title">Sản phẩm OCR</div>
+                  <div class="product-card-count" id="productCountLabel">3 dòng hàng</div>
+                </div>
+                <div class="product-item" data-product-row>
+                  <div>
+                    <label class="product-field">
+                      <span class="mini-label">Mã SP</span>
+                      <input class="product-input product-code-input" data-product-code value="GP900" aria-label="Mã sản phẩm 1">
+                    </label>
+                    <label class="product-field">
+                      <span class="mini-label">Tên SP</span>
+                      <input class="product-input product-name-input" data-product-name value="Sữa bột Grow Plus 900g" aria-label="Tên sản phẩm 1">
+                    </label>
+                    <div class="product-calc-row">
+                      <label class="product-field">
+                        <span class="mini-label">SL</span>
+                        <input class="product-input product-meta-input" data-product-qty inputmode="numeric" value="4" aria-label="Số lượng sản phẩm 1">
+                      </label>
+                      <label class="product-field">
+                        <span class="mini-label">Đơn giá</span>
+                        <input class="product-input product-meta-input" data-product-price inputmode="numeric" value="320.000đ" aria-label="Đơn giá sản phẩm 1">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="product-total-side">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-side-input product-total-input" data-product-total value="1.280.000đ" readonly aria-label="Thành tiền sản phẩm 1">
+                    <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                  </div>
+                </div>
+                <div class="product-item" data-product-row>
+                  <div>
+                    <label class="product-field">
+                      <span class="mini-label">Mã SP</span>
+                      <input class="product-input product-code-input" data-product-code value="VNM180" aria-label="Mã sản phẩm 2">
+                    </label>
+                    <label class="product-field">
+                      <span class="mini-label">Tên SP</span>
+                      <input class="product-input product-name-input" data-product-name value="Sữa tươi Vinamilk 180ml" aria-label="Tên sản phẩm 2">
+                    </label>
+                    <div class="product-calc-row">
+                      <label class="product-field">
+                        <span class="mini-label">SL</span>
+                        <input class="product-input product-meta-input" data-product-qty inputmode="numeric" value="24" aria-label="Số lượng sản phẩm 2">
+                      </label>
+                      <label class="product-field">
+                        <span class="mini-label">Đơn giá</span>
+                        <input class="product-input product-meta-input" data-product-price inputmode="numeric" value="10.000đ" aria-label="Đơn giá sản phẩm 2">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="product-total-side">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-side-input product-total-input" data-product-total value="240.000đ" readonly aria-label="Thành tiền sản phẩm 2">
+                    <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                  </div>
+                </div>
+                <div class="product-item" data-product-row>
+                  <div>
+                    <label class="product-field">
+                      <span class="mini-label">Mã SP</span>
+                      <input class="product-input product-code-input" data-product-code value="MILO4" aria-label="Mã sản phẩm 3">
+                    </label>
+                    <label class="product-field">
+                      <span class="mini-label">Tên SP</span>
+                      <input class="product-input product-name-input" data-product-name value="Milo lốc 4 hộp" aria-label="Tên sản phẩm 3">
+                    </label>
+                    <div class="product-calc-row">
+                      <label class="product-field">
+                        <span class="mini-label">SL</span>
+                        <input class="product-input product-meta-input" data-product-qty inputmode="numeric" value="10" aria-label="Số lượng sản phẩm 3">
+                      </label>
+                      <label class="product-field">
+                        <span class="mini-label">Đơn giá</span>
+                        <input class="product-input product-meta-input" data-product-price inputmode="numeric" value="33.000đ" aria-label="Đơn giá sản phẩm 3">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="product-total-side">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-side-input product-total-input" data-product-total value="330.000đ" readonly aria-label="Thành tiền sản phẩm 3">
+                    <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                  </div>
+                </div>
+                <div class="product-add-row">
+                  <button class="btn-secondary full-btn" type="button" id="addProductButton">+ Thêm sản phẩm</button>
+                </div>
+                <div class="product-total-row">
+                  <div class="product-total-label">Tổng tiền đơn hàng</div>
+                  <input class="product-input product-side-input product-total-input" id="ocrProductTotalInput" value="1.850.000đ" readonly aria-label="Tổng tiền đơn hàng">
+                </div>
+              </div>
+
+              <div class="delivery-note">
+                <div class="delivery-note-title">Thanh toán khi giao hàng</div>
+                <div class="delivery-note-text">Màn OCR chỉ tạo thông tin đơn giao. QR thanh toán sẽ hiển thị ở bước giao hàng.</div>
+              </div>
+            </section>
+          </div>
+
+          <div class="sheet-actions" id="cameraActions">
+            <button class="btn-ghost" type="button" id="cancelOcr">Hủy</button>
+            <button class="btn-primary" type="button" id="captureButton">Xác nhận</button>
+          </div>
+
+          <div class="sheet-actions hidden" id="resultActions">
+            <button class="btn-secondary" type="button" id="retakeButton">Quét lại</button>
+            <button class="btn-primary" type="button" id="createOrderButton">Tạo đơn giao</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span id="toastText">Đã tạo đơn giao từ OCR</span>
+      </div>
+    </section>
+  </main>
+
+<script>
+  const sheet = document.getElementById('ocrSheet');
+  const cameraStep = document.getElementById('ocrCameraStep');
+  const resultStep = document.getElementById('ocrResultStep');
+  const cameraActions = document.getElementById('cameraActions');
+  const resultActions = document.getElementById('resultActions');
+  const captureButton = document.getElementById('captureButton');
+  const toast = document.getElementById('toast');
+  const toastText = document.getElementById('toastText');
+  const listTitle = document.getElementById('listTitle');
+  const orderList = document.getElementById('orderList');
+  const quickScanCard = document.getElementById('quickScanCard');
+  let createdCount = 0;
+  let currentTab = 'ocr';
+
+  function openSheet(step) {
+    sheet.classList.add('open');
+    setSheetStep(step || 'camera');
+  }
+
+  function closeSheet() {
+    sheet.classList.remove('open');
+    captureButton.disabled = false;
+    captureButton.textContent = 'Xác nhận';
+  }
+
+  function setSheetStep(step) {
+    const showResult = step === 'result';
+    cameraStep.classList.toggle('active', !showResult);
+    resultStep.classList.toggle('active', showResult);
+    cameraActions.classList.toggle('hidden', showResult);
+    resultActions.classList.toggle('hidden', !showResult);
+  }
+
+  function showToast(message) {
+    toastText.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 2200);
+  }
+
+  function updateTitle() {
+    if (currentTab === 'created') {
+      listTitle.textContent = 'Đơn đã tạo (' + createdCount + ')';
+      return;
+    }
+    const ocrCards = orderList.querySelectorAll('[data-status="ocr"], [data-status="review"]').length;
+    listTitle.textContent = 'OCR đơn giao hàng (' + ocrCards + ')';
+  }
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function fieldValue(id, fallback) {
+    const field = document.getElementById(id);
+    return field && field.value.trim() ? field.value.trim() : fallback;
+  }
+
+  function productRows() {
+    return Array.from(document.querySelectorAll('[data-product-row]'));
+  }
+
+  function parseMoney(value) {
+    const numeric = String(value || '').replace(/[^\d-]/g, '');
+    return Number(numeric || 0);
+  }
+
+  function parseQty(value) {
+    const numeric = String(value || '').replace(/[^\d.,-]/g, '').replace(',', '.');
+    return Number(numeric || 0);
+  }
+
+  function formatMoney(value) {
+    return Math.round(Number(value || 0)).toLocaleString('vi-VN') + 'đ';
+  }
+
+  function formatQty(value) {
+    const qty = Number(value || 0);
+    return Number.isInteger(qty) ? String(qty) : qty.toFixed(2);
+  }
+
+  function getProductSummary() {
+    let total = 0;
+    let qty = 0;
+    const rows = productRows();
+
+    rows.forEach(function (row) {
+      const qtyField = row.querySelector('[data-product-qty]');
+      const priceField = row.querySelector('[data-product-price]');
+      const totalField = row.querySelector('[data-product-total]');
+      const rowQty = parseQty(qtyField ? qtyField.value : 0);
+      const rowPrice = parseMoney(priceField ? priceField.value : 0);
+      const rowTotal = rowQty * rowPrice;
+
+      qty += rowQty;
+      total += rowTotal;
+
+      if (totalField) {
+        totalField.value = formatMoney(rowTotal);
+      }
+    });
+
+    const countLabel = document.getElementById('productCountLabel');
+    const totalInput = document.getElementById('ocrProductTotalInput');
+    const amountInput = document.getElementById('ocrAmountInput');
+    const formattedTotal = formatMoney(total);
+
+    if (countLabel) {
+      countLabel.textContent = rows.length + ' dòng hàng';
+    }
+    if (totalInput) {
+      totalInput.value = formattedTotal;
+    }
+    if (amountInput) {
+      amountInput.value = formattedTotal;
+    }
+
+    return {
+      count: rows.length,
+      qty: formatQty(qty),
+      total: total,
+      formattedTotal: formattedTotal
+    };
+  }
+
+  function productRowTemplate(index) {
+    return `
+      <div class="product-item" data-product-row>
+        <div>
+          <label class="product-field">
+            <span class="mini-label">Mã SP</span>
+            <input class="product-input product-code-input" data-product-code value="" aria-label="Mã sản phẩm ${index}">
+          </label>
+          <label class="product-field">
+            <span class="mini-label">Tên SP</span>
+            <input class="product-input product-name-input" data-product-name value="" aria-label="Tên sản phẩm ${index}">
+          </label>
+          <div class="product-calc-row">
+            <label class="product-field">
+              <span class="mini-label">SL</span>
+              <input class="product-input product-meta-input" data-product-qty inputmode="numeric" value="1" aria-label="Số lượng sản phẩm ${index}">
+            </label>
+            <label class="product-field">
+              <span class="mini-label">Đơn giá</span>
+              <input class="product-input product-meta-input" data-product-price inputmode="numeric" value="0đ" aria-label="Đơn giá sản phẩm ${index}">
+            </label>
+          </div>
+        </div>
+        <div class="product-total-side">
+          <span class="mini-label">Thành tiền</span>
+          <input class="product-input product-side-input product-total-input" data-product-total value="0đ" readonly aria-label="Thành tiền sản phẩm ${index}">
+          <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+        </div>
+      </div>`;
+  }
+
+  function addProductRow() {
+    const addRow = document.querySelector('.product-add-row');
+    const nextIndex = productRows().length + 1;
+    addRow.insertAdjacentHTML('beforebegin', productRowTemplate(nextIndex));
+    getProductSummary();
+    const newRow = productRows()[productRows().length - 1];
+    const firstInput = newRow && newRow.querySelector('[data-product-code]');
+    if (firstInput) firstInput.focus();
+  }
+
+  function addCreatedOrder() {
+    if (document.getElementById('createdFromOcr')) {
+      showToast('Đơn giao đã có trong danh sách');
+      return;
+    }
+
+    const productSummary = getProductSummary();
+    const store = escapeHtml(fieldValue('ocrStoreInput', 'Hào Sữa Store'));
+    const phone = escapeHtml(fieldValue('ocrPhoneInput', '0328839644'));
+    const address = escapeHtml(fieldValue('ocrAddressInput', '34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh'));
+    const total = escapeHtml(productSummary.formattedTotal);
+
+    const html = `
+      <article class="order-card" id="createdFromOcr" data-status="created">
+        <div class="order-top">
+          <div class="store-name">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+            <span>${store}</span>
+          </div>
+          <button class="info-btn" type="button" aria-label="Xem thông tin">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+          </button>
+        </div>
+        <div class="status-tag tag-success">Đã tạo đơn từ OCR</div>
+        <div class="card-line">
+          <span></span>
+          <span class="line-value">${phone}</span>
+          <span class="line-side">Vừa tạo</span>
+        </div>
+        <div class="card-line">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M3 12h18"></path><path d="M3 18h18"></path></svg>
+          <span class="line-value">${address}</span>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg>
+        </div>
+        <div class="amount-row">
+          <div class="amount-box"><div class="amount-label">Đơn giao</div><div class="amount-value">DG-240616-001</div></div>
+          <div class="amount-box"><div class="amount-label">Thanh toán</div><div class="amount-value">Khi giao hàng</div></div>
+        </div>
+        <div class="product-summary">
+          <div>
+            <div class="product-summary-title">Sản phẩm đã OCR</div>
+            <div class="product-summary-meta">${productSummary.count} dòng hàng · ${productSummary.qty} đơn vị</div>
+          </div>
+          <div class="product-summary-value">${total}</div>
+        </div>
+        <div class="card-actions single-action">
+          <button class="btn-primary" type="button" data-open-result>Xem đơn giao</button>
+        </div>
+      </article>`;
+
+    orderList.insertAdjacentHTML('afterbegin', html);
+    createdCount = 1;
+    applyListTab('created');
+  }
+
+  function applyListTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('[data-list-tab]').forEach(function (button) {
+      button.classList.toggle('active', button.dataset.listTab === tab);
+    });
+
+    const cards = orderList.querySelectorAll('.order-card');
+    cards.forEach(function (card) {
+      const isCreated = card.dataset.status === 'created';
+      card.classList.toggle('hidden', tab === 'created' ? !isCreated : isCreated);
+    });
+
+    quickScanCard.classList.toggle('hidden', tab === 'created');
+    updateTitle();
+  }
+
+  document.getElementById('scanButton').addEventListener('click', function () {
+    openSheet('camera');
+  });
+
+  document.getElementById('closeSheet').addEventListener('click', closeSheet);
+  document.getElementById('cancelOcr').addEventListener('click', closeSheet);
+  sheet.addEventListener('click', function (event) {
+    if (event.target === sheet) closeSheet();
+  });
+
+  captureButton.addEventListener('click', function () {
+    captureButton.disabled = true;
+    captureButton.textContent = 'Đang đọc OCR...';
+    setTimeout(function () {
+      captureButton.disabled = false;
+      captureButton.textContent = 'Xác nhận';
+      setSheetStep('result');
+    }, 650);
+  });
+
+  document.getElementById('retakeButton').addEventListener('click', function () {
+    setSheetStep('camera');
+  });
+
+  document.querySelector('.product-card').addEventListener('input', function (event) {
+    if (event.target.matches('[data-product-qty], [data-product-price]')) {
+      getProductSummary();
+    }
+  });
+
+  document.querySelector('.product-card').addEventListener('blur', function (event) {
+    if (event.target.matches('[data-product-price]')) {
+      event.target.value = formatMoney(parseMoney(event.target.value));
+      getProductSummary();
+    }
+  }, true);
+
+  document.querySelector('.product-card').addEventListener('click', function (event) {
+    if (event.target.closest('#addProductButton')) {
+      addProductRow();
+      showToast('Đã thêm dòng sản phẩm');
+    }
+
+    if (event.target.closest('[data-remove-product]')) {
+      if (productRows().length <= 1) {
+        showToast('Cần giữ ít nhất 1 sản phẩm');
+        return;
+      }
+      event.target.closest('[data-product-row]').remove();
+      getProductSummary();
+      showToast('Đã xóa dòng sản phẩm');
+    }
+  });
+
+  document.getElementById('createOrderButton').addEventListener('click', function () {
+    closeSheet();
+    addCreatedOrder();
+    showToast('Đã tạo đơn giao từ OCR');
+  });
+
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('[data-open-result]')) {
+      openSheet('result');
+    }
+
+    if (event.target.closest('[data-create-from-card]')) {
+      addCreatedOrder();
+      showToast('Đã tạo đơn giao và tự nhận cho tài xế');
+    }
+  });
+
+  document.querySelectorAll('[data-list-tab]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      applyListTab(button.dataset.listTab);
+    });
+  });
+
+  document.getElementById('filterToggle').addEventListener('click', function () {
+    document.getElementById('filterChips').classList.toggle('show');
+  });
+
+  document.getElementById('filterIcon').addEventListener('click', function () {
+    document.getElementById('filterChips').classList.toggle('show');
+  });
+
+  document.querySelectorAll('.chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      document.querySelectorAll('.chip').forEach(function (item) { item.classList.remove('active'); });
+      chip.classList.add('active');
+      showToast('Đã áp dụng bộ lọc: ' + chip.textContent);
+    });
+  });
+
+  getProductSummary();
+</script>
+</body>
+</html>

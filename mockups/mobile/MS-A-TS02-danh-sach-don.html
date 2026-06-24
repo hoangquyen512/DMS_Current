@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-TS02 — Danh sách Đơn Đăng ký Tài sản</title>
+<style>
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--primary-500);
+    color: white;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 13px; }
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow { font-size: 22px; cursor: pointer; }
+  .app-header h1 { font-size: 17px; font-weight: 600; flex: 1; text-align: center; margin-right: 22px; }
+  .content { flex: 1; overflow-y: auto; background: var(--neutral-50); }
+
+  /* Search bar */
+  .search-bar {
+    padding: 10px 16px;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .search-input {
+    background: var(--neutral-100);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 14px;
+    width: 100%;
+    color: var(--neutral-500);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Filter chips */
+  .filter-chips {
+    display: flex;
+    gap: 6px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    white-space: nowrap;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--neutral-200);
+    background: var(--neutral-0);
+    color: var(--neutral-700);
+    cursor: pointer;
+  }
+  .chip.active {
+    background: var(--primary-500);
+    color: white;
+    border-color: var(--primary-500);
+  }
+  .chip .count {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 0 5px;
+    font-size: 11px;
+    margin-left: 3px;
+  }
+  .chip:not(.active) .count {
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+  }
+
+  /* Advanced filter bar */
+  .adv-filter-bar {
+    padding: 8px 16px;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--primary-50);
+    border: 1px solid var(--primary-500);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--primary-600);
+    font-weight: 500;
+  }
+  .filter-tag .remove { color: var(--primary-500); font-size: 14px; cursor: pointer; }
+  .btn-adv-filter {
+    margin-left: auto;
+    padding: 4px 10px;
+    border: 1px solid var(--neutral-300);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--neutral-700);
+    background: var(--neutral-0);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Order card */
+  .order-card {
+    background: var(--neutral-0);
+    margin: 6px 16px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--neutral-200);
+  }
+  .order-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .order-code { font-size: 12px; font-family: 'SF Mono', Consolas, monospace; color: var(--primary-600); font-weight: 600; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-pending { background: var(--warning-50); color: var(--warning-700); }
+  .badge-success { background: var(--success-50); color: var(--success-700); }
+  .badge-rejected { background: var(--error-50); color: var(--error-700); }
+  .badge-cancelled { background: var(--neutral-100); color: var(--neutral-500); }
+  .order-store { font-size: 13px; font-weight: 500; color: var(--neutral-900); }
+  .order-meta { font-size: 12px; color: var(--neutral-500); margin-top: 2px; }
+  .order-asset-summary { font-size: 12px; color: var(--neutral-700); margin-top: 4px; }
+  .order-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .tag-small {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .tag-dinh-danh { background: #EDE9FE; color: #5B21B6; }
+  .tag-posm { background: #FEF3C7; color: #92400E; }
+  .tag-tot { background: #D1FAE5; color: #065F46; }
+
+  /* FAB */
+  .fab {
+    position: sticky;
+    bottom: 16px;
+    right: 16px;
+    float: right;
+    margin-right: 16px;
+    width: 48px;
+    height: 48px;
+    background: var(--primary-500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.5);
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+
+  /* Bottom sheet overlay */
+  .bottom-sheet-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.35);
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+  .bottom-sheet {
+    background: var(--neutral-0);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding: 16px;
+  }
+  .bs-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--neutral-300);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .bs-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); margin-bottom: 12px; }
+  .bs-section { margin-bottom: 14px; }
+  .bs-label { font-size: 12px; color: var(--neutral-500); margin-bottom: 6px; font-weight: 500; }
+  .bs-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bs-chip {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    border: 1px solid var(--neutral-200);
+    background: var(--neutral-50);
+    color: var(--neutral-700);
+    cursor: pointer;
+  }
+  .bs-chip.selected { background: var(--primary-50); border-color: var(--primary-500); color: var(--primary-600); font-weight: 600; }
+  .bs-date-row { display: flex; gap: 8px; }
+  .bs-date-input {
+    flex: 1;
+    background: var(--neutral-100);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--neutral-700);
+    border: none;
+  }
+  .bs-footer { display: flex; gap: 8px; padding-top: 4px; }
+  .btn-primary-mobile {
+    flex: 1;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-secondary-mobile {
+    flex: 1;
+    background: var(--neutral-0);
+    color: var(--primary-600);
+    border: 1.5px solid var(--primary-500);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 8px; }
+  .empty-title { font-size: 15px; font-weight: 600; color: var(--neutral-700); margin-bottom: 4px; }
+  .empty-desc { font-size: 13px; color: var(--neutral-500); }
+
+  .bottom-msg { text-align: center; padding: 16px; color: var(--neutral-500); font-size: 12px; }
+  .hint { color: rgba(255,255,255,0.5); font-size: 12px; text-align: center; margin-top: 16px; font-family: 'SF Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- STATE 1: DEFAULT — có danh sách đơn, filter Chờ duyệt đang active -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Đơn đăng ký tài sản</h1>
+      </div>
+      <div class="content">
+
+        <div class="search-bar">
+          <div class="search-input">🔍 Tìm mã đơn, tên cửa hàng...</div>
+        </div>
+
+        <div class="filter-chips">
+          <div class="chip">Tất cả <span class="count">14</span></div>
+          <div class="chip active">Chờ duyệt <span class="count">5</span></div>
+          <div class="chip">Đã duyệt <span class="count">8</span></div>
+          <div class="chip">Từ chối <span class="count">1</span></div>
+          <div class="chip">Đã hủy <span class="count">0</span></div>
+        </div>
+
+        <div class="adv-filter-bar">
+          <div class="filter-tag">📦 Hàng định danh <span class="remove">×</span></div>
+          <button class="btn-adv-filter">⚙️ Lọc thêm</button>
+        </div>
+
+        <!-- Cards: chỉ hiện Chờ duyệt (5) -->
+        <div style="padding-top:6px;">
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-code">DKTS200520261047</span>
+              <span class="badge badge-pending">⏳ Chờ duyệt</span>
+            </div>
+            <div class="order-store">Tạp hoá Minh Tuấn</div>
+            <div class="order-meta">20/05/2026 · 2 tài sản</div>
+            <div class="order-asset-summary">Tủ mát Finviet 100L (3)...</div>
+            <div class="order-tags">
+              <span class="tag-small tag-dinh-danh">Định danh</span>
+            </div>
+          </div>
+
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-code">DKTS190520263847</span>
+              <span class="badge badge-pending">⏳ Chờ duyệt</span>
+            </div>
+            <div class="order-store">Tạp hoá Minh Tuấn</div>
+            <div class="order-meta">19/05/2026 · 3 tài sản</div>
+            <div class="order-asset-summary">Tủ mát 100L (3) · Kệ POSM A4 (5)...</div>
+            <div class="order-tags">
+              <span class="tag-small tag-dinh-danh">Định danh</span>
+              <span class="tag-small tag-posm">POSM</span>
+            </div>
+          </div>
+
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-code">DKTS180520264291</span>
+              <span class="badge badge-pending">⏳ Chờ duyệt</span>
+            </div>
+            <div class="order-store">Siêu thị Mini Ánh Ngân</div>
+            <div class="order-meta">18/05/2026 · 2 tài sản</div>
+            <div class="order-asset-summary">Băng rôn treo 3×1m (2)</div>
+            <div class="order-tags">
+              <span class="tag-small tag-posm">POSM</span>
+            </div>
+          </div>
+
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-code">DKTS170520261803</span>
+              <span class="badge badge-pending">⏳ Chờ duyệt</span>
+            </div>
+            <div class="order-store">CH Bách hoá Nguyễn Trãi</div>
+            <div class="order-meta">17/05/2026 · 1 tài sản</div>
+            <div class="order-asset-summary">Standee đứng 60×160 (1)</div>
+            <div class="order-tags">
+              <span class="tag-small tag-posm">POSM</span>
+            </div>
+          </div>
+
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-code">DKTS160520265001</span>
+              <span class="badge badge-pending">⏳ Chờ duyệt</span>
+            </div>
+            <div class="order-store">Siêu thị Ngọc Hân</div>
+            <div class="order-meta">16/05/2026 · 2 tài sản</div>
+            <div class="order-asset-summary">Bảng hiệu đèn LED (1) · Ô che nắng (2)</div>
+            <div class="order-tags">
+              <span class="tag-small tag-dinh-danh">Định danh</span>
+              <span class="tag-small tag-tot">ToT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-msg">Hiển thị 5 / 5 đơn chờ duyệt</div>
+        <div class="fab">+</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS02 · Danh sách đơn · State 1: Default (filter Chờ duyệt)</div>
+</div>
+
+<!-- STATE 2: EMPTY — kết quả lọc không có đơn -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Đơn đăng ký tài sản</h1>
+      </div>
+      <div class="content">
+
+        <div class="search-bar">
+          <div class="search-input">🔍 DKTS999999...</div>
+        </div>
+
+        <div class="filter-chips">
+          <div class="chip active">Tất cả <span class="count">0</span></div>
+          <div class="chip">Chờ duyệt <span class="count">0</span></div>
+          <div class="chip">Đã duyệt <span class="count">0</span></div>
+          <div class="chip">Từ chối <span class="count">0</span></div>
+          <div class="chip">Đã hủy <span class="count">0</span></div>
+        </div>
+
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">Không tìm thấy đơn nào</div>
+          <div class="empty-desc">Thử thay đổi từ khoá hoặc bộ lọc</div>
+        </div>
+
+        <div class="fab">+</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS02 · Danh sách đơn · State 2: Empty (no search result)</div>
+</div>
+
+<!-- STATE 3: BOTTOM SHEET — Lọc nâng cao mở -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Đơn đăng ký tài sản</h1>
+      </div>
+      <div class="content" style="position:relative; overflow:hidden;">
+        <!-- Blurred background content -->
+        <div style="filter:blur(2px); pointer-events:none;">
+          <div class="search-bar">
+            <div class="search-input">🔍 Tìm mã đơn, tên cửa hàng...</div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active">Tất cả <span class="count">14</span></div>
+          </div>
+          <div class="order-card" style="margin:12px 16px;">
+            <div class="order-code">DKTS200520261047</div>
+          </div>
+        </div>
+
+        <!-- Bottom sheet -->
+        <div class="bottom-sheet-overlay">
+          <div class="bottom-sheet">
+            <div class="bs-handle"></div>
+            <div class="bs-title">Lọc nâng cao</div>
+
+            <div class="bs-section">
+              <div class="bs-label">Nhóm tài sản</div>
+              <div class="bs-chips">
+                <div class="bs-chip selected">Hàng định danh</div>
+                <div class="bs-chip">POSM</div>
+                <div class="bs-chip">ToT</div>
+              </div>
+            </div>
+
+            <div class="bs-section">
+              <div class="bs-label">Khoảng thời gian tạo đơn</div>
+              <div class="bs-date-row">
+                <div class="bs-date-input">📅 Từ ngày</div>
+                <div class="bs-date-input">📅 Đến ngày</div>
+              </div>
+            </div>
+
+            <div class="bs-section">
+              <div class="bs-label">Cửa hàng</div>
+              <div class="bs-date-input" style="border-radius:8px;">🔍 Tìm cửa hàng...</div>
+            </div>
+
+            <div class="bs-footer">
+              <button class="btn-secondary-mobile">Đặt lại</button>
+              <button class="btn-primary-mobile">Áp dụng</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS02 · Danh sách đơn · State 3: Bottom sheet lọc nâng cao</div>
+</div>
+
+</body>
+</html>

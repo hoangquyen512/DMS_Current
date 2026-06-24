@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-01 - Báo cáo viếng thăm cửa hàng</title>
+<style>
+  :root {
+    --primary-50:#EFF6FF; --primary-500:#3B82F6; --primary-600:#2563EB;
+    --neutral-0:#FFFFFF; --neutral-50:#F9FAFB; --neutral-100:#F3F4F6;
+    --neutral-200:#E5E7EB; --neutral-300:#D1D5DB; --neutral-500:#6B7280;
+    --neutral-700:#374151; --neutral-900:#111827;
+    --success-500:#10B981; --warning-500:#F59E0B; --error-500:#EF4444;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#1a1a2e; min-height:100vh; display:flex; flex-wrap:wrap;
+    gap:32px; padding:32px; justify-content:center; align-items:flex-start;
+  }
+  .phone { width:375px; background:#fff; border-radius:40px; padding:12px; box-shadow:0 0 0 12px #1f2937,0 0 0 14px #4b5563,0 25px 50px rgba(0,0,0,.5); overflow:hidden; }
+  .phone-screen { height:812px; border-radius:28px; overflow:hidden; display:flex; flex-direction:column; background:#fff; }
+  .status-bar { height:44px; padding:0 24px; display:flex; align-items:center; justify-content:space-between; font-size:15px; font-weight:600; color:var(--neutral-900); }
+  .app-header { min-height:56px; padding:12px 16px; background:var(--primary-500); color:white; display:flex; align-items:center; gap:12px; }
+  .back-arrow { font-size:22px; line-height:1; }
+  .app-header h1 { flex:1; text-align:center; font-size:17px; font-weight:600; }
+  .header-action { width:24px; text-align:right; }
+  .content { flex:1; min-height:0; overflow-y:auto; background:var(--neutral-50); }
+  .sticky-filter { position:sticky; top:0; z-index:2; background:white; border-bottom:1px solid var(--neutral-100); padding:12px 16px; }
+  .filter-line { display:flex; gap:8px; align-items:center; }
+  .date-pill { flex:1; border:1px solid var(--neutral-200); border-radius:999px; padding:8px 12px; text-align:center; font-size:14px; color:var(--neutral-700); background:white; }
+  .filter-button { width:42px; height:36px; border:1px solid var(--primary-500); background:var(--primary-50); color:var(--primary-600); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  .filter-glyph { width:16px; height:14px; display:inline-block; position:relative; color:inherit; }
+  .filter-glyph:before { content:""; position:absolute; left:1px; top:0; width:14px; height:8px; background:currentColor; clip-path:polygon(0 0,100% 0,60% 100%,40% 100%); }
+  .filter-glyph:after { content:""; position:absolute; left:6px; top:8px; width:4px; height:6px; border-radius:1px; background:currentColor; }
+  .search-bar { margin-top:10px; background:white; border:1px solid var(--neutral-200); border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px; }
+  .search-bar input { border:0; outline:0; flex:1; font-size:14px; background:transparent; color:var(--neutral-900); }
+  .section-title { padding:16px 16px 8px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:15px; font-weight:600; color:var(--neutral-900); }
+  .section-title .action { color:var(--primary-500); font-size:13px; font-weight:500; white-space:nowrap; }
+  .metric-card { margin:8px 16px; padding:12px; background:white; border:1px solid var(--neutral-100); border-radius:12px; }
+  .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .metric-box { background:var(--neutral-50); border:1px solid var(--neutral-100); border-radius:10px; padding:10px 6px; text-align:center; }
+  .metric-value { font-size:16px; font-weight:700; color:var(--neutral-900); }
+  .metric-label { margin-top:3px; font-size:11px; color:var(--neutral-500); }
+  .tabs { display:flex; gap:8px; padding:8px 16px 10px; background:white; border-bottom:1px solid var(--neutral-100); }
+  .tab { flex:1; border:1px solid var(--neutral-200); background:white; color:var(--neutral-700); border-radius:999px; padding:8px 10px; font-size:12px; font-weight:600; line-height:1.25; }
+  .tab.active { border-color:var(--primary-500); background:var(--primary-50); color:var(--primary-600); }
+  .caption-row { padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:10px; background:white; border-bottom:1px solid var(--neutral-100); }
+  .caption-label { color:var(--neutral-700); font-size:14px; font-weight:600; }
+  .caption-sub { display:block; color:var(--neutral-500); font-size:12px; font-weight:400; margin-top:2px; }
+  .caption-action { color:var(--primary-500); font-size:13px; font-weight:500; text-align:right; }
+  .card { margin:8px 16px; padding:12px; background:white; border:1px solid var(--neutral-100); border-radius:12px; display:flex; gap:12px; }
+  .card.unvisited { border:1.5px dashed var(--neutral-300); }
+  .card-avatar { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#fde68a,#fbbf24); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .card-body { flex:1; min-width:0; }
+  .card-title { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:var(--neutral-900); }
+  .card-meta { margin-top:2px; font-size:12px; color:var(--neutral-500); }
+  .card-address { margin-top:4px; font-size:12px; line-height:1.4; color:var(--neutral-700); }
+  .card-status { margin-top:6px; font-size:12px; font-weight:500; color:var(--error-500); }
+  .card-link { margin-top:8px; font-size:12px; font-weight:600; color:var(--primary-600); }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:500; white-space:nowrap; }
+  .badge-pending { background:var(--warning-500); color:white; }
+  .badge-success { background:var(--success-500); color:white; }
+  .order-info { display:flex; gap:16px; padding:8px 12px; margin:8px -12px -12px; border-top:1px solid var(--neutral-100); font-size:12px; }
+  .order-info-item { color:var(--neutral-700); }
+  .order-info-item strong { color:var(--neutral-900); margin-left:4px; }
+  .filter-scroll { flex:1; min-height:0; overflow-y:auto; padding-bottom:8px; }
+  .filter-group { margin:12px 16px; background:white; border:1px solid var(--neutral-100); border-radius:12px; overflow:hidden; }
+  .filter-row { padding:13px 12px; border-bottom:1px solid var(--neutral-100); }
+  .filter-row:last-child { border-bottom:0; }
+  .filter-label { margin-bottom:8px; font-size:13px; font-weight:600; color:var(--neutral-700); }
+  .filter-chip-row { display:flex; flex-wrap:wrap; gap:8px; margin:8px 16px; }
+  .filter-chip { border:1px solid var(--neutral-200); color:var(--neutral-700); background:white; border-radius:999px; padding:7px 12px; font-size:13px; }
+  .filter-chip.active { border-color:var(--primary-500); color:var(--primary-600); background:var(--primary-50); font-weight:600; }
+  .range-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .range-box { border:1px solid var(--neutral-200); border-radius:8px; padding:8px 10px; background:var(--neutral-50); }
+  .range-box span { display:block; margin-bottom:4px; font-size:11px; color:var(--neutral-500); }
+  .range-box strong { font-size:16px; color:var(--neutral-900); }
+  .counter-box { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .counter-btn { width:28px; height:28px; border-radius:8px; border:1px solid var(--neutral-200); background:white; color:var(--primary-600); font-size:16px; font-weight:700; }
+  .employee-search { border:1px solid var(--neutral-200); background:var(--neutral-50); border-radius:8px; padding:8px 10px; display:flex; align-items:center; gap:8px; margin-bottom:10px; color:var(--neutral-500); font-size:13px; }
+  .employee-tree { border:1px solid var(--neutral-100); border-radius:10px; overflow:hidden; background:white; }
+  .tree-row { min-height:34px; padding:7px 10px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--neutral-100); font-size:13px; color:var(--neutral-700); }
+  .tree-row:last-child { border-bottom:0; }
+  .tree-row.group { background:var(--neutral-50); color:var(--neutral-900); font-weight:700; }
+  .tree-row.manager { font-weight:600; }
+  .tree-indent-1 { padding-left:28px; }
+  .tree-indent-2 { padding-left:48px; }
+  .tree-row input { width:15px; height:15px; accent-color:var(--primary-500); flex-shrink:0; }
+  .tree-name { flex:1; min-width:0; }
+  .tree-meta { display:block; margin-top:1px; color:var(--neutral-500); font-size:11px; font-weight:400; }
+  .list-row { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--neutral-100); }
+  .list-row:last-child { border-bottom:0; }
+  .list-title { font-size:13px; font-weight:600; color:var(--neutral-900); }
+  .list-meta { margin-top:3px; font-size:12px; color:var(--neutral-500); }
+  .list-value { text-align:right; white-space:nowrap; font-size:13px; font-weight:600; color:var(--neutral-900); }
+  .status-pill { display:inline-block; margin-left:4px; padding:2px 7px; border-radius:999px; color:white; font-size:11px; font-weight:600; }
+  .status-processing { background:var(--warning-500); }
+  .status-success { background:var(--success-500); }
+  .status-failed { background:var(--error-500); }
+  .footer-actions { margin-top:auto; display:flex; gap:10px; padding:12px 16px 18px; background:white; border-top:1px solid var(--neutral-100); }
+  .btn { flex:1; border:1px solid var(--neutral-200); background:white; color:var(--neutral-700); border-radius:10px; padding:11px 14px; font-size:14px; font-weight:600; }
+  .btn-primary { background:var(--primary-500); border-color:var(--primary-500); color:white; }
+  .bottom-msg { text-align:center; padding:24px 16px 32px; color:var(--neutral-500); font-size:12px; }
+  .hint { color:rgba(255,255,255,.6); font-size:12px; text-align:center; margin-top:16px; font-family:"SF Mono",monospace; }
+</style>
+</head>
+<body>
+
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span>📶 📡 🔋</span></div>
+      <div class="app-header"><span class="back-arrow">←</span><h1>Báo cáo VT cửa hàng</h1><span class="header-action"><span class="filter-glyph"></span></span></div>
+      <div class="content">
+        <div class="sticky-filter">
+          <div class="filter-line"><div class="date-pill">📅 01/05/2026 - 28/05/2026</div><button class="filter-button"><span class="filter-glyph"></span></button></div>
+          <div class="search-bar"><span>🔍</span><input type="text" placeholder="Tìm theo Tên, Mã, SĐT cửa hàng"></div>
+        </div>
+        <div class="section-title"><span>Dashboard Từ ngày - Đến ngày</span><span class="action">01/05 - 28/05</span></div>
+        <div class="metric-card"><div class="metric-grid"><div class="metric-box"><div class="metric-value">84</div><div class="metric-label">Cửa hàng viếng thăm</div></div><div class="metric-box"><div class="metric-value">126</div><div class="metric-label">Đơn hàng</div></div><div class="metric-box"><div class="metric-value">86.4M</div><div class="metric-label">Doanh số</div></div></div></div>
+        <div class="tabs"><button class="tab active">Chi tiết viếng thăm</button><button class="tab">Danh sách đơn hàng</button></div>
+        <div class="section-title"><span>Chi tiết từng ngày</span><span class="action">Từ 01/05/2026 đến 28/05/2026</span></div>
+        <div class="caption-row"><span class="caption-label">28/05/2026<span class="caption-sub">Đã VT 15 · Chưa VT 4</span></span><span class="caption-action">Thu gọn ↑</span></div>
+        <div class="card">
+          <div class="card-avatar">🏪</div>
+          <div class="card-body"><div class="card-title">Tạp hóa Minh Anh <span class="badge badge-success">Đã VT</span></div><div class="card-meta">CH000318 · 0938123456</div><div class="card-address">22 Lê Văn Sỹ, Quận 3, TP.HCM</div><div class="order-info"><div class="order-info-item">Số lần VT <strong>2</strong></div><div class="order-info-item">Đơn hàng <strong>3</strong></div></div><div class="card-link">Xem chi tiết</div></div>
+        </div>
+        <div class="card unvisited">
+          <div class="card-avatar">🏪</div>
+          <div class="card-body"><div class="card-title">Tạp hóa Finviet <span class="badge badge-pending">Chưa VT</span></div><div class="card-meta">CH000128 · 0908706789</div><div class="card-address">34 Hoàng Việt, Phường 4, Quận Tân Bình, TP.HCM</div><div class="card-status">Chưa VT trong ngày</div><div class="card-link">Xem chi tiết</div></div>
+        </div>
+        <div class="caption-row"><span class="caption-label">27/05/2026<span class="caption-sub">Đã VT 12 · Chưa VT 7</span></span><span class="caption-action">Mở rộng ↓</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">SCREEN 1 · DASHBOARD / TAB CHI TIẾT VT</div>
+</div>
+
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span>📶 📡 🔋</span></div>
+      <div class="app-header"><span class="back-arrow">←</span><h1>Báo cáo VT cửa hàng</h1><span class="header-action"><span class="filter-glyph"></span></span></div>
+      <div class="content">
+        <div class="sticky-filter">
+          <div class="filter-line"><div class="date-pill">📅 01/05/2026 - 28/05/2026</div><button class="filter-button"><span class="filter-glyph"></span></button></div>
+          <div class="search-bar"><span>🔍</span><input type="text" placeholder="Tìm theo Tên, Mã, SĐT cửa hàng"></div>
+        </div>
+        <div class="section-title"><span>Dashboard Từ ngày - Đến ngày</span><span class="action">01/05 - 28/05</span></div>
+        <div class="metric-card"><div class="metric-grid"><div class="metric-box"><div class="metric-value">84</div><div class="metric-label">Cửa hàng viếng thăm</div></div><div class="metric-box"><div class="metric-value">126</div><div class="metric-label">Đơn hàng</div></div><div class="metric-box"><div class="metric-value">86.4M</div><div class="metric-label">Doanh số</div></div></div></div>
+        <div class="tabs"><button class="tab">Chi tiết viếng thăm</button><button class="tab active">Danh sách đơn hàng</button></div>
+        <div class="section-title"><span>Trạng thái đơn hàng</span><span class="action">Mới nhất ↓</span></div>
+        <div class="filter-chip-row"><span class="filter-chip active">Tất cả</span><span class="filter-chip">Đang xử lý</span><span class="filter-chip">Thành công</span><span class="filter-chip">Thất bại</span></div>
+        <div class="metric-card">
+          <div class="list-row"><div><div class="list-title">DH260528-018 · Tạp hóa Minh Anh</div><div class="list-meta">28/05/2026 15:42 <span class="status-pill status-success">Thành công</span></div></div><div class="list-value">1,850,000 đ</div></div>
+          <div class="list-row"><div><div class="list-title">DH260528-014 · Tạp hóa Cô Hoa</div><div class="list-meta">28/05/2026 11:05 <span class="status-pill status-processing">Đang xử lý</span></div></div><div class="list-value">920,000 đ</div></div>
+          <div class="list-row"><div><div class="list-title">DH260527-031 · Mini Mart An Phú</div><div class="list-meta">27/05/2026 16:20 <span class="status-pill status-success">Thành công</span></div></div><div class="list-value">2,480,000 đ</div></div>
+          <div class="list-row"><div><div class="list-title">DH260526-008 · Tạp hóa Finviet</div><div class="list-meta">26/05/2026 09:12 <span class="status-pill status-failed">Thất bại</span></div></div><div class="list-value">640,000 đ</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">SCREEN 2 · DASHBOARD / TAB ĐƠN HÀNG</div>
+</div>
+
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span>📶 📡 🔋</span></div>
+      <div class="app-header"><span class="back-arrow">←</span><h1>Bộ lọc</h1><span class="header-action"></span></div>
+      <div class="content" style="display:flex; flex-direction:column;">
+        <div class="filter-scroll">
+          <div class="filter-group">
+            <div class="filter-row">
+              <div class="filter-label">Nhân viên</div>
+              <div class="employee-search"><span>🔍</span><span>Tìm theo tên, mã nhân viên</span></div>
+              <div class="employee-tree">
+                <label class="tree-row group"><input type="checkbox" checked><span class="tree-name">▾ Nhóm 1<span class="tree-meta">Miền Đông · 2 nhân viên đã chọn</span></span></label>
+                <label class="tree-row manager tree-indent-1"><input type="checkbox" checked><span class="tree-name">▾ Nguyễn Văn Bình<span class="tree-meta">Quản lý · QL001</span></span></label>
+                <label class="tree-row tree-indent-2"><input type="checkbox" checked><span class="tree-name">Trần Minh Đức<span class="tree-meta">Nhân viên · NV001</span></span></label>
+                <label class="tree-row tree-indent-2"><input type="checkbox" checked><span class="tree-name">Lê Thị Hạnh<span class="tree-meta">Nhân viên · NV002</span></span></label>
+                <label class="tree-row group"><input type="checkbox"><span class="tree-name">▾ Nhóm 2<span class="tree-meta">Miền Tây · 1 nhân viên</span></span></label>
+                <label class="tree-row manager tree-indent-1"><input type="checkbox"><span class="tree-name">▾ Võ Hoàng Nam<span class="tree-meta">Quản lý · QL014</span></span></label>
+                <label class="tree-row tree-indent-2"><input type="checkbox"><span class="tree-name">Nguyễn Thùy Linh<span class="tree-meta">Nhân viên · NV031</span></span></label>
+              </div>
+            </div>
+            <div class="filter-row"><div class="filter-label">Thời gian</div><div class="range-row"><div class="range-box"><span>Từ ngày</span><strong>01/05/2026</strong></div><div class="range-box"><span>Đến ngày</span><strong>28/05/2026</strong></div></div></div>
+            <div class="filter-row"><div class="filter-label">Trạng thái VT</div><div class="filter-chip-row" style="margin:0;"><span class="filter-chip">Đã VT</span><span class="filter-chip">Chưa VT</span></div><div class="card-meta" style="margin-top:8px;">Không chọn nghĩa là lọc tất cả trạng thái VT.</div></div>
+            <div class="filter-row"><div class="filter-label">Số lần viếng thăm trong thời gian</div><div class="range-row"><div class="range-box"><span>Từ</span><div class="counter-box"><button class="counter-btn">-</button><strong>1</strong><button class="counter-btn">+</button></div></div><div class="range-box"><span>Đến</span><div class="counter-box"><button class="counter-btn">-</button><strong>5</strong><button class="counter-btn">+</button></div></div></div><div class="card-meta" style="margin-top:8px;">Áp dụng khi chọn trạng thái Đã VT.</div></div>
+            <div class="filter-row"><div class="filter-label">Phát sinh đơn hàng</div><div class="filter-chip-row" style="margin:0;"><span class="filter-chip">Có</span><span class="filter-chip">Không</span></div><div class="card-meta" style="margin-top:8px;">Không chọn nghĩa là lọc tất cả trạng thái phát sinh đơn hàng.</div></div>
+          </div>
+        </div>
+        <div class="footer-actions"><button class="btn">Đặt lại</button><button class="btn btn-primary">Áp dụng</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">SCREEN 3 · BỘ LỌC</div>
+</div>
+
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span>📶 📡 🔋</span></div>
+      <div class="app-header"><span class="back-arrow">←</span><h1>Chi tiết VT cửa hàng</h1><span class="header-action"></span></div>
+      <div class="content">
+        <div style="text-align:center; padding:12px 16px 4px;"><div class="date-pill">📅 01/05/2026 - 28/05/2026</div></div>
+        <div class="card"><div class="card-avatar">🏪</div><div class="card-body"><div class="card-title">Tạp hóa Minh Anh <span class="badge badge-success">Đã VT</span></div><div class="card-meta">CH000318 · 0938123456</div><div class="card-address">22 Lê Văn Sỹ, Quận 3, TP.HCM</div></div></div>
+        <div class="metric-card"><div class="metric-grid"><div class="metric-box"><div class="metric-value">7</div><div class="metric-label">Tổng số lần viếng thăm</div></div><div class="metric-box"><div class="metric-value">9</div><div class="metric-label">Tổng đơn hàng</div></div><div class="metric-box"><div class="metric-value">12.6M</div><div class="metric-label">Tổng doanh số</div></div></div></div>
+        <div class="tabs"><button class="tab active">Chi tiết viếng thăm</button><button class="tab">Danh sách đơn hàng</button></div>
+        <div class="caption-row"><span class="caption-label">28/05/2026 · Lượt VT 2</span><span class="caption-action">Thu gọn ↑</span></div>
+        <div class="metric-card"><div class="list-row"><div class="list-title">Checkin</div><div class="list-value">15:00:00</div></div><div class="list-row"><div class="list-title">Chụp ảnh cửa hàng</div><div class="list-value">15:04:18</div></div><div class="list-row"><div class="list-title">Tạo đơn hàng</div><div class="list-value">15:18:42</div></div><div class="list-row"><div class="list-title">Checkout</div><div class="list-value">15:32:10</div></div></div>
+        <div class="caption-row"><span class="caption-label">25/05/2026 · Lượt VT 1</span><span class="caption-action">Mở rộng ↓</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">SCREEN 4 · CHI TIẾT CỬA HÀNG / TAB CHI TIẾT VT</div>
+</div>
+
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span>📶 📡 🔋</span></div>
+      <div class="app-header"><span class="back-arrow">←</span><h1>Chi tiết VT cửa hàng</h1><span class="header-action"></span></div>
+      <div class="content">
+        <div style="text-align:center; padding:12px 16px 4px;"><div class="date-pill">📅 01/05/2026 - 28/05/2026</div></div>
+        <div class="card"><div class="card-avatar">🏪</div><div class="card-body"><div class="card-title">Tạp hóa Minh Anh <span class="badge badge-success">Đã VT</span></div><div class="card-meta">CH000318 · 0938123456</div><div class="card-address">22 Lê Văn Sỹ, Quận 3, TP.HCM</div></div></div>
+        <div class="metric-card"><div class="metric-grid"><div class="metric-box"><div class="metric-value">7</div><div class="metric-label">Tổng số lần viếng thăm</div></div><div class="metric-box"><div class="metric-value">9</div><div class="metric-label">Tổng đơn hàng</div></div><div class="metric-box"><div class="metric-value">12.6M</div><div class="metric-label">Tổng doanh số</div></div></div></div>
+        <div class="tabs"><button class="tab">Chi tiết viếng thăm</button><button class="tab active">Danh sách đơn hàng</button></div>
+        <div class="section-title"><span>Trạng thái đơn hàng</span><span class="action">Mới nhất ↓</span></div>
+        <div class="filter-chip-row"><span class="filter-chip active">Tất cả</span><span class="filter-chip">Đang xử lý</span><span class="filter-chip">Thành công</span><span class="filter-chip">Thất bại</span></div>
+        <div class="metric-card"><div class="list-row"><div><div class="list-title">DH260528-018</div><div class="list-meta">28/05/2026 15:22 <span class="status-pill status-success">Thành công</span></div></div><div class="list-value">1,850,000 đ</div></div><div class="list-row"><div><div class="list-title">DH260525-009</div><div class="list-meta">25/05/2026 09:28 <span class="status-pill status-processing">Đang xử lý</span></div></div><div class="list-value">760,000 đ</div></div><div class="list-row"><div><div class="list-title">DH260520-021</div><div class="list-meta">20/05/2026 14:10 <span class="status-pill status-success">Thành công</span></div></div><div class="list-value">2,340,000 đ</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">SCREEN 5 · CHI TIẾT CỬA HÀNG / TAB ĐƠN HÀNG</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] MS-W-BCKKTTTS01 - Báo cáo kiểm kê tình trạng tài sản</title>
+<style>
+:root {
+  --primary-50: #EFF6FF;
+  --primary-100: #DBEAFE;
+  --primary-500: #3B82F6;
+  --primary-600: #2563EB;
+  --primary-700: #1D4ED8;
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F9FAFB;
+  --neutral-100: #F3F4F6;
+  --neutral-200: #E5E7EB;
+  --neutral-300: #D1D5DB;
+  --neutral-500: #6B7280;
+  --neutral-700: #374151;
+  --neutral-900: #111827;
+  --success-50: #ECFDF5;
+  --success-500: #10B981;
+  --success-700: #047857;
+  --warning-50: #FFFBEB;
+  --warning-500: #F59E0B;
+  --warning-700: #B45309;
+  --error-50: #FEF2F2;
+  --error-500: #EF4444;
+  --error-600: #DC2626;
+  --error-700: #B91C1C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  background: var(--neutral-100);
+  min-height: 100vh;
+}
+
+.switcher {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  background: var(--neutral-900);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 20px;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.switcher-label {
+  color: rgba(255,255,255,0.35);
+  font-size: 11px;
+  font-family: "SF Mono", Consolas, monospace;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.sw-btn {
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sw-btn:hover { background: rgba(255,255,255,0.08); }
+.sw-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.screen-wrapper { display: none; }
+.screen-wrapper.active { display: block; }
+
+.app {
+  display: flex;
+  height: calc(100vh - 48px);
+  margin-top: 48px;
+}
+
+.sidebar { display: none; }
+
+.main {
+  flex: 1;
+  background: var(--neutral-50);
+  overflow-y: auto;
+  position: relative;
+}
+
+.topbar {
+  background: white;
+  padding: 10px 28px;
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.breadcrumb { font-size: 13px; color: var(--neutral-500); }
+.breadcrumb a { color: var(--primary-500); text-decoration: none; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); }
+
+.avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 600; font-size: 11px;
+}
+
+.page { padding: 20px 28px 40px; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.page-title { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+.page-subtitle { font-size: 12px; color: var(--neutral-500); margin-top: 3px; }
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 34px;
+  white-space: nowrap;
+}
+
+.btn-primary { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-secondary { background: white; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-secondary:hover { background: var(--neutral-50); }
+.btn-text { background: transparent; color: var(--primary-500); border: none; }
+
+.btn-icon {
+  padding: 5px;
+  width: 30px; height: 30px;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--neutral-500);
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-icon:hover { background: var(--neutral-100); color: var(--neutral-900); }
+
+.filter-card {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.filter-row:last-child { margin-bottom: 0; }
+.filter-field { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 140px; }
+.filter-field.wide { flex: 2; min-width: 280px; }
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--neutral-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-select {
+  padding: 6px 28px 6px 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--neutral-700);
+  background: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  width: 100%;
+}
+
+.filter-input {
+  padding: 6px 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--neutral-700);
+  background: white;
+  width: 100%;
+}
+
+.filter-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.list-section {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.list-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.list-section-title { font-size: 15px; font-weight: 700; color: var(--neutral-900); }
+.list-section-actions { display: flex; gap: 8px; align-items: center; }
+
+.table-container {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead { background: var(--neutral-50); }
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-700);
+  border-bottom: 1px solid var(--neutral-200);
+  white-space: nowrap;
+}
+
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--primary-500); }
+
+td {
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--neutral-900);
+  border-bottom: 1px solid var(--neutral-100);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafbfc; }
+td.code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--primary-600); }
+td.code .copy-icon { cursor: pointer; color: var(--neutral-300); margin-left: 4px; font-size: 11px; }
+td.code .copy-icon:hover { color: var(--neutral-500); }
+td.muted { color: var(--neutral-500); font-size: 12px; }
+td.actions { text-align: right; white-space: nowrap; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-pending { background: var(--warning-50); color: var(--warning-700); border: 1px solid #fde68a; }
+.badge-approved { background: var(--success-50); color: var(--success-700); border: 1px solid #a7f3d0; }
+.badge-rejected { background: var(--error-50); color: var(--error-700); border: 1px solid #fecaca; }
+.badge-cancelled { background: var(--neutral-100); color: var(--neutral-500); border: 1px solid var(--neutral-200); }
+.badge-info { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-type-a { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-type-b { background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8; }
+
+.cell-link { color: var(--primary-600); text-decoration: none; cursor: pointer; font-weight: 500; }
+.cell-link:hover { text-decoration: underline; color: var(--primary-700); }
+
+.photo-strip {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.photo-thumb {
+  width: 62px;
+  height: 46px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+
+.photo-thumb:hover { border-color: var(--primary-500); }
+
+.photo-a { background-image: linear-gradient(135deg, rgba(30,64,175,0.28), rgba(255,255,255,0.12)), repeating-linear-gradient(90deg, #f59e0b 0 8px, #ef4444 8px 16px, #10b981 16px 24px, #3b82f6 24px 32px); }
+.photo-b { background-image: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(17,24,39,0.18)), repeating-linear-gradient(0deg, #dbeafe 0 9px, #93c5fd 9px 18px, #fef3c7 18px 27px); }
+.photo-c { background-image: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(255,255,255,0.1)), repeating-linear-gradient(90deg, #f3f4f6 0 12px, #e5e7eb 12px 24px, #60a5fa 24px 36px); }
+.photo-d { background-image: linear-gradient(135deg, rgba(239,68,68,0.18), rgba(255,255,255,0.1)), repeating-linear-gradient(45deg, #fee2e2 0 10px, #fecaca 10px 20px, #fca5a5 20px 30px); }
+
+.photo-more {
+  width: 42px;
+  height: 46px;
+  border: 1px solid var(--primary-100);
+  border-radius: 6px;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.photo-more:hover { border-color: var(--primary-500); }
+
+.pagination {
+  padding: 12px 16px;
+  border-top: 1px solid var(--neutral-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--neutral-500);
+  background: white;
+}
+
+.pagination-controls { display: flex; gap: 4px; align-items: center; }
+.page-btn {
+  width: 28px; height: 28px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neutral-700);
+}
+
+.page-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.page-select { padding: 4px 8px; border: 1px solid var(--neutral-200); border-radius: 5px; font-size: 12px; margin-left: 8px; }
+
+.empty-state { text-align: center; padding: 60px 24px; color: var(--neutral-500); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--neutral-700); margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: var(--neutral-500); margin-bottom: 16px; }
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  border-radius: 10px;
+  width: 720px;
+  max-width: calc(100vw - 64px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); display: flex; align-items: center; gap: 8px; }
+.modal-close { cursor: pointer; color: var(--neutral-500); font-size: 18px; }
+.modal-body { padding: 20px; }
+.modal-footer { padding: 14px 20px; border-top: 1px solid var(--neutral-200); display: flex; justify-content: flex-end; gap: 8px; background: var(--neutral-50); }
+
+.confirm-info-panel {
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.confirm-info-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 6px;
+  align-items: start;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.confirm-info-row:last-child { margin-bottom: 0; }
+.confirm-info-label { color: var(--neutral-500); white-space: nowrap; }
+.confirm-info-value { color: var(--neutral-900); font-weight: 600; word-break: break-word; }
+.confirm-info-value.mono { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--primary-600); }
+
+.hint { display: none; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
+</head>
+<body class="portal-page has-portal-switcher" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+<div class="switcher">
+  <span class="switcher-label">MS-W-BCKKTTTS01</span>
+  <button class="sw-btn active" onclick="switchScreen(1)">1 · Mặc định</button>
+  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
+  <button class="sw-btn" onclick="switchScreen(3)">3 · Chi tiết ảnh</button>
+</div>
+
+<div class="screen-wrapper active" id="sw1">
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Báo cáo</a> / Kiểm kê tình trạng tài sản</div>
+      <div class="topbar-actions">
+        <div class="user-info"><div class="avatar">AD</div><span>Admin hệ thống</span></div>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Báo cáo kiểm kê tình trạng tài sản</div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">* Công ty</div>
+            <select class="filter-select">
+              <option>FINVIET</option>
+              <option>FINVIET HCM</option>
+              <option>FINVIET Miền Bắc</option>
+            </select>
+          </div>
+          <div class="filter-field wide">
+            <div class="filter-label">Thời gian kiểm kê</div>
+            <input class="filter-input" type="text" value="01/06/2026 - 17/06/2026"/>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Nhân viên</div>
+            <select class="filter-select"><option>Tất cả nhân viên</option><option>NV001 - Nguyễn Văn A</option><option>NV002 - Trần Thị Bình</option></select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">Cửa hàng</div>
+            <select class="filter-select"><option>Tất cả cửa hàng</option><option>CH9458495849 - Ông Mười</option><option>NP9458495849 - NEW_STORE</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Nhóm tài sản</div>
+            <select class="filter-select"><option>Tất cả nhóm</option><option>Tài sản định danh</option><option>Tài sản không định danh</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Loại tài sản</div>
+            <select class="filter-select"><option>Tất cả loại</option><option>POSM</option><option>ASSET</option><option>TOT</option><option>MÁY POS</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Kết quả kiểm tra</div>
+            <select class="filter-select"><option>Tất cả kết quả</option><option>Đang hoạt động</option><option>Cần sửa chữa</option><option>Hư hỏng</option><option>Mất</option><option>Cần thu hồi</option></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-secondary">Làm mới</button>
+            <button class="btn btn-primary">Tìm kiếm</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title">Danh sách kết quả kiểm kê</div>
+          <div class="list-section-actions">
+            <button class="btn btn-primary">⇩ Export Excel</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table style="min-width:2550px;">
+              <thead>
+                <tr>
+                  <th class="sortable">Mã kiểm kê ↓</th>
+                  <th class="sortable">Ngày kiểm kê ↓</th>
+                  <th>Vùng</th>
+                  <th>Mã nhân viên</th>
+                  <th>Nhân viên</th>
+                  <th>Mã cửa hàng</th>
+                  <th>Cửa hàng</th>
+                  <th>Mã tài sản</th>
+                  <th>Tài sản</th>
+                  <th>Nhóm tài sản</th>
+                  <th>Loại tài sản</th>
+                  <th>Kết quả</th>
+                  <th>Ghi chú</th>
+                  <th>Hình ảnh</th>
+                  <th style="text-align:right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="code">KKTS-20260617-0008 <span class="copy-icon">⧉</span></td>
+                  <td class="muted">17/06/2026 09:41</td>
+                  <td>Hồ Chí Minh</td>
+                  <td class="code">NV001 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Nguyễn Văn A</a></td>
+                  <td class="code">CH9458495849 <span class="copy-icon">⧉</span></td>
+                  <td>Cửa hàng tạp hoá Ông Mười Hoàng Mai Chi</td>
+                  <td class="code">PS001 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Kệ trưng bày POSM A4</a></td>
+                  <td><span class="badge badge-type-b">Tài sản không định danh</span></td>
+                  <td><span class="badge badge-info">POSM</span></td>
+                  <td><span class="badge badge-approved">Đang hoạt động</span></td>
+                  <td class="muted">Kệ còn sử dụng tốt, đã vệ sinh khu vực trưng bày...</td>
+                  <td>
+                    <div class="photo-strip">
+                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 2"></button>
+                    </div>
+                  </td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết" onclick="switchScreen(3)">👁</button></td>
+                </tr>
+                <tr>
+                  <td class="code">KKTS-20260617-0007 <span class="copy-icon">⧉</span></td>
+                  <td class="muted">17/06/2026 09:18</td>
+                  <td>Hồ Chí Minh</td>
+                  <td class="code">NV001 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Nguyễn Văn A</a></td>
+                  <td class="code">NP12345678 <span class="copy-icon">⧉</span></td>
+                  <td>Tap hoá Finviet</td>
+                  <td class="code">TS001 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Tủ mát Finviet 100L</a></td>
+                  <td><span class="badge badge-type-a">Tài sản định danh</span></td>
+                  <td><span class="badge badge-info">ASSET</span></td>
+                  <td><span class="badge badge-pending">Cần sửa chữa</span></td>
+                  <td class="muted">Đèn tủ mát hoạt động không ổn định...</td>
+                  <td>
+                    <div class="photo-strip">
+                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 3"></button>
+                    </div>
+                  </td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
+                </tr>
+                <tr>
+                  <td class="code">KKTS-20260616-0031 <span class="copy-icon">⧉</span></td>
+                  <td class="muted">16/06/2026 16:05</td>
+                  <td>Hồ Chí Minh</td>
+                  <td class="code">NV002 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Trần Thị Bình</a></td>
+                  <td class="code">NP9458495849 <span class="copy-icon">⧉</span></td>
+                  <td>NEW_STORE_S_2_ROUTE_5</td>
+                  <td class="code">PS002 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Bảng rôn khuyến mãi khai trương lớn treo ngoài cửa hàng 3x1m</a></td>
+                  <td><span class="badge badge-type-b">Tài sản không định danh</span></td>
+                  <td><span class="badge badge-info">POSM</span></td>
+                  <td><span class="badge badge-pending">Cần thu hồi</span></td>
+                  <td class="muted">Hết chương trình, cửa hàng đề nghị thu hồi.</td>
+                  <td>
+                    <div class="photo-strip">
+                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                    </div>
+                  </td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
+                </tr>
+                <tr>
+                  <td class="code">KKTS-20260616-0029 <span class="copy-icon">⧉</span></td>
+                  <td class="muted">16/06/2026 14:32</td>
+                  <td>Miền Đông</td>
+                  <td class="code">NV003 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Lê Quốc Huy</a></td>
+                  <td class="code">CH7788123344 <span class="copy-icon">⧉</span></td>
+                  <td>Cửa hàng Minh Anh</td>
+                  <td class="code">PS003 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Decal dán cửa A3</a></td>
+                  <td><span class="badge badge-type-b">Tài sản không định danh</span></td>
+                  <td><span class="badge badge-info">POSM</span></td>
+                  <td><span class="badge badge-rejected">Hư hỏng</span></td>
+                  <td class="muted">Decal rách, bạc màu, không còn sử dụng.</td>
+                  <td>
+                    <div class="photo-strip">
+                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 3"></button>
+                      <button class="photo-more" onclick="switchScreen(3)" title="Xem thêm ảnh">+1</button>
+                    </div>
+                  </td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
+                </tr>
+                <tr>
+                  <td class="code">KKTS-20260615-0014 <span class="copy-icon">⧉</span></td>
+                  <td class="muted">15/06/2026 10:20</td>
+                  <td>Miền Tây</td>
+                  <td class="code">NV004 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Phạm Minh Tâm</a></td>
+                  <td class="code">CH8899001122 <span class="copy-icon">⧉</span></td>
+                  <td>Cửa hàng Bến Thành</td>
+                  <td class="code">POSV2-0009 <span class="copy-icon">⧉</span></td>
+                  <td><a class="cell-link">Máy POS Sunmi V2</a></td>
+                  <td><span class="badge badge-type-a">Tài sản định danh</span></td>
+                  <td><span class="badge badge-info">MÁY POS</span></td>
+                  <td><span class="badge badge-rejected">Mất</span></td>
+                  <td class="muted">Cửa hàng xác nhận không còn thiết bị tại điểm bán.</td>
+                  <td>
+                    <div class="photo-strip">
+                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 3"></button>
+                      <button class="photo-more" onclick="switchScreen(3)" title="Xem thêm ảnh">+2</button>
+                    </div>
+                  </td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span>Hiển thị 1-20 / tổng <strong>186</strong> bản ghi</span>
+            <div class="pagination-controls">
+              <button class="page-btn">‹</button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">›</button>
+              <select class="page-select"><option>20 / trang</option><option>50 / trang</option><option>100 / trang</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hint">MS-W-BCKKTTTS01 · State 1: Mặc định</div>
+</div>
+
+<div class="screen-wrapper" id="sw2">
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Báo cáo</a> / Kiểm kê tình trạng tài sản</div>
+      <div class="topbar-actions">
+        <div class="user-info"><div class="avatar">AD</div><span>Admin hệ thống</span></div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Báo cáo kiểm kê tình trạng tài sản</div>
+          <div class="page-subtitle">Không có dữ liệu phù hợp với điều kiện lọc hiện tại.</div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">* Công ty</div>
+            <select class="filter-select"><option>FINVIET</option></select>
+          </div>
+          <div class="filter-field wide">
+            <div class="filter-label">Thời gian kiểm kê</div>
+            <input class="filter-input" type="text" value="01/01/2026 - 05/01/2026"/>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Nhân viên</div>
+            <select class="filter-select"><option>Tất cả nhân viên</option></select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">Cửa hàng</div>
+            <select class="filter-select"><option>Tất cả cửa hàng</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Nhóm tài sản</div>
+            <select class="filter-select"><option>Tất cả nhóm</option><option>Tài sản định danh</option><option>Tài sản không định danh</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Loại tài sản</div>
+            <select class="filter-select"><option>Tất cả loại</option><option>POSM</option><option>ASSET</option><option>TOT</option><option>MÁY POS</option></select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Kết quả kiểm tra</div>
+            <select class="filter-select"><option>Tất cả kết quả</option><option>Đang hoạt động</option><option>Cần sửa chữa</option><option>Hư hỏng</option><option>Mất</option><option>Cần thu hồi</option></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-secondary">Làm mới</button>
+            <button class="btn btn-primary">Tìm kiếm</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title">Danh sách kết quả kiểm kê</div>
+          <div class="list-section-actions">
+            <button class="btn btn-primary">⇩ Export Excel</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table style="min-width:2550px;">
+              <thead>
+                <tr>
+                  <th>Mã kiểm kê</th>
+                  <th>Ngày kiểm kê</th>
+                  <th>Vùng</th>
+                  <th>Mã nhân viên</th>
+                  <th>Nhân viên</th>
+                  <th>Mã cửa hàng</th>
+                  <th>Cửa hàng</th>
+                  <th>Mã tài sản</th>
+                  <th>Tài sản</th>
+                  <th>Nhóm tài sản</th>
+                  <th>Loại tài sản</th>
+                  <th>Kết quả</th>
+                  <th>Hình ảnh</th>
+                  <th style="text-align:right;">Thao tác</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div class="empty-title">Không có kết quả phù hợp</div>
+            <div class="empty-desc">Điều chỉnh khoảng thời gian, bỏ bớt bộ lọc hoặc nhấn "Làm mới" để xem lại toàn bộ dữ liệu kiểm kê.</div>
+            <button class="btn btn-secondary">Làm mới</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hint">MS-W-BCKKTTTS01 · State 2: Trống</div>
+</div>
+
+<div class="screen-wrapper" id="sw3">
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <div style="filter:blur(2px);pointer-events:none;">
+      <div class="topbar">
+        <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Báo cáo</a> / Kiểm kê tình trạng tài sản</div>
+        <div class="topbar-actions">
+          <div class="user-info"><div class="avatar">AD</div><span>Admin hệ thống</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-title" style="margin-bottom:16px;">Báo cáo kiểm kê tình trạng tài sản</div>
+        <div class="filter-card" style="height:92px;"></div>
+        <div class="list-section" style="height:420px;"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Chi tiết kiểm kê tài sản</div>
+          <div class="modal-close" onclick="switchScreen(1)">✕</div>
+        </div>
+        <div class="modal-body">
+          <div class="confirm-info-panel">
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Mã kiểm kê:</span>
+              <span class="confirm-info-value mono">KKTS-20260617-0008</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Ngày kiểm kê:</span>
+              <span class="confirm-info-value">17/06/2026 09:41</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Vùng:</span>
+              <span class="confirm-info-value">Hồ Chí Minh</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Mã nhân viên:</span>
+              <span class="confirm-info-value mono">NV001</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Nhân viên:</span>
+              <span class="confirm-info-value">Nguyễn Văn A</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Mã cửa hàng:</span>
+              <span class="confirm-info-value mono">CH9458495849</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Cửa hàng:</span>
+              <span class="confirm-info-value">Cửa hàng tạp hoá Ông Mười Hoàng Mai Chi</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Tài sản:</span>
+              <span class="confirm-info-value">Kệ trưng bày POSM A4 · PS001 · Tài sản không định danh · POSM</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Kết quả:</span>
+              <span class="confirm-info-value"><span class="badge badge-approved">Đang hoạt động</span></span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Ghi chú:</span>
+              <span class="confirm-info-value" style="font-weight:400;">Kệ còn sử dụng tốt, đã vệ sinh lại khu vực trưng bày. Cửa hàng đề nghị bổ sung thêm standee nhỏ.</span>
+            </div>
+          </div>
+
+          <div class="list-section" style="margin-bottom:0;padding:14px;">
+            <div class="list-section-header">
+              <div class="list-section-title">Hình ảnh kiểm kê</div>
+              <span class="badge badge-info">5 ảnh</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+              <button class="photo-thumb photo-a" style="width:100%;height:150px;" title="Ảnh 1"></button>
+              <button class="photo-thumb photo-b" style="width:100%;height:150px;" title="Ảnh 2"></button>
+              <button class="photo-thumb photo-c" style="width:100%;height:150px;" title="Ảnh 3"></button>
+              <button class="photo-thumb photo-d" style="width:100%;height:150px;" title="Ảnh 4"></button>
+              <button class="photo-thumb photo-a" style="width:100%;height:150px;" title="Ảnh 5"></button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="switchScreen(1)">Đóng</button>
+          <button class="btn btn-primary">⇩ Tải ảnh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hint">MS-W-BCKKTTTS01 · State 3: Chi tiết ảnh</div>
+</div>
+
+<script>
+function switchScreen(index) {
+  document.querySelectorAll(".screen-wrapper").forEach(function(screen) {
+    screen.classList.remove("active");
+  });
+  document.querySelectorAll(".sw-btn").forEach(function(button) {
+    button.classList.remove("active");
+  });
+  document.getElementById("sw" + index).classList.add("active");
+  document.querySelectorAll(".sw-btn")[index - 1].classList.add("active");
+}
+</script>
+<script src="../../../../menu-tree.js"></script>
+<script src="../../../../_shared/portal-menu.js"></script>
+<script src="../../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] MS-W-BCKTTKSP01 - Báo cáo lịch sử kiểm tra tồn kho sản phẩm</title>
+<style>
+:root {
+  --primary-50: #EFF6FF;
+  --primary-100: #DBEAFE;
+  --primary-500: #3B82F6;
+  --primary-600: #2563EB;
+  --primary-700: #1D4ED8;
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F9FAFB;
+  --neutral-100: #F3F4F6;
+  --neutral-200: #E5E7EB;
+  --neutral-300: #D1D5DB;
+  --neutral-500: #6B7280;
+  --neutral-700: #374151;
+  --neutral-900: #111827;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  background: var(--neutral-100);
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  background: var(--neutral-50);
+}
+
+.topbar {
+  background: white;
+  padding: 10px 28px;
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.breadcrumb { font-size: 13px; color: var(--neutral-500); }
+.breadcrumb a { color: var(--primary-500); text-decoration: none; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.page { padding: 20px 28px 40px; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.page-title { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+.page-subtitle { font-size: 12px; color: var(--neutral-500); margin-top: 3px; }
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  white-space: nowrap;
+}
+
+.btn-primary { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-secondary { background: white; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-secondary:hover { background: var(--neutral-50); }
+
+.filter-card {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.filter-row:last-child { margin-bottom: 0; }
+.filter-field { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 150px; }
+.filter-field.wide { flex: 2; min-width: 300px; }
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--neutral-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-select {
+  padding: 6px 28px 6px 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--neutral-700);
+  background: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  width: 100%;
+}
+
+.filter-input {
+  padding: 6px 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--neutral-700);
+  background: white;
+  width: 100%;
+}
+
+.filter-search {
+  padding: 7px 12px 7px 34px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+  color: var(--neutral-700);
+  width: 100%;
+}
+
+.filter-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.list-section {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.list-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.list-section-title { font-size: 15px; font-weight: 700; color: var(--neutral-900); }
+.list-section-actions { display: flex; gap: 8px; align-items: center; }
+
+.table-container {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-scroll { overflow-x: auto; }
+
+table {
+  min-width: 3600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead { background: var(--neutral-50); }
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-700);
+  border-bottom: 1px solid var(--neutral-200);
+  white-space: nowrap;
+}
+
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--primary-500); }
+
+td {
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--neutral-900);
+  border-bottom: 1px solid var(--neutral-100);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafbfc; }
+td.code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--primary-600); }
+td.muted { color: var(--neutral-500); font-size: 12px; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  border: 1px solid var(--primary-100);
+}
+
+.tag-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.data-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 270px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #67d8d6;
+  background: #d9fbfb;
+  color: #00979b;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.data-tag.route-tag {
+  border-color: #93c5fd;
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.tag-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag-copy {
+  flex: 0 0 auto;
+  font-size: 12px;
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.cell-link {
+  color: var(--primary-600);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.pagination {
+  padding: 12px 16px;
+  border-top: 1px solid var(--neutral-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--neutral-500);
+  background: white;
+}
+
+.pagination-controls { display: flex; gap: 4px; align-items: center; }
+.page-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neutral-700);
+}
+.page-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.page-select { padding: 4px 8px; border: 1px solid var(--neutral-200); border-radius: 5px; font-size: 12px; margin-left: 8px; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
+</head>
+<body class="portal-page" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+<div class="app">
+  <div class="topbar">
+    <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Báo cáo</a> / Lịch sử kiểm tra tồn kho sản phẩm</div>
+    <div class="topbar-actions">
+      <div class="user-info"><div class="avatar">AD</div><span>Admin hệ thống</span></div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Báo cáo lịch sử kiểm tra tồn kho sản phẩm</div>
+        <div class="page-subtitle">Rawdata từ chức năng kiểm tra tồn kho trên Salesman App.</div>
+      </div>
+      <div class="list-section-actions">
+        <button class="btn btn-secondary" onclick="resetFilters()">↻ Làm mới</button>
+        <button class="btn btn-primary" onclick="exportExcel()">📤 Export Excel</button>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-row">
+        <div class="filter-field wide">
+          <div class="filter-label">Tìm kiếm</div>
+          <input class="filter-search" id="searchInput" oninput="applyFilters()" placeholder="Tìm theo mã kiểm tra, mã SKU, tên SKU, mã SPU, cửa hàng, nhân viên..." type="text"/>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Từ ngày nhập</div>
+          <input class="filter-input" id="fromDate" onchange="applyFilters()" type="text" value="01/06/2026"/>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Đến ngày nhập</div>
+          <input class="filter-input" id="toDate" onchange="applyFilters()" type="text" value="05/06/2026"/>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Nhân viên</div>
+          <select class="filter-select" id="employeeFilter" onchange="applyFilters()">
+            <option value=""></option>
+            <option value="NV001">NV001 - Nguyễn Văn An</option>
+            <option value="NV002">NV002 - Trần Thị Bình</option>
+            <option value="NV003">NV003 - Lê Quốc Huy</option>
+            <option value="NV004">NV004 - Phạm Minh Tâm</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-field wide">
+          <div class="filter-label">Cửa hàng</div>
+          <select class="filter-select" id="storeFilter" onchange="applyFilters()">
+            <option value=""></option>
+            <option value="CH001">CH001 - Cửa hàng Tạp hóa Minh</option>
+            <option value="CH005">CH005 - Cửa hàng Hồng Phúc</option>
+            <option value="CH101">CH101 - Cửa hàng Ngọc Hà</option>
+            <option value="CH202">CH202 - Cửa hàng Bảo An</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Nguồn kiểm tra</div>
+          <select class="filter-select" id="sourceFilter" onchange="applyFilters()">
+            <option value=""></option>
+            <option value="Viếng thăm">Viếng thăm</option>
+            <option value="Chăm sóc">Chăm sóc</option>
+          </select>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-secondary" onclick="resetFilters()">Làm mới</button>
+          <button class="btn btn-primary" onclick="applyFilters()">Tìm kiếm</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="list-section">
+      <div class="list-section-header">
+        <div class="list-section-title">Rawdata lịch sử kiểm tra tồn kho sản phẩm</div>
+        <div class="list-section-actions">
+          <button class="btn btn-primary" onclick="exportExcel()">📤 Export Excel</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-scroll">
+          <table>
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span>Hiển thị 1-8 / tổng <strong>8</strong> bản ghi</span>
+          <div class="pagination-controls">
+            <button class="page-btn">‹</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">›</button>
+            <select class="page-select"><option>20 / trang</option><option>50 / trang</option><option>100 / trang</option></select>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const columns = [
+  {key:"companyCode", label:"Mã công ty"},
+  {key:"companyName", label:"Tên công ty"},
+  {key:"checkId", label:"Mã kiểm tra tồn kho", type:"code"},
+  {key:"source", label:"Nguồn kiểm tra", type:"badge"},
+  {key:"inputAt", label:"Ngày nhập"},
+  {key:"inputBy", label:"Người nhập"},
+  {key:"region", label:"Miền"},
+  {key:"area", label:"Vùng"},
+  {key:"subArea", label:"Khu vực"},
+  {key:"employeeCode", label:"Mã nhân viên", type:"code"},
+  {key:"employeeRef", label:"Mã tham chiếu nhân viên", type:"code"},
+  {key:"employeeName", label:"Tên nhân viên"},
+  {key:"employeePhone", label:"Số điện thoại nhân viên"},
+  {key:"teamLabel", label:"Nhóm nhân viên", type:"teamTag", codeKey:"teamCode", nameKey:"teamName"},
+  {key:"routeLabel", label:"Tuyến", type:"routeTag", codeKey:"routeCode", nameKey:"routeName"},
+  {key:"visitDate", label:"Ngày viếng thăm"},
+  {key:"checkin", label:"Giờ check-in"},
+  {key:"checkout", label:"Giờ check-out"},
+  {key:"storeCode", label:"Mã cửa hàng", type:"code"},
+  {key:"storeBrandCode", label:"Mã cửa hàng nhãn hàng", type:"code"},
+  {key:"storeRef", label:"Mã tham chiếu cửa hàng", type:"code"},
+  {key:"storeName", label:"Tên cửa hàng"},
+  {key:"storePhone", label:"Số điện thoại cửa hàng"},
+  {key:"storeAddress", label:"Địa chỉ cửa hàng"},
+  {key:"spuCode", label:"Mã SPU", type:"code"},
+  {key:"spuName", label:"Tên SPU"},
+  {key:"skuCode", label:"Mã SKU", type:"code"},
+  {key:"skuBrandCode", label:"Mã SKU nhãn hàng", type:"code"},
+  {key:"skuName", label:"Tên SKU"},
+  {key:"uom", label:"Đơn vị tính"},
+  {key:"inputQty", label:"SL nhập kiểm tra", type:"number"},
+  {key:"expiryDate", label:"HSD"},
+  {key:"note", label:"Ghi chú"},
+  {key:"lng", label:"Kinh độ"},
+  {key:"lat", label:"Vĩ độ"}
+];
+
+const rows = [
+  {
+    checkId:"KTTK-20260605-000001", source:"Viếng thăm", inputAt:"05/06/2026 09:41", inputBy:"NV001 - Nguyễn Văn An",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Nam", area:"Hồ Chí Minh", subArea:"Khu vực Tân Bình", province:"Hồ Chí Minh", district:"Tân Bình", ward:"Phường 4",
+    employeeCode:"NV001", employeeRef:"SALE001", employeeName:"Nguyễn Văn An", employeePhone:"908887776", teamCode:"GR001", teamName:"Nhóm Sale HCM 1", routeCode:"RT001", routeName:"Tuyến Tân Bình 01",
+    visitDate:"05/06/2026", checkin:"08:58", checkout:"09:52", storeCode:"CH001", storeBrandCode:"CH-HCM-001", storeRef:"CUS001", storeName:"Cửa hàng Tạp hóa Minh", storePhone:"0909009000", storeAddress:"34 Hoàng Việt, Tân Bình",
+    spuCode:"SPU6805", spuName:"Sữa chua Vinamilk Pro", skuCode:"SKUP6805V225215", skuBrandCode:"SKU-HANG-001", skuName:"Sữa chua Vinamilk Pro Sữa chua, phô mai", uom:"Thùng",
+    inputQty:12, expiryDate:"30/09/2026", note:"Kệ sữa mát.", lng:"106.660171", lat:"10.796334"
+  },
+  {
+    checkId:"KTTK-20260605-000001", source:"Viếng thăm", inputAt:"05/06/2026 09:42", inputBy:"NV001 - Nguyễn Văn An",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Nam", area:"Hồ Chí Minh", subArea:"Khu vực Tân Bình", province:"Hồ Chí Minh", district:"Tân Bình", ward:"Phường 4",
+    employeeCode:"NV001", employeeRef:"SALE001", employeeName:"Nguyễn Văn An", employeePhone:"908887776", teamCode:"GR001", teamName:"Nhóm Sale HCM 1", routeCode:"RT001", routeName:"Tuyến Tân Bình 01",
+    visitDate:"05/06/2026", checkin:"08:58", checkout:"09:52", storeCode:"CH001", storeBrandCode:"CH-HCM-001", storeRef:"CUS001", storeName:"Cửa hàng Tạp hóa Minh", storePhone:"0909009000", storeAddress:"34 Hoàng Việt, Tân Bình",
+    spuCode:"SPU6805", spuName:"Sữa chua Vinamilk Pro", skuCode:"SKUP6805V225215", skuBrandCode:"SKU-HANG-001", skuName:"Sữa chua Vinamilk Pro Sữa chua, phô mai", uom:"Thùng",
+    inputQty:18, expiryDate:"15/10/2026", note:"Thùng mới nhập, để sau.", lng:"106.660171", lat:"10.796334"
+  },
+  {
+    checkId:"KTTK-20260605-000002", source:"Viếng thăm", inputAt:"05/06/2026 09:12", inputBy:"NV001 - Nguyễn Văn An",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Nam", area:"Hồ Chí Minh", subArea:"Khu vực Tân Bình", province:"Hồ Chí Minh", district:"Tân Bình", ward:"Phường 4",
+    employeeCode:"NV001", employeeRef:"SALE001", employeeName:"Nguyễn Văn An", employeePhone:"908887776", teamCode:"GR001", teamName:"Nhóm Sale HCM 1", routeCode:"RT001", routeName:"Tuyến Tân Bình 01",
+    visitDate:"05/06/2026", checkin:"08:58", checkout:"09:52", storeCode:"CH001", storeBrandCode:"CH-HCM-001", storeRef:"CUS001", storeName:"Cửa hàng Tạp hóa Minh", storePhone:"0909009000", storeAddress:"34 Hoàng Việt, Tân Bình",
+    spuCode:"SPU44210", spuName:"Mì Hảo Hảo tôm chua cay", skuCode:"SKUP44210V220118", skuBrandCode:"SKU-HANG-007", skuName:"Mì Hảo Hảo tôm chua cay Thùng 30 gói", uom:"Thùng",
+    inputQty:6, expiryDate:"05/01/2027", note:"Còn 6 thùng sau quầy.", lng:"106.660171", lat:"10.796334"
+  },
+  {
+    checkId:"KTTK-20260605-000003", source:"Chăm sóc", inputAt:"05/06/2026 09:05", inputBy:"NV002 - Trần Thị Bình",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Nam", area:"Hồ Chí Minh", subArea:"Khu vực Quận 5", province:"Hồ Chí Minh", district:"Quận 5", ward:"Phường 8",
+    employeeCode:"NV002", employeeRef:"SALE002", employeeName:"Trần Thị Bình", employeePhone:"0908887788", teamCode:"GR002", teamName:"Nhóm Sale HCM 2", routeCode:"RT002", routeName:"Tuyến Quận 5 02",
+    visitDate:"", checkin:"", checkout:"", storeCode:"CH005", storeBrandCode:"CH-HCM-005", storeRef:"CUS005", storeName:"Cửa hàng Hồng Phúc", storePhone:"0911223333", storeAddress:"120 Trần Hưng Đạo, Quận 5",
+    spuCode:"SPU121550", spuName:"Bánh gạo Ichi", skuCode:"SKUP121550V346183", skuBrandCode:"SKU-HANG-012", skuName:"Bánh gạo Ichi 180g", uom:"Gói",
+    inputQty:32, expiryDate:"01/10/2026", note:"Cần đẩy bán trước hạn.", lng:"106.675000", lat:"10.753000"
+  },
+  {
+    checkId:"KTTK-20260602-000018", source:"Viếng thăm", inputAt:"02/06/2026 15:40", inputBy:"NV003 - Lê Quốc Huy",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Bắc", area:"Hà Nội", subArea:"Khu vực Cầu Giấy", province:"Hà Nội", district:"Cầu Giấy", ward:"Dịch Vọng",
+    employeeCode:"NV003", employeeRef:"SALE003", employeeName:"Lê Quốc Huy", employeePhone:"911002233", teamCode:"GR003", teamName:"Nhóm Sale HN 1", routeCode:"RT101", routeName:"Tuyến Cầu Giấy 01",
+    visitDate:"02/06/2026", checkin:"15:10", checkout:"16:05", storeCode:"CH101", storeBrandCode:"CH-HN-101", storeRef:"CUS101", storeName:"Cửa hàng Ngọc Hà", storePhone:"988123456", storeAddress:"15 Duy Tân, Cầu Giấy",
+    spuCode:"SPU96250", spuName:"Nước cam Twister 320", skuCode:"SKUP96250V320906", skuBrandCode:"SKU-HANG-002", skuName:"Nước cam Twister 320ml Nước giải khát", uom:"Lon",
+    inputQty:8, expiryDate:"15/08/2026", note:"Kệ nước giải khát.", lng:"105.788900", lat:"21.030100"
+  },
+  {
+    checkId:"KTTK-20260602-000019", source:"Viếng thăm", inputAt:"02/06/2026 16:20", inputBy:"NV003 - Lê Quốc Huy",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Bắc", area:"Hà Nội", subArea:"Khu vực Cầu Giấy", province:"Hà Nội", district:"Cầu Giấy", ward:"Dịch Vọng",
+    employeeCode:"NV003", employeeRef:"SALE003", employeeName:"Lê Quốc Huy", employeePhone:"911002233", teamCode:"GR003", teamName:"Nhóm Sale HN 1", routeCode:"RT101", routeName:"Tuyến Cầu Giấy 01",
+    visitDate:"02/06/2026", checkin:"15:10", checkout:"16:05", storeCode:"CH101", storeBrandCode:"CH-HN-101", storeRef:"CUS101", storeName:"Cửa hàng Ngọc Hà", storePhone:"988123456", storeAddress:"15 Duy Tân, Cầu Giấy",
+    spuCode:"SPU100516", spuName:"Bánh quy bơ Cosy", skuCode:"SKUP100516V281463", skuBrandCode:"SKU-HANG-003", skuName:"Bánh quy bơ Cosy Bánh kẹo", uom:"Gói",
+    inputQty:0, expiryDate:"", note:"Hết hàng.", lng:"105.788900", lat:"21.030100"
+  },
+  {
+    checkId:"KTTK-20260601-000012", source:"Chăm sóc", inputAt:"01/06/2026 10:10", inputBy:"NV004 - Phạm Minh Tâm",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Trung", area:"Đà Nẵng", subArea:"Khu vực Hải Châu", province:"Đà Nẵng", district:"Hải Châu", ward:"Hòa Thuận Đông",
+    employeeCode:"NV004", employeeRef:"SALE004", employeeName:"Phạm Minh Tâm", employeePhone:"933445566", teamCode:"GR004", teamName:"Nhóm Sale ĐN 1", routeCode:"RT201", routeName:"Tuyến Hải Châu 01",
+    visitDate:"01/06/2026", checkin:"10:02", checkout:"10:48", storeCode:"CH202", storeBrandCode:"CH-DN-202", storeRef:"CUS202", storeName:"Cửa hàng Bảo An", storePhone:"977998877", storeAddress:"89 Lê Duẩn, Hải Châu",
+    spuCode:"SPU86781", spuName:"Kem đặc có đường Dư Sữa", skuCode:"SKUP86781V225107", skuBrandCode:"SKU-HANG-004", skuName:"Kem đặc có đường Dư Sữa", uom:"Lon",
+    inputQty:18, expiryDate:"20/11/2026", note:"Trưng bày kệ đầu.", lng:"108.221800", lat:"16.068100"
+  },
+  {
+    checkId:"KTTK-20260601-000013", source:"Viếng thăm", inputAt:"01/06/2026 10:25", inputBy:"NV004 - Phạm Minh Tâm",
+    companyCode:"FV", companyName:"Finviet", region:"Miền Trung", area:"Đà Nẵng", subArea:"Khu vực Hải Châu", province:"Đà Nẵng", district:"Hải Châu", ward:"Hòa Thuận Đông",
+    employeeCode:"NV004", employeeRef:"SALE004", employeeName:"Phạm Minh Tâm", employeePhone:"933445566", teamCode:"GR004", teamName:"Nhóm Sale ĐN 1", routeCode:"RT201", routeName:"Tuyến Hải Châu 01",
+    visitDate:"01/06/2026", checkin:"10:02", checkout:"10:48", storeCode:"CH202", storeBrandCode:"CH-DN-202", storeRef:"CUS202", storeName:"Cửa hàng Bảo An", storePhone:"977998877", storeAddress:"89 Lê Duẩn, Hải Châu",
+    spuCode:"SPU86781", spuName:"Kem đặc có đường Dư Sữa", skuCode:"SKUP86781V225107", skuBrandCode:"SKU-HANG-004", skuName:"Kem đặc có đường Dư Sữa", uom:"Lon",
+    inputQty:15, expiryDate:"20/11/2026", note:"Kệ chính còn đủ.", lng:"108.221800", lat:"16.068100"
+  }
+];
+
+let filteredRows = [...rows];
+
+function getCellValue(row, col) {
+  if (col.type === "teamTag" || col.type === "routeTag") {
+    const code = row[col.codeKey] || "";
+    const name = row[col.nameKey] || "";
+    return [code, name].filter(Boolean).join(" - ");
+  }
+  return row[col.key] === undefined ? "" : row[col.key];
+}
+
+function renderDataTag(value, type) {
+  const css = type === "routeTag" ? "data-tag route-tag" : "data-tag";
+  const safeValue = value || "—";
+  const copyValue = safeValue.replace(/"/g, "&quot;");
+  return `<div class="tag-stack"><span class="${css}" title="${safeValue}"><span class="tag-text">${safeValue}</span><span class="tag-copy" title="Copy" data-value="${copyValue}" onclick="copyTagValue(event, this)">⎘</span></span></div>`;
+}
+
+function copyTagValue(event, el) {
+  event.stopPropagation();
+  const value = el.getAttribute("data-value") || "";
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(value);
+  }
+}
+
+function renderTable() {
+  const head = document.getElementById("tableHead");
+  const body = document.getElementById("tableBody");
+  head.innerHTML = "<tr>" + columns.map(function(col) {
+    const cls = col.type === "number" ? "num" : "sortable";
+    return `<th class="${cls}">${col.label}</th>`;
+  }).join("") + "</tr>";
+
+  body.innerHTML = filteredRows.map(function(row) {
+    return "<tr>" + columns.map(function(col) {
+      let value = getCellValue(row, col);
+      value = value === "" ? "—" : value;
+      const cls = [];
+      if (col.type === "code") cls.push("code");
+      if (col.type === "number") cls.push("num");
+      if (value === "—") cls.push("muted");
+      if (col.type === "badge") value = `<span class="badge">${value}</span>`;
+      if (col.type === "teamTag" || col.type === "routeTag") value = renderDataTag(value, col.type);
+      if (col.key === "checkId" || col.key === "skuCode") value = `<span class="cell-link">${value}</span>`;
+      return `<td class="${cls.join(" ")}">${value}</td>`;
+    }).join("") + "</tr>";
+  }).join("");
+}
+
+function parseDate(value) {
+  if (!value) return null;
+  const parts = value.split(" ")[0].split("/");
+  if (parts.length !== 3) return null;
+  return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+}
+
+function applyFilters() {
+  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+  const employee = document.getElementById("employeeFilter").value;
+  const store = document.getElementById("storeFilter").value;
+  const source = document.getElementById("sourceFilter").value;
+  const from = parseDate(document.getElementById("fromDate").value);
+  const to = parseDate(document.getElementById("toDate").value);
+
+  filteredRows = rows.filter(function(row) {
+    const haystack = columns.map(function(col){ return getCellValue(row, col); }).join(" ").toLowerCase();
+    const rowDate = parseDate(row.inputAt);
+    return (!search || haystack.includes(search))
+      && (!employee || row.employeeCode === employee)
+      && (!store || row.storeCode === store)
+      && (!source || row.source === source)
+      && (!from || !rowDate || rowDate >= from)
+      && (!to || !rowDate || rowDate <= to);
+  });
+  renderTable();
+}
+
+function resetFilters() {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("employeeFilter").value = "";
+  document.getElementById("storeFilter").value = "";
+  document.getElementById("sourceFilter").value = "";
+  document.getElementById("fromDate").value = "01/06/2026";
+  document.getElementById("toDate").value = "05/06/2026";
+  applyFilters();
+}
+
+function exportExcel() {
+  alert("Xuất Excel theo template RAW_STOCK_CHECK_HISTORY_TEMPLATE.xlsx.");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  renderTable();
+});
+</script>
+<script src="../../../../menu-tree.js"></script>
+<script src="../../../../_shared/portal-menu.js"></script>
+<script src="../../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+</html>

@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-DL03 - Báo cáo đối soát tiền thu giao hàng</title>
+    <style>
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-100: #DBEAFE;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --primary-700: #1D4ED8;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-400: #9CA3AF;
+            --neutral-500: #6B7280;
+            --neutral-600: #4B5563;
+            --neutral-700: #374151;
+            --neutral-800: #1F2937;
+            --neutral-900: #111827;
+            --success-50: #ECFDF5;
+            --success-100: #D1FAE5;
+            --success-700: #047857;
+            --warning-50: #FFFBEB;
+            --warning-100: #FEF3C7;
+            --warning-700: #B45309;
+            --error-50: #FEF2F2;
+            --error-100: #FEE2E2;
+            --error-700: #B91C1C;
+            --info-50: #F0F9FF;
+            --info-100: #E0F2FE;
+            --info-700: #0369A1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--neutral-50);
+            color: var(--neutral-900);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            letter-spacing: 0;
+        }
+
+        .pay-split-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .pay-split-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .pay-split-card.eco { border-color: var(--primary-100); background: linear-gradient(135deg, var(--primary-50), white); }
+        .pay-split-card.cash { border-color: var(--success-100); background: linear-gradient(135deg, var(--success-50), white); }
+        .pay-split-name { font-size: 12px; font-weight: 700; color: var(--neutral-500); text-transform: uppercase; letter-spacing: .3px; }
+        .pay-split-value { margin-top: 4px; font-size: 18px; font-weight: 800; color: var(--neutral-900); }
+        .pay-split-meta { font-size: 12px; color: var(--neutral-500); text-align: right; }
+
+        .empty-state {
+            border: 1px dashed var(--neutral-300);
+            border-radius: 8px;
+            background: white;
+            padding: 56px 24px;
+            text-align: center;
+            color: var(--neutral-500);
+        }
+
+        .empty-state strong { display: block; margin-bottom: 6px; color: var(--neutral-700); font-size: 15px; }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-top: 1px solid var(--neutral-200);
+            font-size: 13px;
+            color: var(--neutral-500);
+        }
+
+        .page-btns { display: flex; gap: 6px; }
+        .page-btn {
+            min-width: 32px;
+            height: 32px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--neutral-700);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .page-btn.active { background: var(--primary-500); border-color: var(--primary-500); color: white; }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 52px;
+            padding: 10px 28px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: white;
+        }
+
+        .breadcrumb {
+            color: var(--neutral-500);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neutral-700);
+            font-size: 13px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0EA5E9, #2563EB);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .page {
+            padding: 20px 28px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            color: var(--neutral-900);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            margin-top: 4px;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .header-actions,
+        .filter-actions,
+        .bulk-actions,
+        .row-actions,
+        .modal-footer,
+        .tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 32px;
+            padding: 7px 13px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-600);
+        }
+
+        .btn-secondary {
+            border-color: var(--neutral-200);
+            background: white;
+            color: var(--neutral-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--neutral-50);
+        }
+
+        .btn-text {
+            border-color: transparent;
+            background: transparent;
+            color: var(--primary-600);
+            padding-inline: 4px;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .filter-card,
+        .report-card,
+        .table-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .filter-card {
+            margin-bottom: 14px;
+            padding: 14px 16px;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: minmax(240px, 1.4fr) repeat(5, minmax(132px, 1fr)) auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .filter-row + .filter-row {
+            margin-top: 10px;
+            grid-template-columns: repeat(5, minmax(140px, 1fr)) auto;
+        }
+
+        .filter-field,
+        .form-field {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-label,
+        .form-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .filter-input,
+        .filter-select,
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            min-height: 32px;
+            padding: 7px 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--neutral-800);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus,
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-50);
+        }
+
+        .form-textarea {
+            min-height: 76px;
+            resize: vertical;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .report-card {
+            padding: 14px;
+        }
+
+        .report-label {
+            color: var(--neutral-500);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .report-value {
+            margin-top: 8px;
+            color: var(--neutral-900);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .report-note {
+            margin-top: 4px;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .report-card.good .report-value {
+            color: var(--success-700);
+        }
+
+        .report-card.warn .report-value {
+            color: var(--warning-700);
+        }
+
+        .report-card.bad .report-value {
+            color: var(--error-700);
+        }
+
+        .tabs {
+            margin-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            min-height: 32px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 999px;
+            background: white;
+            color: var(--neutral-700);
+            padding: 7px 13px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .bulk-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--primary-100);
+            border-radius: 8px;
+            background: var(--primary-50);
+            color: var(--primary-700);
+            font-size: 13px;
+        }
+
+        .bulk-bar.show {
+            display: flex;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .table-title {
+            color: var(--neutral-900);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .table-subtitle {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1480px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            height: 40px;
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-align: left;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 10px;
+            border-bottom: 1px solid var(--neutral-100);
+            color: var(--neutral-800);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: var(--neutral-50);
+        }
+
+        tr.hidden {
+            display: none;
+        }
+
+        .checkbox-col {
+            width: 42px;
+            text-align: center;
+        }
+
+        .code-main {
+            color: var(--primary-700);
+            font-weight: 700;
+        }
+
+        .code-sub,
+        .cell-sub {
+            margin-top: 3px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .cell-main {
+            color: var(--neutral-900);
+            font-weight: 700;
+        }
+
+        .money {
+            color: var(--neutral-900);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .money.good {
+            color: var(--success-700);
+        }
+
+        .money.bad {
+            color: var(--error-700);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            border-radius: 999px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background: var(--success-50);
+            color: var(--success-700);
+        }
+
+        .badge-warning {
+            background: var(--warning-50);
+            color: var(--warning-700);
+        }
+
+        .badge-error {
+            background: var(--error-50);
+            color: var(--error-700);
+        }
+
+        .badge-info {
+            background: var(--info-50);
+            color: var(--info-700);
+        }
+
+        .badge-neutral {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+
+        .method-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: white;
+            color: var(--neutral-700);
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--primary-500);
+        }
+
+        .dot.cod {
+            background: var(--warning-700);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.45);
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(960px, 96vw);
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .modal-title {
+            color: var(--neutral-900);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .modal-subtitle {
+            margin-top: 4px;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--neutral-700);
+            font-size: 18px;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding: 16px 18px;
+            background: var(--neutral-50);
+        }
+
+        .modal-footer {
+            justify-content: flex-end;
+            padding: 14px 18px;
+            border-top: 1px solid var(--neutral-200);
+            background: white;
+        }
+
+        .modal.modal-wide {
+            width: min(1120px, calc(100vw - 32px));
+        }
+
+        .cod-modal-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .cod-summary-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+            padding: 10px 12px;
+        }
+
+        .cod-summary-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .cod-summary-value {
+            margin-top: 5px;
+            color: var(--neutral-900);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .cod-help-text {
+            margin-bottom: 10px;
+            color: var(--neutral-600);
+            font-size: 12px;
+        }
+
+        .cod-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .cod-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cod-table th,
+        .cod-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--neutral-100);
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .cod-table th {
+            background: var(--neutral-50);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--neutral-500);
+            white-space: nowrap;
+        }
+
+        .cod-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .cod-table .form-input {
+            width: 100%;
+            min-width: 110px;
+        }
+
+        .cod-table .code-main {
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .cod-table .cell-sub {
+            margin-top: 2px;
+            font-size: 11px;
+            color: var(--neutral-500);
+        }
+
+        .cod-empty {
+            border: 1px dashed var(--neutral-300);
+            border-radius: 8px;
+            background: white;
+            color: var(--neutral-500);
+            padding: 24px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .detail-card,
+        .compare-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .detail-card {
+            padding: 12px;
+        }
+
+        .detail-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            margin-top: 6px;
+            color: var(--neutral-900);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .compare-card {
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: 180px repeat(3, 1fr);
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .compare-row:last-child {
+            border-bottom: 0;
+        }
+
+        .compare-cell {
+            padding: 10px 12px;
+            border-right: 1px solid var(--neutral-100);
+            color: var(--neutral-800);
+            font-size: 13px;
+        }
+
+        .compare-cell:last-child {
+            border-right: 0;
+        }
+
+        .compare-head {
+            background: var(--neutral-50);
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 80;
+            display: none;
+            min-width: 260px;
+            max-width: 360px;
+            border-radius: 8px;
+            background: var(--neutral-900);
+            color: white;
+            padding: 12px 14px;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.24);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @media (max-width: 1100px) {
+            .filter-row,
+            .filter-row + .filter-row,
+            .report-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filter-actions {
+                grid-column: 1 / -1;
+            }
+
+            .detail-grid,
+            .form-grid,
+            .cod-modal-summary,
+            .cod-record-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .compare-row {
+                grid-template-columns: 140px repeat(3, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar,
+            .page-header,
+            .bulk-bar,
+            .table-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page,
+            .topbar {
+                padding-inline: 16px;
+            }
+
+            .filter-row,
+            .filter-row + .filter-row,
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="breadcrumb">
+            <a href="#">Trang chủ</a> / <a href="#">Giao hàng</a> / Báo cáo đối soát tiền thu
+        </div>
+        <div class="user-info">
+            <span>Admin DMS</span>
+            <span class="avatar">AD</span>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="page-header">
+            <div>
+                <h1 class="page-title">Báo cáo đối soát tiền thu giao hàng</h1>
+                <div class="page-subtitle">Theo dõi tiền phải thu, tiền đã thu và chênh lệch giữa đơn giao hàng, xác nhận tài xế và giao dịch thanh toán.</div>
+            </div>
+        </section>
+
+        <section class="filter-card">
+            <div class="filter-row">
+                <label class="filter-field">
+                    <span class="filter-label">* Công ty</span>
+                    <select class="filter-select" id="companyFilter">
+                        <option selected>Công ty TNHH NPP HCM</option>
+                        <option>Công ty TNHH NPP Bình Dương</option>
+                    </select>
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Tìm kiếm</span>
+                    <input class="filter-input" id="searchInput" placeholder="Mã DLO, mã CH, cửa hàng, mã GD, tài xế">
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Từ ngày</span>
+                    <input class="filter-input" id="fromDate" type="date" value="2026-06-01">
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Đến ngày</span>
+                    <input class="filter-input" id="toDate" type="date" value="2026-06-16">
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Tài xế</span>
+                    <select class="filter-select" id="driverFilter">
+                        <option value="">Tất cả</option>
+                        <option>TX001 - Nguyễn Văn Tài</option>
+                        <option>TX006 - Lê Thanh Tùng</option>
+                        <option>TX014 - Trần Minh Khoa</option>
+                    </select>
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Phương thức thu</span>
+                    <select class="filter-select" id="methodFilter">
+                        <option value="">Tất cả</option>
+                        <option value="EcoPay QR">EcoPay QR</option>
+                        <option value="Tiền mặt">Tiền mặt</option>
+                    </select>
+                </label>
+                <div class="filter-actions">
+                    <button class="btn btn-primary" type="button" id="applyFilterBtn">Lọc</button>
+                    <button class="btn btn-secondary" type="button" id="resetFilterBtn">Làm mới</button>
+                </div>
+            </div>
+            <div class="filter-row">
+                <label class="filter-field">
+                    <span class="filter-label">Trạng thái đối soát</span>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">Tất cả</option>
+                        <option>Đã khớp</option>
+                        <option>Chênh lệch</option>
+                        <option>Chờ đối soát</option>
+                    </select>
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Nguồn đơn hàng</span>
+                    <select class="filter-select" id="sourceFilter">
+                        <option value="">Tất cả</option>
+                        <option>Ecom</option>
+                        <option>Merchant</option>
+                        <option>DMS</option>
+                        <option>OCR</option>
+                    </select>
+                </label>
+                <label class="filter-field">
+                    <span class="filter-label">Mức chênh lệch</span>
+                    <select class="filter-select" id="diffFilter">
+                        <option value="">Tất cả</option>
+                        <option value="has-diff">Có chênh lệch</option>
+                        <option value="no-diff">Không chênh lệch</option>
+                    </select>
+                </label>
+            </div>
+        </section>
+
+        <section class="report-grid" aria-label="Chỉ số đối soát">
+            <div class="report-card">
+                <div class="report-label">Tổng đơn giao</div>
+                <div class="report-value" id="statOrders">0</div>
+                <div class="report-note">Đơn hoàn tất giao hàng</div>
+            </div>
+            <div class="report-card">
+                <div class="report-label">Tiền phải thu</div>
+                <div class="report-value" id="statExpected">0đ</div>
+                <div class="report-note">Theo đơn giao hàng</div>
+            </div>
+            <div class="report-card good">
+                <div class="report-label">Tiền đã thu</div>
+                <div class="report-value" id="statPaid">0đ</div>
+                <div class="report-note">EcoPay tự khớp · COD sau ghi nhận nộp tiền</div>
+            </div>
+            <div class="report-card bad">
+                <div class="report-label">Chênh lệch</div>
+                <div class="report-value" id="statDiff">0đ</div>
+                <div class="report-note">Cần xử lý</div>
+            </div>
+            <div class="report-card warn">
+                <div class="report-label">Chưa đối soát</div>
+                <div class="report-value" id="statPending">0</div>
+                <div class="report-note">Chờ kế toán xác nhận</div>
+            </div>
+        </section>
+
+        <section class="pay-split-bar" aria-label="Phân bổ theo phương thức thu">
+            <div class="pay-split-card eco">
+                <div>
+                    <div class="pay-split-name">EcoPay QR</div>
+                    <div class="pay-split-value" id="statEcoPay">0đ</div>
+                </div>
+                <div class="pay-split-meta" id="statEcoCount">0 đơn</div>
+            </div>
+            <div class="pay-split-card cash">
+                <div>
+                    <div class="pay-split-name">Tiền mặt</div>
+                    <div class="pay-split-value" id="statCash">0đ</div>
+                </div>
+                <div class="pay-split-meta" id="statCashCount">0 đơn</div>
+            </div>
+        </section>
+
+        <nav class="tabs" aria-label="Lọc nhanh trạng thái">
+            <button class="tab active" type="button" data-tab="">Tất cả</button>
+            <button class="tab" type="button" data-tab="Đã khớp">Đã khớp</button>
+            <button class="tab" type="button" data-tab="Chênh lệch">Chênh lệch</button>
+            <button class="tab" type="button" data-tab="Chờ đối soát">Chờ đối soát</button>
+        </nav>
+
+        <section class="bulk-bar" id="bulkBar">
+            <div><strong id="selectedCount">0</strong> đơn đã chọn · Tổng tiền phải thu <strong id="selectedAmount">0đ</strong></div>
+            <div class="bulk-actions">
+                <button class="btn btn-secondary" type="button" id="clearSelectionBtn">Bỏ chọn</button>
+            </div>
+        </section>
+
+        <section class="table-card">
+            <div class="table-head">
+                <div>
+                    <div class="table-title">Danh sách đơn giao cần đối soát</div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" type="button" id="codRecordBtn">Ghi nhận thu COD</button>
+                    <button class="btn btn-secondary" type="button" id="exportBtn">Xuất Excel</button>
+                    <button class="btn btn-primary" type="button" id="bulkReconcileBtn" disabled>Chốt đối soát</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col"><input type="checkbox" id="selectAll"></th>
+                            <th>Mã đơn giao</th>
+                            <th>Mã CH</th>
+                            <th>Cửa hàng</th>
+                            <th>PXK/HD</th>
+                            <th>Tài xế</th>
+                            <th>Nguồn đơn hàng</th>
+                            <th>Phương thức</th>
+                            <th>Cần thu</th>
+                            <th>Đã thu</th>
+                            <th>Chênh lệch</th>
+                            <th>Mã GD / Biên nhận</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportBody">
+                        <tr data-id="DLO-20260616-003" data-store-code="CH-HCM-1190" data-pxk="" data-store="Tạp hoá Ông Năm" data-phone="0987654321" data-driver="TX001 - Nguyễn Văn Tài" data-source="DMS" data-route="Tuyến Qin Test CKS" data-method="EcoPay QR" data-expected="1120000" data-paid="1120000" data-status="Đã khớp" data-transaction="EP-202606160944881" data-time="16/06/2026 09:44" data-owner="Kế toán giao hàng" data-note="Webhook EcoPay khớp tiền cần thu.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-003</div><div class="code-sub">Hoàn tất 09:44</div></td>
+                            <td><span class="cell-main">CH-HCM-1190</span></td>
+                            <td><div class="cell-main">Tạp hoá Ông Năm</div><div class="cell-sub">88 Cách Mạng Tháng 8, Q.3</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div><div class="cell-sub">Tuyến Qin Test CKS</div></td>
+                            <td><span class="badge badge-neutral">DMS</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="money">1.120.000đ</span></td>
+                            <td><span class="money good">1.120.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><div class="cell-main">EP-202606160944881</div><div class="cell-sub">16/06/2026 09:44</div></td>
+                            <td><span class="badge badge-success">Đã khớp</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <tr data-id="DLO-20260615-021" data-store-code="CH-HCM-4412" data-pxk="" data-store="CH Minh Phát" data-phone="0901234567" data-driver="TX001 - Nguyễn Văn Tài" data-source="Ecom" data-route="HCM Trung tâm" data-method="EcoPay QR" data-expected="8750000" data-paid="8750000" data-status="Đã khớp" data-transaction="EP-20260615882104" data-time="15/06/2026 16:20" data-owner="Kế toán giao hàng" data-note="Thanh toán EcoPay QR thành công.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260615-021</div><div class="code-sub">Hoàn tất 16:20</div></td>
+                            <td><span class="cell-main">CH-HCM-4412</span></td>
+                            <td><div class="cell-main">CH Minh Phát</div><div class="cell-sub">120 Lý Tự Trọng, Q.1</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div><div class="cell-sub">HCM Trung tâm</div></td>
+                            <td><span class="badge badge-info">Ecom</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="money">8.750.000đ</span></td>
+                            <td><span class="money good">8.750.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><div class="cell-main">EP-20260615882104</div><div class="cell-sub">15/06/2026 16:20</div></td>
+                            <td><span class="badge badge-success">Đã khớp</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <tr data-id="DLO-20260614-008" data-store-code="CH-HCM-3301" data-pxk="" data-store="Tạp hoá Cô Lan" data-phone="0912345678" data-driver="TX006 - Lê Thanh Tùng" data-source="Merchant" data-method="Tiền mặt" data-expected="890000" data-paid="0" data-reconciled="false" data-driver-claim="890000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="14/06/2026 11:05" data-note="Tài xế đã giao và xác nhận thu tiền mặt — chờ NV nộp tiền về NPP để chốt đối soát.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260614-008</div><div class="code-sub">Hoàn tất 11:05</div></td>
+                            <td><span class="cell-main">CH-HCM-3301</span></td>
+                            <td><div class="cell-main">Tạp hoá Cô Lan</div><div class="cell-sub">56 Nguyễn Huệ, Q.1</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
+                            <td><span class="badge badge-neutral">Merchant</span></td>
+                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="money">890.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">890.000đ</span></td>
+                            <td><div class="cell-main">Chưa nộp tiền</div><div class="cell-sub">Chờ NV nộp tiền</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <tr data-id="DLO-20260616-012" data-store-code="CH-HCM-7720" data-pxk="PXK-240616-9011" data-store="Bách hóa Tân Thành" data-phone="0938123456" data-driver="TX014 - Trần Minh Khoa" data-source="OCR" data-method="Tiền mặt" data-expected="1450000" data-paid="0" data-reconciled="false" data-driver-claim="1450000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="16/06/2026 15:25" data-note="Đơn OCR thu COD, chờ tài xế nộp tiền cuối ca.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-012</div><div class="code-sub">Hoàn tất 15:25</div></td>
+                            <td><span class="cell-main">CH-HCM-7720</span></td>
+                            <td><div class="cell-main">Bách hóa Tân Thành</div><div class="cell-sub">12 Đồng Khởi, Phường Sài Gòn</div></td>
+                            <td><span class="cell-main">PXK-240616-9011</span></td>
+                            <td><div class="cell-main">TX014 - Trần Minh Khoa</div></td>
+                            <td><span class="badge badge-neutral">OCR</span></td>
+                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="money">1.450.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">1.450.000đ</span></td>
+                            <td><div class="cell-main">Chưa nộp tiền</div><div class="cell-sub">Chờ NV nộp tiền</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <tr data-id="DLO-20260615-018" data-store-code="CH-HCM-2281" data-pxk="" data-store="CH Hương Quỳnh" data-phone="0909911222" data-driver="TX006 - Lê Thanh Tùng" data-source="Ecom" data-method="Tiền mặt" data-expected="620000" data-paid="0" data-reconciled="false" data-driver-claim="620000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="15/06/2026 17:40" data-note="Khách thanh toán tiền mặt khi nhận hàng.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260615-018</div><div class="code-sub">Hoàn tất 17:40</div></td>
+                            <td><span class="cell-main">CH-HCM-2281</span></td>
+                            <td><div class="cell-main">CH Hương Quỳnh</div><div class="cell-sub">56 Nguyễn Huệ, Phường Sài Gòn</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
+                            <td><span class="badge badge-info">Ecom</span></td>
+                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="money">620.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">620.000đ</span></td>
+                            <td><div class="cell-main">Chưa nộp tiền</div><div class="cell-sub">Chờ NV nộp tiền</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <tr data-id="DLO-20260616-010" data-store-code="" data-pxk="PXK-240615-7721" data-store="CH Lan Anh" data-phone="0909887766" data-driver="TX001 - Nguyễn Văn Tài" data-source="OCR" data-method="EcoPay QR" data-expected="8450000" data-paid="8450000" data-status="Đã khớp" data-transaction="EP-202606160832771" data-time="16/06/2026 08:32" data-note="Thanh toán EcoPay QR thành công — giao hàng hoàn tất.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-010</div><div class="code-sub">Hoàn tất 08:32</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">CH Lan Anh</div><div class="cell-sub">Phường 2, Q.3</div></td>
+                            <td><span class="cell-main">PXK-240615-7721</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div></td>
+                            <td><span class="badge badge-neutral">OCR</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="money">8.450.000đ</span></td>
+                            <td><span class="money good">8.450.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><div class="cell-main">EP-202606160832771</div><div class="cell-sub">16/06/2026 08:32</div></td>
+                            <td><span class="badge badge-success">Đã khớp</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <span id="pageInfo">Hiển thị 1–6 / 6 đơn</span>
+                <div class="page-btns">
+                    <button class="page-btn" type="button" disabled>‹</button>
+                    <button class="page-btn active" type="button">1</button>
+                    <button class="page-btn" type="button" disabled>›</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-backdrop" id="codModal">
+        <section class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="codModalTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="codModalTitle">Ghi nhận thu COD</div>
+                    <div class="modal-subtitle">Danh sách đơn COD chờ ghi nhận nộp tiền — sắp xếp theo thời gian giao. Nhập trực tiếp trên từng dòng, lưu một hoặc nhiều đơn cùng lúc.</div>
+                </div>
+                <button class="modal-close" type="button" id="closeCodModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="cod-modal-summary">
+                    <div class="cod-summary-card">
+                        <div class="cod-summary-label">Đơn COD</div>
+                        <div class="cod-summary-value" id="codOrderCount">0</div>
+                    </div>
+                    <div class="cod-summary-card">
+                        <div class="cod-summary-label">Tổng cần thu</div>
+                        <div class="cod-summary-value" id="codExpectedTotal">0đ</div>
+                    </div>
+                    <div class="cod-summary-card">
+                        <div class="cod-summary-label">Dòng đã nhập</div>
+                        <div class="cod-summary-value" id="codInputCount">0</div>
+                    </div>
+                    <div class="cod-summary-card">
+                        <div class="cod-summary-label">Tổng tiền nhập</div>
+                        <div class="cod-summary-value" id="codInputTotal">0đ</div>
+                    </div>
+                </div>
+                <div class="cod-help-text">Nhập trực tiếp trên từng dòng. Chỉ các dòng có <strong>Số tiền thu</strong> &gt; 0 mới được lưu — có thể ghi nhận nhiều đơn trong một lần.</div>
+                <div id="codFormList"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" id="cancelCodModal">Hủy</button>
+                <button class="btn btn-primary" type="button" id="saveCodBtn">Lưu ghi nhận</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" id="detailModal">
+        <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Chi tiết đối soát</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Đối chiếu đơn giao, xác nhận thu tiền và giao dịch thanh toán.</div>
+                </div>
+                <button class="modal-close" type="button" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <div class="detail-label">Đơn giao</div>
+                        <div class="detail-value" id="detailOrder">-</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">Cửa hàng</div>
+                        <div class="detail-value" id="detailStore">-</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">Tài xế</div>
+                        <div class="detail-value" id="detailDriver">-</div>
+                    </div>
+                </div>
+
+                <div class="compare-card">
+                    <div class="compare-row compare-head">
+                        <div class="compare-cell">Hạng mục</div>
+                        <div class="compare-cell">DMS</div>
+                        <div class="compare-cell">Tài xế xác nhận</div>
+                        <div class="compare-cell">Thanh toán/biên nhận</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="compare-cell">Số tiền</div>
+                        <div class="compare-cell money" id="compareExpected">-</div>
+                        <div class="compare-cell money" id="compareDriverPaid">-</div>
+                        <div class="compare-cell money" id="comparePaid">-</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="compare-cell">Mã tham chiếu</div>
+                        <div class="compare-cell" id="compareOrder">-</div>
+                        <div class="compare-cell" id="compareMethod">-</div>
+                        <div class="compare-cell" id="compareTransaction">-</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="compare-cell">Kết quả</div>
+                        <div class="compare-cell" id="compareStatus">-</div>
+                        <div class="compare-cell" id="compareDiff">-</div>
+                        <div class="compare-cell" id="compareTime">-</div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span class="form-label">Kết quả xử lý</span>
+                        <select class="form-select" id="resolveResult">
+                            <option>Chờ kiểm tra lại</option>
+                            <option>Ghi nhận đã khớp</option>
+                            <option>Tài xế bổ sung tiền thiếu</option>
+                            <option>Hoàn tiền phần nộp dư</option>
+                        </select>
+                    </label>
+                    <label class="form-field full">
+                        <span class="form-label">PXK/HD</span>
+                        <input class="form-input" id="detailPxk" readonly value="—">
+                    </label>
+                    <label class="form-field full">
+                        <span class="form-label">Ghi chú đối soát</span>
+                        <textarea class="form-textarea" id="resolveNote" placeholder="Nhập ghi chú xử lý chênh lệch..."></textarea>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" id="cancelModal">Đóng</button>
+                <button class="btn btn-secondary" type="button" id="saveNoteBtn">Lưu ghi chú</button>
+                <button class="btn btn-primary" type="button" id="markMatchedBtn">Đánh dấu đã khớp</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="toast" id="toast">Đã cập nhật báo cáo.</div>
+
+    <script>
+        const rows = Array.from(document.querySelectorAll('#reportBody tr'));
+        const searchInput = document.getElementById('searchInput');
+        const driverFilter = document.getElementById('driverFilter');
+        const methodFilter = document.getElementById('methodFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const sourceFilter = document.getElementById('sourceFilter');
+        const diffFilter = document.getElementById('diffFilter');
+        const bulkBar = document.getElementById('bulkBar');
+        const selectAll = document.getElementById('selectAll');
+        const modal = document.getElementById('detailModal');
+        const codModal = document.getElementById('codModal');
+        const toast = document.getElementById('toast');
+        let currentTab = '';
+        let activeRow = null;
+        let codTargetRows = [];
+
+        function money(value) {
+            return Number(value || 0).toLocaleString('vi-VN') + 'đ';
+        }
+
+        function getDisplayPaid(row) {
+            if (row.dataset.method === 'Tiền mặt') {
+                return row.dataset.reconciled === 'true' ? Number(row.dataset.paid || 0) : 0;
+            }
+            if (row.dataset.method === 'EcoPay QR') {
+                return row.dataset.status === 'Đã khớp' ? Number(row.dataset.expected || 0) : 0;
+            }
+            return Number(row.dataset.paid || 0);
+        }
+
+        function getRowDiff(row) {
+            const expected = Number(row.dataset.expected || 0);
+            return Math.abs(expected - getDisplayPaid(row));
+        }
+
+        function diff(row) {
+            return getRowDiff(row);
+        }
+
+        function rowText(row) {
+            return [
+                row.dataset.id,
+                row.dataset.storeCode,
+                row.dataset.pxk,
+                row.dataset.store,
+                row.dataset.phone,
+                row.dataset.driver,
+                row.dataset.transaction,
+                row.dataset.source,
+                row.dataset.method
+            ].join(' ').toLowerCase();
+        }
+
+        function parseMoneyInput(value) {
+            return Number(String(value || '').replace(/[^\d]/g, '') || 0);
+        }
+
+        function getSelectedRows() {
+            return rows.filter(function (row) {
+                return !row.classList.contains('hidden') && row.querySelector('.row-check').checked;
+            });
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(showToast.timer);
+            showToast.timer = setTimeout(function () {
+                toast.classList.remove('show');
+            }, 2200);
+        }
+
+        function visibleRows() {
+            return rows.filter(function (row) {
+                return !row.classList.contains('hidden');
+            });
+        }
+
+        function applyFilters() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            rows.forEach(function (row) {
+                const matchSearch = !keyword || rowText(row).includes(keyword);
+                const matchDriver = !driverFilter.value || row.dataset.driver === driverFilter.value;
+                const matchMethod = !methodFilter.value || row.dataset.method === methodFilter.value;
+                const matchStatus = !statusFilter.value || row.dataset.status === statusFilter.value;
+                const matchSource = !sourceFilter.value || row.dataset.source === sourceFilter.value;
+                const matchTab = !currentTab || row.dataset.status === currentTab;
+                const rowDiff = getRowDiff(row);
+                const matchDiff = !diffFilter.value || (diffFilter.value === 'has-diff' ? rowDiff > 0 : rowDiff === 0);
+                const visible = matchSearch && matchDriver && matchMethod && matchStatus && matchSource && matchTab && matchDiff;
+                row.classList.toggle('hidden', !visible);
+                if (!visible) {
+                    row.querySelector('.row-check').checked = false;
+                }
+            });
+            selectAll.checked = false;
+            updateStats();
+            updateSelection();
+        }
+
+        function updateStats() {
+            const list = visibleRows();
+            const expected = list.reduce(function (sum, row) { return sum + Number(row.dataset.expected || 0); }, 0);
+            const paid = list.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
+            const diffTotal = list.reduce(function (sum, row) { return sum + getRowDiff(row); }, 0);
+            const pending = list.filter(function (row) { return row.dataset.status !== 'Đã khớp'; }).length;
+            const ecoRows = list.filter(function (row) { return row.dataset.method === 'EcoPay QR'; });
+            const cashRows = list.filter(function (row) { return row.dataset.method === 'Tiền mặt'; });
+            const ecoPaid = ecoRows.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
+            const cashPaid = cashRows.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
+
+            document.getElementById('statOrders').textContent = list.length;
+            document.getElementById('statExpected').textContent = money(expected);
+            document.getElementById('statPaid').textContent = money(paid);
+            document.getElementById('statDiff').textContent = money(diffTotal);
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statEcoPay').textContent = money(ecoPaid);
+            document.getElementById('statCash').textContent = money(cashPaid);
+            document.getElementById('statEcoCount').textContent = ecoRows.length + ' đơn';
+            document.getElementById('statCashCount').textContent = cashRows.length + ' đơn';
+            document.getElementById('pageInfo').textContent = 'Hiển thị 1–' + list.length + ' / ' + list.length + ' đơn';
+        }
+
+        function updateSelection() {
+            const selected = getSelectedRows();
+            const amount = selected.reduce(function (sum, row) { return sum + Number(row.dataset.expected || 0); }, 0);
+            const hasSelected = selected.length > 0;
+            const canFinalize = hasSelected && selected.every(function (row) {
+                return row.dataset.status !== 'Chờ đối soát';
+            });
+
+            document.getElementById('selectedCount').textContent = selected.length;
+            document.getElementById('selectedAmount').textContent = money(amount);
+            bulkBar.classList.toggle('show', hasSelected);
+            document.getElementById('bulkReconcileBtn').disabled = !canFinalize;
+        }
+
+        function badgeClass(status) {
+            if (status === 'Đã khớp') return 'badge badge-success';
+            if (status === 'Chênh lệch') return 'badge badge-error';
+            if (status === 'Chờ đối soát') return 'badge badge-warning';
+            return 'badge badge-neutral';
+        }
+
+        function refreshRowCells(row) {
+            const paid = getDisplayPaid(row);
+            const rowDiff = getRowDiff(row);
+            const paidClass = paid > 0 ? 'money good' : 'money';
+            const diffClass = rowDiff > 0 ? 'money bad' : 'money';
+            const txn = row.dataset.transaction || '—';
+            row.cells[9].innerHTML = '<span class="' + paidClass + '">' + money(paid) + '</span>';
+            row.cells[10].innerHTML = '<span class="' + diffClass + '">' + money(rowDiff) + '</span>';
+            row.cells[11].innerHTML = '<div class="cell-main">' + txn + '</div><div class="cell-sub">' + (row.dataset.time || '') + '</div>';
+            row.cells[12].innerHTML = '<span class="' + badgeClass(row.dataset.status) + '">' + row.dataset.status + '</span>';
+        }
+
+        function recordCodRow(row, receiptCode, amount) {
+            const expected = Number(row.dataset.expected || 0);
+            row.dataset.paid = String(amount);
+            row.dataset.reconciled = 'true';
+            row.dataset.transaction = receiptCode || '—';
+            row.dataset.status = amount === expected ? 'Đã khớp' : 'Chênh lệch';
+            refreshRowCells(row);
+        }
+
+        function parseRowTime(row) {
+            const parts = String(row.dataset.time || '').match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+            if (!parts) return 0;
+            return new Date(Number(parts[3]), Number(parts[2]) - 1, Number(parts[1]), Number(parts[4]), Number(parts[5])).getTime();
+        }
+
+        function getCodRowsForRecording() {
+            return rows
+                .filter(function (row) {
+                    return row.dataset.method === 'Tiền mặt' && row.dataset.reconciled !== 'true';
+                })
+                .sort(function (a, b) { return parseRowTime(a) - parseRowTime(b); });
+        }
+
+        function getRowById(id) {
+            return rows.find(function (row) { return row.dataset.id === id; }) || null;
+        }
+
+        function updateCodInputSummary() {
+            const items = Array.from(document.querySelectorAll('#codFormList .cod-amount-input'));
+            let inputCount = 0;
+            let inputTotal = 0;
+            const expectedTotal = codTargetRows.reduce(function (sum, row) {
+                return sum + Number(row.dataset.expected || 0);
+            }, 0);
+
+            items.forEach(function (input) {
+                const amount = parseMoneyInput(input.value);
+                if (amount > 0) {
+                    inputCount += 1;
+                    inputTotal += amount;
+                }
+            });
+
+            document.getElementById('codOrderCount').textContent = codTargetRows.length;
+            document.getElementById('codExpectedTotal').textContent = money(expectedTotal);
+            document.getElementById('codInputCount').textContent = inputCount;
+            document.getElementById('codInputTotal').textContent = money(inputTotal);
+        }
+
+        function openCodModal() {
+            codTargetRows = getCodRowsForRecording();
+            const list = document.getElementById('codFormList');
+
+            if (!codTargetRows.length) {
+                list.innerHTML = '<div class="cod-empty">Không còn đơn COD chờ ghi nhận nộp tiền trong kỳ đang xem.</div>';
+                updateCodInputSummary();
+                codModal.classList.add('show');
+                return;
+            }
+
+            const bodyRows = codTargetRows.map(function (row) {
+                const expected = Number(row.dataset.expected || 0);
+                return [
+                    '<tr data-row-id="' + row.dataset.id + '">',
+                    '  <td><div class="code-main">' + row.dataset.time + '</div></td>',
+                    '  <td><div class="code-main">' + row.dataset.id + '</div><div class="cell-sub">' + row.dataset.store + '</div></td>',
+                    '  <td>' + row.dataset.driver + '</td>',
+                    '  <td><span class="money">' + money(expected) + '</span></td>',
+                    '  <td><input class="form-input cod-receipt-input" type="text" placeholder="Tuỳ chọn"></td>',
+                    '  <td><input class="form-input cod-amount-input" type="text" inputmode="numeric" placeholder="' + expected.toLocaleString('vi-VN') + '"></td>',
+                    '</tr>'
+                ].join('');
+            }).join('');
+
+            list.innerHTML = [
+                '<div class="cod-table-wrap">',
+                '  <table class="cod-table">',
+                '    <thead>',
+                '      <tr>',
+                '        <th>Thời gian giao</th>',
+                '        <th>Mã đơn giao hàng</th>',
+                '        <th>Tài xế</th>',
+                '        <th>Cần thu</th>',
+                '        <th>Mã biên nhận</th>',
+                '        <th>* Số tiền thu</th>',
+                '      </tr>',
+                '    </thead>',
+                '    <tbody>' + bodyRows + '</tbody>',
+                '  </table>',
+                '</div>'
+            ].join('');
+
+            updateCodInputSummary();
+            codModal.classList.add('show');
+        }
+
+        function closeCodModal() {
+            codModal.classList.remove('show');
+            codTargetRows = [];
+        }
+
+        function saveCodRecords() {
+            const items = Array.from(document.querySelectorAll('#codFormList tbody tr[data-row-id]'));
+            let saved = 0;
+
+            items.forEach(function (item) {
+                const row = getRowById(item.dataset.rowId);
+                if (!row) return;
+                const receipt = item.querySelector('.cod-receipt-input').value.trim();
+                const amount = parseMoneyInput(item.querySelector('.cod-amount-input').value);
+                if (amount <= 0) return;
+                recordCodRow(row, receipt, amount);
+                row.querySelector('.row-check').checked = false;
+                saved += 1;
+            });
+
+            closeCodModal();
+            applyFilters();
+            if (saved > 0) {
+                showToast('Đã ghi nhận thu COD cho ' + saved + ' đơn.');
+            } else {
+                showToast('Vui lòng nhập số tiền thu tại ít nhất một dòng.');
+            }
+        }
+
+        function openDetail(row) {
+            activeRow = row;
+            const expected = Number(row.dataset.expected || 0);
+            const paid = getDisplayPaid(row);
+            const rowDiff = getRowDiff(row);
+            const driverClaim = Number(row.dataset.driverClaim || expected);
+
+            document.getElementById('modalTitle').textContent = 'Chi tiết đối soát ' + row.dataset.id;
+            document.getElementById('detailOrder').textContent = row.dataset.id;
+            document.getElementById('detailStore').textContent = row.dataset.store + (row.dataset.storeCode ? ' · ' + row.dataset.storeCode : '');
+            document.getElementById('detailDriver').textContent = row.dataset.driver;
+            document.getElementById('detailPxk').value = row.dataset.pxk || '—';
+            document.getElementById('compareExpected').textContent = money(expected);
+            document.getElementById('compareDriverPaid').textContent = money(driverClaim);
+            document.getElementById('comparePaid').textContent = money(paid);
+            document.getElementById('compareOrder').textContent = row.dataset.id;
+            document.getElementById('compareMethod').textContent = row.dataset.method;
+            document.getElementById('compareTransaction').textContent = row.dataset.transaction;
+            document.getElementById('compareStatus').innerHTML = '<span class="' + badgeClass(row.dataset.status) + '">' + row.dataset.status + '</span>';
+            document.getElementById('compareDiff').innerHTML = rowDiff > 0 ? '<span class="money bad">' + money(rowDiff) + '</span>' : '<span class="money">0đ</span>';
+            document.getElementById('compareTime').textContent = row.dataset.time;
+            document.getElementById('resolveNote').value = row.dataset.note || '';
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            activeRow = null;
+        }
+
+        function markRowsMatched(selectedOnly) {
+            const targetRows = selectedOnly
+                ? getSelectedRows()
+                : activeRow ? [activeRow] : [];
+
+            const closable = targetRows.filter(function (row) {
+                return row.dataset.status !== 'Chờ đối soát';
+            });
+
+            closable.forEach(function (row) {
+                row.querySelector('.row-check').checked = false;
+            });
+
+            applyFilters();
+            closeModal();
+            if (closable.length > 0) {
+                showToast('Đã chốt đối soát ' + closable.length + ' đơn.');
+            } else {
+                showToast('Vui lòng ghi nhận thu COD trước khi chốt đối soát.');
+            }
+        }
+
+        document.getElementById('applyFilterBtn').addEventListener('click', applyFilters);
+        document.getElementById('resetFilterBtn').addEventListener('click', function () {
+            [searchInput, driverFilter, methodFilter, statusFilter, sourceFilter, diffFilter].forEach(function (field) {
+                field.value = '';
+            });
+            currentTab = '';
+            document.querySelectorAll('.tab').forEach(function (tab) {
+                tab.classList.toggle('active', tab.dataset.tab === '');
+            });
+            applyFilters();
+            showToast('Đã làm mới bộ lọc.');
+        });
+
+        [searchInput, driverFilter, methodFilter, statusFilter, sourceFilter, diffFilter].forEach(function (field) {
+            field.addEventListener('input', applyFilters);
+            field.addEventListener('change', applyFilters);
+        });
+
+        document.querySelectorAll('.tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                currentTab = tab.dataset.tab;
+                document.querySelectorAll('.tab').forEach(function (item) { item.classList.remove('active'); });
+                tab.classList.add('active');
+                statusFilter.value = '';
+                applyFilters();
+            });
+        });
+
+        rows.forEach(function (row) {
+            row.querySelector('.row-check').addEventListener('change', updateSelection);
+            row.addEventListener('click', function (event) {
+                if (event.target.dataset.action === 'detail') {
+                    openDetail(row);
+                }
+            });
+        });
+
+        selectAll.addEventListener('change', function () {
+            visibleRows().forEach(function (row) {
+                row.querySelector('.row-check').checked = selectAll.checked;
+            });
+            updateSelection();
+        });
+
+        document.getElementById('clearSelectionBtn').addEventListener('click', function () {
+            rows.forEach(function (row) { row.querySelector('.row-check').checked = false; });
+            updateSelection();
+        });
+
+        document.getElementById('bulkReconcileBtn').addEventListener('click', function () { markRowsMatched(true); });
+        document.getElementById('codRecordBtn').addEventListener('click', openCodModal);
+        document.getElementById('codFormList').addEventListener('input', function (event) {
+            if (event.target.classList.contains('cod-amount-input')) {
+                updateCodInputSummary();
+            }
+        });
+        document.getElementById('saveCodBtn').addEventListener('click', saveCodRecords);
+        document.getElementById('closeCodModal').addEventListener('click', closeCodModal);
+        document.getElementById('cancelCodModal').addEventListener('click', closeCodModal);
+        codModal.addEventListener('click', function (event) {
+            if (event.target === codModal) closeCodModal();
+        });
+        document.getElementById('markMatchedBtn').addEventListener('click', function () { markRowsMatched(false); });
+
+        document.getElementById('saveNoteBtn').addEventListener('click', function () {
+            if (activeRow) {
+                activeRow.dataset.note = document.getElementById('resolveNote').value;
+            }
+            showToast('Đã lưu ghi chú đối soát.');
+        });
+
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('cancelModal').addEventListener('click', closeModal);
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) closeModal();
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            showToast('Đã tạo file Excel báo cáo đối soát.');
+        });
+
+        updateStats();
+    </script>
+</body>
+</html>

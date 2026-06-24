@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] Danh sách Chuyển kho tài sản — DMS Portal</title>
+    <style>
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --primary-700: #1D4ED8;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            --success-500: #10B981;
+            --warning-500: #F59E0B;
+            --error-500: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            padding: 32px;
+        }
+
+        .browser {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .browser-header {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-dot:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .browser-dot:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .browser-dot:nth-child(3) {
+            background: #28c840;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: var(--neutral-700);
+            border: 1px solid #d0d0d0;
+        }
+
+        .app {
+            display: flex;
+            height: 860px;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: var(--neutral-900);
+            color: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 20px 16px;
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .sidebar-section {
+            padding: 16px 8px 8px;
+        }
+
+        .sidebar-section-title {
+            padding: 0 8px 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-item {
+            padding: 10px 12px;
+            margin: 2px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-item.active {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .sidebar-sub {
+            padding: 6px 12px 6px 36px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .sidebar-sub.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main {
+            flex: 1;
+            background: var(--neutral-50);
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: white;
+            padding: 12px 32px;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--neutral-500);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-500);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--neutral-700);
+        }
+
+        .page {
+            padding: 24px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-700);
+            border-color: var(--neutral-200);
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--primary-500);
+            border: none;
+        }
+
+        .btn-icon {
+            padding: 6px;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .btn-icon:hover {
+            background: var(--neutral-100);
+        }
+
+        /* Filter section */
+        .filter-card {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+
+        .filter-input {
+            padding: 7px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--neutral-700);
+            background: white;
+            min-width: 180px;
+        }
+
+        .filter-input-sm {
+            min-width: 140px;
+        }
+
+        .filter-input-date {
+            min-width: 150px;
+        }
+
+        .filter-select {
+            padding: 7px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--neutral-700);
+            background: white;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .table-count {
+            font-size: 13px;
+            color: var(--neutral-500);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--neutral-50);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 12px;
+            font-size: 13px;
+            color: var(--neutral-900);
+            border-bottom: 1px solid var(--neutral-100);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: var(--neutral-50);
+        }
+
+        td.code {
+            font-family: 'SF Mono', Consolas, monospace;
+            color: var(--primary-600);
+            cursor: pointer;
+        }
+
+        td.code:hover {
+            text-decoration: underline;
+        }
+
+        td.actions {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-init {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+
+        .badge-approved {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .badge-rejected {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .pagination {
+            padding: 12px 16px;
+            border-top: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--neutral-500);
+            background: white;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn.active {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        /* State labels */
+        .state-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 16px;
+            margin-top: 32px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--neutral-200);
+        }
+
+        .state-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 16px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        /* Empty state */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--neutral-500);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-desc {
+            font-size: 14px;
+            color: var(--neutral-500);
+            margin-bottom: 20px;
+        }
+    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+</head>
+
+<body class="portal-page" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+
+    <!-- ===== STATE 1: DEFAULT (CÓ DỮ LIỆU) ===== -->
+    <div class="state-title" style="color:white; border-bottom-color: rgba(255,255,255,0.2);">STATE 1 — Default (Có dữ
+        liệu)</div>
+
+    <div class="browser">
+        <div class="browser-header">
+            <div class="browser-dots">
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+            </div>
+            <div class="browser-url">https://dms.finviet.com.vn/tai-san/chuyen-kho</div>
+        </div>
+        <div class="app">
+            <aside class="sidebar">
+                <div class="sidebar-logo">📊 DMS Portal</div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Danh mục</div>
+                    <div class="sidebar-item">🏭 Sản phẩm</div>
+                    <div class="sidebar-item">🏢 Nhà phân phối</div>
+                    <div class="sidebar-item active">🗄️ Tài sản</div>
+                    <div class="sidebar-sub">📋 Danh sách tài sản</div>
+                    <div class="sidebar-sub">📥 Nhập kho tài sản</div>
+                    <div class="sidebar-sub">📤 Xuất kho tài sản</div>
+                    <div class="sidebar-sub active">🔄 Chuyển kho tài sản</div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Quản lý</div>
+                    <div class="sidebar-item">👥 Nhân viên</div>
+                    <div class="sidebar-item">🏪 Cửa hàng</div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Báo cáo</div>
+                    <div class="sidebar-item">📈 Doanh số</div>
+                </div>
+            </aside>
+            <div class="main">
+                <div class="topbar">
+                    <div class="breadcrumb">
+                        <a href="#">Trang chủ</a> / <a href="#">Danh mục</a> / <a href="#">Tài sản</a> / Chuyển kho tài
+                        sản
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="btn btn-icon btn-secondary"
+                            style="border:1px solid var(--neutral-200);">🔔</button>
+                        <div class="user-info">
+                            <div class="avatar">AT</div>
+                            <span>Admin Test</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-title">Chuyển kho tài sản</div>
+                            <div class="page-subtitle">Quản lý phiếu chuyển kho tài sản giữa các kho</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-secondary">📤 Export</button>
+                            <button class="btn btn-primary">➕ Tạo phiếu mới</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter -->
+                    <div class="filter-card">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <div class="filter-label">Mã chuyển kho</div>
+                                <input type="text" class="filter-input filter-input-sm"
+                                    placeholder="Tìm theo Mã chuyển kho">
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Tài sản</div>
+                                <input type="text" class="filter-input" placeholder="Tìm Mã, Tên tài sản">
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Loại chuyển kho</div>
+                                <select class="filter-select">
+                                    <option value="">-- Tất cả --</option>
+                                    <option>Cấp phát</option>
+                                    <option>Thu hồi</option>
+                                    <option>Chuyển kho ngang cấp</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Trạng thái</div>
+                                <select class="filter-select">
+                                    <option value="">-- Tất cả --</option>
+                                    <option>Khởi tạo</option>
+                                    <option>Đã duyệt</option>
+                                    <option>Đã từ chối</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Từ ngày (*)</div>
+                                <input type="text" class="filter-input filter-input-date" value="01-05-2026">
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Đến ngày (*)</div>
+                                <input type="text" class="filter-input filter-input-date" value="12-05-2026">
+                            </div>
+                        </div>
+                        <div class="filter-row" style="margin-top:10px;">
+                            <div class="filter-group">
+                                <div class="filter-label">NPP</div>
+                                <select class="filter-select" style="min-width:180px;">
+                                    <option value="">-- Tất cả NPP --</option>
+                                    <option>NPP001 — Hà Nội</option>
+                                    <option>NPP002 — Miền Nam</option>
+                                    <option>NPP003 — Miền Trung</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Nhân viên</div>
+                                <select class="filter-select" style="min-width:180px;">
+                                    <option value="">-- Tất cả NV --</option>
+                                    <option>NV010 — Lê Văn D</option>
+                                    <option>NV015 — Nguyễn Văn A</option>
+                                    <option>NV023 — Trần Thị C</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Cửa hàng</div>
+                                <select class="filter-select" style="min-width:180px;">
+                                    <option value="">-- Tất cả CH --</option>
+                                    <option>CH009 — CH Lê Lợi</option>
+                                    <option>CH012 — CH Nguyễn Huệ</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Lý do chuyển kho</div>
+                                <select class="filter-select" style="min-width:180px;">
+                                    <option value="">-- Tất cả --</option>
+                                    <option>Cấp phát định kỳ</option>
+                                    <option>Cấp phát theo yêu cầu</option>
+                                    <option>Thu hồi định kỳ</option>
+                                    <option>Điều phối nội bộ</option>
+                                    <option>Nghỉ việc</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn-primary">🔍 Tìm kiếm</button>
+                            <button class="btn btn-secondary">↻ Làm mới</button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <span class="table-count">Tổng: <strong>24</strong> phiếu chuyển kho</span>
+                            <div style="display:flex; gap:8px;">
+                                <select class="filter-select" style="font-size:12px; padding:4px 8px; min-width:auto;">
+                                    <option>20 / trang</option>
+                                    <option>50 / trang</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:36px;"><input type="checkbox"></th>
+                                    <th>Công ty</th>
+                                    <th>Mã chuyển kho ↕</th>
+                                    <th>Ngày CK ↓</th>
+                                    <th>Loại chuyển kho</th>
+                                    <th>Kho nguồn</th>
+                                    <th>Kho đích</th>
+                                    <th>Lý do chuyển kho</th>
+                                    <th>Trạng thái</th>
+                                    <th>Lý do từ chối</th>
+                                    <th>Người cập nhật</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th style="width:90px; text-align:right;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-size:12px;">CTY001 — Finviet HCM</td>
+                                    <td class="code">CK0012345</td>
+                                    <td>12-05-2026</td>
+                                    <td>Cấp phát</td>
+                                    <td style="font-size:12px;">CTY — CTY001 — Finviet HCM</td>
+                                    <td style="font-size:12px;">NPP — NPP002 — Miền Nam</td>
+                                    <td>Cấp phát định kỳ</td>
+                                    <td><span class="badge badge-init">Khởi tạo</span></td>
+                                    <td style="color:var(--neutral-300); font-size:12px;">—</td>
+                                    <td>admin.test</td>
+                                    <td>12-05-2026 09:30:00</td>
+                                    <td class="actions">
+                                        <button class="btn-icon" title="Sửa">✏️</button>
+                                        <button class="btn-icon" title="Duyệt">✅</button>
+                                        <button class="btn-icon" title="Từ chối">❌</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-size:12px;">CTY001 — Finviet HCM</td>
+                                    <td class="code">CK0012344</td>
+                                    <td>10-05-2026</td>
+                                    <td>Thu hồi</td>
+                                    <td style="font-size:12px;">CH — CH009 — CH Lê Lợi</td>
+                                    <td style="font-size:12px;">NV — NV015 — Nguyễn Văn A</td>
+                                    <td>Thu hồi định kỳ</td>
+                                    <td><span class="badge badge-approved">Đã duyệt</span></td>
+                                    <td style="color:var(--neutral-300); font-size:12px;">—</td>
+                                    <td>nguyen.van.a</td>
+                                    <td>10-05-2026 16:00:00</td>
+                                    <td class="actions">
+                                        <span style="font-size:12px; color: var(--neutral-500);">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-size:12px;">CTY001 — Finviet HCM</td>
+                                    <td class="code">CK0012343</td>
+                                    <td>08-05-2026</td>
+                                    <td>Chuyển kho ngang cấp</td>
+                                    <td style="font-size:12px;">NPP — NPP001 — Hà Nội</td>
+                                    <td style="font-size:12px;">NPP — NPP005 — Đà Nẵng</td>
+                                    <td>Điều phối nội bộ</td>
+                                    <td><span class="badge badge-rejected">Đã từ chối</span></td>
+                                    <td style="font-size:11px; color:#b91c1c; max-width:160px;">Kho NPP Đà Nẵng đang
+                                        kiểm kê</td>
+                                    <td>admin.test</td>
+                                    <td>09-05-2026 08:45:00</td>
+                                    <td class="actions">
+                                        <span style="font-size:12px; color: var(--neutral-500);">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-size:12px;">CTY001 — Finviet HCM</td>
+                                    <td class="code">CK0012342</td>
+                                    <td>07-05-2026</td>
+                                    <td>Cấp phát</td>
+                                    <td style="font-size:12px;">NPP — NPP002 — Miền Nam</td>
+                                    <td style="font-size:12px;">NV — NV023 — Trần Thị C</td>
+                                    <td>Cấp phát theo yêu cầu</td>
+                                    <td><span class="badge badge-init">Khởi tạo</span></td>
+                                    <td style="color:var(--neutral-300); font-size:12px;">—</td>
+                                    <td>tran.thi.b</td>
+                                    <td>07-05-2026 16:45:00</td>
+                                    <td class="actions">
+                                        <button class="btn-icon" title="Sửa">✏️</button>
+                                        <button class="btn-icon" title="Duyệt">✅</button>
+                                        <button class="btn-icon" title="Từ chối">❌</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-size:12px;">CTY001 — Finviet HCM</td>
+                                    <td class="code">CK0012341</td>
+                                    <td>05-05-2026</td>
+                                    <td>Thu hồi</td>
+                                    <td style="font-size:12px;">NV — NV010 — Lê Văn D</td>
+                                    <td style="font-size:12px;">NPP — NPP003 — Miền Trung</td>
+                                    <td>Nghỉ việc</td>
+                                    <td><span class="badge badge-approved">Đã duyệt</span></td>
+                                    <td style="color:var(--neutral-300); font-size:12px;">—</td>
+                                    <td>le.van.d</td>
+                                    <td>05-05-2026 10:00:00</td>
+                                    <td class="actions">
+                                        <span style="font-size:12px; color: var(--neutral-500);">—</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination">
+                            <span>Hiển thị 1–5 / 24 bản ghi</span>
+                            <div class="pagination-controls">
+                                <button class="page-btn">‹</button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">2</button>
+                                <button class="page-btn">3</button>
+                                <span style="padding:0 4px;">...</span>
+                                <button class="page-btn">›</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STATE 2: EMPTY STATE ===== -->
+    <div class="state-title" style="color:white; border-bottom-color: rgba(255,255,255,0.2); margin-top: 48px;">STATE 2
+        — Empty (Không có dữ liệu)</div>
+
+    <div class="browser">
+        <div class="browser-header">
+            <div class="browser-dots">
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+            </div>
+            <div class="browser-url">https://dms.finviet.com.vn/tai-san/chuyen-kho</div>
+        </div>
+        <div class="app" style="height:680px;">
+            <aside class="sidebar">
+                <div class="sidebar-logo">📊 DMS Portal</div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Danh mục</div>
+                    <div class="sidebar-item">🏭 Sản phẩm</div>
+                    <div class="sidebar-item">🏢 Nhà phân phối</div>
+                    <div class="sidebar-item active">🗄️ Tài sản</div>
+                    <div class="sidebar-sub">📋 Danh sách tài sản</div>
+                    <div class="sidebar-sub">📥 Nhập kho tài sản</div>
+                    <div class="sidebar-sub">📤 Xuất kho tài sản</div>
+                    <div class="sidebar-sub active">🔄 Chuyển kho tài sản</div>
+                </div>
+            </aside>
+            <div class="main">
+                <div class="topbar">
+                    <div class="breadcrumb">
+                        <a href="#">Trang chủ</a> / <a href="#">Danh mục</a> / <a href="#">Tài sản</a> / Chuyển kho tài
+                        sản
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="btn btn-icon btn-secondary"
+                            style="border:1px solid var(--neutral-200);">🔔</button>
+                        <div class="user-info">
+                            <div class="avatar">AT</div>
+                            <span>Admin Test</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-title">Chuyển kho tài sản</div>
+                            <div class="page-subtitle">Quản lý phiếu chuyển kho tài sản giữa các kho</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-secondary" style="opacity:0.5; cursor:not-allowed;">📤
+                                Export</button>
+                            <button class="btn btn-primary">➕ Tạo phiếu mới</button>
+                        </div>
+                    </div>
+                    <div class="filter-card">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <div class="filter-label">Mã chuyển kho</div>
+                                <input type="text" class="filter-input filter-input-sm" value="CK9999999">
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Trạng thái</div>
+                                <select class="filter-select">
+                                    <option>Đã duyệt</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Từ ngày (*)</div>
+                                <input type="text" class="filter-input filter-input-date" value="01-05-2026">
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-label">Đến ngày (*)</div>
+                                <input type="text" class="filter-input filter-input-date" value="12-05-2026">
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn-primary">🔍 Tìm kiếm</button>
+                            <button class="btn btn-secondary">↻ Làm mới</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <span class="table-count">Tổng: <strong>0</strong> phiếu chuyển kho</span>
+                        </div>
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <div class="empty-title">Không tìm thấy phiếu chuyển kho</div>
+                            <div class="empty-desc">Không có dữ liệu phù hợp với điều kiện tìm kiếm. Vui lòng thử lại
+                                với điều kiện khác.</div>
+                            <button class="btn btn-primary">➕ Tạo phiếu mới</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">mockups/web/MS-W-CK01-danh-sach-chuyen-kho.html — [WEB] Danh sách Chuyển kho tài sản</div>
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+
+</html>

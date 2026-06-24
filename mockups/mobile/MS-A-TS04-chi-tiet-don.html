@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-TS04 — Chi tiết Đơn Đăng ký Tài sản</title>
+<style>
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--primary-500);
+    color: white;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 13px; }
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow { font-size: 22px; cursor: pointer; }
+  .app-header h1 { font-size: 17px; font-weight: 600; flex: 1; text-align: center; margin-right: 22px; }
+  .content { flex: 1; overflow-y: auto; background: var(--neutral-50); padding-bottom: 80px; }
+
+  /* Detail header banner */
+  .detail-banner {
+    background: var(--neutral-0);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--neutral-100);
+    margin-bottom: 8px;
+  }
+  .detail-code {
+    font-size: 13px;
+    font-family: 'SF Mono', Consolas, monospace;
+    color: var(--primary-600);
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .copy-icon { font-size: 14px; cursor: pointer; }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .badge-pending { background: var(--warning-50); color: var(--warning-700); }
+  .badge-success { background: var(--success-50); color: var(--success-700); }
+  .badge-rejected { background: var(--error-50); color: var(--error-700); }
+  .badge-cancelled { background: var(--neutral-100); color: var(--neutral-500); }
+
+  /* Info section */
+  .info-section {
+    background: var(--neutral-0);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    padding: 12px 16px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .info-row {
+    padding: 10px 16px;
+    display: flex;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-caption {
+    font-size: 12px;
+    color: var(--neutral-500);
+    width: 110px;
+    flex-shrink: 0;
+  }
+  .info-value { font-size: 13px; color: var(--neutral-900); font-weight: 500; flex: 1; }
+  .info-value.muted { color: var(--neutral-500); font-weight: 400; }
+
+  /* Asset list in detail */
+  .asset-line-detail {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .asset-line-detail:last-child { border-bottom: none; }
+  .asset-line-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .asset-detail-name { font-size: 13px; font-weight: 600; color: var(--neutral-900); flex: 1; }
+  .asset-detail-qty {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-600);
+    background: var(--primary-50);
+    border: 1px solid var(--primary-200, #BFDBFE);
+    border-radius: 6px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+  }
+  .asset-detail-meta { font-size: 11px; color: var(--neutral-500); margin-top: 2px; }
+  .tag-small {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  .tag-dinh-danh { background: #EDE9FE; color: #5B21B6; }
+  .tag-posm { background: #FEF3C7; color: #92400E; }
+
+  /* Rejection reason box */
+  .rejection-box {
+    background: var(--error-50);
+    border: 1px solid var(--error-500);
+    border-radius: 10px;
+    margin: 0 16px 8px;
+    padding: 12px;
+  }
+  .rejection-label { font-size: 12px; font-weight: 700; color: var(--error-700); margin-bottom: 4px; }
+  .rejection-reason { font-size: 13px; color: var(--error-700); line-height: 1.5; }
+
+  /* Note box */
+  .note-box {
+    background: var(--neutral-0);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  .note-label { font-size: 12px; color: var(--neutral-500); font-weight: 600; margin-bottom: 4px; }
+  .note-value { font-size: 13px; color: var(--neutral-700); line-height: 1.5; }
+  .note-empty { font-size: 13px; color: var(--neutral-400); font-style: italic; }
+
+  /* Footer */
+  .footer-fixed {
+    position: sticky;
+    bottom: 0;
+    background: var(--neutral-0);
+    border-top: 1px solid var(--neutral-200);
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+  }
+  .btn-primary-mobile {
+    flex: 1;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-danger-mobile {
+    flex: 1;
+    background: var(--error-50);
+    color: var(--error-700);
+    border: 1.5px solid var(--error-500);
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-grey-mobile {
+    flex: 1;
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+    border: 1px solid var(--neutral-200);
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: not-allowed;
+  }
+
+  .hint { color: rgba(255,255,255,0.5); font-size: 12px; text-align: center; margin-top: 16px; font-family: 'SF Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- STATE 1: Chờ duyệt — có nút Hủy đơn -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Chi tiết đơn</h1>
+      </div>
+      <div class="content">
+
+        <div class="detail-banner">
+          <div class="detail-code">
+            DKTS190520263847 <span class="copy-icon">⎘</span>
+          </div>
+          <span class="badge badge-pending">⏳ Chờ duyệt</span>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Thông tin chung</div>
+          <div class="info-row">
+            <div class="info-caption">Cửa hàng</div>
+            <div class="info-value">Tạp hoá Minh Tuấn</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Ngày tạo</div>
+            <div class="info-value">19/05/2026 14:32</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Người tạo</div>
+            <div class="info-value">Nguyễn Văn A (SR)</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Tổng tài sản</div>
+            <div class="info-value">2 loại · 8 SL</div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Danh sách tài sản</div>
+          <div class="asset-line-detail">
+            <div class="asset-line-top">
+              <div class="asset-detail-name">
+                Tủ mát Finviet 100L
+                <span class="tag-small tag-dinh-danh">Định danh</span>
+              </div>
+              <div class="asset-detail-qty">×3</div>
+            </div>
+            <div class="asset-detail-meta">Nhóm: Hàng định danh · Loại: Tủ mát · Tồn ĐK: 12</div>
+          </div>
+          <div class="asset-line-detail">
+            <div class="asset-line-top">
+              <div class="asset-detail-name">
+                Kệ POSM A4
+                <span class="tag-small tag-posm">POSM</span>
+              </div>
+              <div class="asset-detail-qty">×5</div>
+            </div>
+            <div class="asset-detail-meta">Nhóm: POSM · Loại: Kệ trưng bày · Tồn ĐK: 20</div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <div class="note-label">Ghi chú</div>
+          <div class="note-empty">Không có ghi chú</div>
+        </div>
+
+        <div class="footer-fixed">
+          <button class="btn-danger-mobile">🗑 Hủy đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS04 · Chi tiết đơn · State 1: Chờ duyệt (có nút Hủy đơn)</div>
+</div>
+
+<!-- STATE 2: Đã duyệt — readonly, không có nút hành động -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Chi tiết đơn</h1>
+      </div>
+      <div class="content">
+
+        <div class="detail-banner">
+          <div class="detail-code">
+            DKTS120520261023 <span class="copy-icon">⎘</span>
+          </div>
+          <span class="badge badge-success">✅ Đã duyệt</span>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Thông tin chung</div>
+          <div class="info-row">
+            <div class="info-caption">Cửa hàng</div>
+            <div class="info-value">Tạp hoá Ông Mười</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Ngày tạo</div>
+            <div class="info-value">12/05/2026 09:15</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Ngày duyệt</div>
+            <div class="info-value">14/05/2026 11:30</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Người duyệt</div>
+            <div class="info-value">Admin Trần B</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Tổng tài sản</div>
+            <div class="info-value">1 loại · 2 SL</div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Danh sách tài sản</div>
+          <div class="asset-line-detail">
+            <div class="asset-line-top">
+              <div class="asset-detail-name">
+                Ô che nắng Finviet
+                <span class="tag-small tag-dinh-danh">Định danh</span>
+              </div>
+              <div class="asset-detail-qty">×2</div>
+            </div>
+            <div class="asset-detail-meta">Nhóm: Hàng định danh · Loại: Ô che nắng · Tồn ĐK: 8</div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <div class="note-label">Ghi chú</div>
+          <div class="note-value">Cửa hàng mới, ưu tiên cấp phát sớm</div>
+        </div>
+
+        <!-- Không có footer button — trạng thái cuối, readonly -->
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS04 · Chi tiết đơn · State 2: Đã duyệt (readonly, không có nút)</div>
+</div>
+
+<!-- STATE 3: Từ chối — hiện lý do từ chối -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Chi tiết đơn</h1>
+      </div>
+      <div class="content">
+
+        <div class="detail-banner">
+          <div class="detail-code">
+            DKTS150520265614 <span class="copy-icon">⎘</span>
+          </div>
+          <span class="badge badge-rejected">❌ Từ chối</span>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Thông tin chung</div>
+          <div class="info-row">
+            <div class="info-caption">Cửa hàng</div>
+            <div class="info-value">Siêu thị Ngọc Hân</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Ngày tạo</div>
+            <div class="info-value">15/05/2026 10:20</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Ngày từ chối</div>
+            <div class="info-value">16/05/2026 14:05</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Người từ chối</div>
+            <div class="info-value">Admin Trần B</div>
+          </div>
+          <div class="info-row">
+            <div class="info-caption">Tổng tài sản</div>
+            <div class="info-value">1 loại · 1 SL</div>
+          </div>
+        </div>
+
+        <!-- Lý do từ chối — chỉ hiện khi status = Từ chối -->
+        <div class="rejection-box">
+          <div class="rejection-label">❌ Lý do từ chối</div>
+          <div class="rejection-reason">Cửa hàng chưa đủ điều kiện nhận bảng hiệu LED. Vui lòng liên hệ ASM để xác nhận lại tiêu chí cửa hàng trước khi tạo đơn mới.</div>
+        </div>
+
+        <div class="info-section">
+          <div class="section-title">Danh sách tài sản</div>
+          <div class="asset-line-detail">
+            <div class="asset-line-top">
+              <div class="asset-detail-name">
+                Bảng hiệu đèn LED
+                <span class="tag-small tag-dinh-danh">Định danh</span>
+              </div>
+              <div class="asset-detail-qty">×1</div>
+            </div>
+            <div class="asset-detail-meta">Nhóm: Hàng định danh · Loại: Bảng hiệu · Tồn ĐK: 5</div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <div class="note-label">Ghi chú</div>
+          <div class="note-empty">Không có ghi chú</div>
+        </div>
+
+        <!-- State Từ chối: không có button hành động (đơn đã kết thúc) -->
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS04 · Chi tiết đơn · State 3: Từ chối (có lý do từ chối)</div>
+</div>
+
+</body>
+</html>

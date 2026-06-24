@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-KTTKSP01 - Kiểm tra tồn kho sản phẩm</title>
+<style>
+  /* ======= Design Tokens (sync với .claude/design-system) ======= */
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-500: #10B981;
+    --warning-500: #F59E0B;
+    --error-500: #EF4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ======= Phone Frame ======= */
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--neutral-0);
+    color: var(--neutral-900);
+    position: relative;
+    z-index: 2;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+
+  /* ======= App Header ======= */
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow {
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+  }
+  .app-header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    margin-right: 22px;
+  }
+
+  /* ======= Content ======= */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--neutral-50);
+  }
+
+  /* ======= Common Components ======= */
+
+  /* Date filter pill (như image của bạn) */
+  .date-pill {
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 999px;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--neutral-700);
+    margin: 16px;
+  }
+
+  /* Tabs / Segment */
+  .tabs {
+    display: flex;
+    padding: 0 16px;
+    gap: 8px;
+    background: var(--neutral-0);
+  }
+  .tab {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--neutral-500);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .tab.active {
+    background: var(--primary-500);
+    color: white;
+  }
+
+  /* Search bar */
+  .search-bar {
+    margin: 12px 16px;
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: var(--neutral-900);
+    background: transparent;
+  }
+  .search-bar input::placeholder { color: var(--neutral-500); }
+  .search-bar .icon { color: var(--neutral-500); font-size: 16px; }
+
+  /* Section title */
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    padding: 16px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title .action {
+    font-size: 13px;
+    color: var(--primary-500);
+    font-weight: 500;
+  }
+
+  /* Card item */
+  .card {
+    background: var(--neutral-0);
+    margin: 8px 16px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--neutral-100);
+    display: flex;
+    gap: 12px;
+  }
+  .card-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: var(--neutral-500);
+    margin-top: 2px;
+  }
+  .card-address {
+    font-size: 12px;
+    color: var(--neutral-700);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  /* Status badge */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-pending { background: var(--warning-500); color: white; }
+  .badge-success { background: var(--success-500); color: white; }
+  .badge-offline { background: var(--neutral-100); color: var(--neutral-500); }
+
+  /* Order info */
+  .order-info {
+    display: flex;
+    gap: 16px;
+    padding: 8px 12px;
+    margin: 8px -12px -12px;
+    border-top: 1px solid var(--neutral-100);
+    font-size: 12px;
+  }
+  .order-info-item { color: var(--neutral-700); }
+  .order-info-item strong { color: var(--neutral-900); margin-left: 4px; }
+
+  /* Dotted border indicator (như image) */
+  .card.unvisited {
+    border: 1.5px dashed var(--neutral-300);
+  }
+
+  /* Bottom message */
+  .bottom-msg {
+    text-align: center;
+    padding: 24px 16px 32px;
+    color: var(--neutral-500);
+    font-size: 12px;
+  }
+
+  /* Caption / Label */
+  .caption-row {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .caption-label { color: var(--neutral-700); font-size: 14px; }
+  .caption-action { color: var(--primary-500); font-size: 13px; font-weight: 500; }
+
+  /* Hint label cho mockup (chú thích) */
+  .hint {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'SF Mono', monospace;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--neutral-900);
+    background: var(--neutral-0);
+  }
+  textarea {
+    min-height: 72px;
+    resize: none;
+  }
+  label {
+    display: block;
+    margin: 10px 0 4px;
+    color: var(--neutral-700);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  button {
+    min-height: 40px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: var(--neutral-0);
+    color: var(--neutral-700);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button[type="submit"] {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--neutral-0);
+  }
+  small {
+    display: block;
+    color: var(--neutral-500);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  strong { color: var(--neutral-900); }
+</style>
+</head>
+<body>
+
+<!-- ====== PHONE 1: DEFAULT LIST + QUICK ENTRY ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Kiểm tra tồn kho</h1>
+      </div>
+
+      <div class="content" style="padding-bottom:72px;">
+        <div class="tabs" style="padding-top:12px;">
+          <button id="tabProducts" class="tab active" onclick="switchInventoryTab('products')">Danh sách sản phẩm</button>
+          <button id="tabHistory" class="tab" onclick="switchInventoryTab('history')">Lịch sử</button>
+        </div>
+
+        <div class="search-bar">
+          <span class="icon">🔍</span>
+          <input id="productSearch" type="text" placeholder="Tìm mã SKU, tên sản phẩm" oninput="renderCurrentTab()">
+          <span class="icon" onclick="showToast('Bộ lọc: Ngành hàng, nhóm sản phẩm, đơn vị tính.')">☰</span>
+        </div>
+
+        <div class="section-title">
+          <span id="sectionTitle">Danh sách sản phẩm</span>
+          <span id="productCount" class="action"></span>
+        </div>
+
+        <div id="productList"></div>
+        <div id="historyList" style="display:none;"></div>
+
+        <div class="bottom-msg">Đã hết thông tin</div>
+      </div>
+
+      <button id="addProductButton" type="submit" onclick="openProductPopup()" style="position:absolute; left:28px; right:28px; bottom:28px; z-index:4; min-height:44px;">+ Thêm sản phẩm</button>
+
+      <div id="productPopup" style="display:none; position:absolute; left:12px; right:12px; top:112px; bottom:12px; background:rgba(17,24,39,.36); border-radius:0 0 28px 28px; z-index:5; padding:12px;">
+        <div style="height:100%; background:var(--neutral-50); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; border:1px solid var(--neutral-200); position:relative;">
+          <div class="caption-row">
+            <span class="caption-label">Danh sách sản phẩm</span>
+            <span class="caption-action" onclick="closeProductPopup()">Đóng</span>
+          </div>
+          <div class="search-bar">
+            <span class="icon">🔍</span>
+            <input id="popupSearch" type="text" placeholder="Tìm mã SKU, tên sản phẩm" oninput="renderPopupProducts()">
+            <span class="icon">☰</span>
+          </div>
+          <div id="popupProductList" style="overflow-y:auto; padding-bottom:76px;"></div>
+          <div style="position:absolute; left:24px; right:24px; bottom:24px; display:flex; gap:8px;">
+            <button style="flex:1;" onclick="closeProductPopup()">Hủy</button>
+            <button id="addSelectedProductsButton" type="submit" style="flex:1;" onclick="addSelectedProductsFromPopup()">Thêm sản phẩm</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="stockDetailScreen" style="display:none; position:absolute; left:12px; right:12px; top:44px; bottom:12px; background:var(--neutral-50); border-radius:0 0 28px 28px; z-index:7; overflow:hidden; flex-direction:column;">
+        <div class="app-header">
+          <span class="back-arrow" onclick="closeStockDetailScreen()">←</span>
+          <h1>Chi tiết tồn kho</h1>
+        </div>
+        <div class="content" style="padding-bottom:16px;">
+          <div class="card" style="display:block;">
+            <div id="detailProductName" class="card-title">Tên sản phẩm</div>
+            <div id="detailProductSku" class="card-meta">Mã sản phẩm</div>
+            <div id="detailProductStock" class="card-address" style="margin-top:8px;">Tồn kho gần nhất: <strong>--</strong></div>
+          </div>
+          <div class="section-title">
+            <span>Lịch sử kiểm tra tồn kho sản phẩm</span>
+          </div>
+          <div id="stockDetailRows"></div>
+        </div>
+      </div>
+
+      <div id="toast" style="display:none; position:absolute; left:28px; right:28px; bottom:28px; background:var(--neutral-900); color:var(--neutral-0); padding:10px 12px; border-radius:8px; font-size:12px; line-height:1.4; z-index:8; text-align:center;"></div>
+    </div>
+  </div>
+  <div class="hint">MS-A-KTTKSP01 · Default</div>
+</div>
+
+<!-- ====== PHONE 2: EMPTY STATE ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Kiểm tra tồn kho</h1>
+      </div>
+
+      <div class="content" style="padding-bottom:72px;">
+        <div class="tabs" style="padding-top:12px;">
+          <button class="tab active">Danh sách sản phẩm</button>
+          <button class="tab">Lịch sử</button>
+        </div>
+
+        <div class="search-bar">
+          <span class="icon">🔍</span>
+          <input type="text" placeholder="Tìm mã SKU, tên sản phẩm">
+          <span class="icon">☰</span>
+        </div>
+
+        <div class="section-title">
+          <span>Danh sách sản phẩm</span>
+        </div>
+
+        <div class="card unvisited" style="display:block; text-align:center; padding:32px 20px;">
+          <div class="card-avatar" style="margin:0 auto 12px;">📦</div>
+          <div class="card-title" style="justify-content:center;">Chưa có sản phẩm trong danh sách</div>
+          <div class="card-address" style="margin-top:8px;">
+            Nhấn "+ Thêm sản phẩm" để chọn một hoặc nhiều sản phẩm cần kiểm tra tồn kho.
+          </div>
+        </div>
+
+        <div class="bottom-msg">Chưa có dữ liệu kiểm tra tồn kho</div>
+      </div>
+      <button type="submit" style="position:absolute; left:28px; right:28px; bottom:28px; z-index:4; min-height:44px;">+ Thêm sản phẩm</button>
+    </div>
+  </div>
+  <div class="hint">MS-A-KTTKSP01 · Empty</div>
+</div>
+
+<script>
+  const inventoryProducts = [
+    { sku: 'SKUP86805V225215', name: 'Sữa chua Vinamilk Probeauty', unit: 'Thùng', qty: 24, exp: '30/09/2026', status: 'checked', updated: '05/06/2026 08:45:00', icon: '🥛', inList: true },
+    { sku: 'SKUP96250V320906', name: 'Nước cam Twister 320ml', unit: 'Lon', qty: 8, exp: '15/08/2026', status: 'need', updated: 'Chưa cập nhật trong hôm nay', icon: '🧃', inList: true },
+    { sku: 'SKUP100516V284163', name: 'Bánh quy bơ Cosy', unit: 'Gói', qty: 0, exp: '--', status: 'old', updated: '02/06/2026 16:20:00', icon: '🍪', inList: true },
+    { sku: 'SKUP86781V225107', name: 'Kem đặc có đường Dutch Lady 380g', unit: 'Lon', qty: 18, exp: '20/11/2026', status: 'need', updated: 'Chưa cập nhật trong hôm nay', icon: '🥫', inList: true },
+    { sku: 'SKUP121550V346082', name: 'Nhân chà bông bơ 50g', unit: 'Gói', qty: 32, exp: '01/10/2026', status: 'checked', updated: '05/06/2026 09:05:00', icon: '🥐', inList: true },
+    { sku: 'SKUP76321V104421', name: 'Trà xanh không độ 455ml', unit: 'Chai', qty: 15, exp: '18/12/2026', status: 'need', updated: 'Chưa cập nhật trong hôm nay', icon: '🍵', inList: true },
+    { sku: 'SKUP44210V220118', name: 'Mì Hảo Hảo tôm chua cay', unit: 'Thùng', qty: 6, exp: '05/01/2027', status: 'checked', updated: '05/06/2026 09:12:00', icon: '🍜', inList: true },
+    { sku: 'SKUP99870V112006', name: 'Cà phê sữa đá Highlands lon', unit: 'Lon', qty: 11, exp: '09/09/2026', status: 'old', updated: '01/06/2026 14:30:00', icon: '☕', inList: true },
+    { sku: 'SKUP34567V567890', name: 'Bột giặt OMO 3kg', unit: 'Túi', qty: '', exp: '', status: 'new', updated: 'Chưa có trong danh sách gần nhất', icon: '🧼', inList: false },
+    { sku: 'SKUP56789V908172', name: 'Dầu ăn Tường An 1L', unit: 'Chai', qty: '', exp: '', status: 'new', updated: 'Chưa có trong danh sách gần nhất', icon: '🛢️', inList: false },
+    { sku: 'SKUP24680V135790', name: 'Nước mắm Nam Ngư 500ml', unit: 'Chai', qty: '', exp: '', status: 'new', updated: 'Chưa có trong danh sách gần nhất', icon: '🍶', inList: false },
+    { sku: 'SKUP13579V246801', name: 'Sữa tươi Dutch Lady có đường', unit: 'Lốc', qty: '', exp: '', status: 'new', updated: 'Chưa có trong danh sách gần nhất', icon: '🥛', inList: false }
+  ];
+
+  const inventoryHistory = [
+    '05/06/2026 09:12:00 · SKUP44210V220118 · Tồn 6 · HSD 05/01/2027',
+    '05/06/2026 09:05:00 · SKUP121550V346082 · Tồn 32 · HSD 01/10/2026',
+    '05/06/2026 08:45:00 · SKUP86805V225215 · Tồn 24 · HSD 30/09/2026',
+    '02/06/2026 16:20:00 · SKUP100516V284163 · Tồn 0 · HSD --',
+    '01/06/2026 14:30:00 · SKUP99870V112006 · Tồn 11 · HSD 09/09/2026'
+  ];
+
+  const inlineStockEntries = {};
+  const expandedStockDetails = {};
+  const selectedPopupSkus = new Set();
+  let activeTab = 'products';
+  const stockDetailsBySku = {
+    SKUP86805V225215: [
+      { date: '05/06/2026 08:45', hsd: '30/09/2026', sl: 24, note: 'Kệ sữa mát.' },
+      { date: '02/06/2026 16:20', hsd: '28/09/2026', sl: 18, note: 'Còn trong tủ lạnh.' },
+      { date: '29/05/2026 09:10', hsd: '25/09/2026', sl: 12, note: '' },
+      { date: '25/05/2026 11:30', hsd: '20/09/2026', sl: 20, note: 'Nhập sau đợt khuyến mãi.' }
+    ],
+    SKUP96250V320906: [
+      { date: '02/06/2026 15:40', hsd: '15/08/2026', sl: 8, note: 'Kệ nước giải khát.' }
+    ],
+    SKUP100516V284163: [
+      { date: '02/06/2026 16:20', hsd: '--', sl: 0, note: 'Hết hàng.' }
+    ],
+    SKUP86781V225107: [
+      { date: '01/06/2026 10:25', hsd: '20/11/2026', sl: 18, note: 'Trưng bày kệ đầu.' }
+    ],
+    SKUP121550V346082: [
+      { date: '05/06/2026 09:05', hsd: '01/10/2026', sl: 32, note: 'Còn đủ hàng.' }
+    ],
+    SKUP76321V104421: [
+      { date: '01/06/2026 09:45', hsd: '18/12/2026', sl: 15, note: '' }
+    ],
+    SKUP44210V220118: [
+      { date: '05/06/2026 09:12', hsd: '05/01/2027', sl: 6, note: 'Còn 6 thùng sau quầy.' }
+    ],
+    SKUP99870V112006: [
+      { date: '01/06/2026 14:30', hsd: '09/09/2026', sl: 11, note: 'Cần đẩy bán trước hạn.' }
+    ]
+  };
+
+  function productCard(product, includeAction) {
+    const qty = product.qty === '' ? '--' : product.qty;
+    const exp = product.exp || '--';
+    const isEditing = Boolean(inlineStockEntries[product.sku]);
+    const button = includeAction && !isEditing
+      ? `<div style="display:flex; gap:8px; margin-top:10px;">
+           <button style="flex:1;" onclick="openInlineStock('${product.sku}')">Nhập tồn kho</button>
+         </div>`
+      : '';
+
+    return `
+      <div class="card" style="display:block;">
+        <div style="display:flex; gap:12px;">
+          <div class="card-avatar">${product.icon}</div>
+          <div class="card-body">
+            <div class="card-title">${product.name}</div>
+            <div class="card-meta">${product.sku} · ${product.unit}</div>
+            <div class="card-address">Tồn gần nhất: <strong>${qty}</strong> · HSD: <strong>${exp}</strong></div>
+            ${button}
+          </div>
+        </div>
+        ${includeAction ? inlineStockMarkup(product.sku) : ''}
+        ${includeAction ? stockSummaryMarkup(product.sku) : ''}
+      </div>`;
+  }
+
+  function inlineStockMarkup(sku) {
+    const rows = inlineStockEntries[sku];
+    if (!rows) return '';
+    return `
+      <div style="margin-top:10px; padding:10px; border:1px solid var(--neutral-200); border-radius:8px; background:var(--neutral-50);">
+        ${rows.map((row, index) => `
+          <div style="margin-top:${index === 0 ? '0' : '12px'};">
+            <div style="display:flex; gap:8px;">
+              <div style="flex:2; position:relative;">
+                <input id="stock-exp-${sku}-${index}" type="text" value="${row.exp}" placeholder="HSD dd/MM/yyyy" style="padding-right:34px;">
+                <span onclick="focusDateField('${sku}', ${index})" style="position:absolute; right:10px; top:9px; font-size:16px; cursor:pointer;">📅</span>
+              </div>
+              <input id="stock-qty-${sku}-${index}" type="number" value="${row.qty}" placeholder="SL" style="flex:1;">
+              <button onclick="removeInlineStockRow('${sku}', ${index})" title="Xóa HSD" style="width:40px; min-height:40px; flex:0 0 40px; padding:0;">🗑</button>
+            </div>
+            <textarea id="stock-note-${sku}-${index}" maxlength="500" placeholder="Ghi chú" style="margin-top:8px; min-height:56px; width:100%;">${row.note}</textarea>
+          </div>
+        `).join('')}
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button type="submit" style="flex:1;" onclick="saveInlineStock('${sku}')">Lưu</button>
+          <button style="flex:1;" onclick="addInlineStockRow('${sku}')">Thêm HSD</button>
+        </div>
+      </div>`;
+  }
+
+  function stockSummaryMarkup(sku) {
+    const details = stockDetailsBySku[sku] || [];
+    if (!details.length) return '';
+    const expanded = expandedStockDetails[sku];
+    if (!expanded) {
+      return `<div style="margin-top:10px;"><button style="min-height:28px; padding:4px 0; border:none; background:transparent; color:var(--primary-500);" onclick="toggleStockDetails('${sku}')">Chi tiết tồn kho</button></div>`;
+    }
+    const rows = details.slice(0, 3).map(item => stockDetailLineMarkup(item)).join('');
+    const more = details.length > 3
+      ? `<button style="min-height:28px; padding:4px 0; border:none; background:transparent; color:var(--primary-500);" onclick="openStockDetailScreen('${sku}')">Xem thêm</button>`
+      : '';
+    return `
+      <div style="margin-top:10px; padding:10px; border:1px solid var(--neutral-200); border-radius:8px; background:var(--neutral-50);">
+        <button style="min-height:28px; padding:0; border:none; background:transparent; color:var(--primary-500);" onclick="toggleStockDetails('${sku}')">Chi tiết tồn kho ▲</button>
+        <div style="margin-top:8px;">${rows}</div>
+        ${more}
+      </div>`;
+  }
+
+  function stockDetailLineMarkup(item) {
+    return `
+      <div style="padding:8px 0; border-top:1px solid var(--neutral-200);">
+        <div class="card-meta">Ngày nhập: ${item.date}</div>
+        <div class="card-address">HSD: <strong>${item.hsd}</strong> · SL: <strong>${item.sl}</strong></div>
+        <div class="card-address">Ghi chú: ${item.note || '--'}</div>
+      </div>`;
+  }
+
+  function focusDateField(sku, index) {
+    document.getElementById(`stock-exp-${sku}-${index}`)?.focus();
+    showToast('Chọn hoặc nhập HSD theo định dạng dd/MM/yyyy.');
+  }
+
+  function toggleStockDetails(sku) {
+    expandedStockDetails[sku] = !expandedStockDetails[sku];
+    renderProductList();
+  }
+
+  function renderProductList() {
+    const keyword = (document.getElementById('productSearch')?.value || '').trim().toLowerCase();
+    const products = inventoryProducts.filter(item => {
+      const matched = `${item.sku} ${item.name}`.toLowerCase().includes(keyword);
+      return item.inList && matched;
+    });
+    document.getElementById('productList').innerHTML = products.length
+      ? products.map(item => productCard(item, true)).join('')
+      : `<div class="card unvisited" style="display:block; text-align:center;">
+           <div class="card-title" style="justify-content:center;">Không có sản phẩm phù hợp</div>
+           <div class="card-address">Thử tìm bằng mã SKU hoặc tên sản phẩm khác.</div>
+         </div>`;
+    document.getElementById('productCount').textContent = '';
+  }
+
+  function renderCurrentTab() {
+    if (activeTab === 'history') {
+      renderHistoryList();
+    } else {
+      renderProductList();
+    }
+  }
+
+  function renderPopupProducts() {
+    const keyword = (document.getElementById('popupSearch')?.value || '').trim().toLowerCase();
+    const products = inventoryProducts.filter(item => `${item.sku} ${item.name}`.toLowerCase().includes(keyword));
+    document.getElementById('popupProductList').innerHTML = products.length
+      ? products.map(item => popupProductCard(item)).join('')
+      : `<div class="card unvisited" style="display:block; text-align:center;">
+           <div class="card-title" style="justify-content:center;">Không tìm thấy sản phẩm</div>
+           <div class="card-address">Vui lòng kiểm tra mã SKU hoặc tên sản phẩm.</div>
+         </div>`;
+    updateSelectedProductsButton();
+  }
+
+  function popupProductCard(product) {
+    const selected = selectedPopupSkus.has(product.sku);
+    const qty = product.qty === '' ? '--' : product.qty;
+    const exp = product.exp || '--';
+    const inListText = product.inList ? '<div class="card-address">Đã có trong danh sách</div>' : '';
+
+    return `
+      <div class="card" style="align-items:flex-start;">
+        <input type="checkbox" ${selected ? 'checked' : ''} onchange="togglePopupProduct('${product.sku}', this.checked)" style="width:20px; min-height:20px; flex:0 0 auto; margin-top:14px;">
+        <div class="card-avatar">${product.icon}</div>
+        <div class="card-body">
+          <div class="card-title">${product.name}</div>
+          <div class="card-meta">${product.sku} · ${product.unit}</div>
+          <div class="card-address">Tồn gần nhất: <strong>${qty}</strong> · HSD: <strong>${exp}</strong></div>
+          ${inListText}
+        </div>
+      </div>`;
+  }
+
+  function togglePopupProduct(sku, checked) {
+    if (checked) {
+      selectedPopupSkus.add(sku);
+    } else {
+      selectedPopupSkus.delete(sku);
+    }
+    updateSelectedProductsButton();
+  }
+
+  function updateSelectedProductsButton() {
+    const button = document.getElementById('addSelectedProductsButton');
+    if (!button) return;
+    button.textContent = selectedPopupSkus.size ? `Thêm ${selectedPopupSkus.size} sản phẩm` : 'Thêm sản phẩm';
+  }
+
+  function getProductSearchText(product) {
+    const spuCode = product.spu || product.sku.replace('SKUP', 'SPU');
+    const spuName = product.spuName || product.name;
+    return `${product.sku} ${product.name} ${spuCode} ${spuName}`.toLowerCase();
+  }
+
+  function renderHistoryList() {
+    const keyword = (document.getElementById('productSearch')?.value || '').trim().toLowerCase();
+    const items = [];
+    inventoryProducts.forEach(product => {
+      if (keyword && !getProductSearchText(product).includes(keyword)) return;
+      (stockDetailsBySku[product.sku] || []).forEach(detail => {
+        items.push({ product, detail });
+      });
+    });
+    items.sort((a, b) => b.detail.date.localeCompare(a.detail.date));
+    document.getElementById('productCount').textContent = '';
+    const groups = items.reduce((acc, item) => {
+      const day = item.detail.date.split(' ')[0];
+      acc[day] = acc[day] || [];
+      acc[day].push(item);
+      return acc;
+    }, {});
+
+    document.getElementById('historyList').innerHTML = Object.keys(groups).length
+      ? Object.keys(groups).map(day => `
+          <div class="section-title">
+            <span>${day}</span>
+          </div>
+          ${groups[day].map(({ product, detail }) => `
+            <div class="card" style="display:block;">
+              <div class="card-title">${product.sku} - ${product.name}</div>
+              <div class="card-meta">Ngày nhập: ${detail.date}</div>
+              <div class="card-address">HSD: <strong>${detail.hsd}</strong> · SL: <strong>${detail.sl}</strong></div>
+              <div class="card-address">Ghi chú: ${detail.note || '--'}</div>
+            </div>
+          `).join('')}
+        `).join('')
+      : `<div class="card unvisited" style="display:block; text-align:center;">
+           <div class="card-title" style="justify-content:center;">Không có lịch sử phù hợp</div>
+           <div class="card-address">Thử tìm theo mã SKU, tên SKU, mã SPU hoặc tên SPU khác.</div>
+         </div>`;
+  }
+
+  function openInlineStock(sku) {
+    const product = inventoryProducts.find(item => item.sku === sku);
+    if (!product) return;
+    inlineStockEntries[sku] = inlineStockEntries[sku] || [{
+      exp: product.exp && product.exp !== '--' ? product.exp : '',
+      qty: product.qty === '' ? '' : product.qty,
+      note: ''
+    }];
+    renderProductList();
+  }
+
+  function syncInlineStockRows(sku) {
+    const rows = inlineStockEntries[sku] || [];
+    inlineStockEntries[sku] = rows.map((row, index) => ({
+      exp: document.getElementById(`stock-exp-${sku}-${index}`)?.value.trim() || '',
+      qty: document.getElementById(`stock-qty-${sku}-${index}`)?.value.trim() || '',
+      note: document.getElementById(`stock-note-${sku}-${index}`)?.value.trim() || ''
+    }));
+  }
+
+  function addInlineStockRow(sku) {
+    syncInlineStockRows(sku);
+    inlineStockEntries[sku].push({ exp: '', qty: '', note: '' });
+    renderProductList();
+  }
+
+  function removeInlineStockRow(sku, index) {
+    syncInlineStockRows(sku);
+    if (!inlineStockEntries[sku]) return;
+    if (inlineStockEntries[sku].length <= 1) {
+      delete inlineStockEntries[sku];
+      renderProductList();
+      return;
+    }
+    inlineStockEntries[sku].splice(index, 1);
+    renderProductList();
+  }
+
+  function saveInlineStock(sku) {
+    syncInlineStockRows(sku);
+    const product = inventoryProducts.find(item => item.sku === sku);
+    const rows = inlineStockEntries[sku] || [];
+    if (!product || rows.length === 0) return;
+    for (const row of rows) {
+      if (!/^[1-9][0-9]{0,6}$/.test(String(row.qty))) {
+        showToast('Số lượng tồn phải là số nguyên dương, tối đa 7 chữ số.');
+        return;
+      }
+      if (!/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/.test(row.exp)) {
+        showToast('Hạn sử dụng phải đúng định dạng dd/MM/yyyy.');
+        return;
+      }
+    }
+    product.qty = rows.reduce((sum, row) => sum + Number(row.qty), 0);
+    product.exp = rows.map(row => row.exp).join(', ');
+    product.status = 'checked';
+    product.updated = '05/06/2026 09:41:00';
+    product.inList = true;
+    stockDetailsBySku[sku] = stockDetailsBySku[sku] || [];
+    rows.slice().reverse().forEach(row => {
+      stockDetailsBySku[sku].unshift({
+        date: '05/06/2026 09:41',
+        hsd: row.exp,
+        sl: Number(row.qty),
+        note: row.note
+      });
+    });
+    expandedStockDetails[sku] = true;
+    inventoryHistory.unshift(`05/06/2026 09:41:00 · ${product.sku} · ${rows.length} HSD · Tổng tồn ${product.qty}`);
+    delete inlineStockEntries[sku];
+    renderProductList();
+    renderHistoryList();
+    showToast('Lưu kiểm tra tồn kho thành công.');
+  }
+
+  function addSelectedProductsFromPopup() {
+    if (!selectedPopupSkus.size) {
+      showToast('Vui lòng chọn ít nhất 1 sản phẩm.');
+      return;
+    }
+    const selectedSkus = Array.from(selectedPopupSkus);
+    selectedSkus.forEach(sku => {
+      const product = inventoryProducts.find(item => item.sku === sku);
+      if (product) product.inList = true;
+    });
+    selectedPopupSkus.clear();
+    closeProductPopup();
+    switchInventoryTab('products');
+    openInlineStock(selectedSkus[0]);
+    updateSelectedProductsButton();
+    showToast(`Đã thêm ${selectedSkus.length} sản phẩm vào danh sách.`);
+  }
+
+  function openProductPopup() {
+    document.getElementById('productPopup').style.display = 'block';
+    document.getElementById('popupSearch').value = '';
+    selectedPopupSkus.clear();
+    renderPopupProducts();
+  }
+
+  function closeProductPopup() {
+    document.getElementById('productPopup').style.display = 'none';
+    selectedPopupSkus.clear();
+    updateSelectedProductsButton();
+  }
+
+  function openStockDetailScreen(sku) {
+    const product = inventoryProducts.find(item => item.sku === sku);
+    const details = stockDetailsBySku[sku] || [];
+    if (!product) return;
+    document.getElementById('detailProductName').textContent = product.name;
+    document.getElementById('detailProductSku').textContent = `Mã sản phẩm: ${product.sku}`;
+    document.getElementById('detailProductStock').innerHTML = `Tồn kho gần nhất: <strong>${product.qty === '' ? '--' : product.qty}</strong>`;
+    document.getElementById('stockDetailRows').innerHTML = details.length
+      ? details.map(item => `
+          <div class="card" style="display:block;">
+            <div class="card-meta">Ngày nhập: ${item.date}</div>
+            <div class="card-address">HSD: <strong>${item.hsd}</strong> · SL: <strong>${item.sl}</strong></div>
+            <div class="card-address">Ghi chú: ${item.note || '--'}</div>
+          </div>
+        `).join('')
+      : `<div class="card unvisited" style="display:block; text-align:center;">
+           <div class="card-title" style="justify-content:center;">Chưa có chi tiết tồn kho</div>
+         </div>`;
+    const screen = document.getElementById('stockDetailScreen');
+    screen.style.display = 'flex';
+  }
+
+  function closeStockDetailScreen() {
+    document.getElementById('stockDetailScreen').style.display = 'none';
+  }
+
+  function switchInventoryTab(tabName) {
+    const latest = tabName === 'products' || tabName === 'latest';
+    activeTab = latest ? 'products' : 'history';
+    const tabProducts = document.getElementById('tabProducts');
+    const tabHistory = document.getElementById('tabHistory');
+    if (tabProducts) tabProducts.className = latest ? 'tab active' : 'tab';
+    if (tabHistory) tabHistory.className = latest ? 'tab' : 'tab active';
+    document.getElementById('productList').style.display = latest ? 'block' : 'none';
+    document.getElementById('historyList').style.display = latest ? 'none' : 'block';
+    document.getElementById('sectionTitle').textContent = latest ? 'Danh sách sản phẩm' : 'Lịch sử kiểm tra tồn kho sản phẩm';
+    document.getElementById('productCount').textContent = '';
+    document.getElementById('productSearch').value = '';
+    document.getElementById('productSearch').placeholder = latest
+      ? 'Tìm mã SKU, tên sản phẩm'
+      : 'Tìm theo mã SKU, tên SKU, mã SPU, tên SPU';
+    document.getElementById('addProductButton').style.display = latest ? 'block' : 'none';
+    renderCurrentTab();
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.style.display = 'block';
+    clearTimeout(window.stockToastTimer);
+    window.stockToastTimer = setTimeout(() => {
+      toast.style.display = 'none';
+    }, 2200);
+  }
+
+  renderProductList();
+  renderHistoryList();
+</script>
+</body>
+</html>

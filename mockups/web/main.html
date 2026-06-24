@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] DMS Portal — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+    --font-sans: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Fira Code", Consolas, monospace;
+    --header-bg: #1e3a8a;
+    --header-active: #3b82f6;
+    --menu-bg: #2c4475;
+    --menu-hover: #3b82f6;
+    --menu-border: rgba(255,255,255,0.12);
+    --brand-yellow: #f5c518;
+    --filter-green: #10b981;
+    --role-green: #10b981;
+    --user-orange: #f59e0b;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4286;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background: var(--neutral-100);
+    min-height: 100vh;
+    color: var(--neutral-700);
+    padding-bottom: 32px;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ======= Portal Header ======= */
+.portal-header {
+    background: var(--header-bg);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 48px;
+    gap: 4px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.brand-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.brand-name {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.nav-l1-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0;
+    color: rgba(255,255,255,0.92);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+}
+
+.nav-l1-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+.nav-l1-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nav-l1-label {
+    font-weight: 400;
+}
+
+.nav-l1-item:hover,
+.nav-l1-item.open {
+    background: var(--header-active);
+    color: white;
+}
+
+.nav-l1 {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    height: 48px;
+}
+
+/* ======= Dropdown L2 + Flyout L3/L4 (compact overlay) ======= */
+.mega-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--menu-bg);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    z-index: 1001;
+    padding: 4px 0;
+}
+
+.mega-menu.open { display: block; }
+
+.mega-l2-list {
+    width: 260px;
+}
+
+.menu-row {
+    position: relative;
+}
+
+.menu-row > .mega-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.006em;
+    color: rgba(255,255,255,0.95);
+    cursor: pointer;
+    transition: background 0.1s;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.menu-row:hover > .mega-item,
+.menu-row > .mega-item.active {
+    background: var(--menu-hover);
+    color: white;
+}
+
+.menu-flyout {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background: var(--menu-bg);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+    padding: 4px 0;
+    min-width: 160px;
+    width: max-content;
+    max-width: 300px;
+    z-index: 30;
+}
+
+/* Vùng đệm để di chuột sang flyout không bị đóng */
+.menu-flyout::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 6px;
+    height: 100%;
+}
+
+.menu-row.has-flyout:hover > .menu-flyout {
+    display: block;
+}
+
+.mega-item.is-link { cursor: pointer; }
+.mega-item.is-leaf { cursor: default; }
+.mega-item.is-leaf.has-href { cursor: pointer; }
+
+.mega-item .chevron {
+    font-size: 13px;
+    opacity: 0.85;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.mega-item .mockup-badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: rgba(40,167,69,0.3);
+    color: #a8f0c0;
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.header-tag {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.header-tag.company {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.9);
+}
+
+.header-tag.role {
+    background: var(--role-green);
+    color: white;
+    font-weight: 400;
+}
+
+.header-icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    border: none;
+    background: transparent;
+}
+
+.header-icon-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+.header-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    background: var(--user-orange);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ======= Dashboard ======= */
+.dashboard {
+    padding: 18px 22px 36px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.dashboard-title {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: 0;
+    color: var(--neutral-900);
+}
+
+.dashboard-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lang-toggle {
+    display: flex;
+    border: 1px solid var(--neutral-200);
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+}
+
+.lang-btn {
+    padding: 5px 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    border: none;
+    background: white;
+    color: var(--neutral-500);
+    cursor: pointer;
+}
+
+.lang-btn.active {
+    background: var(--header-active);
+    color: white;
+}
+
+.date-range {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--neutral-700);
+}
+
+.btn-filter {
+    padding: 7px 16px;
+    font-family: var(--font-sans);
+    background: var(--filter-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    cursor: pointer;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.summary-card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    min-height: 100px;
+}
+
+.summary-card.purple { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+.summary-card.cyan   { background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%); }
+.summary-card.green  { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+.summary-card.pink   { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+
+.summary-card-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 34px;
+    opacity: 0.3;
+}
+
+.summary-card-label {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    opacity: 0.95;
+    margin-bottom: 6px;
+}
+.summary-card-value {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0;
+    margin-bottom: 4px;
+}
+.summary-card-sub {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    opacity: 0.9;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--neutral-200);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    color: var(--neutral-900);
+}
+
+.map-placeholder {
+    height: 340px;
+    background: linear-gradient(160deg, #e8f4f8 0%, #d4e8f0 50%, #c5dde8 100%);
+    position: relative;
+}
+
+.map-overlay-info {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: white;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+.map-pin {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--header-active);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.map-pin.red {
+    width: 12px;
+    height: 12px;
+    background: #e74c3c;
+}
+
+.tab-bar { display: flex; border-bottom: 1px solid var(--neutral-200); }
+
+.tab-btn {
+    padding: 11px 16px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--neutral-500);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.tab-btn.active {
+    color: var(--header-active);
+    border-bottom-color: var(--header-active);
+    font-weight: 500;
+}
+
+.employee-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--neutral-100);
+}
+
+.employee-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--brand-yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.employee-name {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--neutral-900);
+}
+.employee-phone {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--neutral-500);
+    margin-top: 2px;
+}
+
+.chat-fab {
+    position: fixed;
+    bottom: 36px;
+    right: 22px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--brand-yellow);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: none;
+    cursor: pointer;
+    z-index: 900;
+}
+
+.dev-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1a1a2e;
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    line-height: 16px;
+    padding: 6px 18px;
+    z-index: 9999;
+}
+</style>
+</head>
+<body>
+
+<header class="portal-header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#f5c518"/>
+          <rect x="11" y="11" width="10" height="10" rx="1.5" fill="#fff" opacity="0.95"/>
+        </svg>
+      </div>
+      <span class="brand-name">ecodms</span>
+    </div>
+    <nav class="nav-l1" id="navL1"></nav>
+    <div class="header-right">
+      <span class="header-tag company">Công ty: FINVIET</span>
+      <span class="header-tag role">Vai trò: Admin</span>
+      <button class="header-icon-btn" title="Thông báo">🔔</button>
+      <button class="header-icon-btn" title="Hồ sơ">👤</button>
+      <button class="header-icon-btn" title="Trợ giúp">?</button>
+      <button class="header-user-btn">Quyên CPH BA</button>
+    </div>
+  </div>
+</header>
+
+<main class="dashboard">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Tình hình bán hàng</h1>
+    <div class="dashboard-controls">
+      <div class="lang-toggle">
+        <button class="lang-btn active">VI</button>
+        <button class="lang-btn">EN</button>
+      </div>
+      <div class="date-range">📅 22-06-2024 → 22-06-2024</div>
+      <button class="btn-filter">Bộ lọc</button>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card purple">
+      <div class="summary-card-icon">🛒</div>
+      <div class="summary-card-label">Đơn hàng</div>
+      <div class="summary-card-value">0</div>
+      <div class="summary-card-sub">Tháng: 0</div>
+    </div>
+    <div class="summary-card cyan">
+      <div class="summary-card-icon">📈</div>
+      <div class="summary-card-label">Doanh số</div>
+      <div class="summary-card-value">0</div>
+      <div class="summary-card-sub">Tháng: 0</div>
+    </div>
+    <div class="summary-card green">
+      <div class="summary-card-icon">💰</div>
+      <div class="summary-card-label">Viếng thăm</div>
+      <div class="summary-card-value">6</div>
+      <div class="summary-card-sub">Tháng: 474</div>
+    </div>
+    <div class="summary-card pink">
+      <div class="summary-card-icon">🏪</div>
+      <div class="summary-card-label">Cửa hàng mới</div>
+      <div class="summary-card-value">0</div>
+      <div class="summary-card-sub">Tháng: 0</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="panel">
+      <div class="panel-header">Bản đồ hoạt động</div>
+      <div class="map-placeholder">
+        <div class="map-overlay-info">
+          <div>Cửa hàng: <strong>20/351</strong></div>
+          <div>Nhân viên: <strong>5</strong></div>
+        </div>
+        <div class="map-pin" style="top:30%;left:35%;">3</div>
+        <div class="map-pin" style="top:45%;left:55%;">2</div>
+        <div class="map-pin" style="top:60%;left:42%;">1</div>
+        <div class="map-pin red" style="top:38%;left:62%;"></div>
+        <div class="map-pin red" style="top:52%;left:28%;"></div>
+        <div class="map-pin" style="top:25%;left:48%;">4</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="tab-bar">
+        <button class="tab-btn active">Nhân viên online</button>
+        <button class="tab-btn">Hoạt động gần đây</button>
+      </div>
+      <div>
+        <div class="employee-item">
+          <div class="employee-avatar">👤</div>
+          <div>
+            <div class="employee-name">Phan Hoài Nam</div>
+            <div class="employee-phone">0398790110</div>
+          </div>
+        </div>
+        <div class="employee-item">
+          <div class="employee-avatar">👤</div>
+          <div>
+            <div class="employee-name">Nguyễn Thị Mỹ Trang</div>
+            <div class="employee-phone">0901234567</div>
+          </div>
+        </div>
+        <div class="employee-item">
+          <div class="employee-avatar">👤</div>
+          <div>
+            <div class="employee-name">Trần Thị Bích</div>
+            <div class="employee-phone">0912345678</div>
+          </div>
+        </div>
+        <div class="employee-item">
+          <div class="employee-avatar">👤</div>
+          <div>
+            <div class="employee-name">Lê Quốc Hùng</div>
+            <div class="employee-phone">0923456789</div>
+          </div>
+        </div>
+        <div class="employee-item">
+          <div class="employee-avatar">👤</div>
+          <div>
+            <div class="employee-name">Hoàng Minh Tuấn</div>
+            <div class="employee-phone">0934567890</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<button class="chat-fab" title="Hỗ trợ">💬</button>
+<div class="dev-bar">MAIN · Dashboard — Menu từ Menu_DMS.xlsx · Badge MOCKUP = đã có file HTML</div>
+
+<script src="menu-tree.js"></script>
+<script>
+var L1_ICONS = {
+  'Quản trị': '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>',
+  'Mua hàng': '<svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>',
+  'Giám sát': '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/><path d="M7 9h4M7 12h7"/></svg>',
+  'Danh mục': '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+  'Báo cáo': '<svg viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-8"/><path d="M20 16V6"/></svg>',
+  'Hỗ trợ phần mềm': '<svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 0 1 16 0"/><path d="M4 14v3a2 2 0 0 0 2 2h1"/><path d="M20 14v3a2 2 0 0 1-2 2h-1"/><path d="M12 20v2"/><circle cx="12" cy="11" r="1"/></svg>'
+};
+
+function hasChildren(node) {
+  return node.children && node.children.length > 0;
+}
+
+function createItemEl(node) {
+  var kids = hasChildren(node);
+  var href = node.href || null;
+  var el = document.createElement(kids ? 'div' : (href ? 'a' : 'div'));
+  el.className = 'mega-item';
+  if (!kids && href) {
+    el.href = href;
+    el.classList.add('is-link', 'has-href');
+  } else if (!kids) {
+    el.classList.add('is-leaf');
+  }
+  var label = document.createElement('span');
+  label.textContent = node.label;
+  el.appendChild(label);
+  if (href) {
+    var badge = document.createElement('span');
+    badge.className = 'mockup-badge';
+    badge.textContent = 'MOCKUP';
+    label.appendChild(badge);
+  }
+  if (kids) {
+    var chev = document.createElement('span');
+    chev.className = 'chevron';
+    chev.textContent = '›';
+    el.appendChild(chev);
+  }
+  return el;
+}
+
+function buildMenuRow(node) {
+  var row = document.createElement('div');
+  row.className = 'menu-row';
+  row.appendChild(createItemEl(node));
+  if (hasChildren(node)) {
+    row.classList.add('has-flyout');
+    var flyout = document.createElement('div');
+    flyout.className = 'menu-flyout';
+    node.children.forEach(function(child) {
+      flyout.appendChild(buildMenuRow(child));
+    });
+    row.appendChild(flyout);
+  }
+  return row;
+}
+
+function buildMegaMenu(l1) {
+  var mega = document.createElement('div');
+  mega.className = 'mega-menu';
+  mega.id = 'mega-' + l1.id;
+  var list = document.createElement('div');
+  list.className = 'mega-l2-list';
+  l1.children.forEach(function(l2) {
+    list.appendChild(buildMenuRow(l2));
+  });
+  mega.appendChild(list);
+  return mega;
+}
+
+function renderMenu() {
+  var nav = document.getElementById('navL1');
+  nav.innerHTML = '';
+
+  MENU.forEach(function(l1) {
+    var item = document.createElement('div');
+    item.className = 'nav-l1-item';
+
+    var iconWrap = document.createElement('span');
+    iconWrap.className = 'nav-l1-icon';
+    iconWrap.innerHTML = L1_ICONS[l1.label] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+    item.appendChild(iconWrap);
+
+    var label = document.createElement('span');
+    label.className = 'nav-l1-label';
+    label.textContent = l1.label;
+    item.appendChild(label);
+
+    var mega = buildMegaMenu(l1);
+    item.appendChild(mega);
+
+    item.addEventListener('mouseenter', function() {
+      document.querySelectorAll('.nav-l1-item').forEach(function(n) { n.classList.remove('open'); });
+      document.querySelectorAll('.mega-menu').forEach(function(n) { n.classList.remove('open'); });
+      item.classList.add('open');
+      mega.classList.add('open');
+    });
+
+    item.addEventListener('mouseleave', function(e) {
+      if (!mega.contains(e.relatedTarget)) {
+        item.classList.remove('open');
+        mega.classList.remove('open');
+      }
+    });
+
+    mega.addEventListener('mouseleave', function(e) {
+      if (!item.contains(e.relatedTarget)) {
+        item.classList.remove('open');
+        mega.classList.remove('open');
+      }
+    });
+
+    nav.appendChild(item);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', renderMenu);
+</script>
+</body>
+</html>

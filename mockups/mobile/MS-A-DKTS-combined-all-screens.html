@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[APP] Đăng ký tài sản — Tất cả màn hình (Combined for Figma)</title>
+    <style>
+        /* ======= Design Tokens ======= */
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-100: #DBEAFE;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            --success-50: #ECFDF5;
+            --success-500: #10B981;
+            --success-700: #047857;
+            --warning-50: #FFFBEB;
+            --warning-500: #F59E0B;
+            --error-50: #FEF2F2;
+            --error-500: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            padding: 32px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* ======= Section Label ======= */
+        .screen-section {
+            flex-basis: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .screen-section-id {
+            background: var(--primary-500);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .screen-section-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .screen-section-desc {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .screen-section-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ======= Phone Frame ======= */
+        .phone {
+            width: 375px;
+            background: var(--neutral-0);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .phone-screen {
+            background: var(--neutral-0);
+            border-radius: 28px;
+            overflow: hidden;
+            height: 812px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 600;
+            background: var(--neutral-0);
+            color: var(--neutral-900);
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .app-header {
+            background: var(--primary-500);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-header .back-arrow {
+            font-size: 22px;
+        }
+
+        .app-header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            margin-right: 22px;
+        }
+
+        .app-header .add-btn {
+            font-size: 22px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 2px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--neutral-50);
+            position: relative;
+        }
+
+        /* ======= Hint label ======= */
+        .hint {
+            margin-top: 12px;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* ======= TS01: Dashboard ======= */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--neutral-0);
+            border-radius: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .stat-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--neutral-500);
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .stat-badge-warn {
+            color: var(--warning-500);
+        }
+
+        .stat-badge-success {
+            color: var(--success-500);
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            padding: 8px 16px 4px;
+        }
+
+        .action-list {
+            padding: 0 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .action-btn .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .btn-icon.blue {
+            background: var(--primary-50);
+        }
+
+        .btn-icon.green {
+            background: var(--success-50);
+        }
+
+        .action-btn .btn-body {
+            flex: 1;
+        }
+
+        .action-btn .btn-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .action-btn .btn-desc {
+            font-size: 12px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        .action-btn .arrow {
+            color: var(--neutral-300);
+            font-size: 16px;
+        }
+
+        .recent-item {
+            background: var(--neutral-0);
+            margin: 0 16px 10px;
+            border-radius: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .ri-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .ri-code {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-500);
+        }
+
+        .ri-ch {
+            font-size: 12px;
+            color: var(--neutral-700);
+            margin-bottom: 6px;
+        }
+
+        .ri-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--neutral-500);
+        }
+
+        /* ======= TS01: Date Filter Bar ======= */
+        .date-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 16px 0;
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .dfb-icon {
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .dfb-date-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dfb-label {
+            font-size: 10px;
+            color: var(--neutral-400);
+            display: block;
+            line-height: 1.3;
+        }
+
+        .dfb-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .dfb-sep {
+            color: var(--neutral-400);
+            font-size: 14px;
+            flex-shrink: 0;
+            padding: 0 2px;
+        }
+
+        .dfb-edit {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--primary-500);
+            flex-shrink: 0;
+        }
+
+        /* ======= Status Badges ======= */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-approved {
+            background: var(--success-50);
+            color: var(--success-700);
+        }
+
+        .badge-rejected {
+            background: var(--error-50);
+            color: #7F1D1D;
+        }
+
+        .badge-success {
+            background: var(--success-50);
+            color: var(--success-700);
+        }
+
+        .badge-error {
+            background: var(--error-50);
+            color: #7F1D1D;
+        }
+
+        /* ======= TS02: List Screen ======= */
+        /* Search + Filter row */
+        .search-filter-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 16px 4px;
+        }
+
+        .search-bar {
+            flex: 1;
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: var(--neutral-900);
+            background: transparent;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--neutral-500);
+        }
+
+        .filter-toggle-btn {
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--neutral-700);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .filter-toggle-btn.active {
+            background: var(--primary-50);
+            border-color: var(--primary-500);
+            color: var(--primary-600);
+        }
+
+        .filter-count-badge {
+            background: var(--primary-500);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 999px;
+            line-height: 1.4;
+        }
+
+        /* Status chips (quick filter) */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--neutral-200);
+            background: var(--neutral-0);
+            color: var(--neutral-500);
+            flex-shrink: 0;
+        }
+
+        .chip.active {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        /* Active filter tags */
+        .active-filter-row {
+            display: flex;
+            gap: 6px;
+            padding: 0 16px 8px;
+            overflow-x: auto;
+        }
+
+        .active-filter-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .active-filter-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--primary-50);
+            border: 1px solid var(--primary-500);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--primary-600);
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .active-filter-tag .tag-close {
+            font-size: 11px;
+            color: #93c5fd;
+        }
+
+        /* Order cards */
+        .order-card {
+            background: var(--neutral-0);
+            margin: 0 16px 10px;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .oc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .oc-code {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-500);
+        }
+
+        .oc-store {
+            font-size: 13px;
+            color: var(--neutral-700);
+            margin-bottom: 4px;
+        }
+
+        .oc-reject {
+            font-size: 11px;
+            color: #7F1D1D;
+            background: var(--error-50);
+            border-radius: 6px;
+            padding: 6px 8px;
+            margin: 6px 0;
+        }
+
+        .oc-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--neutral-500);
+            margin-top: 6px;
+        }
+
+        /* FAB */
+        .fab {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 52px;
+            height: 52px;
+            background: var(--primary-500);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.5);
+            z-index: 5;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 56px 32px 32px;
+        }
+
+        .empty-state .icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state .title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-state .desc {
+            font-size: 13px;
+            color: var(--neutral-500);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .empty-btn {
+            background: var(--primary-500);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* ======= Bottom Sheet Filter ======= */
+        .bs-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 10;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .bottom-sheet {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 75%;
+        }
+
+        .bs-handle-area {
+            padding: 10px 0 0;
+        }
+
+        .bs-handle {
+            width: 36px;
+            height: 4px;
+            background: var(--neutral-200);
+            border-radius: 999px;
+            margin: 0 auto;
+        }
+
+        .bs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .bs-header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .bs-close {
+            font-size: 22px;
+            color: var(--neutral-400);
+            line-height: 1;
+        }
+
+        .bs-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px;
+        }
+
+        .bs-section {
+            padding: 14px 0 10px;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .bs-section:last-child {
+            border-bottom: none;
+        }
+
+        .bs-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 10px;
+        }
+
+        /* Radio options (vertical) */
+        .bs-radio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .bs-radio-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 0;
+            font-size: 14px;
+            color: var(--neutral-700);
+        }
+
+        .bs-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--neutral-200);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .bs-radio.on {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+        }
+
+        .bs-radio.on::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        /* Chip options (horizontal) */
+        .bs-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bs-chip {
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            border: 1.5px solid var(--neutral-200);
+            background: var(--neutral-0);
+            color: var(--neutral-700);
+        }
+
+        .bs-chip.on {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            color: var(--primary-600);
+            font-weight: 500;
+        }
+
+        /* Dropdown in sheet */
+        .bs-dropdown {
+            background: var(--neutral-50);
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--neutral-500);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bs-dropdown.enabled {
+            color: var(--neutral-900);
+            background: white;
+        }
+
+        /* Search in sheet */
+        .bs-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--neutral-50);
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            color: var(--neutral-500);
+        }
+
+        /* Footer buttons */
+        .bs-footer {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--neutral-100);
+        }
+
+        .bs-clear-btn {
+            flex: 1;
+            padding: 11px;
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--neutral-700);
+            text-align: center;
+        }
+
+        .bs-apply-btn {
+            flex: 2;
+            padding: 11px;
+            background: var(--primary-500);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        /* ======= TS03: Create Form ======= */
+        .form-card {
+            background: var(--neutral-0);
+            margin: 12px 16px 0;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .form-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-card-title .required {
+            color: var(--error-500);
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--neutral-500);
+            margin-bottom: 5px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .field-label .req {
+            color: var(--error-500);
+        }
+
+        .field-input {
+            width: 100%;
+            background: var(--neutral-0);
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--neutral-900);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .field-input.readonly {
+            background: var(--neutral-50);
+            color: var(--neutral-500);
+            border-color: var(--neutral-100);
+        }
+
+        .field-input .placeholder {
+            color: var(--neutral-300);
+        }
+
+        .field-input .arrow {
+            color: var(--neutral-300);
+            font-size: 14px;
+        }
+
+        .field-input.error {
+            border-color: var(--error-500);
+        }
+
+        .field-error {
+            font-size: 11px;
+            color: var(--error-500);
+            margin-top: 4px;
+        }
+
+        .asset-row {
+            background: var(--neutral-50);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--neutral-100);
+            position: relative;
+        }
+
+        .asset-row .ar-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .asset-row .ar-type {
+            font-size: 11px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        .asset-row .ar-delete {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 16px;
+            color: var(--neutral-400);
+        }
+
+        .asset-row .ar-qty-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .asset-row .ar-qty-label {
+            font-size: 12px;
+            color: var(--neutral-500);
+            flex: 1;
+        }
+
+        .asset-row .ar-qty-input {
+            width: 72px;
+            padding: 6px 10px;
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            color: var(--neutral-900);
+            background: white;
+        }
+
+        .add-asset-btn {
+            background: var(--primary-50);
+            border: 1.5px dashed var(--primary-500);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary-500);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .add-asset-btn.disabled {
+            background: var(--neutral-50);
+            border-color: var(--neutral-200);
+            color: var(--neutral-300);
+        }
+
+        .field-textarea {
+            width: 100%;
+            background: var(--neutral-0);
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--neutral-900);
+            resize: vertical;
+            min-height: 72px;
+            font-family: inherit;
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: var(--neutral-400);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--neutral-100);
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border: 1.5px solid var(--neutral-200);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--neutral-700);
+            background: white;
+            text-align: center;
+        }
+
+        .btn-submit {
+            flex: 2;
+            padding: 12px;
+            background: var(--primary-500);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: MS-A-TS01 — Dashboard Quản lý tài sản            -->
+    <!-- ============================================================ -->
+    <div class="screen-section">
+        <div class="screen-section-id">MS-A-TS01</div>
+        <div>
+            <div class="screen-section-name">Dashboard Quản lý tài sản</div>
+            <div class="screen-section-desc">3 frames: Default (tháng này) · Kỳ tùy chỉnh (tháng trước) · Empty (không
+                có đơn trong kỳ)</div>
+        </div>
+        <div class="screen-section-line"></div>
+    </div>
+
+    <!-- TS01 / Frame 1: Default State -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Quản lý tài sản</h1>
+                </div>
+                <div class="content">
+                    <!-- Bộ lọc thời gian -->
+                    <div class="date-filter-bar">
+                        <span class="dfb-icon">📅</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Từ ngày</span>
+                            <span class="dfb-value">01/05/2026</span>
+                        </div>
+                        <span class="dfb-sep">→</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Đến ngày</span>
+                            <span class="dfb-value">18/05/2026</span>
+                        </div>
+                        <span class="dfb-edit">🗓️</span>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Tài sản đang quản lý</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-value stat-badge-warn">3</div>
+                            <div class="stat-label">Chờ duyệt</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value stat-badge-success">12</div>
+                            <div class="stat-label">Đã duyệt trong kỳ</div>
+                        </div>
+                    </div>
+                    <div class="section-title">Thao tác</div>
+                    <div class="action-list">
+                        <div class="action-btn">
+                            <div class="btn-icon blue">📝</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Đăng ký tài sản</div>
+                                <div class="btn-desc">Tạo đơn đăng ký cấp phát tài sản cho cửa hàng</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="action-btn">
+                            <div class="btn-icon green">📋</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Xem danh sách đơn</div>
+                                <div class="btn-desc">Tra cứu, tìm kiếm và lọc đơn đăng ký tài sản</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                    <div class="section-title">Đơn gần đây</div>
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000045</span>
+                            <span class="badge badge-pending">Chờ duyệt</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Nguyễn Trãi Q5</div>
+                        <div class="ri-footer"><span>14/05/2026</span><span>2 tài sản</span></div>
+                    </div>
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000041</span>
+                            <span class="badge badge-approved">Đã duyệt</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Lê Văn Sỹ Q3</div>
+                        <div class="ri-footer"><span>10/05/2026</span><span>1 tài sản</span></div>
+                    </div>
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000039</span>
+                            <span class="badge badge-rejected">Đã từ chối</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Hoàng Diệu Q4</div>
+                        <div class="ri-footer"><span>08/05/2026</span><span>3 tài sản</span></div>
+                    </div>
+                    <div style="padding:16px; text-align:center; font-size:12px; color:var(--neutral-500);">
+                        Xem tất cả đơn ›
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS01 — 1 / Default State — Tháng 5/2026<br>01/05 → 18/05/2026 · 47 TS · 3 chờ duyệt · 12 đã
+            duyệt</div>
+    </div>
+
+    <!-- TS01 / Frame 2: Kỳ tùy chỉnh — tháng trước -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Quản lý tài sản</h1>
+                </div>
+                <div class="content">
+                    <!-- Bộ lọc thời gian — kỳ tùy chỉnh -->
+                    <div class="date-filter-bar" style="border-color:var(--primary-500); background:var(--primary-50);">
+                        <span class="dfb-icon">📅</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Từ ngày</span>
+                            <span class="dfb-value">01/04/2026</span>
+                        </div>
+                        <span class="dfb-sep">→</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Đến ngày</span>
+                            <span class="dfb-value">30/04/2026</span>
+                        </div>
+                        <span class="dfb-edit">🗓️</span>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">38</div>
+                            <div class="stat-label">Tài sản đang quản lý</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-value stat-badge-warn">2</div>
+                            <div class="stat-label">Chờ duyệt</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value stat-badge-success">8</div>
+                            <div class="stat-label">Đã duyệt trong kỳ</div>
+                        </div>
+                    </div>
+                    <div class="section-title">Thao tác</div>
+                    <div class="action-list">
+                        <div class="action-btn">
+                            <div class="btn-icon blue">📝</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Đăng ký tài sản</div>
+                                <div class="btn-desc">Tạo đơn đăng ký cấp phát tài sản cho cửa hàng</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="action-btn">
+                            <div class="btn-icon green">📋</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Xem danh sách đơn</div>
+                                <div class="btn-desc">Tra cứu, tìm kiếm và lọc đơn đăng ký tài sản</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                    <div class="section-title">Đơn gần đây</div>
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000033</span>
+                            <span class="badge badge-approved">Đã duyệt</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Lê Văn Sỹ Q3</div>
+                        <div class="ri-footer"><span>28/04/2026</span><span>2 tài sản</span></div>
+                    </div>
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000031</span>
+                            <span class="badge badge-rejected">Đã từ chối</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Hoàng Diệu Q4</div>
+                        <div class="ri-footer"><span>20/04/2026</span><span>1 tài sản</span></div>
+                    </div>
+                    <div style="padding:16px; text-align:center; font-size:12px; color:var(--neutral-500);">
+                        Xem tất cả đơn ›
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS01 — 2 / Kỳ tùy chỉnh — Tháng 4/2026<br>01/04 → 30/04/2026 · 38 TS · 2 chờ duyệt · 8 đã
+            duyệt</div>
+    </div>
+
+    <!-- TS01 / Frame 3: Empty State — không có đơn trong kỳ -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Quản lý tài sản</h1>
+                </div>
+                <div class="content">
+                    <!-- Bộ lọc thời gian — hôm nay, không có đơn -->
+                    <div class="date-filter-bar" style="border-color:var(--primary-500); background:var(--primary-50);">
+                        <span class="dfb-icon">📅</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Từ ngày</span>
+                            <span class="dfb-value">18/05/2026</span>
+                        </div>
+                        <span class="dfb-sep">→</span>
+                        <div class="dfb-date-group">
+                            <span class="dfb-label">Đến ngày</span>
+                            <span class="dfb-value">18/05/2026</span>
+                        </div>
+                        <span class="dfb-edit">🗓️</span>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Tài sản đang quản lý</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-value" style="color:var(--neutral-300)">0</div>
+                            <div class="stat-label">Chờ duyệt</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value" style="color:var(--neutral-300)">0</div>
+                            <div class="stat-label">Đã duyệt trong kỳ</div>
+                        </div>
+                    </div>
+                    <div class="section-title">Thao tác</div>
+                    <div class="action-list">
+                        <div class="action-btn">
+                            <div class="btn-icon blue">📝</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Đăng ký tài sản</div>
+                                <div class="btn-desc">Tạo đơn đăng ký cấp phát tài sản cho cửa hàng</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="action-btn">
+                            <div class="btn-icon green">📋</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Xem danh sách đơn</div>
+                                <div class="btn-desc">Tra cứu, tìm kiếm và lọc đơn đăng ký tài sản</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                    <div style="text-align:center; padding: 36px 32px;">
+                        <div style="font-size:48px; margin-bottom:12px;">📋</div>
+                        <div style="font-size:15px; font-weight:600; color:var(--neutral-700); margin-bottom:8px;">Không
+                            có đơn nào trong kỳ</div>
+                        <div style="font-size:13px; color:var(--neutral-500); margin-bottom:20px; line-height:1.6;">
+                            Không tìm thấy đơn đăng ký<br>từ 18/05 đến 18/05/2026</div>
+                        <div style="display:flex; gap:10px; justify-content:center;">
+                            <div
+                                style="background:var(--neutral-0); border:1.5px solid var(--neutral-200); color:var(--neutral-700); padding:10px 18px; border-radius:999px; font-size:13px; font-weight:500;">
+                                ↩ Đổi kỳ</div>
+                            <div
+                                style="background:var(--primary-500); color:white; padding:10px 18px; border-radius:999px; font-size:13px; font-weight:600;">
+                                ➕ Tạo đơn mới</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS01 — 3 / Empty State — Hôm nay<br>18/05/2026 only · 0 đơn trong ngày · CTA đổi kỳ hoặc tạo
+            mới</div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: MS-A-TS02 — Danh sách đơn đăng ký tài sản        -->
+    <!-- (Bổ sung bộ lọc: Thời gian · Nhóm TS · Loại TS · Tài sản)  -->
+    <!-- ============================================================ -->
+    <div class="screen-section">
+        <div class="screen-section-id">MS-A-TS02</div>
+        <div>
+            <div class="screen-section-name">Danh sách đơn đăng ký tài sản</div>
+            <div class="screen-section-desc">4 frames: Default · Bộ lọc đang mở · Đã áp dụng lọc · Empty</div>
+        </div>
+        <div class="screen-section-line"></div>
+    </div>
+
+    <!-- TS02 / Frame 1: Default — Không có bộ lọc active -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <div style="flex:1">
+                        <div style="font-size:17px; font-weight:600;">Đăng ký tài sản</div>
+                        <div class="header-subtitle">CH Nguyễn Trãi Q5</div>
+                    </div>
+                    <span class="add-btn">➕</span>
+                </div>
+                <div class="content">
+                    <!-- Search + Filter button row -->
+                    <div class="search-filter-row">
+                        <div class="search-bar">
+                            <span style="color:var(--neutral-400)">🔍</span>
+                            <input type="text" placeholder="Tìm mã đơn, cửa hàng...">
+                        </div>
+                        <div class="filter-toggle-btn">
+                            🎛 Lọc
+                        </div>
+                    </div>
+                    <!-- Status quick chips -->
+                    <div class="filter-chips">
+                        <span class="chip active">Tất cả</span>
+                        <span class="chip">Chờ duyệt</span>
+                        <span class="chip">Đã duyệt</span>
+                        <span class="chip">Đã từ chối</span>
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000045</span>
+                            <span class="badge badge-pending">⏳ Chờ duyệt</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Nguyễn Trãi Q5</div>
+                        <div class="oc-footer"><span>📅 14/05/2026</span><span>📦 2 tài sản</span></div>
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000041</span>
+                            <span class="badge badge-approved">✅ Đã duyệt</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Lê Văn Sỹ Q3</div>
+                        <div class="oc-footer"><span>📅 10/05/2026</span><span>📦 1 tài sản</span></div>
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000039</span>
+                            <span class="badge badge-rejected">❌ Đã từ chối</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Hoàng Diệu Q4</div>
+                        <div class="oc-reject">Lý do: Cửa hàng chưa đủ điều kiện nhận tài sản tủ lạnh tháng 5</div>
+                        <div class="oc-footer"><span>📅 08/05/2026</span><span>📦 3 tài sản</span></div>
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000035</span>
+                            <span class="badge badge-approved">✅ Đã duyệt</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Nguyễn Trãi Q5</div>
+                        <div class="oc-footer"><span>📅 02/05/2026</span><span>📦 2 tài sản</span></div>
+                    </div>
+                    <div style="text-align:center; padding:16px; font-size:12px; color:var(--neutral-500)">Đã hiển thị
+                        4/4 đơn</div>
+                    <div class="fab">➕</div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS02 — 1 / Default State<br>Không có bộ lọc active · 4 đơn tất cả</div>
+    </div>
+
+    <!-- TS02 / Frame 2: Bộ lọc đang mở (Bottom Sheet) -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <div style="flex:1">
+                        <div style="font-size:17px; font-weight:600;">Đăng ký tài sản</div>
+                        <div class="header-subtitle">CH Nguyễn Trãi Q5</div>
+                    </div>
+                    <span class="add-btn">➕</span>
+                </div>
+                <!-- Background content (blurred behind overlay) -->
+                <div class="content" style="opacity:0.4; pointer-events:none;">
+                    <div class="search-filter-row">
+                        <div class="search-bar">
+                            <span style="color:var(--neutral-400)">🔍</span>
+                            <input type="text" placeholder="Tìm mã đơn, cửa hàng...">
+                        </div>
+                        <div class="filter-toggle-btn active">🎛 Lọc</div>
+                    </div>
+                    <div class="filter-chips">
+                        <span class="chip active">Tất cả</span>
+                        <span class="chip">Chờ duyệt</span>
+                        <span class="chip">Đã duyệt</span>
+                        <span class="chip">Đã từ chối</span>
+                    </div>
+                    <div class="order-card" style="opacity:0.5">
+                        <div class="oc-header"><span class="oc-code">ĐKTS0000045</span><span
+                                class="badge badge-pending">⏳ Chờ duyệt</span></div>
+                        <div class="oc-store">🏪 CH Nguyễn Trãi Q5</div>
+                    </div>
+                </div>
+
+                <!-- Bottom Sheet Overlay -->
+                <div class="bs-overlay">
+                    <div class="bottom-sheet">
+                        <div class="bs-handle-area">
+                            <div class="bs-handle"></div>
+                        </div>
+                        <div class="bs-header">
+                            <div class="bs-header-title">🎛 Bộ lọc</div>
+                            <div class="bs-close">✕</div>
+                        </div>
+                        <div class="bs-body">
+
+                            <!-- Section: Thời gian -->
+                            <div class="bs-section">
+                                <div class="bs-section-title">📅 Thời gian</div>
+                                <div class="bs-radio-list">
+                                    <div class="bs-radio-item">
+                                        <div class="bs-radio"></div>
+                                        <span>Hôm nay</span>
+                                    </div>
+                                    <div class="bs-radio-item">
+                                        <div class="bs-radio"></div>
+                                        <span>Tuần này</span>
+                                    </div>
+                                    <div class="bs-radio-item">
+                                        <div class="bs-radio on"></div>
+                                        <span style="color:var(--primary-600); font-weight:500;">Tháng này</span>
+                                    </div>
+                                    <div class="bs-radio-item">
+                                        <div class="bs-radio"></div>
+                                        <span>3 tháng gần nhất</span>
+                                    </div>
+                                    <div class="bs-radio-item">
+                                        <div class="bs-radio"></div>
+                                        <span>Tùy chỉnh...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Nhóm tài sản -->
+                            <div class="bs-section">
+                                <div class="bs-section-title">📦 Nhóm tài sản</div>
+                                <div class="bs-chip-row">
+                                    <div class="bs-chip on">Tất cả</div>
+                                    <div class="bs-chip">Asset</div>
+                                    <div class="bs-chip">Posm</div>
+                                    <div class="bs-chip">Tot</div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Loại tài sản -->
+                            <div class="bs-section">
+                                <div class="bs-section-title">🏷 Loại tài sản</div>
+                                <div class="bs-dropdown">
+                                    <span>Chọn Nhóm TS trước...</span>
+                                    <span style="color:var(--neutral-300)">›</span>
+                                </div>
+                            </div>
+
+                            <!-- Section: Tài sản -->
+                            <div class="bs-section">
+                                <div class="bs-section-title">🔎 Tài sản cụ thể</div>
+                                <div class="bs-search">
+                                    <span>🔍</span>
+                                    <span>Tìm mã hoặc tên tài sản...</span>
+                                </div>
+                            </div>
+
+                        </div><!-- /bs-body -->
+                        <div class="bs-footer">
+                            <div class="bs-clear-btn">Xoá tất cả</div>
+                            <div class="bs-apply-btn">Áp dụng (1)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS02 — 2 / Bộ lọc đang mở<br>Bottom sheet · "Tháng này" selected · Nhóm: Tất cả</div>
+    </div>
+
+    <!-- TS02 / Frame 3: Bộ lọc đã áp dụng (Nhóm: Posm + Tháng 5/2026) -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <div style="flex:1">
+                        <div style="font-size:17px; font-weight:600;">Đăng ký tài sản</div>
+                        <div class="header-subtitle">CH Nguyễn Trãi Q5</div>
+                    </div>
+                    <span class="add-btn">➕</span>
+                </div>
+                <div class="content">
+                    <!-- Search + Filter active button -->
+                    <div class="search-filter-row">
+                        <div class="search-bar">
+                            <span style="color:var(--neutral-400)">🔍</span>
+                            <input type="text" placeholder="Tìm mã đơn, cửa hàng...">
+                        </div>
+                        <div class="filter-toggle-btn active">
+                            🎛 Lọc <span class="filter-count-badge">2</span>
+                        </div>
+                    </div>
+                    <!-- Active filter tags -->
+                    <div class="active-filter-row">
+                        <div class="active-filter-tag">📅 Tháng 5/2026 <span class="tag-close">×</span></div>
+                        <div class="active-filter-tag">📦 Nhóm: Posm <span class="tag-close">×</span></div>
+                    </div>
+                    <!-- Status quick chips -->
+                    <div class="filter-chips">
+                        <span class="chip active">Tất cả</span>
+                        <span class="chip">Chờ duyệt</span>
+                        <span class="chip">Đã duyệt</span>
+                        <span class="chip">Đã từ chối</span>
+                    </div>
+                    <!-- Filtered results -->
+                    <div style="font-size:12px; color:var(--neutral-500); padding:0 16px 8px;">
+                        Tìm thấy <strong style="color:var(--neutral-700)">2 đơn</strong> có tài sản Posm · Tháng 5/2026
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000045</span>
+                            <span class="badge badge-pending">⏳ Chờ duyệt</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Nguyễn Trãi Q5</div>
+                        <div style="font-size:11px; color:var(--primary-500); margin-top:4px; margin-bottom:2px;">
+                            🏷 Bảng hiệu loại A (×2), Standee 1.8m (×1)
+                        </div>
+                        <div class="oc-footer"><span>📅 14/05/2026</span><span>📦 3 tài sản Posm</span></div>
+                    </div>
+                    <div class="order-card">
+                        <div class="oc-header">
+                            <span class="oc-code">ĐKTS0000039</span>
+                            <span class="badge badge-rejected">❌ Đã từ chối</span>
+                        </div>
+                        <div class="oc-store">🏪 CH Hoàng Diệu Q4</div>
+                        <div style="font-size:11px; color:var(--primary-500); margin-top:4px; margin-bottom:2px;">
+                            🏷 Bảng hiệu loại A (×1)
+                        </div>
+                        <div class="oc-footer"><span>📅 08/05/2026</span><span>📦 1 tài sản Posm</span></div>
+                    </div>
+                    <div style="text-align:center; padding:16px; font-size:12px; color:var(--neutral-500)">Đã hiển thị
+                        2/2 đơn</div>
+                    <div class="fab">➕</div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS02 — 3 / Bộ lọc đã áp dụng<br>Nhóm: Posm + Tháng 5/2026 → 2 đơn · Badge "2" trên nút Lọc
+        </div>
+    </div>
+
+    <!-- TS02 / Frame 4: Empty State (sau khi lọc không có kết quả) -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <div style="flex:1">
+                        <div style="font-size:17px; font-weight:600;">Đăng ký tài sản</div>
+                        <div class="header-subtitle">CH Nguyễn Trãi Q5</div>
+                    </div>
+                    <span class="add-btn">➕</span>
+                </div>
+                <div class="content">
+                    <div class="search-filter-row">
+                        <div class="search-bar">
+                            <span style="color:var(--neutral-400)">🔍</span>
+                            <input type="text" placeholder="Tìm mã đơn, cửa hàng...">
+                        </div>
+                        <div class="filter-toggle-btn active">
+                            🎛 Lọc <span class="filter-count-badge">1</span>
+                        </div>
+                    </div>
+                    <div class="active-filter-row">
+                        <div class="active-filter-tag">🏷 Loại: Tủ lạnh Sanyo <span class="tag-close">×</span></div>
+                    </div>
+                    <div class="filter-chips">
+                        <span class="chip active">Tất cả</span>
+                        <span class="chip">Chờ duyệt</span>
+                        <span class="chip">Đã duyệt</span>
+                        <span class="chip">Đã từ chối</span>
+                    </div>
+                    <div class="empty-state">
+                        <div class="icon">🔍</div>
+                        <div class="title">Không tìm thấy đơn nào</div>
+                        <div class="desc">Không có đơn đăng ký nào chứa<br>tài sản "Tủ lạnh Sanyo" trong kỳ này</div>
+                        <div class="empty-btn"
+                            style="background:var(--neutral-0); border:1.5px solid var(--neutral-200); color:var(--neutral-700);">
+                            ↩ Xoá bộ lọc
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS02 — 4 / Empty after filter<br>Lọc theo Loại TS không có kết quả · Nút "Xoá bộ lọc"</div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: MS-A-TS03 — Tạo đơn đăng ký tài sản             -->
+    <!-- ============================================================ -->
+    <div class="screen-section">
+        <div class="screen-section-id">MS-A-TS03</div>
+        <div>
+            <div class="screen-section-name">Tạo đơn đăng ký tài sản</div>
+            <div class="screen-section-desc">3 frames: Luồng A (CH từ viếng thăm) · Luồng B (chọn CH thủ công) ·
+                Validate Error</div>
+        </div>
+        <div class="screen-section-line"></div>
+    </div>
+
+    <!-- TS03 / Frame 1: Luồng A — CH readonly, có tài sản -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Đăng ký tài sản</h1>
+                </div>
+                <div class="content">
+                    <div class="form-card">
+                        <div class="form-card-title">🏪 Thông tin cửa hàng</div>
+                        <div class="field">
+                            <div class="field-label">Cửa hàng <span class="req">*</span></div>
+                            <div class="field-input readonly">
+                                <span>CH001 — Nguyễn Trãi Q5</span>
+                                <span style="font-size:11px; color:var(--neutral-300)">🔒</span>
+                            </div>
+                            <div style="font-size:11px; color:var(--neutral-500); margin-top:4px;">Lấy từ cửa hàng đang
+                                viếng thăm</div>
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Ngày đăng ký</div>
+                            <div class="field-input readonly"><span>14/05/2026</span></div>
+                        </div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">
+                            📦 Tài sản đăng ký <span class="required">*</span>
+                        </div>
+                        <div class="asset-row">
+                            <div class="ar-name">Máy POS Sunmi V2</div>
+                            <div class="ar-type">Máy POS · Tài sản định danh</div>
+                            <div class="ar-delete">🗑</div>
+                            <div class="ar-qty-row">
+                                <span class="ar-qty-label">Số lượng <span style="color:var(--error-500)">*</span></span>
+                                <input class="ar-qty-input" type="number" value="1" min="1">
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="ar-name">Bảng hiệu cửa hàng loại A</div>
+                            <div class="ar-type">Bảng hiệu · Tài sản không định danh</div>
+                            <div class="ar-delete">🗑</div>
+                            <div class="ar-qty-row">
+                                <span class="ar-qty-label">Số lượng <span style="color:var(--error-500)">*</span></span>
+                                <input class="ar-qty-input" type="number" value="3" min="1">
+                            </div>
+                        </div>
+                        <div class="add-asset-btn">➕ Thêm tài sản</div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">📝 Ghi chú</div>
+                        <div class="field">
+                            <textarea class="field-textarea"
+                                placeholder="Nhập ghi chú (tùy chọn)">Cửa hàng đang cần máy POS gấp để phục vụ chương trình tháng 5</textarea>
+                            <div class="char-count">47/500</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="btn-cancel">Hủy</div>
+                    <div class="btn-submit">Gửi đơn ›</div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS03 — 1 / Luồng A<br>CH readonly (từ viếng thăm) · 2 tài sản đã thêm</div>
+    </div>
+
+    <!-- TS03 / Frame 2: Luồng B — Chưa chọn CH -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Đăng ký tài sản</h1>
+                </div>
+                <div class="content">
+                    <div class="form-card">
+                        <div class="form-card-title">🏪 Thông tin cửa hàng</div>
+                        <div class="field">
+                            <div class="field-label">Cửa hàng <span class="req">*</span></div>
+                            <div class="field-input">
+                                <span class="placeholder">Chọn cửa hàng...</span>
+                                <span class="arrow">›</span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Ngày đăng ký</div>
+                            <div class="field-input readonly"><span>14/05/2026</span></div>
+                        </div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">
+                            📦 Tài sản đăng ký <span class="required">*</span>
+                        </div>
+                        <div style="text-align:center; padding:20px 0; color:var(--neutral-300); font-size:13px;">
+                            <div style="font-size:32px; margin-bottom:8px;">📦</div>
+                            Chọn cửa hàng trước để thêm tài sản
+                        </div>
+                        <div class="add-asset-btn disabled">➕ Thêm tài sản</div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">📝 Ghi chú</div>
+                        <div class="field">
+                            <textarea class="field-textarea" placeholder="Nhập ghi chú (tùy chọn)"></textarea>
+                            <div class="char-count">0/500</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="btn-cancel">Hủy</div>
+                    <div class="btn-submit" style="background:var(--neutral-200); color:var(--neutral-500)">Gửi đơn ›
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS03 — 2 / Luồng B<br>CH chưa chọn · Tài sản block · Nút Gửi disabled</div>
+    </div>
+
+    <!-- TS03 / Frame 3: Validate Error State -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen" style="position:relative">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Đăng ký tài sản</h1>
+                </div>
+                <div class="content">
+                    <div class="form-card">
+                        <div class="form-card-title">🏪 Thông tin cửa hàng</div>
+                        <div class="field">
+                            <div class="field-label">Cửa hàng <span class="req">*</span></div>
+                            <div class="field-input error">
+                                <span class="placeholder">Chọn cửa hàng...</span>
+                                <span class="arrow">›</span>
+                            </div>
+                            <div class="field-error">⚠ Vui lòng chọn Cửa hàng</div>
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Ngày đăng ký</div>
+                            <div class="field-input readonly"><span>14/05/2026</span></div>
+                        </div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">
+                            📦 Tài sản đăng ký <span class="required">*</span>
+                        </div>
+                        <div class="asset-row" style="border-color:var(--error-500)">
+                            <div class="ar-name">Tủ lạnh Sanyo 150L</div>
+                            <div class="ar-type">Tủ lạnh · Tài sản định danh</div>
+                            <div class="ar-delete">🗑</div>
+                            <div class="ar-qty-row">
+                                <span class="ar-qty-label">Số lượng <span style="color:var(--error-500)">*</span></span>
+                                <input class="ar-qty-input" type="number" value="" placeholder="0"
+                                    style="border-color:var(--error-500)">
+                            </div>
+                            <div style="font-size:11px; color:var(--error-500); margin-top:6px;">⚠ Số lượng phải là số
+                                nguyên dương</div>
+                        </div>
+                        <div class="add-asset-btn">➕ Thêm tài sản</div>
+                    </div>
+                    <div class="form-card" style="margin-top:10px">
+                        <div class="form-card-title">📝 Ghi chú</div>
+                        <div class="field">
+                            <textarea class="field-textarea" placeholder="Nhập ghi chú (tùy chọn)"></textarea>
+                            <div class="char-count">0/500</div>
+                        </div>
+                    </div>
+                    <div
+                        style="margin:10px 16px; background:var(--error-50); border:1px solid var(--error-500); border-radius:8px; padding:12px; display:flex; gap:8px; align-items:flex-start;">
+                        <span style="font-size:16px">⚠️</span>
+                        <div style="font-size:13px; color:#7F1D1D; line-height:1.5;">Vui lòng kiểm tra lại thông tin
+                            trước khi gửi đơn</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="btn-cancel">Hủy</div>
+                    <div class="btn-submit">Gửi đơn ›</div>
+                </div>
+            </div>
+        </div>
+        <div class="hint">TS03 — 3 / Validate Error<br>CH chưa chọn · Số lượng = 0 · Error toast</div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- SPEC: Mô tả chi tiết bộ lọc MS-A-TS02                       -->
+    <!-- ============================================================ -->
+    <div style="flex-basis:100%; width:100%; margin-top:24px;">
+        <div
+            style="max-width:960px; margin:0 auto; background:#0f172a; border-radius:16px; padding:32px; border:1px solid rgba(255,255,255,0.08);">
+
+            <div
+                style="font-size:11px; letter-spacing:1px; color:#64748b; font-weight:600; text-transform:uppercase; margin-bottom:8px;">
+                SPEC — MS-A-TS02</div>
+            <div style="font-size:20px; font-weight:700; color:#f1f5f9; margin-bottom:4px;">Bộ lọc Danh sách đơn đăng ký
+                tài sản</div>
+            <div style="font-size:13px; color:#94a3b8; margin-bottom:28px;">Mô tả chi tiết cho từng tiêu chí lọc ·
+                Platform: Salesman App (Mobile)</div>
+
+            <!-- Mô tả chung bộ lọc -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:20px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:10px;">🎛 Cơ chế hiển thị bộ
+                    lọc</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8; width:35%">Trigger mở</td>
+                        <td style="padding:8px 0;">Nhấn nút <strong style="color:#93c5fd">🎛 Lọc</strong> trên màn hình
+                            Danh sách → Bottom Sheet trượt lên từ dưới</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Badge đếm</td>
+                        <td style="padding:8px 0;">Hiển thị badge số trên nút Lọc khi có ≥1 tiêu chí khác Default (VD:
+                            <strong style="color:#93c5fd">🎛 Lọc (2)</strong>)
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Active tags</td>
+                        <td style="padding:8px 0;">Hiển thị chips filter active bên dưới search bar. Mỗi chip có nút [×]
+                            để xoá riêng lẻ</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Nút Xoá tất cả</td>
+                        <td style="padding:8px 0;">Reset tất cả về Default, đóng bottom sheet, xoá toàn bộ active tags
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:#94a3b8;">Đóng sheet</td>
+                        <td style="padding:8px 0;">Nhấn [×] góc phải, swipe down sheet, hoặc nhấn vào overlay tối phía
+                            trên</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tiêu chí 1: Thời gian -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:16px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">📅 Tiêu chí 1 — Thời
+                    gian</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8; width:35%">Loại control</td>
+                        <td style="padding:8px 0;">Radio button (chọn 1 trong N)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Giá trị lựa chọn</td>
+                        <td style="padding:8px 0;">
+                            Hôm nay · Tuần này · <strong style="color:#93c5fd">Tháng này</strong> (default) · 3 tháng
+                            gần nhất · Tùy chỉnh
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Default</td>
+                        <td style="padding:8px 0;"><strong style="color:#93c5fd">Tháng này</strong> — không hiển thị
+                            trong active tags khi là default</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Option "Tùy chỉnh"</td>
+                        <td style="padding:8px 0;">Khi chọn → mở thêm 2 field date: <em>Từ ngày</em> (dd/MM/yyyy) và
+                            <em>Đến ngày</em> (dd/MM/yyyy). Validate: Từ ngày ≤ Đến ngày
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Áp dụng vào dữ liệu</td>
+                        <td style="padding:8px 0;">Lọc theo trường <code
+                                style="background:#0f172a; padding:2px 6px; border-radius:4px; font-size:12px;">ngày_tao_don</code>
+                            của đơn đăng ký</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:#94a3b8;">Active tag label</td>
+                        <td style="padding:8px 0;">📅 Hôm nay · 📅 Tuần này · 📅 Tháng 5/2026 · 📅 3 tháng gần nhất · 📅
+                            12/05 – 18/05/2026</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tiêu chí 2: Nhóm tài sản -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:16px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">📦 Tiêu chí 2 — Nhóm
+                    tài sản</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8; width:35%">Loại control</td>
+                        <td style="padding:8px 0;">Chip chọn đơn (chọn 1)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Giá trị</td>
+                        <td style="padding:8px 0;"><strong style="color:#93c5fd">Tất cả</strong> (default) · Asset ·
+                            Posm · Tot</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Default</td>
+                        <td style="padding:8px 0;"><strong style="color:#93c5fd">Tất cả</strong> — không hiển thị trong
+                            active tags</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Khi chọn Nhóm ≠ Tất cả</td>
+                        <td style="padding:8px 0;">Kích hoạt dropdown Loại tài sản với danh sách loại thuộc nhóm đó</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Áp dụng vào dữ liệu</td>
+                        <td style="padding:8px 0;">Đơn được hiển thị khi CÓ ÍT NHẤT 1 dòng tài sản trong đơn thuộc nhóm
+                            đã chọn</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:#94a3b8;">Active tag label</td>
+                        <td style="padding:8px 0;">📦 Nhóm: Asset · 📦 Nhóm: Posm · 📦 Nhóm: Tot</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tiêu chí 3: Loại tài sản -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:16px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">🏷 Tiêu chí 3 — Loại
+                    tài sản</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8; width:35%">Loại control</td>
+                        <td style="padding:8px 0;">Dropdown single-select (có search)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">State mặc định</td>
+                        <td style="padding:8px 0;">Disabled — hiển thị "Chọn Nhóm TS trước..." (màu neutral-300) khi
+                            Nhóm = Tất cả</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Kích hoạt khi</td>
+                        <td style="padding:8px 0;">Nhóm tài sản ≠ Tất cả → Load danh sách loại TS thuộc nhóm từ API</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Giá trị</td>
+                        <td style="padding:8px 0;">Dropdown: Tất cả loại + danh sách loại thuộc nhóm (VD: Nhóm Posm →
+                            Bảng hiệu / Tủ lạnh / Standee...)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Reset khi đổi Nhóm</td>
+                        <td style="padding:8px 0;">Khi user chọn Nhóm khác → reset Loại về "Tất cả" và load lại danh
+                            sách</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:#94a3b8;">Active tag label</td>
+                        <td style="padding:8px 0;">🏷 Loại: Bảng hiệu loại A · 🏷 Loại: Tủ lạnh Sanyo...</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tiêu chí 4: Tài sản cụ thể -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:16px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">🔎 Tiêu chí 4 — Tài sản
+                    cụ thể</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8; width:35%">Loại control</td>
+                        <td style="padding:8px 0;">Text search (live search trong sheet, debounce 300ms)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Tìm kiếm theo</td>
+                        <td style="padding:8px 0;">Mã tài sản (Mã TS) hoặc Tên loại tài sản, không phân biệt hoa thường
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Kết hợp bộ lọc</td>
+                        <td style="padding:8px 0;">Tìm theo tên TS bên trong đơn. Đơn hiện thị khi có ít nhất 1 dòng TS
+                            match tên/mã</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #334155;">
+                        <td style="padding:8px 0; color:#94a3b8;">Default</td>
+                        <td style="padding:8px 0;">Rỗng — không hiển thị trong active tags khi chưa nhập</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:#94a3b8;">Active tag label</td>
+                        <td style="padding:8px 0;">🔎 TS: "Máy POS" (hiển thị keyword user đã nhập)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Business rules tổng hợp -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px; margin-bottom:16px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">⚙️ Business Rules & UX
+                    Rules</div>
+                <div style="display:flex; flex-direction:column; gap:8px; font-size:13px; color:#cbd5e1;">
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Các tiêu chí lọc hoạt động theo logic <strong>AND</strong>: đơn phải thoả tất cả điều kiện
+                            đã chọn mới hiển thị</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Filter chips trạng thái (Tất cả / Chờ duyệt / Đã duyệt / Đã từ chối) là quick filter
+                            <strong>độc lập</strong> với bottom sheet filter — cả 2 cùng áp dụng AND</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Khi nhấn "Áp dụng": đóng sheet, refresh danh sách, hiển thị active filter tags, cập nhật
+                            badge count</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Số trong nút "Áp dụng (n)": n = số tiêu chí khác Default. VD: Thời gian=Tháng này
+                            (default) không tính; Nhóm=Posm tính là 1</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Empty state sau filter: hiển thị icon 🔍, message cụ thể, nút "↩ Xoá bộ lọc" (không phải
+                            "Tạo đơn mới")</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Bộ lọc được giữ khi back và vào lại màn hình trong cùng session. Xoá khi đăng xuất hoặc
+                            force close app</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span style="color:#4ade80; flex-shrink:0;">✓</span>
+                        <span>Tích hợp với search bar trên đầu: search bar tìm theo mã đơn/tên cửa hàng; bộ lọc tìm theo
+                            thuộc tính tài sản bên trong đơn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kết hợp filter logic -->
+            <div style="background:#1e293b; border-radius:10px; padding:18px 20px;">
+                <div style="font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:12px;">📐 Ví dụ kết hợp filter
+                </div>
+                <div style="font-size:12px; color:#94a3b8; font-family:monospace; line-height:2;">
+                    <div><span style="color:#86efac">Ví dụ 1:</span> Thời gian=Tháng này + Nhóm=Posm + Status chip=Chờ
+                        duyệt</div>
+                    <div style="color:#64748b; padding-left:16px;">→ Hiện đơn Chờ duyệt trong tháng này, CÓ tài sản Posm
+                    </div>
+                    <div style="margin-top:8px;"><span style="color:#86efac">Ví dụ 2:</span> Thời gian=Tuần này +
+                        Loại=Bảng hiệu loại A</div>
+                    <div style="color:#64748b; padding-left:16px;">→ Hiện đơn tuần này có dòng tài sản "Bảng hiệu loại
+                        A"</div>
+                    <div style="margin-top:8px;"><span style="color:#86efac">Ví dụ 3:</span> Keyword="POS" + Nhóm=Asset
+                    </div>
+                    <div style="color:#64748b; padding-left:16px;">→ Hiện đơn có tài sản Asset tên chứa "POS" (VD: Máy
+                        POS Sunmi V2)</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

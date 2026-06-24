@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-KKTTS01 — Kiểm tra tình trạng tài sản</title>
+<style>
+  /* ======= Design Tokens (sync với .claude/design-system) ======= */
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-500: #10B981;
+    --warning-500: #F59E0B;
+    --error-500: #EF4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ======= Phone Frame ======= */
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--neutral-0);
+    color: var(--neutral-900);
+    position: relative;
+    z-index: 2;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+
+  /* ======= App Header ======= */
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow {
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+  }
+  .app-header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    margin-right: 22px;
+  }
+
+  /* ======= Content ======= */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--neutral-50);
+  }
+
+  /* ======= Common Components ======= */
+
+  /* Date filter pill (như image của bạn) */
+  .date-pill {
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 999px;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--neutral-700);
+    margin: 16px;
+  }
+
+  /* Tabs / Segment */
+  .tabs {
+    display: flex;
+    padding: 0 16px;
+    gap: 8px;
+    background: var(--neutral-0);
+  }
+  .tab {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--neutral-500);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .tab.active {
+    background: var(--primary-500);
+    color: white;
+  }
+
+  /* Search bar */
+  .search-bar {
+    margin: 12px 16px;
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: var(--neutral-900);
+    background: transparent;
+  }
+  .search-bar input::placeholder { color: var(--neutral-500); }
+  .search-bar .icon { color: var(--neutral-500); font-size: 16px; }
+
+  /* Section title */
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    padding: 16px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title .action {
+    font-size: 13px;
+    color: var(--primary-500);
+    font-weight: 500;
+  }
+
+  /* Card item */
+  .card {
+    background: var(--neutral-0);
+    margin: 8px 16px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--neutral-100);
+    display: flex;
+    gap: 12px;
+  }
+  .card-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: var(--neutral-500);
+    margin-top: 2px;
+  }
+  .card-address {
+    font-size: 12px;
+    color: var(--neutral-700);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .card-status {
+    font-size: 12px;
+    color: var(--error-500);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* Status badge */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-pending { background: var(--warning-500); color: white; }
+  .badge-success { background: var(--success-500); color: white; }
+  .badge-offline { background: var(--neutral-100); color: var(--neutral-500); }
+
+  /* Order info */
+  .order-info {
+    display: flex;
+    gap: 16px;
+    padding: 8px 12px;
+    margin: 8px -12px -12px;
+    border-top: 1px solid var(--neutral-100);
+    font-size: 12px;
+  }
+  .order-info-item { color: var(--neutral-700); }
+  .order-info-item strong { color: var(--neutral-900); margin-left: 4px; }
+
+  /* Dotted border indicator (như image) */
+  .card.unvisited {
+    border: 1.5px dashed var(--neutral-300);
+  }
+
+  /* Bottom message */
+  .bottom-msg {
+    text-align: center;
+    padding: 24px 16px 32px;
+    color: var(--neutral-500);
+    font-size: 12px;
+  }
+
+  /* Caption / Label */
+  .caption-row {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .caption-label { color: var(--neutral-700); font-size: 14px; }
+  .caption-action { color: var(--primary-500); font-size: 13px; font-weight: 500; }
+
+  /* Hint label cho mockup (chú thích) */
+  .hint {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'SF Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== PHONE 1: DEFAULT LIST ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar" style="background:var(--primary-500);color:white;">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Kiểm tra tình trạng</h1>
+      </div>
+
+      <div class="content">
+        <div class="card" style="align-items:center;border-color:var(--neutral-200);box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+          <div class="card-avatar" style="background:var(--primary-50);">🏪</div>
+          <div class="card-body">
+            <div class="card-title" style="font-size:13px;">NEW_STORE_S_2_ROUTE_5</div>
+            <div class="card-meta"><span style="color:var(--primary-500);">NPP9458495849</span> · 0908706789</div>
+            <div class="card-address">454 Nguyễn Thị Minh Khai, Phường Bàn Cờ, Hồ Chí Minh</div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span>Tài sản cần kiểm tra</span>
+          <span class="action">3/5 đã kiểm</span>
+        </div>
+
+        <div class="search-bar" style="border-radius:999px;background:var(--neutral-100);border-color:transparent;">
+          <span class="icon">🔍</span>
+          <input type="text" placeholder="Tìm theo mã, tên tài sản">
+        </div>
+
+        <div class="tabs" style="padding-top:4px;padding-bottom:8px;background:var(--neutral-50);">
+          <button class="tab active">Tất cả</button>
+          <button class="tab">Định danh</button>
+          <button class="tab">Không định danh</button>
+        </div>
+
+        <div class="card">
+          <div class="card-avatar" style="background:var(--primary-50);font-size:20px;">▣</div>
+          <div class="card-body">
+            <div class="card-title">Tủ mát Finviet 100L <span class="badge badge-success">Đã kiểm</span></div>
+            <div class="card-meta"><strong style="color:var(--primary-500);">Asset</strong> · TS001 · QR-TS001-002</div>
+            <div class="card-address">Kiểm kê lần cuối: 09:20 - 11/06/2026</div>
+            <div class="order-info">
+              <div class="order-info-item">Hình thức <strong>Quét QR</strong></div>
+              <div class="order-info-item">Kết quả <strong>Hợp lệ</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card unvisited">
+          <div class="card-avatar" style="background:var(--primary-50);font-size:20px;">▦</div>
+          <div class="card-body">
+            <div class="card-title">Kệ trưng bày POSM A4 <span class="badge badge-pending">Chưa kiểm</span></div>
+            <div class="card-meta"><strong style="color:var(--primary-500);">Posm</strong> · PS001 · Không định danh</div>
+            <div class="card-address">Số lượng tại cửa hàng: 12 · Cần chọn tình trạng, ghi chú và chụp ảnh</div>
+            <div class="card-status" style="color:var(--primary-500);">Chạm để kiểm tra tình trạng →</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-avatar" style="background:var(--primary-50);font-size:20px;">▦</div>
+          <div class="card-body">
+            <div class="card-title">Bảng rôn khai trương 3x1m <span class="badge badge-success">Đã kiểm</span></div>
+            <div class="card-meta"><strong style="color:var(--primary-500);">Posm</strong> · PS002 · Không định danh</div>
+            <div class="card-address">Tình trạng: Đang hoạt động · 2 ảnh đã chụp</div>
+            <div class="order-info">
+              <div class="order-info-item">Số lượng <strong>8</strong></div>
+              <div class="order-info-item">Lúc <strong>08:45</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card unvisited">
+          <div class="card-avatar" style="background:var(--primary-50);font-size:20px;">▦</div>
+          <div class="card-body">
+            <div class="card-title">Decal dán cửa A3 <span class="badge badge-pending">Chưa kiểm</span></div>
+            <div class="card-meta"><strong style="color:var(--primary-500);">Posm</strong> · PS003 · Không định danh</div>
+            <div class="card-address">Số lượng tại cửa hàng: 20 · Chưa ghi nhận tình trạng hôm nay</div>
+          </div>
+        </div>
+
+        <div class="bottom-msg">Đã hết danh sách</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-KKTTS01 · State 1: Default list</div>
+</div>
+
+<!-- ====== PHONE 2: NON-IDENTIFIED ASSET FORM ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar" style="background:var(--primary-500);color:white;">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Cập nhật tình trạng</h1>
+      </div>
+
+      <div class="content">
+        <div class="card" style="border-color:var(--primary-500);">
+          <div class="card-avatar" style="background:var(--primary-50);font-size:20px;">▦</div>
+          <div class="card-body">
+            <div class="card-title">Kệ trưng bày POSM A4</div>
+            <div class="card-meta"><strong style="color:var(--primary-500);">Posm</strong> · PS001 · Không định danh</div>
+            <div class="order-info">
+              <div class="order-info-item">Số lượng tại CH <strong>12</strong></div>
+              <div class="order-info-item">Đã kiểm hôm nay <strong>0</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span>* Tình trạng</span>
+        </div>
+        <div style="margin:0 16px 12px;background:var(--neutral-0);border:1px solid var(--neutral-200);border-radius:12px;padding:4px 12px;">
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--neutral-900);border-bottom:1px solid var(--neutral-100);">
+            <input type="radio" name="asset-status" checked>
+            <span>Đang hoạt động</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--neutral-900);border-bottom:1px solid var(--neutral-100);">
+            <input type="radio" name="asset-status">
+            <span>Cần sửa chữa</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--neutral-900);border-bottom:1px solid var(--neutral-100);">
+            <input type="radio" name="asset-status">
+            <span>Hư hỏng</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--neutral-900);border-bottom:1px solid var(--neutral-100);">
+            <input type="radio" name="asset-status">
+            <span>Mất</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--neutral-900);">
+            <input type="radio" name="asset-status">
+            <span>Cần thu hồi</span>
+          </label>
+        </div>
+
+        <div class="section-title">
+          <span>Ghi chú</span>
+        </div>
+        <div style="margin:8px 16px 12px;background:var(--neutral-0);border:1px solid var(--neutral-200);border-radius:12px;padding:12px;">
+          <div style="font-size:14px;line-height:1.45;color:var(--neutral-700);min-height:88px;">Kệ còn sử dụng tốt, đã vệ sinh lại khu vực trưng bày. Cửa hàng đề nghị bổ sung thêm standee nhỏ.</div>
+        </div>
+
+        <div class="section-title">
+          <span>* Hình ảnh</span>
+        </div>
+        <div class="card" style="align-items:center;">
+          <div class="card-avatar" style="background:var(--primary-500);color:white;">📷</div>
+          <div class="card-body">
+            <div class="card-title">Hình ảnh:</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin:8px 16px 12px;">
+          <div class="card-avatar" style="border-radius:10px;background:var(--neutral-200);">🖼</div>
+          <div class="card-avatar" style="border-radius:10px;background:var(--neutral-200);">🖼</div>
+          <div class="card-avatar" style="border-radius:10px;background:var(--neutral-100);color:var(--neutral-500);font-size:18px;">+</div>
+        </div>
+
+        <div class="caption-row" style="border-top:1px solid var(--neutral-200);padding-top:14px;">
+          <button class="tab active" style="width:100%;border-radius:10px;font-size:15px;padding:12px 16px;">Xác nhận</button>
+        </div>
+
+        <div class="bottom-msg">Xác nhận sẽ tạo lịch sử kiểm kê tài sản không định danh</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-KKTTS01 · State 2: Form không định danh</div>
+</div>
+
+<!-- ====== PHONE 3: EMPTY STATE ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar" style="background:var(--primary-500);color:white;">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Kiểm tra tình trạng</h1>
+      </div>
+
+      <div class="content">
+        <div class="card" style="align-items:center;border-color:var(--neutral-200);box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+          <div class="card-avatar" style="background:var(--primary-50);">🏪</div>
+          <div class="card-body">
+            <div class="card-title" style="font-size:13px;">Cửa hàng tạp hoá Ông Mười</div>
+            <div class="card-meta"><span style="color:var(--primary-500);">CH9458495849</span> · 0908706789</div>
+            <div class="card-address">97 Pasteur, Phường Sài Gòn, Hồ Chí Minh</div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span>Tài sản cần kiểm tra</span>
+          <span class="action">0 tài sản</span>
+        </div>
+
+        <div class="search-bar" style="border-radius:999px;background:var(--neutral-100);border-color:transparent;">
+          <span class="icon">🔍</span>
+          <input type="text" placeholder="Tìm theo mã, tên tài sản">
+        </div>
+
+        <div class="tabs" style="padding-top:4px;padding-bottom:8px;background:var(--neutral-50);">
+          <button class="tab">Tất cả</button>
+          <button class="tab">Định danh</button>
+          <button class="tab active">Không định danh</button>
+        </div>
+
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-title">Không có tài sản cần kiểm tra</div>
+          <div class="empty-desc">Cửa hàng chưa có tài sản phù hợp hoặc không có kết quả theo điều kiện tìm kiếm.</div>
+          <button class="tab active" style="font-size:14px;padding:12px 24px;border-radius:10px;">Làm mới</button>
+        </div>
+
+        <div class="bottom-msg">Default + Empty trong cùng file HTML</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-KKTTS01 · State 3: Empty</div>
+</div>
+
+</body>
+</html>

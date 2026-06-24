@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] Cấu hình khu vực giao hàng theo Tuyến</title>
+<style>
+:root {
+    --primary-50: #EFF6FF; --primary-100: #DBEAFE; --primary-500: #3B82F6; --primary-600: #2563EB; --primary-700: #1D4ED8;
+    --neutral-0: #FFFFFF; --neutral-50: #F9FAFB; --neutral-100: #F3F4F6; --neutral-200: #E5E7EB; --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280; --neutral-700: #374151; --neutral-900: #111827;
+    --success-50: #ECFDF5; --success-700: #047857; --warning-50: #FFFBEB; --warning-700: #B45309;
+    --error-50: #FEF2F2; --error-700: #B91C1C; --indigo-50: #EEF2FF; --indigo-700: #4338CA; --indigo-100: #C7D2FE;
+    --info-50: #F0F9FF; --info-100: #E0F2FE; --info-700: #0369A1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; background: var(--neutral-100); min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.main { flex: 1; background: var(--neutral-50); overflow-y: auto; }
+
+.topbar { background: white; padding: 10px 28px; border-bottom: 1px solid var(--neutral-200); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.breadcrumb { font-size: 13px; color: var(--neutral-500); }
+.breadcrumb a { color: var(--primary-500); text-decoration: none; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 11px; }
+.company-badge { font-size: 12px; font-weight: 600; color: var(--primary-700); background: var(--primary-50); border: 1px solid var(--primary-100); border-radius: 6px; padding: 4px 10px; }
+
+.page { padding: 20px 28px 40px; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.page-title { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+.page-subtitle { margin-top: 4px; font-size: 12px; color: var(--neutral-500); }
+
+.btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 5px; font-family: inherit; }
+.btn-primary { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: white; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-secondary:hover { background: var(--neutral-50); }
+.btn-text { background: transparent; color: var(--primary-500); border: none; padding: 4px 8px; }
+.btn-text:hover { background: var(--primary-50); border-radius: 4px; }
+
+.filter-card { background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+.filter-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 10px; }
+.filter-row:last-child { margin-bottom: 0; }
+.filter-field { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 140px; }
+.filter-label { font-size: 11px; font-weight: 500; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.5px; }
+.filter-select, .filter-input { padding: 6px 10px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 13px; color: var(--neutral-700); background: white; width: 100%; }
+.filter-select { padding-right: 28px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.filter-select:disabled { background-color: var(--neutral-50); color: var(--neutral-300); cursor: not-allowed; }
+.filter-search { padding: 7px 12px 7px 34px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 13px; background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 10px center; color: var(--neutral-700); width: 100%; }
+.filter-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.bulk-bar { display: none !important; }
+
+.list-section { background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 16px; }
+.list-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.list-section-title { font-size: 15px; font-weight: 700; color: var(--neutral-900); }
+.status-toggle-cell { white-space: nowrap; text-align: center; }
+.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-slider { position: absolute; inset: 0; cursor: pointer; background: var(--neutral-300); border-radius: 999px; transition: background 0.2s; }
+.toggle-slider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+.toggle-switch input:checked + .toggle-slider { background: var(--success-700); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
+.table-container { background: white; border: 1px solid var(--neutral-200); border-radius: 8px; overflow: hidden; }
+
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--neutral-50); }
+th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--neutral-700); border-bottom: 1px solid var(--neutral-200); white-space: nowrap; }
+td { padding: 12px 14px; font-size: 13px; color: var(--neutral-900); border-bottom: 1px solid var(--neutral-100); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafbfc; }
+tr.selected td { background: var(--primary-50); }
+tr.hidden { display: none; }
+
+td.code { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--primary-600); }
+td.code .copy-icon { cursor: pointer; color: var(--neutral-300); margin-left: 4px; font-size: 11px; }
+td.code .copy-icon:hover { color: var(--primary-500); }
+td.muted { color: var(--neutral-500); font-size: 12px; }
+td.actions { text-align: right; white-space: nowrap; }
+td.center { text-align: center; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-active { background: var(--success-50); color: var(--success-700); border: 1px solid #a7f3d0; }
+.badge-off { background: var(--warning-50); color: var(--warning-700); border: 1px solid #fde68a; }
+.badge-info { background: var(--info-50); color: var(--info-700); border: 1px solid var(--info-100); }
+.badge-ward { background: var(--indigo-50); color: var(--indigo-700); border: 1px solid var(--indigo-100); }
+
+.driver-info { display: flex; flex-direction: column; gap: 1px; }
+.driver-name { font-weight: 600; color: var(--neutral-900); font-size: 13px; }
+.driver-phone { font-size: 11px; color: var(--neutral-500); }
+
+.area-empty { color: var(--warning-700); font-size: 12px; font-style: italic; }
+.area-more { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; background: var(--neutral-100); color: var(--neutral-700); margin-top: 4px; }
+
+.ward-cards-wrap { display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+.ward-card { border: 1px solid var(--neutral-200); border-radius: 8px; background: white; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.ward-card-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--neutral-100); background: linear-gradient(180deg, #f8fafc 0%, #fff 100%); }
+.ward-card-pin { font-size: 14px; line-height: 1; }
+.ward-card-title { font-size: 13px; font-weight: 700; color: var(--neutral-900); flex: 1; }
+.ward-card-count { font-size: 11px; font-weight: 600; color: var(--success-700); background: var(--success-50); border: 1px solid #a7f3d0; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.ward-card-row { display: grid; grid-template-columns: 72px 1fr; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--neutral-100); font-size: 12px; align-items: start; }
+.ward-card-row:last-child { border-bottom: none; }
+.ward-card-label { color: var(--neutral-500); font-weight: 500; }
+.ward-card-value { color: var(--neutral-800); }
+.ward-card-streets { align-items: start; }
+.ward-card-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+.ward-card-street-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+
+td.note-cell { max-width: 160px; color: var(--neutral-600); font-size: 12px; }
+td.note-cell.empty { color: var(--neutral-400); font-style: italic; }
+td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap; }
+
+.btn-icon { width: 32px; height: 32px; border: 1px solid var(--neutral-200); border-radius: 6px; background: white; color: var(--primary-600); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; padding: 0; }
+.btn-icon:hover { background: var(--primary-50); border-color: var(--primary-100); }
+
+.pagination { padding: 12px 16px; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--neutral-500); }
+.pagination-controls { display: flex; gap: 4px; align-items: center; }
+.page-btn { width: 28px; height: 28px; border: 1px solid var(--neutral-200); border-radius: 5px; background: white; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--neutral-700); }
+.page-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+
+/* ===== Modal ===== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(17,24,39,0.48); z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 10px; width: min(1180px, 100%); max-height: calc(100vh - 48px); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--neutral-200); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); }
+.modal-close { cursor: pointer; color: var(--neutral-500); font-size: 20px; padding: 4px; border: none; background: transparent; }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; max-height: calc(100vh - 176px); }
+.modal-footer { padding: 14px 20px; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; background: var(--neutral-50); }
+.modal-footer-meta { font-size: 12px; color: var(--neutral-500); }
+.modal-footer-actions { display: flex; gap: 8px; }
+
+.driver-summary { background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; display: grid; grid-template-columns: 110px 1fr 110px 1fr; gap: 8px; font-size: 13px; }
+.driver-summary .label { color: var(--neutral-500); }
+.driver-summary .value { color: var(--neutral-900); font-weight: 600; }
+
+.info-banner { background: var(--info-50); border: 1px solid var(--info-100); color: var(--info-700); border-radius: 6px; padding: 10px 14px; font-size: 12px; margin-bottom: 14px; line-height: 1.55; }
+.rule-preview { margin-top: 12px; padding: 10px 12px; border: 1px solid var(--info-100); border-radius: 8px; background: var(--info-50); color: var(--info-700); font-size: 12px; line-height: 1.5; }
+
+/* ===== Tree Transfer (theo MS-W-DL02) ===== */
+.transfer-layout { display: grid; grid-template-columns: minmax(360px, 1fr) 108px minmax(360px, 1fr); gap: 14px; align-items: stretch; }
+.transfer-box { min-height: 320px; border: 1px solid var(--neutral-200); border-radius: 8px; background: white; overflow: visible; display: flex; flex-direction: column; }
+.transfer-box-scroll { overflow: hidden; }
+.transfer-head { display: flex; align-items: center; justify-content: space-between; min-height: 38px; padding: 8px 12px; border-bottom: 1px solid var(--neutral-200); background: var(--neutral-50); color: var(--neutral-700); font-size: 13px; }
+.transfer-head-left { display: flex; align-items: center; gap: 8px; }
+.transfer-head-actions { display: flex; align-items: center; gap: 8px; }
+.transfer-head-sub { font-size: 11px; color: var(--neutral-500); }
+.btn-link { font-size: 12px; font-weight: 500; color: var(--primary-600); background: none; border: none; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-family: inherit; }
+.btn-link:hover { background: var(--primary-50); }
+.btn-link:disabled { color: var(--neutral-300); cursor: not-allowed; background: none; }
+
+.transfer-scope { padding: 10px 12px; border-bottom: 1px solid var(--neutral-100); background: var(--neutral-50); }
+.transfer-scope-row { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
+.scope-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.scope-label { font-size: 10px; font-weight: 600; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.3px; }
+.scope-select { padding: 6px 28px 6px 10px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 12px; color: var(--neutral-700); background: white; width: 100%; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.scope-select:disabled { background-color: var(--neutral-100); color: var(--neutral-400); cursor: not-allowed; }
+.scope-input { padding: 7px 10px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 13px; color: var(--neutral-700); background: white; width: 100%; font-family: inherit; }
+.scope-input:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 2px var(--primary-50); }
+.scope-input::placeholder { color: var(--neutral-400); }
+
+.multi-select { position: relative; }
+.multi-select-trigger { width: 100%; text-align: left; padding: 6px 28px 6px 10px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 12px; color: var(--neutral-700); background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center; cursor: pointer; font-family: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.multi-select-trigger:disabled { background-color: var(--neutral-100); color: var(--neutral-400); cursor: not-allowed; }
+.multi-select-panel { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; background: white; border: 1px solid var(--neutral-200); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); max-height: 200px; overflow-y: auto; }
+.multi-select.open .multi-select-panel { display: block; }
+.multi-select-option { display: flex; align-items: center; gap: 8px; padding: 7px 10px; font-size: 12px; cursor: pointer; }
+.multi-select-option:hover { background: var(--neutral-50); }
+.scope-label.required::before { content: '* '; color: #EF4444; }
+
+/* ===== Tree Multi-Select (Phường / Đường) ===== */
+.tree-ms { position: relative; }
+.tree-ms-tags-bar { display: flex; align-items: flex-start; gap: 6px; min-height: 32px; padding: 5px 8px; border: 1px solid var(--neutral-200); border-radius: 6px 6px 0 0; background: var(--neutral-50); border-bottom: none; }
+.tree-ms-tags-bar.empty { border-radius: 6px; border-bottom: 1px solid var(--neutral-200); }
+.tree-ms-tags { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; min-height: 22px; align-items: center; }
+.tree-ms-placeholder { color: var(--neutral-400); font-size: 12px; padding: 2px 4px; }
+.tree-ms-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: var(--neutral-100); color: var(--neutral-700); border: 1px solid var(--neutral-200); max-width: 100%; }
+.tree-ms-tag.ward-tag { background: var(--indigo-50); color: var(--indigo-700); border-color: var(--indigo-100); }
+.tree-ms-tag.street-tag { background: var(--primary-50); color: var(--primary-700); border-color: var(--primary-100); }
+.tree-ms-tag-remove { cursor: pointer; color: var(--neutral-400); font-size: 14px; line-height: 1; padding: 0 2px; border: none; background: none; }
+.tree-ms-tag-remove:hover { color: var(--error-700); }
+.tree-ms-clear { flex-shrink: 0; width: 22px; height: 22px; border: none; background: none; color: var(--neutral-400); cursor: pointer; font-size: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.tree-ms-clear:hover { background: var(--neutral-200); color: var(--neutral-700); }
+.tree-ms-panel { border: 1px solid var(--neutral-200); border-radius: 0 0 6px 6px; background: white; max-height: 240px; overflow-y: auto; min-height: 120px; }
+.tree-ms-panel.disabled { background: var(--neutral-50); min-height: 80px; }
+.tree-ms-node { display: flex; align-items: center; gap: 6px; padding: 7px 10px; font-size: 13px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--neutral-100); }
+.tree-ms-node:last-child { border-bottom: none; }
+.tree-ms-node:hover { background: var(--neutral-50); }
+.tree-ms-node.selected { background: #E8EEF6; }
+.tree-ms-node.ward-node { font-weight: 500; }
+.tree-ms-node.street-node { padding-left: 34px; font-size: 12px; color: var(--neutral-700); }
+.tree-ms-expand { width: 16px; flex-shrink: 0; color: var(--neutral-400); font-size: 10px; text-align: center; cursor: pointer; }
+.tree-ms-expand.placeholder { visibility: hidden; }
+.tree-ms-node-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tree-ms-empty { padding: 28px 12px; text-align: center; color: var(--neutral-400); font-size: 12px; font-style: italic; }
+.tree-ms-search-wrap { margin-top: 8px; }
+.tree-ms-search-wrap .transfer-search { font-size: 12px; }
+.tree-ms-search-wrap .transfer-search:disabled { background-color: var(--neutral-50); color: var(--neutral-400); cursor: not-allowed; }
+
+.list-section-actions { display: flex; gap: 8px; align-items: center; }
+.transfer-search-wrap { padding: 10px 12px; border-bottom: 1px solid var(--neutral-100); }
+.transfer-search { width: 100%; padding: 7px 10px 7px 34px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 12px; background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 10px center; }
+.transfer-list { flex: 1; overflow-y: auto; min-height: 280px; max-height: 320px; }
+
+.tree-row { display: grid; grid-template-columns: 22px 1fr auto; gap: 4px; align-items: center; min-height: 32px; padding: 6px 12px; border-bottom: 1px solid var(--neutral-100); font-size: 13px; cursor: default; }
+.tree-row:hover { background: var(--neutral-50); }
+.tree-row.selected { background: #E8EEF6; }
+.tree-row.disabled { color: var(--neutral-400); cursor: default; }
+.tree-row.hidden-row { display: none; }
+.tree-row.selectable { cursor: pointer; }
+
+.tree-label { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.tree-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.indent-0 { padding-left: 0; font-weight: 700; }
+.indent-1 { padding-left: 18px; font-weight: 650; }
+.indent-2 { padding-left: 36px; font-weight: 600; }
+.indent-3 { padding-left: 54px; font-weight: 500; }
+.indent-4 { padding-left: 72px; font-weight: 500; }
+.indent-prov { padding-left: 0; font-weight: 600; color: var(--primary-700); }
+.indent-flat { padding-left: 0; }
+.indent-ward { padding-left: 16px; font-weight: 500; }
+.indent-street { padding-left: 32px; font-weight: 500; }
+#rightTree .tree-row.r-indent-0 { padding-left: 12px; }
+#rightTree .tree-row.r-indent-1 { padding-left: 30px; }
+#rightTree .tree-row.r-indent-2 { padding-left: 48px; }
+#rightTree .tree-row.r-indent-ward { padding-left: 54px; }
+#rightTree .tree-row.r-indent-street { padding-left: 78px; font-size: 12px; color: var(--neutral-700); }
+#rightTree .tree-row[class*="r-indent-"] .tree-label { padding-left: 0; }
+.tree-row.prov-header { background: var(--primary-50); border-bottom-color: var(--primary-100); cursor: default; }
+.tree-row.prov-header:hover { background: var(--primary-50); }
+
+.node-type { color: var(--neutral-500); font-size: 11px; white-space: nowrap; }
+.node-badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+.node-badge.ward { background: var(--indigo-50); color: var(--indigo-700); border: 1px solid var(--indigo-100); }
+.node-badge.street { background: var(--info-50); color: var(--info-700); border: 1px solid var(--info-100); }
+
+.transfer-actions { display: flex; flex-direction: column; justify-content: center; gap: 10px; align-items: center; align-self: center; }
+.transfer-actions .btn { width: 92px; min-height: 36px; justify-content: center; font-weight: 600; }
+
+.driver-picker { background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; }
+.driver-picker-row { display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; align-items: end; }
+.driver-picker .scope-select { font-size: 13px; padding: 7px 28px 7px 10px; }
+.driver-meta { font-size: 12px; color: var(--neutral-500); margin-top: 8px; }
+.driver-meta strong { color: var(--neutral-700); font-weight: 600; }
+
+.tree-empty { text-align: center; padding: 32px 12px; color: var(--neutral-400); font-size: 12px; font-style: italic; }
+
+.form-textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--neutral-200); border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 60px; margin-top: 14px; }
+.form-counter { text-align: right; font-size: 11px; color: var(--neutral-500); margin-top: 3px; }
+.form-label-block { display: block; font-size: 12px; font-weight: 600; color: var(--neutral-700); margin-top: 14px; margin-bottom: 5px; }
+
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--success-700); color: white; padding: 12px 18px; border-radius: 8px; font-size: 13px; z-index: 200; display: none; max-width: 420px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.toast.show { display: block; }
+.toast.error { background: var(--error-700); }
+
+.config-section { margin-bottom: 18px; }
+.config-section-title { font-size: 13px; font-weight: 700; color: var(--neutral-900); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--neutral-200); }
+.route-name { font-weight: 600; color: var(--neutral-900); }
+.driver-field { max-width: 420px; }
+
+@media (max-width: 900px) {
+    .transfer-layout { grid-template-columns: 1fr; }
+    .transfer-actions { flex-direction: row; }
+    .driver-summary { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Giao hàng</a> / Cấu hình khu vực giao hàng theo tuyến</div>
+      <div class="topbar-actions">
+        <span class="company-badge">Finviet</span>
+        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Cấu hình khu vực giao hàng theo Tuyến giao hàng</div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field"><div class="filter-label">* Công ty</div><select class="filter-select" id="filterCompany"><option selected>Công ty TNHH NPP HCM</option><option>Công ty TNHH NPP Bình Dương</option></select></div>
+          <div class="filter-field" style="flex:1.5;"><div class="filter-label">Tìm kiếm</div><input class="filter-search" id="filterSearch" placeholder="Mã tuyến, tên tuyến, tài xế, phường, đường..." type="text"/></div>
+          <div class="filter-field"><div class="filter-label">Trạng thái tuyến</div><select class="filter-select" id="filterStatus"><option value="">Tất cả</option><option value="active">Đang hoạt động</option><option value="inactive">Ngưng</option></select></div>
+          <div class="filter-field"><div class="filter-label">Gán tài xế</div><select class="filter-select" id="filterDriverStatus"><option value="">Tất cả</option><option value="has">Đã gán</option><option value="none">Chưa gán</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-field"><div class="filter-label">Vùng</div><select class="filter-select" id="filterRegion"><option value="">Tất cả vùng</option></select></div>
+          <div class="filter-field"><div class="filter-label">Khu vực</div><select class="filter-select" id="filterArea" disabled><option value="">Tất cả khu vực</option></select></div>
+          <div class="filter-field"><div class="filter-label">Tỉnh / TP</div><select class="filter-select" id="filterProvince" disabled><option value="">Tất cả tỉnh/TP</option></select></div>
+          <div class="filter-field"><div class="filter-label">Phường / Xã</div><select class="filter-select" id="filterWard" disabled><option value="">Tất cả phường/xã</option></select></div>
+          <div class="filter-actions"><button class="btn btn-secondary" id="btnRefresh" type="button">Làm mới</button><button class="btn btn-primary" id="btnSearch" type="button">Tìm kiếm</button></div>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title" id="listTitle">Danh sách tuyến giao hàng (4)</div>
+          <div class="list-section-actions">
+            <button class="btn btn-secondary" type="button">📤 Export</button>
+            <button class="btn btn-primary" id="btnAssignArea" type="button">Tạo tuyến</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table><thead><tr>
+              <th>Mã tuyến</th><th>Tên tuyến giao hàng</th>
+              <th style="min-width:340px;">Khu vực giao hàng</th>
+              <th>Tài xế</th>
+              <th style="min-width:120px;">Ghi chú</th>
+              <th>Người tạo</th><th>Ngày tạo</th>
+              <th>Người cập nhật</th><th>Ngày cập nhật</th>
+              <th style="width:72px;text-align:center;">Trạng thái</th>
+              <th style="width:56px;text-align:center;"></th>
+            </tr></thead><tbody id="routeBody"></tbody></table>
+          </div>
+          <div class="pagination"><span id="paginationInfo">Hiển thị <strong>1–4</strong> / tổng <strong>4</strong></span>
+            <div class="pagination-controls"><button class="page-btn" type="button">‹</button><button class="page-btn active" type="button">1</button><button class="page-btn" type="button">›</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Tree Transfer -->
+<div class="modal-overlay" id="configModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="configTitle">Cấu hình khu vực giao hàng</div>
+      <button class="modal-close" id="configClose" type="button">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="config-section">
+        <div class="config-section-title">1. Thông tin tuyến giao hàng</div>
+        <div class="driver-picker">
+          <div class="driver-picker-row">
+            <div class="scope-field">
+              <span class="scope-label required">Mã tuyến</span>
+              <input class="scope-input" id="cfgRouteCode" maxlength="20" placeholder="VD: TGH-005" type="text"/>
+            </div>
+            <div class="scope-field">
+              <span class="scope-label required">Tên tuyến giao hàng</span>
+              <input class="scope-input" id="cfgRouteName" maxlength="100" placeholder="VD: Tuyến Q7 — Phú Mỹ Hưng" type="text"/>
+            </div>
+          </div>
+          <div class="driver-meta">Người cập nhật: <strong id="cfgRouteUpdatedBy">—</strong> · Ngày cập nhật: <strong id="cfgRouteUpdatedAt">—</strong></div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-title">2. Gán tài xế cho tuyến</div>
+        <div class="scope-field driver-field">
+          <span class="scope-label">Tài xế</span>
+          <select class="scope-select" id="cfgDriver"><option value="">— Chưa gán —</option></select>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-title">3. Khu vực giao hàng theo tuyến</div>
+      <div class="transfer-layout">
+        <div class="transfer-box">
+          <div class="transfer-head">
+            <span class="transfer-head-sub">Chọn khu vực giao hàng</span>
+            <span id="leftCount" style="font-size:11px;color:var(--neutral-500);">0 mục đã chọn</span>
+          </div>
+          <div class="transfer-scope" style="padding:12px;">
+            <div class="transfer-scope-row" style="margin-bottom:10px;">
+              <div class="scope-field">
+                <span class="scope-label required">Vùng</span>
+                <select class="scope-select" id="leftScopeRegion"></select>
+              </div>
+              <div class="scope-field">
+                <span class="scope-label required">Khu vực</span>
+                <select class="scope-select" id="leftScopeArea" disabled><option value="">— Chọn vùng trước —</option></select>
+              </div>
+              <div class="scope-field">
+                <span class="scope-label required">Tỉnh / TP (nhiều)</span>
+                <div class="multi-select" id="leftProvMulti">
+                  <button class="multi-select-trigger" id="leftProvTrigger" type="button" disabled>— Chọn khu vực trước —</button>
+                  <div class="multi-select-panel" id="leftProvPanel"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tree-ms" id="leftWardStreetMs">
+              <span class="scope-label required" style="display:block;margin-bottom:4px;">Phường / Đường</span>
+              <div class="tree-ms-tags-bar empty" id="leftMsTagsBar">
+                <div class="tree-ms-tags" id="leftMsTags"><span class="tree-ms-placeholder">Mục đã chọn sẽ hiển thị tại đây</span></div>
+                <button class="tree-ms-clear" id="leftMsClearAll" type="button" title="Xóa tất cả" style="display:none;">×</button>
+              </div>
+              <div class="tree-ms-search-wrap">
+                <input class="transfer-search" id="leftSearch" placeholder="Tìm phường, đường..." type="text" disabled/>
+              </div>
+              <div class="tree-ms-panel disabled" id="leftMsPanel">
+                <div class="tree-ms-tree" id="leftMsTree"><div class="tree-ms-empty">Chọn Vùng, Khu vực và Tỉnh/TP để hiển thị cây Phường → Đường</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="transfer-actions">
+          <button class="btn btn-primary" id="btnAdd" type="button" disabled>Thêm</button>
+          <button class="btn btn-secondary" id="btnRemove" type="button" disabled>Xóa</button>
+        </div>
+
+        <div class="transfer-box transfer-box-scroll">
+          <div class="transfer-head">
+            <div class="transfer-head-left">
+              <input id="rightCheckAll" type="checkbox"/>
+              <span id="rightCount">0 mục</span>
+            </div>
+            <div class="transfer-head-actions">
+              <button class="btn-link" id="btnRightClearCheck" type="button" disabled>Bỏ chọn</button>
+              <span class="transfer-head-sub">Vùng đã gán</span>
+            </div>
+          </div>
+          <div class="transfer-search-wrap"><input class="transfer-search" id="rightSearch" placeholder="Tìm ở đây" type="text"/></div>
+          <div class="transfer-list" id="rightTree"></div>
+        </div>
+      </div>
+
+      <div class="rule-preview" id="rulePreview">Chọn phường hoặc đường từ cây bên trái để gán khu vực cho tuyến.</div>
+
+      <label class="form-label-block">Ghi chú cấu hình tuyến</label>
+      <textarea class="form-textarea" id="cfgNote" maxlength="500" placeholder="Ghi chú (tuỳ chọn)..."></textarea>
+      <div class="form-counter" id="cfgCounter">0/500</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-footer-meta" id="cfgFooterMeta">Tổng: <strong>0</strong> phường · <strong>0</strong> đường</div>
+      <div class="modal-footer-actions">
+        <button class="btn btn-secondary" id="configReset" type="button">Làm mới</button>
+        <button class="btn btn-secondary" id="configCancel" type="button">Hủy</button>
+        <button class="btn btn-primary" id="configSave" type="button">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========== DATA ========== */
+const TREE = {
+  'MN': { name: 'Miền Nam', areas: {
+    'DNB': { name: 'Đông Nam Bộ', provinces: {
+      'HCM': { name: 'TP. Hồ Chí Minh', wards: {
+        'BN': { name: 'Phường Bến Nghé', streets: ['Đường Lê Lợi', 'Đường Nguyễn Huệ', 'Đường Đồng Khởi', 'Đường Pasteur'] },
+        'BT': { name: 'Phường Bến Thành', streets: ['Đường Lý Tự Trọng', 'Đường Lê Lai', 'Đường Cách Mạng Tháng 8'] },
+        'DK': { name: 'Phường Đa Kao', streets: ['Đường Đinh Tiên Hoàng', 'Đường Mạc Đĩnh Chi'] },
+        'TD': { name: 'Phường Tân Định', streets: ['Đường Hai Bà Trưng', 'Đường Trần Quang Khải'] }
+      }},
+      'DNAI': { name: 'Tỉnh Đồng Nai', wards: {
+        'TP': { name: 'Phường Tân Phong', streets: ['Đường Đồng Khởi', 'Đường Phạm Văn Thuận'] },
+        'BH': { name: 'Phường Biên Hoà', streets: ['Đường Cách Mạng Tháng 8', 'Đường 30/4'] }
+      }}
+    }}
+  }},
+  'MT': { name: 'Miền Trung', areas: {
+    'DHNTB': { name: 'Duyên hải Nam Trung Bộ', provinces: {
+      'DN': { name: 'TP. Đà Nẵng', wards: { 'TT': { name: 'Phường Thanh Bình', streets: ['Đường Bạch Đằng', 'Đường Trần Phú'] } } }
+    }}
+  }},
+  'MB': { name: 'Miền Bắc', areas: {
+    'DBSH': { name: 'Đồng bằng sông Hồng', provinces: {
+      'HN': { name: 'TP. Hà Nội', wards: { 'HK': { name: 'Phường Hàng Khay', streets: ['Đường Tràng Tiền', 'Đường Đinh Tiên Hoàng'] } } }
+    }}
+  }}
+};
+
+const DRIVERS = [
+  { id:'TX-001', name:'Nguyễn Văn Tài', phone:'0901 234 567', npp:'NPP-HCM-01', status:'active' },
+  { id:'TX-002', name:'Trần Minh Đức', phone:'0902 345 678', npp:'NPP-HCM-01', status:'active' },
+  { id:'TX-003', name:'Lê Hoàng Nam', phone:'0903 456 789', npp:'NPP-HCM-01', status:'active' },
+  { id:'TX-004', name:'Ngô Quốc Hùng', phone:'0904 567 890', npp:'NPP-HCM-02', status:'active' },
+  { id:'TX-005', name:'Võ Thanh Sơn', phone:'0905 678 901', npp:'NPP-HCM-02', status:'off' },
+  { id:'TX-006', name:'Đỗ Minh Quân', phone:'0906 789 012', npp:'NPP-HCM-01', status:'active' }
+];
+
+const ROUTES = [
+  { id:'TGH-001', name:'Tuyến Q1 — Trung tâm', npp:'NPP-HCM-01', status:'active',
+    driver:'TX-001',
+    note:'Ca sáng Q1', createdBy:'admin.npp', createdAt:'01/06/2026 09:00', updatedBy:'admin.npp', updatedAt:'12/06/2026 10:15',
+    areas:[ {region:'MN',area:'DNB',province:'HCM',ward:'BN',street:'Đường Lê Lợi'}, {region:'MN',area:'DNB',province:'HCM',ward:'BN',street:'Đường Nguyễn Huệ'}, {region:'MN',area:'DNB',province:'HCM',ward:'DK',street:null} ] },
+  { id:'TGH-002', name:'Tuyến Q1 — Tân Định', npp:'NPP-HCM-01', status:'active',
+    driver:'TX-002',
+    note:'', createdBy:'admin.npp', createdAt:'02/06/2026 10:15', updatedBy:'admin.npp', updatedAt:'11/06/2026 08:15',
+    areas:[ {region:'MN',area:'DNB',province:'HCM',ward:'TD',street:null} ] },
+  { id:'TGH-003', name:'Tuyến Đồng Nai — Biên Hòa', npp:'NPP-HCM-02', status:'active',
+    driver:'TX-004',
+    note:'Tuyến khu vực Biên Hòa', createdBy:'admin.npp', createdAt:'05/06/2026 11:00', updatedBy:'admin.npp', updatedAt:'14/06/2026 16:20',
+    areas:[ {region:'MN',area:'DNB',province:'DNAI',ward:'TP',street:null} ] },
+  { id:'TGH-004', name:'Tuyến Q3 — Tân Bình', npp:'NPP-HCM-01', status:'active',
+    driver:'',
+    note:'Tuyến mới — chưa gán tài xế', createdBy:'admin.npp', createdAt:'10/06/2026 14:00', updatedBy:'admin.npp', updatedAt:'10/06/2026 14:00',
+    areas:[] }
+];
+
+/* ========== HELPERS ========== */
+function el(id){ return document.getElementById(id); }
+function showToast(msg, type){
+  var t=el('toast'); t.textContent=(type==='error'?'⚠ ':'✓ ')+msg;
+  t.className='toast show'+(type==='error'?' error':'');
+  setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+function wardKey(r,a,p,w){ return r+'|'+a+'|'+p+'|'+w; }
+function streetKey(r,a,p,w,s){ return r+'|'+a+'|'+p+'|'+w+'|'+s; }
+function parseWardKey(k){ var x=k.split('|'); return {region:x[0],area:x[1],province:x[2],ward:x[3],street:null}; }
+function parseStreetKey(k){ var x=k.split('|'); return {region:x[0],area:x[1],province:x[2],ward:x[3],street:x[4]}; }
+function statusBadge(s){ return s==='off'?'<span class="badge badge-off">Nghỉ</span>':'<span class="badge badge-active">Đang làm việc</span>'; }
+function routeStatusToggleHtml(r){
+  var active=r.status!=='inactive';
+  return '<label class="toggle-switch"><input type="checkbox" class="route-status-toggle" data-id="'+r.id+'"'+(active?' checked':'')+'><span class="toggle-slider"></span></label>';
+}
+function setRouteStatus(routeId, active){
+  var r=ROUTES.find(function(x){ return x.id===routeId; });
+  if(!r) return;
+  r.status=active?'active':'inactive';
+  var now=new Date().toLocaleDateString('vi-VN')+' '+new Date().toTimeString().slice(0,5);
+  r.updatedBy='NPP Admin';
+  r.updatedAt=now;
+  renderRoutes();
+  applyMainFilters();
+  showToast('Đã '+(active?'bật':'tắt')+' tuyến '+r.name);
+}
+function getDriver(id){ return DRIVERS.find(function(x){ return x.id===id; }) || null; }
+function driverCell(id, roleLabel){
+  if(!id) return '<span class="area-empty">— Chưa gán</span>';
+  var d=getDriver(id);
+  if(!d) return '<span class="area-empty">—</span>';
+  return '<div class="driver-info"><span class="driver-name">'+d.name+'</span><span class="driver-phone">'+d.id+' · '+d.phone+'</span>'+statusBadge(d.status)+'</div>';
+}
+function routeSearchText(r){
+  var d=getDriver(r.driver);
+  return [r.id,r.name,r.note||'', d?d.name+' '+d.phone:'',
+    r.areas.map(function(a){ var p=pathParts(a); return p.province+' '+p.ward+' '+(a.street||''); }).join(' ')
+  ].join(' ').toLowerCase();
+}
+
+function pathParts(a){
+  var prov=TREE[a.region].areas[a.area].provinces[a.province].name;
+  var ward=TREE[a.region].areas[a.area].provinces[a.province].wards[a.ward].name;
+  return { province:prov.replace(/^(TP\.|Tỉnh)\s+/,''), ward:ward.replace(/^Phường\s+/,'P.'), street:a.street };
+}
+function expandAreasToStreets(areas){
+  var out=[];
+  (areas||[]).forEach(function(a){
+    if(a.street) out.push(a);
+    else getStreetsForWard(wardKey(a.region,a.area,a.province,a.ward)).forEach(function(s){
+      out.push(parseStreetKey(s.key));
+    });
+  });
+  return out;
+}
+function groupAreasByWard(areas){
+  var map={};
+  expandAreasToStreets(areas).forEach(function(a){
+    var wk=wardKey(a.region,a.area,a.province,a.ward);
+    if(!map[wk]) map[wk]={ wardKey:wk, region:a.region, area:a.area, province:a.province, ward:a.ward, streets:[] };
+    map[wk].streets.push(a.street);
+  });
+  return Object.keys(map).map(function(k){ return map[k]; });
+}
+function streetPillLabel(street){
+  return (street||'').replace(/^Đường\s+/,'');
+}
+function areaCardsHtml(areas){
+  if(!areas||!areas.length) return '<span class="area-empty">⚠ Chưa gán khu vực</span>';
+  var wards=groupAreasByWard(areas);
+  var maxShow=2;
+  var html='<div class="ward-cards-wrap">'+wards.slice(0,maxShow).map(function(w){
+    var wardItem=ITEM_BY_KEY[w.wardKey];
+    var wardName=wardItem?wardItem.label:('Phường '+w.ward);
+    var regionName=TREE[w.region].name;
+    var areaName=TREE[w.region].areas[w.area].name;
+    var provName=TREE[w.region].areas[w.area].provinces[w.province].name;
+    var streetPills=w.streets.map(function(s){
+      return '<span class="ward-card-street-pill">'+streetPillLabel(s)+'</span>';
+    }).join('');
+    return '<div class="ward-card">'+
+      '<div class="ward-card-head">'+
+        '<span class="ward-card-pin">📍</span>'+
+        '<span class="ward-card-title">'+wardName+'</span>'+
+        '<span class="ward-card-count">'+w.streets.length+' đường</span>'+
+      '</div>'+
+      '<div class="ward-card-row"><span class="ward-card-label">Vùng</span><span class="ward-card-value">'+regionName+' &gt; '+areaName+'</span></div>'+
+      '<div class="ward-card-row"><span class="ward-card-label">Tỉnh/TP</span><span class="ward-card-value">'+provName+'</span></div>'+
+      '<div class="ward-card-row ward-card-streets"><span class="ward-card-label">Đường</span><div class="ward-card-pills">'+streetPills+'</div></div>'+
+    '</div>';
+  }).join('')+'</div>';
+  if(wards.length>maxShow) html+='<span class="area-more">+'+(wards.length-maxShow)+' phường khác</span>';
+  return html;
+}
+
+/* ========== BUILD FLAT TREE ITEMS ========== */
+var TREE_ITEMS = [];
+var ITEM_BY_ID = {};
+var ITEM_BY_KEY = {};
+
+(function buildTreeItems(){
+  Object.keys(TREE).forEach(function(r){
+    var R=TREE[r];
+    var rItem={ id:'r_'+r, level:0, type:'Vùng', label:R.name, selectable:false, path:[R.name], region:r };
+    TREE_ITEMS.push(rItem); ITEM_BY_ID[rItem.id]=rItem;
+    Object.keys(R.areas).forEach(function(a){
+      var A=R.areas[a];
+      var aItem={ id:'a_'+r+'_'+a, level:1, type:'Khu vực', label:A.name, selectable:false, path:[R.name,A.name], region:r, area:a };
+      TREE_ITEMS.push(aItem); ITEM_BY_ID[aItem.id]=aItem;
+      Object.keys(A.provinces).forEach(function(p){
+        var P=A.provinces[p];
+        var pItem={ id:'p_'+r+'_'+a+'_'+p, level:2, type:'Tỉnh/TP', label:P.name, selectable:false, path:[R.name,A.name,P.name], region:r, area:a, province:p };
+        TREE_ITEMS.push(pItem); ITEM_BY_ID[pItem.id]=pItem;
+        Object.keys(P.wards).forEach(function(w){
+          var W=P.wards[w];
+          var wk=wardKey(r,a,p,w);
+          var wItem={ id:'w_'+wk, level:3, type:'Phường/Xã', label:W.name, selectable:true, assignLevel:'Phường', key:wk, path:[R.name,A.name,P.name,W.name], region:r, area:a, province:p, ward:w };
+          TREE_ITEMS.push(wItem); ITEM_BY_ID[wItem.id]=wItem; ITEM_BY_KEY[wk]=wItem;
+          W.streets.forEach(function(s){
+            var sk=streetKey(r,a,p,w,s);
+            var sItem={ id:'s_'+sk, level:4, type:'Đường', label:s, selectable:true, assignLevel:'Đường', key:sk, path:[R.name,A.name,P.name,W.name,s], region:r, area:a, province:p, ward:w, street:s, parentWardKey:wk };
+            TREE_ITEMS.push(sItem); ITEM_BY_ID[sItem.id]=sItem; ITEM_BY_KEY[sk]=sItem;
+          });
+        });
+      });
+    });
+  });
+})();
+
+/* ========== SELECTION STATE ========== */
+var currentRouteId = null;
+var isCreateMode = false;
+var selectedStreets = new Set();
+var checkedLeft = new Set();
+var checkedRight = new Set();
+
+var leftScope = { region: '', area: '', provinces: new Set() };
+var collapsedWardsMs = new Set();
+
+function getStreetsForWard(wk){
+  return TREE_ITEMS.filter(function(t){ return t.parentWardKey===wk && t.assignLevel==='Đường'; });
+}
+function isWardFullyAssigned(wk){
+  var streets=getStreetsForWard(wk);
+  return streets.length>0 && streets.every(function(s){ return selectedStreets.has(s.key); });
+}
+function isStreetAssigned(sk){ return selectedStreets.has(sk); }
+function isStreetAvailable(item){
+  return !isStreetAssigned(item.key);
+}
+function isWardAvailable(item){
+  return !isWardFullyAssigned(item.key);
+}
+function itemDisplayLabel(item){
+  if(item.assignLevel==='Đường'){
+    var name=item.street||item.label||'';
+    return name.indexOf('Đường ')===0?name:'Đường '+name;
+  }
+  return item.label;
+}
+
+function getAssignedStreetKeysForWard(wk){
+  return getStreetsForWard(wk).filter(function(s){ return selectedStreets.has(s.key); }).map(function(s){ return s.key; });
+}
+function getWardKeysFromSelectedStreets(){
+  var wards=new Set();
+  selectedStreets.forEach(function(sk){
+    var item=ITEM_BY_KEY[sk];
+    if(item && item.parentWardKey) wards.add(item.parentWardKey);
+  });
+  return wards;
+}
+function handleRightTreeCheckToggle(key, checked, checkSet){
+  var item=ITEM_BY_KEY[key];
+  if(!item) return;
+  if(checked){
+    checkSet.add(key);
+    if(item.assignLevel==='Phường'){
+      getAssignedStreetKeysForWard(key).forEach(function(sk){ checkSet.add(sk); });
+    } else if(item.assignLevel==='Đường' && item.parentWardKey){
+      var allAssigned=getAssignedStreetKeysForWard(item.parentWardKey);
+      if(allAssigned.length && allAssigned.every(function(sk){ return checkSet.has(sk); })){
+        checkSet.add(item.parentWardKey);
+      }
+    }
+  } else {
+    checkSet.delete(key);
+    if(item.assignLevel==='Phường'){
+      getAssignedStreetKeysForWard(key).forEach(function(sk){ checkSet.delete(sk); });
+    } else if(item.assignLevel==='Đường' && item.parentWardKey){
+      checkSet.delete(item.parentWardKey);
+    }
+  }
+}
+
+function getAvailableStreetKeysForWard(wk){
+  return getStreetsForWard(wk).filter(function(t){ return isStreetAvailable(t); }).map(function(t){ return t.key; });
+}
+
+function handleTreeCheckToggle(key, checked, checkSet){
+  var item=ITEM_BY_KEY[key];
+  if(!item) return;
+  if(checked){
+    checkSet.add(key);
+    if(item.assignLevel==='Phường'){
+      getAvailableStreetKeysForWard(key).forEach(function(sk){ checkSet.add(sk); });
+    }
+  } else {
+    checkSet.delete(key);
+    if(item.assignLevel==='Phường'){
+      getAvailableStreetKeysForWard(key).forEach(function(sk){ checkSet.delete(sk); });
+    } else if(item.assignLevel==='Đường' && item.parentWardKey){
+      checkSet.delete(item.parentWardKey);
+    }
+  }
+}
+
+function populateDriverSelect(driverId){
+  var sel=el('cfgDriver');
+  sel.innerHTML='<option value="">— Chưa gán —</option>';
+  DRIVERS.forEach(function(d){
+    var label=d.id+' — '+d.name+(d.status==='off'?' (Nghỉ)':'');
+    sel.insertAdjacentHTML('beforeend','<option value="'+d.id+'">'+label+'</option>');
+  });
+  sel.value=driverId||'';
+}
+
+function fillRouteForm(r){
+  el('cfgRouteCode').value=r?r.id:'';
+  el('cfgRouteName').value=r?r.name:'';
+}
+
+function updateRouteMeta(r){
+  if(!r){
+    el('cfgRouteUpdatedBy').textContent='—';
+    el('cfgRouteUpdatedAt').textContent='—';
+    el('configTitle').textContent='Tạo tuyến giao hàng mới';
+    return;
+  }
+  el('cfgRouteUpdatedBy').textContent=r.updatedBy||'—';
+  el('cfgRouteUpdatedAt').textContent=r.updatedAt||'—';
+  el('configTitle').textContent='Chỉnh sửa tuyến giao hàng';
+}
+function loadRouteNote(r){
+  el('cfgNote').value=r?(r.note||''):'';
+  el('cfgCounter').textContent=el('cfgNote').value.length+'/500';
+}
+
+function initLeftScopeDefaults(){
+  leftScope.region='MN'; leftScope.area='DNB'; leftScope.provinces=new Set(['HCM']);
+  el('leftScopeRegion').value=leftScope.region;
+  var areaSel=el('leftScopeArea');
+  areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+  Object.keys(TREE[leftScope.region].areas).forEach(function(k){
+    areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[leftScope.region].areas[k].name+'</option>');
+  });
+  areaSel.disabled=false;
+  areaSel.value=leftScope.area;
+  renderProvinceMulti(leftScope,'leftProvMulti','leftProvTrigger','leftProvPanel');
+}
+
+function matchSearch(item, keyword){
+  if(!keyword) return true;
+  return item.path.join(' ').toLowerCase().indexOf(keyword)>=0;
+}
+
+function filterLeftWardStreets(ward, streets, keyword){
+  if(!keyword) return { show:true, streets:streets };
+  if(matchSearch(ward, keyword)) return { show:true, streets:streets };
+  var matched=streets.filter(function(st){ return matchSearch(st, keyword); });
+  if(matched.length) return { show:true, streets:matched };
+  return { show:false, streets:[] };
+}
+
+function getProvinceName(r,a,p){
+  return TREE[r].areas[a].provinces[p].name;
+}
+
+function getRightRowIndentClass(item){
+  if(item.assignLevel==='Đường') return 'r-indent-street';
+  if(item.assignLevel==='Phường') return 'r-indent-ward';
+  return 'r-indent-'+item.level;
+}
+
+function renderTreeRow(item, opts){
+  opts=opts||{};
+  var side=opts.side||'left';
+  var checked=opts.checked||false;
+  var compact=opts.compact||false;
+  var showCb=opts.showCheckbox!==false && item.selectable;
+  var disabled=!item.selectable;
+  var displayLabel=itemDisplayLabel(item);
+  var isRight=side==='right';
+  var indentClass=isRight
+    ? 'indent-flat'
+    : (compact
+      ? (opts.rowKind==='prov-header'?'indent-prov':item.assignLevel==='Phường'?'indent-ward':item.assignLevel==='Đường'?'indent-street':'indent-'+item.level)
+      : ('indent-'+item.level));
+  var rowIndentClass=isRight?getRightRowIndentClass(item):'';
+  var rowClass='tree-row'+(disabled?' disabled':' selectable')+(checked?' selected':'')+(opts.rowKind==='prov-header'?' prov-header':'')+(rowIndentClass?' '+rowIndentClass:'');
+  var expand=compact
+    ? (item.assignLevel==='Phường'?'▾ ':'')
+    : ((!compact && item.level<3)?'▾ ':'');
+  var cbHtml=showCb
+    ? '<input type="checkbox" class="'+side+'-check" data-key="'+item.key+'" data-level="'+item.assignLevel+'"'+(checked?' checked':'')+'>'
+    : '<span style="width:16px;display:inline-block;"></span>';
+  var typeHtml=(side==='right'&&item.assignLevel==='Đường')?'':'<span class="node-type">'+item.type+'</span>';
+  return '<div class="'+rowClass+'" data-id="'+item.id+'" data-key="'+(item.key||'')+'">'+
+    cbHtml+
+    '<div class="tree-label '+indentClass+'">'+expand+'<span>'+displayLabel+'</span></div>'+
+    typeHtml+'</div>';
+}
+
+function renderProvHeaderRow(r,a,p){
+  return '<div class="tree-row prov-header disabled" data-id="ph_'+r+'_'+a+'_'+p+'">'+
+    '<span style="width:16px;display:inline-block;"></span>'+
+    '<div class="tree-label indent-prov"><span>'+getProvinceName(r,a,p)+'</span></div>'+
+    '<span class="node-type">Tỉnh/TP</span></div>';
+}
+
+function getScopeProvinceKeys(scope){
+  return Array.from(scope.provinces).sort();
+}
+
+function getProvinceSelectableItems(r,a,p, keyword){
+  return TREE_ITEMS.filter(function(item){
+    return item.region===r && item.area===a && item.province===p && item.selectable && matchSearch(item, keyword);
+  });
+}
+
+function provinceHasVisibleItems(r,a,p, keyword){
+  return getProvinceSelectableItems(r,a,p, keyword).some(function(item){
+    if(item.assignLevel==='Phường') return isWardAvailable(item);
+    if(item.assignLevel==='Đường') return isStreetAvailable(item);
+    return false;
+  });
+}
+
+function populateScopeRegionSelect(selectId){
+  var sel=el(selectId);
+  sel.innerHTML='';
+  Object.keys(TREE).forEach(function(k){
+    sel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[k].name+'</option>');
+  });
+}
+
+function cascadeScopeArea(scope, regionSelectId, areaSelectId, provMultiId, provTriggerId, provPanelId){
+  var r=el(regionSelectId).value;
+  scope.region=r; scope.area=''; scope.provinces.clear();
+  var areaSel=el(areaSelectId);
+  areaSel.innerHTML='<option value="">— Chọn vùng trước —</option>';
+  areaSel.disabled=!r;
+  if(r){
+    areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+    Object.keys(TREE[r].areas).forEach(function(k){
+      areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[k].name+'</option>');
+    });
+    areaSel.disabled=false;
+  }
+  renderProvinceMulti(scope, provMultiId, provTriggerId, provPanelId);
+}
+
+function onScopeAreaChange(scope, areaSelectId, provMultiId, provTriggerId, provPanelId){
+  scope.area=el(areaSelectId).value;
+  scope.provinces.clear();
+  renderProvinceMulti(scope, provMultiId, provTriggerId, provPanelId);
+}
+
+function updateProvTriggerLabel(scope, triggerId){
+  var btn=el(triggerId);
+  if(!scope.region||!scope.area){
+    btn.textContent='— Chọn khu vực trước —';
+    btn.disabled=true;
+    return;
+  }
+  btn.disabled=false;
+  if(!scope.provinces.size){
+    btn.textContent='Chọn tỉnh/TP...';
+    return;
+  }
+  var names=getScopeProvinceKeys(scope).map(function(p){ return getProvinceName(scope.region, scope.area, p); });
+  btn.textContent=names.length===1?names[0]:names.length+' tỉnh/TP đã chọn';
+}
+
+function renderProvinceMulti(scope, multiId, triggerId, panelId){
+  var wrap=el(multiId);
+  var panel=el(panelId);
+  wrap.classList.remove('open');
+  updateProvTriggerLabel(scope, triggerId);
+  if(!scope.region||!scope.area){
+    panel.innerHTML='';
+    return;
+  }
+  var html='';
+  Object.keys(TREE[scope.region].areas[scope.area].provinces).forEach(function(p){
+    var name=getProvinceName(scope.region, scope.area, p);
+    var checked=scope.provinces.has(p)?' checked':'';
+    html+='<label class="multi-select-option"><input type="checkbox" data-prov="'+p+'"'+checked+'><span>'+name+'</span></label>';
+  });
+  panel.innerHTML=html;
+}
+
+function bindProvinceMulti(scope, multiId, triggerId, panelId, onChange){
+  el(triggerId).addEventListener('click',function(e){
+    e.stopPropagation();
+    if(this.disabled) return;
+    el(multiId).classList.toggle('open');
+  });
+  el(panelId).addEventListener('click',function(e){ e.stopPropagation(); });
+  el(panelId).addEventListener('change',function(e){
+    if(e.target.type!=='checkbox') return;
+    var p=e.target.dataset.prov;
+    if(e.target.checked) scope.provinces.add(p); else scope.provinces.delete(p);
+    updateProvTriggerLabel(scope, triggerId);
+    if(onChange) onChange();
+  });
+}
+
+function initLeftScopeFromRoute(r){
+  var region, area, provinces;
+  if(r.areas.length){
+    region=r.areas[0].region;
+    area=r.areas[0].area;
+    provinces=new Set(r.areas.map(function(a){ return a.province; }));
+  } else {
+    region='MN'; area='DNB'; provinces=new Set(['HCM']);
+  }
+  leftScope.region=region; leftScope.area=area; leftScope.provinces=provinces;
+  el('leftScopeRegion').value=region;
+  var areaSel=el('leftScopeArea');
+  areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+  Object.keys(TREE[region].areas).forEach(function(k){
+    areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[region].areas[k].name+'</option>');
+  });
+  areaSel.disabled=false;
+  areaSel.value=area;
+  renderProvinceMulti(leftScope,'leftProvMulti','leftProvTrigger','leftProvPanel');
+}
+
+function renderLeftTree(containerId, checkSet, searchId, countId, allId, mode){
+  renderTreeMultiSelect(leftScope, checkSet, 'leftMsTags', 'leftMsTagsBar', 'leftMsTree', 'leftMsPanel', 'leftMsClearAll', countId||'leftCount', mode);
+}
+
+function getCheckedLeftTags(checkSet){
+  var tags=[];
+  checkSet.forEach(function(k){
+    var item=ITEM_BY_KEY[k];
+    if(!item) return;
+    if(item.assignLevel==='Đường' && checkSet.has(item.parentWardKey)) return;
+    tags.push({ key:k, item:item });
+  });
+  tags.sort(function(a,b){ return TREE_ITEMS.indexOf(a.item)-TREE_ITEMS.indexOf(b.item); });
+  return tags;
+}
+
+function renderTreeMultiSelect(scope, checkSet, tagsId, tagsBarId, treeId, panelId, clearId, countId, mode){
+  mode=mode||'config';
+  var tagsEl=el(tagsId), tagsBar=el(tagsBarId), treeEl=el(treeId), panel=el(panelId), clearBtn=el(clearId);
+  var scopeReady=scope.region && scope.area && scope.provinces.size;
+
+  if(!scopeReady){
+    tagsBar.classList.add('empty');
+    panel.classList.add('disabled');
+    tagsEl.innerHTML='<span class="tree-ms-placeholder">Mục đã chọn sẽ hiển thị tại đây</span>';
+    clearBtn.style.display='none';
+    treeEl.innerHTML='<div class="tree-ms-empty">Chọn Vùng, Khu vực và Tỉnh/TP để hiển thị cây Phường → Đường</div>';
+    if(el('leftSearch')){ el('leftSearch').disabled=true; el('leftSearch').value=''; }
+    if(countId) el(countId).textContent='0 mục đã chọn';
+    if(mode==='config') el('btnAdd').disabled=true;
+    return;
+  }
+
+  panel.classList.remove('disabled');
+  if(el('leftSearch')) el('leftSearch').disabled=false;
+  var keyword=el('leftSearch')?el('leftSearch').value.trim().toLowerCase():'';
+  var tags=getCheckedLeftTags(checkSet);
+  if(!tags.length){
+    tagsBar.classList.add('empty');
+    tagsEl.innerHTML='<span class="tree-ms-placeholder">Chưa chọn phường/đường</span>';
+    clearBtn.style.display='none';
+  } else {
+    tagsBar.classList.remove('empty');
+    tagsEl.innerHTML=tags.map(function(t){
+      var cls=t.item.assignLevel==='Phường'?'ward-tag':'street-tag';
+      return '<span class="tree-ms-tag '+cls+'" data-key="'+t.key+'"><span>'+itemDisplayLabel(t.item)+'</span><button type="button" class="tree-ms-tag-remove" data-key="'+t.key+'">×</button></span>';
+    }).join('');
+    clearBtn.style.display='flex';
+  }
+
+  var html='', provKeys=getScopeProvinceKeys(scope);
+  provKeys.forEach(function(p){
+    var provBlock='';
+    if(provKeys.length>1){
+      provBlock+='<div class="tree-ms-node prov-node disabled" style="background:var(--primary-50);cursor:default;">'+
+        '<span class="tree-ms-expand placeholder"></span><span style="width:16px;"></span>'+
+        '<span class="tree-ms-node-label" style="font-weight:600;color:var(--primary-700);">'+getProvinceName(scope.region,scope.area,p)+'</span></div>';
+    }
+    var provHasMatch=false;
+    TREE_ITEMS.filter(function(item){
+      return item.region===scope.region && item.area===scope.area && item.province===p && item.assignLevel==='Phường';
+    }).forEach(function(ward){
+      if(!isWardAvailable(ward)) return;
+      var streets=TREE_ITEMS.filter(function(s){ return s.parentWardKey===ward.key && isStreetAvailable(s); });
+      var filtered=filterLeftWardStreets(ward, streets, keyword);
+      if(!filtered.show) return;
+      provHasMatch=true;
+      var collapsed=keyword?false:collapsedWardsMs.has(ward.key);
+      var visibleStreets=filtered.streets;
+      var wardChecked=checkSet.has(ward.key);
+      provBlock+='<div class="tree-ms-node ward-node'+(wardChecked?' selected':'')+'" data-key="'+ward.key+'" data-level="Phường">'+
+        '<span class="tree-ms-expand" data-ward="'+ward.key+'">'+(visibleStreets.length?(collapsed?'▸':'▾'):'')+'</span>'+
+        '<input type="checkbox"'+(wardChecked?' checked':'')+' data-key="'+ward.key+'">'+
+        '<span class="tree-ms-node-label">'+ward.label+'</span></div>';
+      if(!collapsed){
+        visibleStreets.forEach(function(st){
+          var stChecked=checkSet.has(st.key);
+          provBlock+='<div class="tree-ms-node street-node'+(stChecked?' selected':'')+'" data-key="'+st.key+'" data-level="Đường">'+
+            '<span class="tree-ms-expand placeholder"></span>'+
+            '<input type="checkbox"'+(stChecked?' checked':'')+' data-key="'+st.key+'">'+
+            '<span class="tree-ms-node-label">'+itemDisplayLabel(st)+'</span></div>';
+        });
+      }
+    });
+    if(provKeys.length>1 && !provHasMatch) return;
+    html+=provBlock;
+  });
+  treeEl.innerHTML=html||(keyword
+    ?'<div class="tree-ms-empty">Không tìm thấy phường/đường phù hợp</div>'
+    :'<div class="tree-ms-empty">Không có phường/đường khả dụng trong phạm vi đã chọn</div>');
+  if(countId) el(countId).textContent=checkSet.size+' mục đã chọn';
+  if(mode==='config') el('btnAdd').disabled=checkSet.size===0;
+}
+
+function bindTreeMultiSelect(checkSet, rerenderFn){
+  el('leftMsTags').addEventListener('click',function(e){
+    var rm=e.target.closest('.tree-ms-tag-remove');
+    if(rm){ handleTreeCheckToggle(rm.dataset.key,false,checkSet); rerenderFn(); }
+  });
+  el('leftMsClearAll').addEventListener('click',function(e){
+    e.stopPropagation();
+    checkSet.clear();
+    rerenderFn();
+  });
+  el('leftMsTree').addEventListener('click',function(e){
+    var exp=e.target.closest('.tree-ms-expand[data-ward]');
+    if(exp){ e.stopPropagation(); var wk=exp.dataset.ward; if(collapsedWardsMs.has(wk)) collapsedWardsMs.delete(wk); else collapsedWardsMs.add(wk); rerenderFn(); return; }
+    var node=e.target.closest('.tree-ms-node');
+    if(!node||node.classList.contains('prov-node')) return;
+    var cb=node.querySelector('input[type=checkbox]');
+    if(!cb) return;
+    if(e.target!==cb) cb.checked=!cb.checked;
+    handleTreeCheckToggle(cb.dataset.key, cb.checked, checkSet);
+    rerenderFn();
+  });
+}
+
+function buildRightTreeRows(keyword){
+  var rows=[];
+  var byWard={};
+  selectedStreets.forEach(function(sk){
+    var item=ITEM_BY_KEY[sk];
+    if(!item||!matchSearch(item,keyword)) return;
+    var wk=item.parentWardKey;
+    if(!byWard[wk]) byWard[wk]=[];
+    byWard[wk].push(item);
+  });
+  var wardKeys=Object.keys(byWard).sort(function(a,b){
+    return TREE_ITEMS.indexOf(ITEM_BY_KEY[a])-TREE_ITEMS.indexOf(ITEM_BY_KEY[b]);
+  });
+  var addedAncestorIds=new Set();
+  wardKeys.forEach(function(wk){
+    var ward=ITEM_BY_KEY[wk];
+    var streets=byWard[wk].sort(function(a,b){ return TREE_ITEMS.indexOf(a)-TREE_ITEMS.indexOf(b); });
+    TREE_ITEMS.filter(function(t){
+      return t.level<ward.level && t.level<3 && ward.path.slice(0,t.path.length).every(function(v,i){ return v===t.path[i]; });
+    }).forEach(function(a){
+      if(!addedAncestorIds.has(a.id)){ addedAncestorIds.add(a.id); rows.push({item:a, selectable:false}); }
+    });
+    rows.push({item:ward, selectable:true});
+    streets.forEach(function(st){
+      rows.push({item:st, selectable:true});
+    });
+  });
+  return rows;
+}
+
+function renderRightTree(){
+  var keyword=el('rightSearch').value.trim().toLowerCase();
+  var rows=buildRightTreeRows(keyword);
+  if(!rows.length){
+    el('rightTree').innerHTML='<div class="tree-empty">Chưa có vùng được gán. Chọn từ cây bên trái và bấm Thêm.</div>';
+  } else {
+    el('rightTree').innerHTML=rows.map(function(r){
+      return renderTreeRow(r.item,{side:'right',checked:checkedRight.has(r.item.key),showCheckbox:r.selectable,compact:true});
+    }).join('');
+  }
+  el('rightCount').textContent=selectedStreets.size+' mục';
+  el('btnRemove').disabled=checkedRight.size===0;
+  el('btnRightClearCheck').disabled=checkedRight.size===0;
+  el('cfgFooterMeta').innerHTML='Tổng: <strong>'+selectedStreets.size+'</strong> đường';
+  updateRulePreview();
+}
+
+function renderBothTrees(){
+  renderTreeMultiSelect(leftScope, checkedLeft, 'leftMsTags', 'leftMsTagsBar', 'leftMsTree', 'leftMsPanel', 'leftMsClearAll', 'leftCount', 'config');
+  renderRightTree();
+}
+
+function resetConfigTransferPanels(){
+  checkedLeft.clear();
+  checkedRight.clear();
+  selectedStreets.clear();
+  collapsedWardsMs.clear();
+  el('rightCheckAll').checked=false;
+  el('rightSearch').value='';
+  if(el('leftSearch')){ el('leftSearch').value=''; el('leftSearch').disabled=true; }
+}
+
+function updateRulePreview(){
+  var p=el('rulePreview');
+  var s=selectedStreets.size;
+  if(!s){ p.textContent='Chọn phạm vi Vùng/Khu vực/Tỉnh, tick Phường hoặc Đường bên trái rồi bấm Thêm.'; return; }
+  p.textContent='Đang gán: '+s+' đường.';
+}
+
+function bindTreeEvents(containerId, checkSet, rerenderFn, useParentChild){
+  el(containerId).addEventListener('click', function(e){
+    var row=e.target.closest('.tree-row');
+    if(!row) return;
+    var cb=row.querySelector('input[type=checkbox]');
+    if(!cb||cb.disabled) return;
+    if(e.target!==cb) cb.checked=!cb.checked;
+    if(useParentChild){
+      if(containerId==='rightTree') handleRightTreeCheckToggle(cb.dataset.key, cb.checked, checkSet);
+      else handleTreeCheckToggle(cb.dataset.key, cb.checked, checkSet);
+    } else {
+      var key=cb.dataset.key;
+      if(cb.checked) checkSet.add(key); else checkSet.delete(key);
+    }
+    rerenderFn();
+  });
+}
+
+/* ========== MAIN TABLE ========== */
+function renderRoutes(){
+  var body=el('routeBody'); body.innerHTML='';
+  ROUTES.forEach(function(r){
+    var search=routeSearchText(r);
+    var tr=document.createElement('tr');
+    tr.dataset.id=r.id; tr.dataset.npp=r.npp; tr.dataset.status=r.status;
+    tr.dataset.areaCount=r.areas.length; tr.dataset.hasDriver=r.driver?'1':'0';
+    tr.dataset.search=search;
+    tr.dataset.regions=r.areas.map(function(a){return a.region;}).join(',');
+    tr.dataset.areas=r.areas.map(function(a){return a.area;}).join(',');
+    tr.dataset.provinces=r.areas.map(function(a){return a.province;}).join(',');
+    tr.dataset.wards=r.areas.map(function(a){return a.ward;}).join(',');
+    var noteHtml=r.note?('<span title="'+r.note.replace(/"/g,'&quot;')+'">'+r.note+'</span>'):'<span class="empty">—</span>';
+    tr.innerHTML=
+      '<td class="code">'+r.id+' <span class="copy-icon" title="Sao chép">⎘</span></td>'+
+      '<td><div class="route-name">'+r.name+'</div></td>'+
+      '<td>'+areaCardsHtml(r.areas)+'</td>'+
+      '<td>'+driverCell(r.driver)+'</td>'+
+      '<td class="note-cell'+(r.note?'':' empty')+'">'+noteHtml+'</td>'+
+      '<td class="audit-cell">'+(r.createdBy||'—')+'</td>'+
+      '<td class="audit-cell">'+(r.createdAt||'—')+'</td>'+
+      '<td class="audit-cell">'+(r.updatedBy||'—')+'</td>'+
+      '<td class="audit-cell">'+(r.updatedAt||'—')+'</td>'+
+      '<td class="status-toggle-cell">'+routeStatusToggleHtml(r)+'</td>'+
+      '<td class="actions" style="text-align:center;"><button class="btn-icon btn-config" data-id="'+r.id+'" type="button" title="Chỉnh sửa">✎</button></td>';
+    body.appendChild(tr);
+  });
+  el('listTitle').textContent='Danh sách tuyến giao hàng ('+ROUTES.length+')';
+}
+renderRoutes();
+
+/* ========== FILTERS ========== */
+function populateRegionSelect(id){
+  Object.keys(TREE).forEach(function(k){ el(id).insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[k].name+'</option>'); });
+}
+populateRegionSelect('filterRegion');
+
+function cascadeMain(level){
+  var r=el('filterRegion').value,a=el('filterArea').value,p=el('filterProvince').value;
+  if(level<=1){ var sA=el('filterArea'); sA.innerHTML='<option value="">Tất cả khu vực</option>'; sA.disabled=!r;
+    if(r) Object.keys(TREE[r].areas).forEach(function(k){ sA.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[k].name+'</option>'); }); }
+  if(level<=2){ var sP=el('filterProvince'); sP.innerHTML='<option value="">Tất cả tỉnh/TP</option>'; sP.disabled=!(r&&a);
+    if(r&&a) Object.keys(TREE[r].areas[a].provinces).forEach(function(k){ sP.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[a].provinces[k].name+'</option>'); }); }
+  if(level<=3){ var sW=el('filterWard'); sW.innerHTML='<option value="">Tất cả phường/xã</option>'; sW.disabled=!(r&&a&&p);
+    if(r&&a&&p) Object.keys(TREE[r].areas[a].provinces[p].wards).forEach(function(k){ sW.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[a].provinces[p].wards[k].name+'</option>'); }); }
+}
+['filterRegion','filterArea','filterProvince','filterWard'].forEach(function(id,i){
+  el(id).addEventListener('change',function(){ if(i<3) cascadeMain(i+1); applyMainFilters(); });
+});
+function applyMainFilters(){
+  var search=el('filterSearch').value.trim().toLowerCase(), status=el('filterStatus').value, dStatus=el('filterDriverStatus').value;
+  var r=el('filterRegion').value,a=el('filterArea').value,p=el('filterProvince').value,w=el('filterWard').value, visible=0;
+  document.querySelectorAll('#routeBody tr').forEach(function(row){
+    var hasDriver=row.dataset.hasDriver==='1';
+    var dMatch=!dStatus||(dStatus==='has'&&hasDriver)||(dStatus==='none'&&!hasDriver);
+    var sMatch=!status||row.dataset.status===status;
+    var hMatch=(!r||(row.dataset.regions||'').split(',').indexOf(r)>=0)&&(!a||(row.dataset.areas||'').split(',').indexOf(a)>=0)&&(!p||(row.dataset.provinces||'').split(',').indexOf(p)>=0)&&(!w||(row.dataset.wards||'').split(',').indexOf(w)>=0);
+    var m=(!search||(row.dataset.search||'').indexOf(search)>=0)&&sMatch&&dMatch&&hMatch;
+    row.classList.toggle('hidden',!m); if(m) visible++;
+  });
+  el('listTitle').textContent='Danh sách tuyến giao hàng ('+visible+')';
+  el('paginationInfo').innerHTML='Hiển thị <strong>1–'+visible+'</strong> / tổng <strong>'+visible+'</strong>';
+}
+el('btnSearch').addEventListener('click',applyMainFilters);
+el('filterSearch').addEventListener('keydown',function(e){ if(e.key==='Enter') applyMainFilters(); });
+['filterStatus','filterDriverStatus'].forEach(function(id){ el(id).addEventListener('change',applyMainFilters); });
+el('btnRefresh').addEventListener('click',function(){
+  ['filterSearch','filterStatus','filterDriverStatus','filterRegion','filterArea','filterProvince','filterWard'].forEach(function(id){ el(id).value=''; });
+  cascadeMain(1); applyMainFilters(); showToast('Đã làm mới');
+});
+
+el('routeBody').addEventListener('click',function(e){
+  if(e.target.classList.contains('copy-icon')){ var code=e.target.parentElement.textContent.replace('⎘','').trim(); navigator.clipboard.writeText(code).then(function(){showToast('Đã sao chép: '+code);}); return; }
+  var btn=e.target.closest('.btn-config'); if(btn){ openConfig(btn.dataset.id); return; }
+});
+el('routeBody').addEventListener('change',function(e){
+  if(!e.target.classList.contains('route-status-toggle')) return;
+  e.stopPropagation();
+  setRouteStatus(e.target.dataset.id, e.target.checked);
+});
+
+/* ========== CONFIG MODAL ========== */
+function loadSelectionFromRoute(r){
+  selectedStreets=new Set();
+  r.areas.forEach(function(a){
+    if(a.street) selectedStreets.add(streetKey(a.region,a.area,a.province,a.ward,a.street));
+    else getStreetsForWard(wardKey(a.region,a.area,a.province,a.ward)).forEach(function(s){ selectedStreets.add(s.key); });
+  });
+}
+
+function openConfig(routeId){
+  isCreateMode=!routeId;
+  currentRouteId=routeId||null;
+  checkedLeft.clear(); checkedRight.clear();
+  selectedStreets=new Set();
+  loadRouteNote(null);
+  el('rightSearch').value='';
+  if(el('leftSearch')) el('leftSearch').value='';
+  el('rightCheckAll').checked=false;
+  collapsedWardsMs.clear();
+  if(routeId){
+    var r=ROUTES.find(function(x){return x.id===routeId;});
+    fillRouteForm(r);
+    populateDriverSelect(r.driver);
+    loadSelectionFromRoute(r);
+    updateRouteMeta(r);
+    loadRouteNote(r);
+    initLeftScopeFromRoute(r);
+  } else {
+    fillRouteForm(null);
+    populateDriverSelect('');
+    updateRouteMeta(null);
+    initLeftScopeDefaults();
+  }
+  renderBothTrees();
+  el('configModal').classList.add('open');
+}
+function closeConfig(){ el('configModal').classList.remove('open'); }
+el('configClose').addEventListener('click',closeConfig);
+el('configCancel').addEventListener('click',closeConfig);
+el('configModal').addEventListener('click',function(e){ if(e.target===this) closeConfig(); });
+
+bindTreeEvents('rightTree', checkedRight, function(){ renderBothTrees(); }, true);
+
+el('btnAssignArea').addEventListener('click',function(){ openConfig(null); });
+
+el('rightSearch').addEventListener('input', renderBothTrees);
+el('leftSearch').addEventListener('input', renderBothTrees);
+
+el('rightCheckAll').addEventListener('change',function(){
+  checkedRight.clear();
+  if(el('rightCheckAll').checked){
+    selectedStreets.forEach(function(k){ checkedRight.add(k); });
+    getWardKeysFromSelectedStreets().forEach(function(wk){ checkedRight.add(wk); });
+  }
+  renderBothTrees();
+});
+el('btnRightClearCheck').addEventListener('click',function(){
+  checkedRight.clear();
+  el('rightCheckAll').checked=false;
+  renderBothTrees();
+});
+
+el('btnAdd').addEventListener('click',function(){
+  var added=0;
+  checkedLeft.forEach(function(k){
+    var item=ITEM_BY_KEY[k];
+    if(!item) return;
+    if(item.assignLevel==='Phường'){
+      getStreetsForWard(k).forEach(function(s){
+        if(!selectedStreets.has(s.key)){ selectedStreets.add(s.key); added++; }
+      });
+    } else if(item.assignLevel==='Đường'){
+      if(checkedLeft.has(item.parentWardKey)) return;
+      if(!selectedStreets.has(k)){ selectedStreets.add(k); added++; }
+    }
+  });
+  checkedLeft.clear(); el('rightCheckAll').checked=false;
+  renderBothTrees();
+  showToast('Đã thêm '+added+' đường vào tuyến');
+});
+
+el('btnRemove').addEventListener('click',function(){
+  var n=0;
+  checkedRight.forEach(function(k){
+    var item=ITEM_BY_KEY[k];
+    if(!item) return;
+    if(item.assignLevel==='Phường'){
+      getAssignedStreetKeysForWard(k).forEach(function(sk){
+        if(selectedStreets.has(sk)){ selectedStreets.delete(sk); n++; }
+      });
+    } else if(item.assignLevel==='Đường'){
+      if(checkedRight.has(item.parentWardKey)) return;
+      if(selectedStreets.has(k)){ selectedStreets.delete(k); n++; }
+    }
+  });
+  checkedRight.clear(); el('rightCheckAll').checked=false;
+  renderBothTrees();
+  showToast('Đã xóa '+n+' đường khỏi tuyến');
+});
+
+el('cfgNote').addEventListener('input',function(){ el('cfgCounter').textContent=this.value.length+'/500'; });
+el('configReset').addEventListener('click',function(){
+  if(!confirm('Khôi phục về trạng thái ban đầu?')) return;
+  openConfig(currentRouteId);
+});
+el('configSave').addEventListener('click',function(){
+  var code=el('cfgRouteCode').value.trim();
+  var name=el('cfgRouteName').value.trim();
+  if(!code){ showToast('Vui lòng nhập mã tuyến','error'); return; }
+  if(!name){ showToast('Vui lòng nhập tên tuyến giao hàng','error'); return; }
+  if(ROUTES.some(function(x){ return x.id.toLowerCase()===code.toLowerCase() && x.id!==currentRouteId; })){
+    showToast('Mã tuyến "'+code+'" đã tồn tại','error'); return;
+  }
+  var r;
+  if(isCreateMode){
+    r={ id:code, name:name, npp:'NPP-HCM-01', status:'active', driver:'', note:'', areas:[], createdBy:'', createdAt:'', updatedBy:'', updatedAt:'' };
+    ROUTES.push(r);
+    currentRouteId=code;
+    isCreateMode=false;
+  } else {
+    r=ROUTES.find(function(x){return x.id===currentRouteId;});
+    if(!r) return;
+    r.id=code;
+    r.name=name;
+    currentRouteId=code;
+  }
+  var newAreas=[];
+  selectedStreets.forEach(function(k){ newAreas.push(parseStreetKey(k)); });
+  r.areas=newAreas;
+  r.driver=el('cfgDriver').value;
+  r.note=el('cfgNote').value.trim();
+  var now=new Date().toLocaleDateString('vi-VN')+' '+new Date().toTimeString().slice(0,5);
+  if(!r.createdBy||r.createdBy==='—'){ r.createdBy='NPP Admin'; r.createdAt=now; }
+  r.updatedBy='NPP Admin';
+  r.updatedAt=now;
+  renderRoutes(); applyMainFilters(); closeConfig();
+  showToast('Đã lưu tuyến '+r.name+' thành công');
+});
+
+/* ========== INIT SCOPE CONTROLS ========== */
+populateScopeRegionSelect('leftScopeRegion');
+el('leftScopeRegion').addEventListener('change',function(){
+  resetConfigTransferPanels();
+  cascadeScopeArea(leftScope,'leftScopeRegion','leftScopeArea','leftProvMulti','leftProvTrigger','leftProvPanel');
+  renderBothTrees();
+});
+el('leftScopeArea').addEventListener('change',function(){
+  resetConfigTransferPanels();
+  onScopeAreaChange(leftScope,'leftScopeArea','leftProvMulti','leftProvTrigger','leftProvPanel');
+  renderBothTrees();
+});
+bindProvinceMulti(leftScope,'leftProvMulti','leftProvTrigger','leftProvPanel',function(){
+  checkedLeft.clear(); renderBothTrees();
+});
+document.addEventListener('click',function(){
+  document.querySelectorAll('.multi-select.open').forEach(function(ms){ ms.classList.remove('open'); });
+});
+el('leftProvMulti').addEventListener('click',function(e){ e.stopPropagation(); });
+
+bindTreeMultiSelect(checkedLeft, renderBothTrees);
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-TS-VT01 — Dashboard Tài sản tại Cửa hàng (Flow A)</title>
+<style>
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--primary-500);
+    color: white;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 13px; }
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow { font-size: 22px; cursor: pointer; }
+  .app-header h1 { font-size: 17px; font-weight: 600; flex: 1; }
+  .app-header .header-sub { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 1px; }
+  .content { flex: 1; overflow-y: auto; background: var(--neutral-50); }
+
+  /* Store info banner */
+  .store-banner {
+    background: var(--primary-600);
+    padding: 10px 16px 14px;
+    color: white;
+  }
+  .store-name { font-size: 15px; font-weight: 700; }
+  .store-address { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 2px; }
+  .store-meta { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; display: flex; gap: 12px; }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .stat-card {
+    flex: 1;
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .stat-number { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+  .stat-label { font-size: 11px; color: var(--neutral-500); margin-top: 2px; }
+  .stat-card.primary .stat-number { color: var(--primary-600); }
+  .stat-card.success .stat-number { color: var(--success-700); }
+
+  /* Quick actions */
+  .quick-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 12px;
+  }
+  .btn-primary-mobile {
+    flex: 1;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-secondary-mobile {
+    flex: 1;
+    background: var(--neutral-0);
+    color: var(--primary-600);
+    border: 1.5px solid var(--primary-500);
+    border-radius: 10px;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* Section header */
+  .section-head {
+    padding: 12px 16px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-head .title { font-size: 15px; font-weight: 600; color: var(--neutral-900); }
+  .section-head .see-all { font-size: 13px; color: var(--primary-500); font-weight: 500; }
+
+  /* Asset group */
+  .asset-group-header {
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--neutral-100);
+    border-top: 1px solid var(--neutral-200);
+    border-bottom: 1px solid var(--neutral-200);
+  }
+  .asset-item {
+    background: var(--neutral-0);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .asset-icon { font-size: 20px; flex-shrink: 0; }
+  .asset-info { flex: 1; }
+  .asset-code { font-size: 11px; font-family: 'SF Mono', Consolas, monospace; color: var(--primary-600); }
+  .asset-name { font-size: 13px; font-weight: 500; color: var(--neutral-900); margin-top: 1px; }
+  .asset-qty {
+    background: var(--primary-50);
+    border: 1px solid var(--primary-500);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-600);
+    flex-shrink: 0;
+  }
+
+  /* Order card */
+  .order-card {
+    background: var(--neutral-0);
+    margin: 4px 16px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--neutral-100);
+  }
+  .order-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .order-code { font-size: 12px; font-family: 'SF Mono', Consolas, monospace; color: var(--primary-600); font-weight: 600; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-pending { background: var(--warning-50); color: var(--warning-700); }
+  .badge-success { background: var(--success-50); color: var(--success-700); }
+  .badge-rejected { background: var(--error-50); color: var(--error-700); }
+  .badge-cancelled { background: var(--neutral-100); color: var(--neutral-500); }
+  .order-meta { font-size: 12px; color: var(--neutral-500); margin-top: 4px; }
+  .order-asset-summary { font-size: 12px; color: var(--neutral-700); margin-top: 4px; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 8px; }
+  .empty-title { font-size: 15px; font-weight: 600; color: var(--neutral-700); margin-bottom: 4px; }
+  .empty-desc { font-size: 13px; color: var(--neutral-500); margin-bottom: 16px; }
+  .empty-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 32px; }
+
+  .bottom-msg { text-align: center; padding: 20px 16px; color: var(--neutral-500); font-size: 12px; }
+  .hint { color: rgba(255,255,255,0.5); font-size: 12px; text-align: center; margin-top: 16px; font-family: 'SF Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- STATE 1: DEFAULT (cửa hàng có tài sản) -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <div style="flex:1">
+          <div style="font-size:17px;font-weight:600;">Quản lý tài sản</div>
+          <div class="header-sub">Nhiệm vụ viếng thăm</div>
+        </div>
+      </div>
+      <div class="content">
+
+        <!-- Store info -->
+        <div class="store-banner">
+          <div class="store-name">🏪 Tạp hoá Minh Tuấn</div>
+          <div class="store-address">123 Lê Văn Việt, Quận 9, TP.HCM</div>
+          <div class="store-meta">
+            <span>MST: 0312345678</span>
+            <span>SR: Nguyễn Văn A</span>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-card primary">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Loại TS</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-number">11</div>
+            <div class="stat-label">Tổng SL</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Đơn đăng ký</div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="quick-actions">
+          <button class="btn-primary-mobile">+ Đăng ký mới</button>
+          <button class="btn-secondary-mobile">🔍 Kiểm tra TS</button>
+        </div>
+
+        <!-- Assets grouped by nhóm -->
+        <div class="section-head">
+          <span class="title">Tài sản hiện tại</span>
+          <span class="see-all">11 tài sản</span>
+        </div>
+
+        <div class="asset-group-header">🏷 Hàng định danh (2)</div>
+        <div class="asset-item">
+          <div class="asset-icon">❄️</div>
+          <div class="asset-info">
+            <div class="asset-code">TS-TM-100L-00142</div>
+            <div class="asset-name">Tủ mát Finviet 100L</div>
+          </div>
+          <div class="asset-qty">×3</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-icon">☀️</div>
+          <div class="asset-info">
+            <div class="asset-code">TS-ON-FV-00087</div>
+            <div class="asset-name">Ô che nắng Finviet</div>
+          </div>
+          <div class="asset-qty">×2</div>
+        </div>
+
+        <div class="asset-group-header">📦 POSM (3)</div>
+        <div class="asset-item">
+          <div class="asset-icon">🪧</div>
+          <div class="asset-info">
+            <div class="asset-code">POSM-KE-A4</div>
+            <div class="asset-name">Kệ POSM A4</div>
+          </div>
+          <div class="asset-qty">×5</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-icon">🪧</div>
+          <div class="asset-info">
+            <div class="asset-code">POSM-BR-3X1</div>
+            <div class="asset-name">Băng rôn treo 3×1m</div>
+          </div>
+          <div class="asset-qty">×1</div>
+        </div>
+
+        <!-- Đơn gần đây (chỉ đơn của CH này) -->
+        <div class="section-head">
+          <span class="title">Đơn gần đây</span>
+          <span class="see-all">Xem tất cả →</span>
+        </div>
+
+        <div class="order-card">
+          <div class="order-card-top">
+            <span class="order-code">DKTS190520263847</span>
+            <span class="badge badge-pending">⏳ Chờ duyệt</span>
+          </div>
+          <div class="order-meta">19/05/2026 · 3 tài sản</div>
+          <div class="order-asset-summary">Tủ mát 100L (3) · Kệ POSM A4 (5)...</div>
+        </div>
+
+        <div class="order-card">
+          <div class="order-card-top">
+            <span class="order-code">DKTS120520261023</span>
+            <span class="badge badge-success">✅ Đã duyệt</span>
+          </div>
+          <div class="order-meta">12/05/2026 · 2 tài sản</div>
+          <div class="order-asset-summary">Ô che nắng (2)</div>
+        </div>
+
+        <div class="order-card">
+          <div class="order-card-top">
+            <span class="order-code">DKTS050520265421</span>
+            <span class="badge badge-success">✅ Đã duyệt</span>
+          </div>
+          <div class="order-meta">05/05/2026 · 3 tài sản</div>
+          <div class="order-asset-summary">Băng rôn (1) · Kệ A4 (5)...</div>
+        </div>
+
+        <div class="bottom-msg">Hiển thị 3 đơn gần nhất tại cửa hàng này</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS-VT01 · Flow A: Dashboard Tài sản tại CH · State 1: Default</div>
+</div>
+
+<!-- STATE 2: EMPTY (cửa hàng chưa có tài sản) -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <div style="flex:1">
+          <div style="font-size:17px;font-weight:600;">Quản lý tài sản</div>
+          <div class="header-sub">Nhiệm vụ viếng thăm</div>
+        </div>
+      </div>
+      <div class="content">
+
+        <div class="store-banner">
+          <div class="store-name">🏪 Siêu thị Mini Ánh Ngân</div>
+          <div class="store-address">45 Nguyễn Oanh, Gò Vấp, TP.HCM</div>
+          <div class="store-meta">
+            <span>MST: 0398765432</span>
+            <span>SR: Nguyễn Văn A</span>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Loại TS</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Tổng SL</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Đơn đăng ký</div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="btn-primary-mobile">+ Đăng ký mới</button>
+          <button class="btn-secondary-mobile" style="opacity:0.45;cursor:not-allowed;">🔍 Kiểm tra TS</button>
+        </div>
+
+        <div class="section-head">
+          <span class="title">Tài sản hiện tại</span>
+        </div>
+
+        <div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <div class="empty-title">Cửa hàng chưa có tài sản</div>
+          <div class="empty-desc">Đăng ký cấp phát tài sản để bắt đầu theo dõi</div>
+          <div class="empty-actions">
+            <button class="btn-primary-mobile">+ Tạo đơn đăng ký</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS-VT01 · Flow A: Dashboard Tài sản tại CH · State 2: Empty</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-A-TS03 — Tạo Đơn Đăng ký Tài sản</title>
+<style>
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--primary-500);
+    color: white;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 13px; }
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow { font-size: 22px; cursor: pointer; }
+  .app-header h1 { font-size: 17px; font-weight: 600; flex: 1; text-align: center; margin-right: 22px; }
+  .content { flex: 1; overflow-y: auto; background: var(--neutral-50); padding-bottom: 80px; }
+
+  /* Form sections */
+  .form-section {
+    background: var(--neutral-0);
+    margin-bottom: 8px;
+  }
+  .form-section-title {
+    padding: 12px 16px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .form-field {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--neutral-100);
+  }
+  .form-field:last-child { border-bottom: none; }
+  .field-label {
+    font-size: 12px;
+    color: var(--neutral-500);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .field-label .req { color: var(--error-500); font-weight: 700; margin-right: 2px; }
+  .field-input {
+    background: var(--neutral-100);
+    border: 1.5px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--neutral-900);
+    width: 100%;
+  }
+  .field-input.readonly {
+    background: var(--neutral-50);
+    border-color: var(--neutral-200);
+    color: var(--neutral-500);
+  }
+  .field-input.error {
+    border-color: var(--error-500);
+    background: var(--error-50);
+  }
+  .field-input.placeholder-style { color: var(--neutral-500); }
+  .field-input.has-value { color: var(--neutral-900); border-color: var(--neutral-300); }
+  .field-input-dropdown {
+    background: var(--neutral-0);
+    border: 1.5px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--neutral-900);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .field-input-dropdown .arrow { color: var(--neutral-500); font-size: 12px; }
+  .error-msg {
+    font-size: 12px;
+    color: var(--error-700);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Asset line */
+  .asset-lines { padding: 0 16px 12px; }
+  .asset-line {
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-200);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .asset-line-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .asset-line-num { font-size: 12px; font-weight: 700; color: var(--primary-600); }
+  .btn-remove-line { font-size: 18px; color: var(--error-500); cursor: pointer; }
+  .asset-cascade { display: flex; flex-direction: column; gap: 6px; }
+  .cascade-row { display: flex; gap: 6px; }
+  .dropdown-mini {
+    flex: 1;
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 7px;
+    padding: 7px 8px;
+    font-size: 12px;
+    color: var(--neutral-700);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dropdown-mini .label-sm { font-size: 10px; color: var(--neutral-500); display: block; margin-bottom: 1px; }
+  .dropdown-mini.selected { border-color: var(--primary-500); }
+  .qty-row { display: flex; gap: 8px; margin-top: 6px; }
+  .qty-field {
+    flex: 1;
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 7px;
+    padding: 7px 10px;
+  }
+  .qty-field .label-sm { font-size: 10px; color: var(--neutral-500); margin-bottom: 2px; }
+  .qty-field .value { font-size: 14px; font-weight: 600; color: var(--neutral-900); }
+  .qty-field.readonly .value { color: var(--neutral-500); }
+  .qty-field.readonly { background: var(--neutral-100); }
+  .qty-field.has-error .value { color: var(--error-700); }
+  .qty-field.has-error { border-color: var(--error-500); background: var(--error-50); }
+
+  /* Add line button */
+  .btn-add-line {
+    margin: 0 16px 12px;
+    padding: 10px;
+    border: 1.5px dashed var(--primary-500);
+    border-radius: 10px;
+    background: var(--primary-50);
+    color: var(--primary-600);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  /* Textarea */
+  .field-textarea {
+    background: var(--neutral-100);
+    border: 1.5px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--neutral-500);
+    width: 100%;
+    height: 72px;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .char-counter { text-align: right; font-size: 11px; color: var(--neutral-500); margin-top: 2px; }
+
+  /* Footer */
+  .footer-fixed {
+    position: sticky;
+    bottom: 0;
+    background: var(--neutral-0);
+    border-top: 1px solid var(--neutral-200);
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+  }
+  .btn-primary-mobile {
+    flex: 1;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-secondary-mobile {
+    background: var(--neutral-0);
+    color: var(--neutral-700);
+    border: 1.5px solid var(--neutral-300);
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .hint { color: rgba(255,255,255,0.5); font-size: 12px; text-align: center; margin-top: 16px; font-family: 'SF Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- STATE 1: FLOW B — form đang điền, 2 dòng tài sản -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Tạo đơn đăng ký</h1>
+      </div>
+      <div class="content">
+
+        <div class="form-section">
+          <div class="form-section-title">Thông tin đơn</div>
+
+          <!-- * Cửa hàng — Flow B: user chọn -->
+          <div class="form-field">
+            <div class="field-label"><span class="req">*</span> Cửa hàng</div>
+            <div class="field-input-dropdown has-value">
+              <span>Tạp hoá Minh Tuấn</span>
+              <span class="arrow">▼</span>
+            </div>
+          </div>
+
+          <!-- Ghi chú -->
+          <div class="form-field">
+            <div class="field-label">Ghi chú</div>
+            <textarea class="field-textarea" placeholder="Nhập ghi chú (tuỳ chọn)..."></textarea>
+            <div class="char-counter">0/500</div>
+          </div>
+        </div>
+
+        <!-- Asset lines -->
+        <div class="form-section-title" style="padding:12px 16px 8px;">
+          <span>Danh sách tài sản</span>
+        </div>
+
+        <div class="asset-lines">
+
+          <!-- Dòng 1 — đã chọn đầy đủ -->
+          <div class="asset-line">
+            <div class="asset-line-header">
+              <span class="asset-line-num">Dòng 1</span>
+              <span class="btn-remove-line">🗑</span>
+            </div>
+            <div class="asset-cascade">
+              <div class="cascade-row">
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Nhóm</span>
+                    <span style="font-size:13px;">Định danh</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Loại</span>
+                    <span style="font-size:13px;">Tủ mát</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+              </div>
+              <div class="dropdown-mini selected">
+                <div>
+                  <span class="label-sm">Tài sản</span>
+                  <span style="font-size:13px;">Tủ mát Finviet 100L</span>
+                </div>
+                <span style="font-size:10px;color:#6B7280;">▼</span>
+              </div>
+              <div class="qty-row">
+                <div class="qty-field">
+                  <div class="label-sm">* SL yêu cầu</div>
+                  <div class="value">3</div>
+                </div>
+                <div class="qty-field readonly">
+                  <div class="label-sm">Tồn ĐK</div>
+                  <div class="value">12</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dòng 2 — chưa chọn tài sản -->
+          <div class="asset-line">
+            <div class="asset-line-header">
+              <span class="asset-line-num">Dòng 2</span>
+              <span class="btn-remove-line">🗑</span>
+            </div>
+            <div class="asset-cascade">
+              <div class="cascade-row">
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Nhóm</span>
+                    <span style="font-size:13px;">POSM</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+                <div class="dropdown-mini" style="color:var(--neutral-500);">
+                  <div>
+                    <span class="label-sm">Loại</span>
+                    <span style="font-size:13px;">Chọn loại...</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+              </div>
+              <div class="dropdown-mini" style="color:var(--neutral-500);opacity:0.6;">
+                <div>
+                  <span class="label-sm">Tài sản</span>
+                  <span style="font-size:13px;">Chọn loại trước</span>
+                </div>
+                <span style="font-size:10px;color:#6B7280;">▼</span>
+              </div>
+              <div class="qty-row">
+                <div class="qty-field" style="opacity:0.5;">
+                  <div class="label-sm">* SL yêu cầu</div>
+                  <div class="value" style="color:var(--neutral-400);">—</div>
+                </div>
+                <div class="qty-field readonly" style="opacity:0.5;">
+                  <div class="label-sm">Tồn ĐK</div>
+                  <div class="value">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="btn-add-line">+ Thêm dòng tài sản</div>
+
+        <div class="footer-fixed">
+          <button class="btn-secondary-mobile">Hủy</button>
+          <button class="btn-primary-mobile">Lưu đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS03 · Tạo đơn · State 1: Flow B — form đang điền</div>
+</div>
+
+<!-- STATE 2: FLOW A — CH đã prefill readonly + validation errors -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="status-bar"><span>9:41</span><span class="icons">📶 🔋</span></div>
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Tạo đơn đăng ký</h1>
+      </div>
+      <div class="content">
+
+        <div class="form-section">
+          <div class="form-section-title">Thông tin đơn</div>
+
+          <!-- * Cửa hàng — Flow A: readonly prefill từ context viếng thăm -->
+          <div class="form-field">
+            <div class="field-label"><span class="req">*</span> Cửa hàng</div>
+            <div class="field-input-dropdown" style="background:var(--neutral-50);border-color:var(--neutral-200);">
+              <span style="color:var(--neutral-700);">Tạp hoá Minh Tuấn</span>
+              <span style="font-size:11px;color:var(--neutral-500);">🔒</span>
+            </div>
+            <div style="font-size:11px;color:var(--neutral-500);margin-top:3px;">Điền từ nhiệm vụ viếng thăm</div>
+          </div>
+
+          <!-- Ghi chú -->
+          <div class="form-field">
+            <div class="field-label">Ghi chú</div>
+            <textarea class="field-textarea" placeholder="Nhập ghi chú (tuỳ chọn)..."></textarea>
+            <div class="char-counter">0/500</div>
+          </div>
+        </div>
+
+        <div class="form-section-title" style="padding:12px 16px 8px;background:var(--neutral-0);">
+          <span>Danh sách tài sản</span>
+        </div>
+
+        <div class="asset-lines">
+
+          <!-- Dòng 1 — SL > Tồn ĐK → lỗi -->
+          <div class="asset-line" style="border-color:var(--error-500);">
+            <div class="asset-line-header">
+              <span class="asset-line-num" style="color:var(--error-700);">Dòng 1 ⚠️</span>
+              <span class="btn-remove-line">🗑</span>
+            </div>
+            <div class="asset-cascade">
+              <div class="cascade-row">
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Nhóm</span>
+                    <span style="font-size:13px;">Định danh</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Loại</span>
+                    <span style="font-size:13px;">Tủ mát</span>
+                  </div>
+                  <span style="font-size:10px;color:#6B7280;">▼</span>
+                </div>
+              </div>
+              <div class="dropdown-mini selected">
+                <div>
+                  <span class="label-sm">Tài sản</span>
+                  <span style="font-size:13px;">Tủ mát Finviet 100L</span>
+                </div>
+              </div>
+              <div class="qty-row">
+                <div class="qty-field has-error">
+                  <div class="label-sm">* SL yêu cầu</div>
+                  <div class="value">15</div>
+                </div>
+                <div class="qty-field readonly">
+                  <div class="label-sm">Tồn ĐK</div>
+                  <div class="value">12</div>
+                </div>
+              </div>
+              <div class="error-msg">⚠️ SL yêu cầu (15) vượt tồn ĐK (12)</div>
+            </div>
+          </div>
+
+          <!-- Dòng 2 — chưa chọn Tài sản (bỏ trống) -->
+          <div class="asset-line" style="border-color:var(--error-500);">
+            <div class="asset-line-header">
+              <span class="asset-line-num" style="color:var(--error-700);">Dòng 2 ⚠️</span>
+              <span class="btn-remove-line">🗑</span>
+            </div>
+            <div class="asset-cascade">
+              <div class="cascade-row">
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Nhóm</span>
+                    <span style="font-size:13px;">POSM</span>
+                  </div>
+                </div>
+                <div class="dropdown-mini selected">
+                  <div>
+                    <span class="label-sm">Loại</span>
+                    <span style="font-size:13px;">Kệ trưng bày</span>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-mini" style="border-color:var(--error-500);background:var(--error-50);color:var(--error-700);">
+                <div>
+                  <span class="label-sm">Tài sản</span>
+                  <span style="font-size:13px;">Chọn tài sản...</span>
+                </div>
+                <span style="font-size:10px;">▼</span>
+              </div>
+              <div class="error-msg">⚠️ Vui lòng chọn tài sản</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="btn-add-line">+ Thêm dòng tài sản</div>
+
+        <!-- Toast-style error summary -->
+        <div style="margin:0 16px 12px;padding:10px 12px;background:var(--error-50);border:1px solid var(--error-500);border-radius:8px;font-size:12px;color:var(--error-700);">
+          ⚠️ <strong>2 lỗi cần sửa</strong> trước khi lưu đơn
+        </div>
+
+        <div class="footer-fixed">
+          <button class="btn-secondary-mobile">Hủy</button>
+          <button class="btn-primary-mobile" style="background:#93C5FD;cursor:not-allowed;">Lưu đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">MS-A-TS03 · Tạo đơn · State 2: Flow A + Validation errors</div>
+</div>
+
+</body>
+</html>

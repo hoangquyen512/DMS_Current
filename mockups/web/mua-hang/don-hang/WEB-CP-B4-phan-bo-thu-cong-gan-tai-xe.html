@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] Phân bổ thủ công — Gán tài xế giao hàng</title>
+<style>
+/* ======= Design Tokens ======= */
+:root {
+    --primary-50: #EFF6FF;
+    --primary-100: #DBEAFE;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --primary-700: #1D4ED8;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-600: #DC2626;
+    --error-700: #B91C1C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--neutral-100);
+    min-height: 100vh;
+}
+
+.switcher {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: var(--neutral-900);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 20px;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.switcher-label {
+    color: rgba(255,255,255,0.35);
+    font-size: 11px;
+    font-family: 'SF Mono', Consolas, monospace;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.sw-btn {
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.sw-btn:hover { background: rgba(255,255,255,0.08); }
+.sw-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+
+.screen-wrapper { display: none; }
+.screen-wrapper.active { display: block; }
+
+.app { display: flex; height: calc(100vh - 48px); margin-top: 48px; }
+.sidebar { display: none; }
+
+.main { flex: 1; background: var(--neutral-50); overflow-y: auto; position: relative; }
+
+.topbar {
+    background: white;
+    padding: 10px 28px;
+    border-bottom: 1px solid var(--neutral-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.breadcrumb { font-size: 13px; color: var(--neutral-500); }
+.breadcrumb a { color: var(--primary-500); text-decoration: none; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); }
+.avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 600; font-size: 11px;
+}
+
+.page { padding: 20px 28px; }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.page-title { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+.page-subtitle { font-size: 12px; color: var(--neutral-500); margin-top: 3px; }
+
+.btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-primary { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-secondary { background: white; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-secondary:hover { background: var(--neutral-50); }
+.btn-text { background: transparent; color: var(--primary-500); border: none; }
+
+.filter-card {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.filter-row:last-child { margin-bottom: 0; }
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select, .filter-input {
+    padding: 6px 10px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--neutral-700);
+    background: white;
+    width: 100%;
+}
+
+.filter-select {
+    padding-right: 28px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+.filter-select.active {
+    border-color: var(--primary-500);
+    background-color: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.filter-search {
+    padding: 7px 12px 7px 34px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 10px center;
+    color: var(--neutral-700);
+    width: 100%;
+}
+
+.filter-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.filter-active-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--primary-700);
+    background: var(--primary-50);
+    border: 1px solid var(--primary-100);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-top: 6px;
+}
+
+.bulk-bar {
+    background: var(--primary-50);
+    border: 1px solid var(--primary-100);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bulk-count { font-size: 13px; font-weight: 600; color: var(--primary-700); }
+.bulk-meta { font-size: 12px; color: var(--neutral-500); }
+.bulk-actions { display: flex; gap: 8px; margin-left: auto; }
+
+.list-section {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 40px;
+}
+
+.list-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.list-section-title { font-size: 15px; font-weight: 700; color: var(--neutral-900); }
+.list-section-actions { display: flex; gap: 8px; }
+
+.table-container {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--neutral-50); }
+
+th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    border-bottom: 1px solid var(--neutral-200);
+    white-space: nowrap;
+}
+
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--primary-500); }
+
+td {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--neutral-900);
+    border-bottom: 1px solid var(--neutral-100);
+    vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafbfc; }
+tr.selected td { background: var(--primary-50); }
+
+td.code {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 12px;
+    color: var(--primary-600);
+}
+
+td.code .copy-icon {
+    cursor: pointer;
+    color: var(--neutral-300);
+    margin-left: 4px;
+    font-size: 11px;
+}
+
+td.muted { color: var(--neutral-500); font-size: 12px; }
+td.money { font-weight: 600; text-align: right; white-space: nowrap; }
+td.actions { text-align: right; white-space: nowrap; }
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-pending { background: var(--warning-50); color: var(--warning-700); border: 1px solid #fde68a; }
+.badge-info { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-type-a { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-type-b { background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8; }
+
+.cell-link {
+    color: var(--primary-600);
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+.cell-link:hover { text-decoration: underline; }
+
+.pagination {
+    padding: 12px 16px;
+    border-top: 1px solid var(--neutral-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--neutral-500);
+}
+
+.pagination-controls { display: flex; gap: 4px; align-items: center; }
+.page-btn {
+    width: 28px; height: 28px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--neutral-700);
+}
+.page-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.page-select { padding: 4px 8px; border: 1px solid var(--neutral-200); border-radius: 5px; font-size: 12px; margin-left: 8px; }
+
+.empty-state { text-align: center; padding: 60px 24px; color: var(--neutral-500); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--neutral-700); margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: var(--neutral-500); margin-bottom: 16px; }
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: white;
+    border-radius: 10px;
+    width: 560px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--neutral-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); }
+.modal-close { cursor: pointer; color: var(--neutral-500); font-size: 18px; }
+
+.modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
+
+.modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--neutral-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--neutral-50);
+}
+
+.confirm-info-panel {
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+}
+
+.confirm-info-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 6px;
+    align-items: start;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.confirm-info-row:last-child { margin-bottom: 0; }
+.confirm-info-label { color: var(--neutral-500); }
+.confirm-info-value { color: var(--neutral-900); font-weight: 600; }
+.confirm-info-value.mono { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--primary-600); }
+
+.form-field { margin-bottom: 16px; }
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    margin-bottom: 5px;
+}
+.form-label .required { color: var(--error-500); margin-right: 2px; }
+
+.form-select {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    appearance: none;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+}
+
+.form-select:focus { outline: none; border-color: var(--primary-500); }
+
+.driver-option-hint {
+    font-size: 11px;
+    color: var(--neutral-500);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-counter { text-align: right; font-size: 11px; color: var(--neutral-500); margin-top: 3px; }
+
+.modal-note {
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+.modal-note.info { background: var(--primary-50); border: 1px solid var(--primary-100); color: var(--primary-700); }
+
+.mini-order-list {
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.mini-order-list table { font-size: 12px; }
+.mini-order-list th { padding: 8px 12px; font-size: 11px; }
+.mini-order-list td { padding: 8px 12px; }
+
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.stat-card-label { font-size: 11px; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-card-value { font-size: 20px; font-weight: 700; color: var(--neutral-900); margin-top: 4px; }
+.stat-card-value.warning { color: var(--warning-700); }
+
+.btn-icon {
+    padding: 5px;
+    width: 30px; height: 30px;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--neutral-500);
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex; align-items: center;
+}
+.btn-icon:hover { background: var(--neutral-100); }
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <span class="switcher-label">WEB-CP-B4</span>
+  <button class="sw-btn" onclick="switchScreen(1)">1 · Danh sách chờ phân bổ</button>
+  <button class="sw-btn" onclick="switchScreen(2)">2 · Đã chọn đơn</button>
+  <button class="sw-btn" onclick="switchScreen(3)">3 · Modal gán tài xế</button>
+  <button class="sw-btn" onclick="switchScreen(4)">4 · Trống</button>
+</div>
+
+<script>
+function switchScreen(n) {
+  document.querySelectorAll('.screen-wrapper').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.sw-btn').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('sw'+n).classList.add('active');
+  document.querySelectorAll('.sw-btn')[n-1].classList.add('active');
+}
+document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
+</script>
+
+<!-- STATE 1: Danh sách chờ phân bổ -->
+<div class="screen-wrapper" id="sw1">
+<div class="app">
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="#">Trang chủ</a> / <a href="#">Mua hàng</a> / <a href="#">Quản lý đơn giao hàng</a> / Phân bổ thủ công
+      </div>
+      <div class="topbar-actions">
+        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Phân bổ thủ công — Gán tài xế</div>
+          <div class="page-subtitle">Chọn đơn giao hàng ở trạng thái Chờ phân bổ và gán cho tài xế phù hợp</div>
+        </div>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-card-label">Chờ phân bổ</div>
+          <div class="stat-card-value warning">24</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Đã gán hôm nay</div>
+          <div class="stat-card-value">18</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Tài xế sẵn sàng</div>
+          <div class="stat-card-value">6</div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field" style="flex:1.2;">
+            <div class="filter-label">* Công ty</div>
+            <select class="filter-select active">
+              <option>FVC — Finviet Consumer</option>
+              <option>Tất cả công ty</option>
+            </select>
+          </div>
+          <div class="filter-field" style="flex:1.5;">
+            <div class="filter-label">Tìm kiếm</div>
+            <input class="filter-search" placeholder="Mã DLO, mã đơn, tên cửa hàng, SĐT..." type="text"/>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Trạng thái giao hàng</div>
+            <select class="filter-select active">
+              <option>Chờ phân bổ</option>
+              <option>Tất cả</option>
+              <option>Đã gán</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Nguồn đơn</div>
+            <select class="filter-select">
+              <option value="">Tất cả</option>
+              <option>Ecom</option>
+              <option>Salesman App</option>
+              <option>Econsumer</option>
+              <option>Import</option>
+            </select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-secondary">🔄 Làm mới</button>
+            <button class="btn btn-primary">🔍 Tìm kiếm</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">Tuyến giao hàng</div>
+            <select class="filter-select">
+              <option value="">Tất cả tuyến</option>
+              <option>TUY-Q1-01 — Quận 1</option>
+              <option>TUY-Q7-02 — Quận 7</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Vùng giao hàng</div>
+            <select class="filter-select">
+              <option value="">Tất cả vùng</option>
+              <option>VUNG-Q1-A</option>
+              <option>VUNG-Q7-B</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Ngày tạo DLO</div>
+            <div style="display:flex;gap:4px;align-items:center;">
+              <input class="filter-input" placeholder="Từ ngày" type="text" value="01/06/2026"/>
+              <span style="font-size:12px;color:var(--neutral-500);">→</span>
+              <input class="filter-input" placeholder="Đến ngày" type="text" value="15/06/2026"/>
+            </div>
+          </div>
+        </div>
+        <div class="filter-active-tag">🔵 Đang lọc: Chờ phân bổ · FVC</div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title">Danh sách đơn chờ phân bổ (24)</div>
+          <div class="list-section-actions">
+            <button class="btn btn-secondary">📤 Export</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:36px;"><input type="checkbox"/></th>
+                  <th class="sortable">Mã DLO ↕</th>
+                  <th class="sortable">Mã đơn bán ↕</th>
+                  <th class="sortable">Cửa hàng ↕</th>
+                  <th>Địa chỉ giao</th>
+                  <th class="sortable" style="text-align:right;">Tổng tiền ↕</th>
+                  <th>Nguồn</th>
+                  <th>Trạng thái</th>
+                  <th class="sortable">Ngày tạo ↓</th>
+                  <th style="text-align:right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0042 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-ECOM-88921 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">CH Minh Phát — Q.1</a></td>
+                  <td class="muted">12 Nguyễn Huệ, P.Bến Nghé, Q.1, TP.HCM</td>
+                  <td class="money">2.450.000</td>
+                  <td><span class="badge badge-type-a">Ecom</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">15-06-2026 08:30:00</td>
+                  <td class="actions"><button class="btn btn-text">Gán ngay</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0041 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-APP-77210 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">Tạp hóa Hoa Mai</a></td>
+                  <td class="muted">45 Lê Văn Việt, P.Tăng Nhơn Phú A, Q.9</td>
+                  <td class="money">890.000</td>
+                  <td><span class="badge badge-type-b">App</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">15-06-2026 07:45:00</td>
+                  <td class="actions"><button class="btn btn-text">Gán ngay</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0038 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-ECO-55102 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">Siêu thị Việt An</a></td>
+                  <td class="muted">88 Nguyễn Văn Linh, Q.7, TP.HCM</td>
+                  <td class="money">5.120.000</td>
+                  <td><span class="badge badge-info">Econsumer</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">14-06-2026 16:20:00</td>
+                  <td class="actions"><button class="btn btn-text">Gán ngay</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span>Hiển thị 1–20 / tổng <strong>24</strong> bản ghi</span>
+            <div class="pagination-controls">
+              <button class="page-btn">‹</button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">›</button>
+              <select class="page-select"><option>20 / trang</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATE 2: Đã chọn đơn + bulk bar -->
+<div class="screen-wrapper" id="sw2">
+<div class="app">
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="#">Trang chủ</a> / <a href="#">Mua hàng</a> / <a href="#">Quản lý đơn giao hàng</a> / Phân bổ thủ công
+      </div>
+      <div class="topbar-actions">
+        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Phân bổ thủ công — Gán tài xế</div>
+          <div class="page-subtitle">Chọn đơn giao hàng ở trạng thái Chờ phân bổ và gán cho tài xế phù hợp</div>
+        </div>
+      </div>
+
+      <div class="filter-card" style="padding:10px 16px;">
+        <div class="filter-active-tag">🔵 Đang lọc: Chờ phân bổ · FVC</div>
+      </div>
+
+      <div class="bulk-bar">
+        <span class="bulk-count">✓ Đã chọn 3 đơn giao hàng</span>
+        <span class="bulk-meta">Tổng tiền: <strong>8.460.000</strong> · Tất cả ở trạng thái Chờ phân bổ</span>
+        <div class="bulk-actions">
+          <button class="btn btn-secondary">Bỏ chọn</button>
+          <button class="btn btn-primary">🚚 Gán tài xế (3)</button>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title">Danh sách đơn chờ phân bổ (24)</div>
+        </div>
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:36px;"><input checked type="checkbox"/></th>
+                  <th>Mã DLO</th>
+                  <th>Mã đơn bán</th>
+                  <th>Cửa hàng</th>
+                  <th>Địa chỉ giao</th>
+                  <th style="text-align:right;">Tổng tiền</th>
+                  <th>Nguồn</th>
+                  <th>Trạng thái</th>
+                  <th>Ngày tạo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="selected">
+                  <td><input checked type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0042 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-ECOM-88921 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">CH Minh Phát — Q.1</a></td>
+                  <td class="muted">12 Nguyễn Huệ, Q.1</td>
+                  <td class="money">2.450.000</td>
+                  <td><span class="badge badge-type-a">Ecom</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">15-06-2026 08:30:00</td>
+                </tr>
+                <tr class="selected">
+                  <td><input checked type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0041 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-APP-77210 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">Tạp hóa Hoa Mai</a></td>
+                  <td class="muted">45 Lê Văn Việt, Q.9</td>
+                  <td class="money">890.000</td>
+                  <td><span class="badge badge-type-b">App</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">15-06-2026 07:45:00</td>
+                </tr>
+                <tr class="selected">
+                  <td><input checked type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0038 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-ECO-55102 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">Siêu thị Việt An</a></td>
+                  <td class="muted">88 Nguyễn Văn Linh, Q.7</td>
+                  <td class="money">5.120.000</td>
+                  <td><span class="badge badge-info">Econsumer</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">14-06-2026 16:20:00</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0035 <span class="copy-icon">⎘</span></td>
+                  <td class="code">SO-ECOM-88900 <span class="copy-icon">⎘</span></td>
+                  <td><a class="cell-link">Cửa hàng Bình An</a></td>
+                  <td class="muted">22 Cách Mạng Tháng 8, Q.3</td>
+                  <td class="money">1.200.000</td>
+                  <td><span class="badge badge-type-a">Ecom</span></td>
+                  <td><span class="badge badge-pending">⏳ Chờ phân bổ</span></td>
+                  <td class="muted">14-06-2026 14:10:00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATE 3: Modal gán tài xế -->
+<div class="screen-wrapper" id="sw3">
+<div class="app">
+  <div class="main" style="position:relative;">
+    <div style="filter:blur(2px);pointer-events:none;">
+      <div class="topbar">
+        <div class="breadcrumb"><a href="#">Trang chủ</a> / Phân bổ thủ công</div>
+        <div class="topbar-actions"><div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div></div>
+      </div>
+      <div class="page">
+        <div class="page-title" style="margin-bottom:12px;">Phân bổ thủ công — Gán tài xế</div>
+        <div class="bulk-bar"><span class="bulk-count">✓ Đã chọn 3 đơn giao hàng</span></div>
+        <div class="list-section" style="height:220px;"></div>
+      </div>
+    </div>
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">🚚 Gán tài xế giao hàng</div>
+          <div class="modal-close">✕</div>
+        </div>
+        <div class="modal-body">
+          <div class="confirm-info-panel">
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Số đơn được chọn:</span>
+              <span class="confirm-info-value">3 đơn giao hàng</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Tổng tiền thu:</span>
+              <span class="confirm-info-value">8.460.000 VNĐ</span>
+            </div>
+            <div class="confirm-info-row">
+              <span class="confirm-info-label">Trạng thái sau gán:</span>
+              <span class="confirm-info-value"><span class="badge badge-info">ℹ Đã gán — Chờ tài xế xác nhận</span></span>
+            </div>
+          </div>
+
+          <div class="mini-order-list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mã DLO</th>
+                  <th>Cửa hàng</th>
+                  <th style="text-align:right;">Tổng tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="code">DLO-20260615-0042</td>
+                  <td>CH Minh Phát — Q.1</td>
+                  <td class="money">2.450.000</td>
+                </tr>
+                <tr>
+                  <td class="code">DLO-20260615-0041</td>
+                  <td>Tạp hóa Hoa Mai</td>
+                  <td class="money">890.000</td>
+                </tr>
+                <tr>
+                  <td class="code">DLO-20260614-0038</td>
+                  <td>Siêu thị Việt An</td>
+                  <td class="money">5.120.000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label"><span class="required">*</span> Tài xế</label>
+            <select class="form-select">
+              <option value="">— Chọn tài xế —</option>
+              <option selected>TX-001 — Nguyễn Văn Tài · 51A-12345 · TUY-Q1-01 · Đang giao 2 đơn</option>
+              <option>TX-002 — Trần Minh Đức · 51B-67890 · TUY-Q7-02 · Sẵn sàng</option>
+              <option>TX-003 — Lê Hoàng Nam · 51C-11223 · VUNG-Q1-A · Sẵn sàng</option>
+              <option>TX-004 — Phạm Quốc Bảo · 51D-44556 · TUY-Q1-01 · Nghỉ</option>
+            </select>
+            <div class="driver-option-hint">Hiển thị: Mã NV — Họ tên · Biển số · Tuyến/Vùng · Trạng thái · Số đơn đang giao. Chỉ liệt kê tài xế thuộc NPP và trạng thái ≠ Nghỉ.</div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">Ghi chú</label>
+            <textarea class="form-textarea" maxlength="500" placeholder="Ghi chú cho tài xế (tuỳ chọn)..."></textarea>
+            <div class="form-counter">0/500</div>
+          </div>
+
+          <div class="modal-note info">
+            ℹ️ Sau khi xác nhận: hệ thống cập nhật DLO sang <strong>Đã gán</strong>, gửi push notification FCM cho tài xế. Tài xế mở App sẽ thấy đơn trong danh sách giao hàng.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary">Hủy</button>
+          <button class="btn btn-primary">Xác nhận gán tài xế</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATE 4: Empty -->
+<div class="screen-wrapper" id="sw4">
+<div class="app">
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="#">Trang chủ</a> / <a href="#">Mua hàng</a> / Phân bổ thủ công
+      </div>
+      <div class="topbar-actions">
+        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Phân bổ thủ công — Gán tài xế</div>
+          <div class="page-subtitle">Chọn đơn giao hàng ở trạng thái Chờ phân bổ và gán cho tài xế phù hợp</div>
+        </div>
+      </div>
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="filter-label">* Công ty</div>
+            <select class="filter-select active"><option>FVC — Finviet Consumer</option></select>
+          </div>
+          <div class="filter-field" style="flex:1.5;">
+            <div class="filter-label">Tìm kiếm</div>
+            <input class="filter-search" placeholder="Mã DLO, mã đơn, tên cửa hàng..." type="text"/>
+          </div>
+          <div class="filter-field">
+            <div class="filter-label">Trạng thái giao hàng</div>
+            <select class="filter-select active"><option>Chờ phân bổ</option></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-secondary">🔄 Làm mới</button>
+            <button class="btn btn-primary">🔍 Tìm kiếm</button>
+          </div>
+        </div>
+      </div>
+      <div class="list-section">
+        <div class="list-section-header">
+          <div class="list-section-title">Danh sách đơn chờ phân bổ (0)</div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:36px;"><input disabled type="checkbox"/></th>
+                <th>Mã DLO</th>
+                <th>Cửa hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div class="empty-title">Không có đơn chờ phân bổ</div>
+            <div class="empty-desc">Tất cả đơn giao hàng đã được auto-assign hoặc đã gán tài xế. Thử đổi bộ lọc hoặc kiểm tra lại sau.</div>
+            <button class="btn btn-secondary">🔄 Làm mới</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

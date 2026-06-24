@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-DKTS01 — Duyệt đăng ký cấp phát tài sản</title>
+    <style>
+        /* ======= Design Tokens ======= */
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-100: #DBEAFE;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --primary-700: #1D4ED8;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            --success-50: #ECFDF5;
+            --success-500: #10B981;
+            --success-700: #047857;
+            --warning-50: #FFFBEB;
+            --warning-500: #F59E0B;
+            --warning-700: #B45309;
+            --error-50: #FEF2F2;
+            --error-500: #EF4444;
+            --error-600: #DC2626;
+            --error-700: #B91C1C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            background: var(--neutral-100);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ======= Screen switcher ======= */
+        .screen-label {
+            display: none;
+        }
+
+        .screen-wrapper {
+            display: none;
+        }
+
+        .screen-wrapper.active {
+            display: block;
+        }
+
+        .switcher {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: var(--neutral-900);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 20px;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .switcher-label {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 11px;
+            font-family: 'SF Mono', Consolas, monospace;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .sw-btn {
+            padding: 5px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.65);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .sw-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sw-btn.active {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        /* ======= Browser Frame (removed decoration for full-screen) ======= */
+        .browser {
+            background: white;
+            overflow: hidden;
+        }
+
+        .browser-header {
+            display: none;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-dot:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .browser-dot:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .browser-dot:nth-child(3) {
+            background: #28c840;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: var(--neutral-700);
+            border: 1px solid #d0d0d0;
+        }
+
+        /* ======= App Layout ======= */
+        .app {
+            display: flex;
+            height: calc(100vh - 48px);
+            margin-top: 48px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 230px;
+            background: var(--neutral-900);
+            color: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 18px 16px;
+            font-size: 17px;
+            font-weight: 700;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .sidebar-section {
+            padding: 12px 8px 6px;
+        }
+
+        .sidebar-section-title {
+            padding: 0 8px 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-item {
+            padding: 9px 12px;
+            margin: 2px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.75);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-item.active {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .sidebar-item.sub {
+            padding-left: 28px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .sidebar-item.sub.active {
+            background: rgba(59, 130, 246, 0.25);
+            color: #93c5fd;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            background: var(--neutral-50);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Top bar */
+        .topbar {
+            background: white;
+            padding: 10px 28px;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--neutral-500);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-500);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--neutral-700);
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        /* Page content */
+        .page {
+            padding: 20px 28px;
+        }
+
+        /* Page header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .page-subtitle {
+            font-size: 12px;
+            color: var(--neutral-500);
+            margin-top: 3px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-700);
+            border-color: var(--neutral-200);
+        }
+
+        .btn-danger {
+            background: var(--error-500);
+            color: white;
+            border-color: var(--error-500);
+        }
+
+        .btn-danger-outline {
+            background: white;
+            color: var(--error-600);
+            border-color: var(--error-500);
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--primary-500);
+            border: none;
+        }
+
+        .btn-icon {
+            padding: 5px;
+            width: 30px;
+            height: 30px;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--neutral-500);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-icon:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+        }
+
+        /* Filter card */
+        .filter-card {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-search {
+            width: 260px;
+            padding: 7px 12px 7px 34px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 13px;
+            background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 10px center;
+            color: var(--neutral-700);
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 6px 28px 6px 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--neutral-700);
+            background: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            width: 100%;
+        }
+
+        .filter-select.active {
+            border-color: var(--primary-500);
+            background-color: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .filter-input {
+            padding: 6px 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--neutral-700);
+            background: white;
+            width: 100%;
+        }
+
+        .filter-divider {
+            width: 100%;
+            height: 1px;
+            background: var(--neutral-100);
+            margin: 10px 0;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        /* Thanh hành động nhóm */
+        .bulk-bar {
+            background: var(--primary-50);
+            border: 1px solid var(--primary-100);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bulk-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-700);
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--neutral-50);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+            white-space: nowrap;
+        }
+
+        th.sortable {
+            cursor: pointer;
+        }
+
+        th.sortable:hover {
+            color: var(--primary-500);
+        }
+
+        td {
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--neutral-900);
+            border-bottom: 1px solid var(--neutral-100);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #fafbfc;
+        }
+
+        tr.selected td {
+            background: var(--primary-50);
+        }
+
+        td.code {
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 12px;
+            color: var(--primary-600);
+        }
+
+        td.code .copy-icon {
+            cursor: pointer;
+            color: var(--neutral-300);
+            margin-left: 4px;
+            font-size: 11px;
+        }
+
+        td.code .copy-icon:hover {
+            color: var(--neutral-500);
+        }
+
+        td.muted {
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        td.actions {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        td .asset-summary {
+            font-size: 12px;
+            color: var(--neutral-700);
+            line-height: 1.5;
+        }
+
+        td .asset-more {
+            font-size: 11px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        td .nv-info {
+            font-size: 13px;
+        }
+
+        td .nv-code {
+            font-size: 11px;
+            color: var(--neutral-500);
+            margin-top: 1px;
+        }
+
+        /* Status badge */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-pending {
+            background: var(--warning-50);
+            color: var(--warning-700);
+            border: 1px solid #fde68a;
+        }
+
+        .badge-approved {
+            background: var(--success-50);
+            color: var(--success-700);
+            border: 1px solid #a7f3d0;
+        }
+
+        .badge-rejected {
+            background: var(--error-50);
+            color: var(--error-700);
+            border: 1px solid #fecaca;
+        }
+
+        .badge-cancelled {
+            background: var(--neutral-100);
+            color: var(--neutral-500);
+            border: 1px solid var(--neutral-200);
+        }
+
+        /* Pagination */
+        .pagination {
+            padding: 12px 16px;
+            border-top: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--neutral-500);
+            background: white;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .page-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-700);
+        }
+
+        .page-btn.active {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .page-select {
+            padding: 4px 8px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 5px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* Trạng thái trống */
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--neutral-500);
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 6px;
+        }
+
+        .empty-desc {
+            font-size: 13px;
+            color: var(--neutral-500);
+            margin-bottom: 16px;
+        }
+
+        /* ======= MODAL / POPUP ======= */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 10px;
+            width: 480px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .modal-close {
+            cursor: pointer;
+            color: var(--neutral-500);
+            font-size: 18px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-info {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .modal-info-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .modal-info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-info-label {
+            color: var(--neutral-500);
+            min-width: 90px;
+        }
+
+        .modal-info-value {
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+
+        .form-field {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 5px;
+        }
+
+        .form-label .required {
+            color: var(--error-500);
+            margin-right: 2px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 90px;
+            color: var(--neutral-900);
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+        }
+
+        .form-textarea.error {
+            border-color: var(--error-500);
+            background: var(--error-50);
+        }
+
+        .form-counter {
+            text-align: right;
+            font-size: 11px;
+            color: var(--neutral-500);
+            margin-top: 3px;
+        }
+
+        .form-error {
+            font-size: 12px;
+            color: var(--error-500);
+            margin-top: 4px;
+        }
+
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* ======= Hộp thoại xác nhận ======= */
+        .confirm-modal {
+            background: white;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .confirm-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .confirm-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .confirm-desc {
+            font-size: 13px;
+            color: var(--neutral-500);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* ======= Ẩn sidebar để tối ưu diện tích ======= */
+        .sidebar {
+            display: none;
+        }
+
+        /* hint footer */
+        .hint {
+            display: none;
+        }
+
+        /* ======= Cell link (NV/CH trong bảng + chi tiết) ======= */
+        .cell-link {
+            color: var(--primary-600);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .cell-link:hover {
+            text-decoration: underline;
+            color: var(--primary-700);
+        }
+
+        /* ======= Detail cards (MS-W-DKTS02) ======= */
+        .detail-card {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 14px;
+        }
+
+        .detail-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 16px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 32px;
+        }
+
+        .detail-grid.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .detail-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+
+        .detail-value.muted {
+            color: var(--neutral-500);
+            font-weight: 400;
+        }
+
+        .detail-value.mono {
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 12px;
+            color: var(--primary-600);
+        }
+
+        /* ======= Stock error row (in asset table) ======= */
+        .stock-error-row {
+            background: var(--error-50);
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+        }
+
+        /* ======= Mục kết quả (modal kết quả nhóm) ======= */
+        .result-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            background: var(--success-50);
+            border: 1px solid #a7f3d0;
+        }
+
+        .result-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .result-content {
+            flex: 1;
+        }
+
+        .result-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 2px;
+        }
+
+        .result-desc {
+            font-size: 12px;
+            color: var(--neutral-500);
+            line-height: 1.4;
+        }
+
+        /* ======= Mã QR tài sản định danh ======= */
+        .qr-cell-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .qr-serial {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: var(--neutral-600);
+            text-align: center;
+            line-height: 1.3;
+            max-width: 88px;
+            word-break: break-all;
+        }
+
+        .qr-dl-btn {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--primary-500);
+            background: var(--primary-50, #EFF6FF);
+            border: 1px solid #BFDBFE;
+            border-radius: 3px;
+            padding: 1px 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .tag-dinh-danh {
+            font-size: 10px;
+            font-weight: 600;
+            color: #1D4ED8;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-radius: 3px;
+            padding: 1px 6px;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .tag-theo-sl {
+            font-size: 10px;
+            color: var(--neutral-400);
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: 3px;
+            padding: 1px 6px;
+            white-space: nowrap;
+            display: inline-block;
+        }
+    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+</head>
+
+<body class="portal-page has-portal-switcher" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+
+    <!-- Switcher bar -->
+    <div class="switcher">
+        <span class="switcher-label">MS-W-DKTS01/02</span>
+        <button class="sw-btn" onclick="switchScreen(1)">1 · Danh sách</button>
+        <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
+        <button class="sw-btn" onclick="switchScreen(3)">3 · Từ chối (nhóm)</button>
+        <button class="sw-btn" onclick="switchScreen(4)">4 · Xác nhận duyệt</button>
+        <button class="sw-btn" onclick="switchScreen(5)">5 · Chi tiết đơn</button>
+        <button class="sw-btn" onclick="switchScreen(6)">6 · Lỗi tồn kho (đơn lẻ)</button>
+        <button class="sw-btn" onclick="switchScreen(7)">7 · Lỗi nhóm — Dừng toàn bộ</button>
+    </div>
+
+    <script>
+        function switchScreen(n) {
+            document.querySelectorAll('.screen-wrapper').forEach(function (el) { el.classList.remove('active'); });
+            document.querySelectorAll('.sw-btn').forEach(function (el) { el.classList.remove('active'); });
+            document.getElementById('sw' + n).classList.add('active');
+            document.querySelectorAll('.sw-btn')[n - 1].classList.add('active');
+        }
+        document.addEventListener('DOMContentLoaded', function () { switchScreen(1); });
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 1: DANH SÁCH — MẶC ĐỊNH (có data, thanh hành động nhóm) -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw1">
+        <div class="screen-label">MS-W-DKTS01 — Danh sách đăng ký cấp phát tài sản · TRẠNG THÁI: Mặc định (có dữ liệu, 3
+            đơn
+            đã chọn)</div>
+
+        <div class="browser">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                </div>
+                <div class="browser-url">https://dms.finviet.com.vn/tai-san/duyet-dang-ky</div>
+            </div>
+            <div class="app">
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Danh mục</div>
+                        <div class="sidebar-item">📦 Sản phẩm</div>
+                        <div class="sidebar-item">👥 Khách hàng</div>
+                        <div class="sidebar-item">🏢 NPP</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub">📋 Danh sách tài sản</div>
+                        <div class="sidebar-item sub">🏭 Kho tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                        <div class="sidebar-item sub">📄 Phiếu giao nhận</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Báo cáo</div>
+                        <div class="sidebar-item">📈 Doanh số</div>
+                        <div class="sidebar-item">🗺 Viếng thăm</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Hệ thống</div>
+                        <div class="sidebar-item">⚙ Cấu hình</div>
+                    </div>
+                </aside>
+
+                <!-- Main -->
+                <div class="main">
+                    <div class="topbar">
+                        <div class="breadcrumb">
+                            <a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / Đăng ký cấp phát
+                        </div>
+                        <div class="topbar-actions">
+                            <button class="btn btn-icon btn-secondary" title="Làm mới">🔄</button>
+                            <button class="btn btn-secondary" style="font-size:12px;">📤 Export</button>
+                            <div class="user-info">
+                                <div class="avatar">AT</div>
+                                <span>Quản trị NPP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <!-- Page header -->
+                        <div class="page-header">
+                            <div>
+                                <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                <div class="page-subtitle">Xem xét và phê duyệt các đơn đăng ký từ nhân viên sales</div>
+                            </div>
+                        </div>
+
+                        <!-- Filter card -->
+                        <div class="filter-card">
+                            <div class="filter-row">
+                                <input type="text" class="filter-search" placeholder="Tìm mã đơn...">
+                                <div class="filter-field" style="min-width:150px;">
+                                    <div class="filter-label">Nhân viên</div>
+                                    <select class="filter-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="filter-field" style="min-width:160px;">
+                                    <div class="filter-label">Cửa hàng</div>
+                                    <select class="filter-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="filter-field" style="min-width:120px;max-width:140px;">
+                                    <div class="filter-label">Nhóm tài sản</div>
+                                    <select class="filter-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-divider"></div>
+                            <div class="filter-row">
+                                <div class="filter-field" style="min-width:150px;">
+                                    <div class="filter-label">Loại tài sản</div>
+                                    <select class="filter-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="filter-field" style="min-width:160px;">
+                                    <div class="filter-label">Tài sản</div>
+                                    <select class="filter-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="filter-field" style="min-width:200px;">
+                                    <div class="filter-label">Thời gian đăng ký</div>
+                                    <div style="display:flex;gap:4px;align-items:center;">
+                                        <input type="text" class="filter-input" placeholder="Từ ngày"
+                                            style="width:100px;">
+                                        <span style="font-size:12px;color:var(--neutral-500);">→</span>
+                                        <input type="text" class="filter-input" placeholder="Đến ngày"
+                                            style="width:100px;">
+                                    </div>
+                                </div>
+                                <div class="filter-field" style="min-width:130px;max-width:160px;">
+                                    <div class="filter-label">Trạng thái</div>
+                                    <select class="filter-select">
+                                        <option value="">Tất cả</option>
+                                        <option>Chờ duyệt</option>
+                                        <option>Đã duyệt</option>
+                                        <option>Từ chối</option>
+                                        <option>Đã hủy</option>
+                                    </select>
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="btn btn-secondary">🔄 Làm mới</button>
+                                    <button class="btn btn-primary">🔍 Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thanh hành động nhóm (hiện khi có dòng đã chọn) -->
+                        <div class="bulk-bar">
+                            <span class="bulk-count">✓ Đã chọn 3 đơn</span>
+                            <span style="font-size:12px;color:var(--primary-500);">Tất cả đơn đã chọn đang ở trạng thái
+                                Chờ duyệt</span>
+                            <div class="bulk-actions">
+                                <button class="btn btn-danger-outline">❌ Từ chối (3)</button>
+                                <button class="btn btn-primary">✅ Duyệt đồng ý (3)</button>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="table-container">
+                            <div style="overflow-x:auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:36px;"><input type="checkbox" checked></th>
+                                            <th class="sortable" style="white-space:nowrap;">Mã đơn ↕</th>
+                                            <th class="sortable" style="min-width:140px;">Nhân viên ↕</th>
+                                            <th class="sortable" style="min-width:150px;">Cửa hàng ↕</th>
+                                            <th style="min-width:160px;">Tài sản (tóm tắt)</th>
+                                            <th class="sortable" style="text-align:center;white-space:nowrap;">Tổng SL ↕
+                                            </th>
+                                            <th class="sortable" style="min-width:120px;white-space:nowrap;">Ngày đăng
+                                                ký ↓</th>
+                                            <th class="sortable" style="min-width:120px;white-space:nowrap;">Ngày cấp phát
+                                                ↕</th>
+                                            <th style="min-width:160px;">Lý do từ chối</th>
+                                            <th style="min-width:110px;">Trạng thái</th>
+                                            <th style="min-width:120px;">Người tạo</th>
+                                            <th style="min-width:120px;white-space:nowrap;">Ngày tạo</th>
+                                            <th style="min-width:130px;">Người cập nhật</th>
+                                            <th style="min-width:120px;white-space:nowrap;">Ngày cập nhật</th>
+                                            <th style="text-align:right;min-width:100px;">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Row 1 — Chờ duyệt, selected -->
+                                        <tr class="selected">
+                                            <td><input type="checkbox" checked></td>
+                                            <td class="code">DKTS190520263847 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Nguyễn Văn An</a></td>
+                                            <td><a class="cell-link">Tạp hoá Minh Tuấn</a></td>
+                                            <td>
+                                                <div class="asset-summary">Tủ mát Finviet 100L (3)</div>
+                                                <div class="asset-summary">Kệ trưng bày POSM A4 (5)</div>
+                                                <div class="asset-more">+ 1 tài sản khác</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">10</td>
+                                            <td class="muted">19-05-2026 09:14:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td><span class="badge badge-pending">⏳ Chờ duyệt</span></td>
+                                            <td><a class="cell-link">Nguyễn Văn An</a></td>
+                                            <td class="muted">19-05-2026 09:14:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Duyệt đồng ý">✅</button>
+                                                <button class="btn-icon" title="Từ chối">❌</button>
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 2 — Chờ duyệt, selected -->
+                                        <tr class="selected">
+                                            <td><input type="checkbox" checked></td>
+                                            <td class="code">DKTS190520261523 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Trần Thị Bích</a></td>
+                                            <td><a class="cell-link">Siêu thị Mini Ánh Ngân</a></td>
+                                            <td>
+                                                <div class="asset-summary">Băng rôn treo 3×1m (2)</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">2</td>
+                                            <td class="muted">19-05-2026 08:47:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td><span class="badge badge-pending">⏳ Chờ duyệt</span></td>
+                                            <td><a class="cell-link">Trần Thị Bích</a></td>
+                                            <td class="muted">19-05-2026 08:47:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Duyệt đồng ý">✅</button>
+                                                <button class="btn-icon" title="Từ chối">❌</button>
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 3 — Chờ duyệt, selected -->
+                                        <tr class="selected">
+                                            <td><input type="checkbox" checked></td>
+                                            <td class="code">DKTS180520264291 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Lê Quốc Hùng</a></td>
+                                            <td><a class="cell-link">Tạp hoá Finviet Q.Tân Bình</a></td>
+                                            <td>
+                                                <div class="asset-summary">Standee đứng 60×160 (1)</div>
+                                                <div class="asset-summary">Decal dán cửa A3 (4)</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">5</td>
+                                            <td class="muted">18-05-2026 16:03:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td><span class="badge badge-pending">⏳ Chờ duyệt</span></td>
+                                            <td><a class="cell-link">Lê Quốc Hùng</a></td>
+                                            <td class="muted">18-05-2026 16:03:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Duyệt đồng ý">✅</button>
+                                                <button class="btn-icon" title="Từ chối">❌</button>
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 4 — Chờ duyệt, not selected -->
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td class="code">DKTS170520268732 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Phạm Hoài Nam</a></td>
+                                            <td><a class="cell-link">CH Bách hoá Nguyễn Trãi</a></td>
+                                            <td>
+                                                <div class="asset-summary">Ô che nắng Finviet (2)</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">2</td>
+                                            <td class="muted">17-05-2026 10:22:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td><span class="badge badge-pending">⏳ Chờ duyệt</span></td>
+                                            <td><a class="cell-link">Phạm Hoài Nam</a></td>
+                                            <td class="muted">17-05-2026 10:22:00</td>
+                                            <td class="muted">—</td>
+                                            <td class="muted">—</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Duyệt đồng ý">✅</button>
+                                                <button class="btn-icon" title="Từ chối">❌</button>
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 5 — Từ chối (có lý do từ chối) -->
+                                        <tr>
+                                            <td><input type="checkbox" disabled></td>
+                                            <td class="code">DKTS150520265614 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Nguyễn Văn An</a></td>
+                                            <td><a class="cell-link">Siêu thị Ngọc Hân</a></td>
+                                            <td>
+                                                <div class="asset-summary">Bảng hiệu đèn LED (1)</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">1</td>
+                                            <td class="muted">15-05-2026 07:15:00</td>
+                                            <td class="muted">16-05-2026 09:30:00</td>
+                                            <td style="font-size:12px;color:var(--error-700);">Kho đang hết hàng, chưa
+                                                có lịch nhập.</td>
+                                            <td><span class="badge badge-rejected">❌ Từ chối</span></td>
+                                            <td><a class="cell-link">Nguyễn Văn An</a></td>
+                                            <td class="muted">15-05-2026 07:15:00</td>
+                                            <td class="muted">Quản trị NPP</td>
+                                            <td class="muted">16-05-2026 09:30:00</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 6 — Đã duyệt -->
+                                        <tr>
+                                            <td><input type="checkbox" disabled></td>
+                                            <td class="code">DKTS140520267834 <span class="copy-icon">⎘</span></td>
+                                            <td><a class="cell-link">Trần Thị Bích</a></td>
+                                            <td><a class="cell-link">Siêu thị Mini Ánh Ngân</a></td>
+                                            <td>
+                                                <div class="asset-summary">Ô che nắng Finviet (3)</div>
+                                            </td>
+                                            <td style="text-align:center;font-weight:600;">3</td>
+                                            <td class="muted">14-05-2026 11:00:00</td>
+                                            <td class="muted">15-05-2026 08:15:00</td>
+                                            <td class="muted">—</td>
+                                            <td><span class="badge badge-approved">✅ Đã duyệt</span></td>
+                                            <td><a class="cell-link">Trần Thị Bích</a></td>
+                                            <td class="muted">14-05-2026 11:00:00</td>
+                                            <td class="muted">Quản trị NPP</td>
+                                            <td class="muted">15-05-2026 08:15:00</td>
+                                            <td class="actions">
+                                                <button class="btn-icon" title="Xem chi tiết">👁</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="pagination">
+                                <span>Hiển thị 1–6 / tổng <strong>14</strong> đơn</span>
+                                <div class="pagination-controls">
+                                    <button class="page-btn">‹</button>
+                                    <button class="page-btn active">1</button>
+                                    <button class="page-btn">2</button>
+                                    <button class="page-btn">›</button>
+                                    <select class="page-select">
+                                        <option>20 / trang</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- /main -->
+            </div><!-- /app -->
+        </div><!-- /browser -->
+    </div><!-- /screen-wrapper -->
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 1: Mặc định — 3 dòng đã chọn (thanh hành động nhóm đang hiển thị)</div>
+
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 2: DANH SÁCH — TRẠNG THÁI TRỐNG -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw2">
+        <div class="screen-label">MS-W-DKTS01 — Danh sách đăng ký cấp phát tài sản · TRẠNG THÁI: Trống (không có đơn chờ
+            duyệt)</div>
+
+        <div class="browser">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                </div>
+                <div class="browser-url">https://dms.finviet.com.vn/tai-san/duyet-dang-ky</div>
+            </div>
+            <div class="app">
+
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub">📋 Danh sách tài sản</div>
+                        <div class="sidebar-item sub">🏭 Kho tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                        <div class="sidebar-item sub">📄 Phiếu giao nhận</div>
+                    </div>
+                </aside>
+
+                <div class="main">
+                    <div class="topbar">
+                        <div class="breadcrumb">
+                            <a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / Đăng ký cấp phát
+                        </div>
+                        <div class="topbar-actions">
+                            <div class="user-info">
+                                <div class="avatar">AT</div><span>Quản trị NPP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="page-header">
+                            <div>
+                                <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                <div class="page-subtitle">Xem xét và phê duyệt các đơn đăng ký từ nhân viên sales</div>
+                            </div>
+                        </div>
+
+                        <!-- Filter card (thu gọn) -->
+                        <div class="filter-card">
+                            <div class="filter-row">
+                                <input type="text" class="filter-search" placeholder="Tìm mã đơn...">
+                                <div class="filter-field" style="min-width:140px;max-width:160px;">
+                                    <div class="filter-label">* Công ty</div>
+                                    <select class="filter-select">
+                                        <option value="">Tất cả công ty</option>
+                                    </select>
+                                </div>
+                                <div class="filter-field" style="min-width:130px;max-width:160px;">
+                                    <div class="filter-label">Trạng thái</div>
+                                    <select class="filter-select">
+                                        <option value="">Tất cả</option>
+                                        <option>Chờ duyệt</option>
+                                        <option>Đã duyệt</option>
+                                        <option>Từ chối</option>
+                                        <option>Đã hủy</option>
+                                    </select>
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="btn btn-secondary">🔄 Làm mới</button>
+                                    <button class="btn btn-primary">🔍 Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bảng dữ liệu khi không có đơn -->
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:36px;"><input type="checkbox" disabled></th>
+                                        <th>Mã đơn ↕</th>
+                                        <th>Nhân viên ↕</th>
+                                        <th>Cửa hàng ↕</th>
+                                        <th>Tài sản</th>
+                                        <th style="text-align:center;">Tổng SL</th>
+                                        <th>Ngày đăng ký ↓</th>
+                                        <th>Ngày duyệt</th>
+                                        <th>Lý do từ chối</th>
+                                        <th>Trạng thái</th>
+                                        <th>Người tạo</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Người cập nhật</th>
+                                        <th>Ngày cập nhật</th>
+                                        <th style="text-align:right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="empty-state">
+                                <div class="empty-icon">✅</div>
+                                <div class="empty-title">Không có đơn nào đang chờ duyệt</div>
+                                <div class="empty-desc">Tất cả đơn đăng ký đã được xử lý. Chưa có đơn mới từ nhân viên.
+                                </div>
+                                <button class="btn btn-secondary">Xem tất cả đơn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 2: Trống — không có đơn chờ duyệt</div>
+
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 3: POPUP TỪ CHỐI (overlay trên danh sách) -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw3">
+        <div class="screen-label">MS-W-DKTS01 — Popup Từ chối · TRẠNG THÁI: Từ chối nhóm (3 đơn) — có lỗi kiểm tra</div>
+
+        <div class="browser">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                </div>
+                <div class="browser-url">https://dms.finviet.com.vn/tai-san/duyet-dang-ky</div>
+            </div>
+            <div class="app">
+
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                    </div>
+                </aside>
+
+                <div class="main" style="position:relative;">
+                    <!-- Blurred background content (danh sách mờ) -->
+                    <div style="filter:blur(2px);pointer-events:none;">
+                        <div class="topbar">
+                            <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / Đăng ký cấp
+                                phát</div>
+                            <div class="topbar-actions">
+                                <div class="user-info">
+                                    <div class="avatar">AT</div><span>Quản trị NPP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page">
+                            <div class="page-header">
+                                <div>
+                                    <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                </div>
+                            </div>
+                            <div class="filter-card" style="height:50px;"></div>
+                            <div class="bulk-bar">
+                                <span class="bulk-count">✓ Đã chọn 3 đơn</span>
+                                <div class="bulk-actions">
+                                    <button class="btn btn-danger-outline">❌ Từ chối (3)</button>
+                                    <button class="btn btn-primary">✅ Duyệt đồng ý (3)</button>
+                                </div>
+                            </div>
+                            <div class="table-container" style="height:300px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Modal overlay -->
+                    <div class="modal-overlay">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <div class="modal-title">❌ Từ chối đơn đăng ký</div>
+                                <div class="modal-close">✕</div>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Thông tin xác nhận -->
+                                <div class="modal-info">
+                                    <div class="modal-info-row">
+                                        <span class="modal-info-label">Số đơn:</span>
+                                        <span class="modal-info-value" style="color:var(--error-600);font-weight:700;">3
+                                            đơn sẽ bị từ chối</span>
+                                    </div>
+                                    <div class="modal-info-row">
+                                        <span class="modal-info-label">Gồm:</span>
+                                        <span class="modal-info-value" style="font-size:12px;">DKTS190520263847,
+                                            DKTS190520261523, DKTS180520264291</span>
+                                    </div>
+                                </div>
+
+                                <!-- Lý do từ chối -->
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span class="required">*</span> Lý do từ chối
+                                    </label>
+                                    <textarea class="form-textarea error"
+                                        placeholder="Nhập lý do từ chối..."></textarea>
+                                    <div class="form-counter">0/500</div>
+                                    <div class="form-error">⚠ Vui lòng nhập lý do từ chối</div>
+                                </div>
+
+                                <div
+                                    style="background:var(--warning-50);border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:12px;color:var(--warning-700);">
+                                    ⚠ Lý do sẽ được gửi đến nhân viên trên ứng dụng Salesman App. Hành động này không
+                                    thể hoàn tác.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary">Hủy</button>
+                                <button class="btn btn-danger">Xác nhận từ chối (3)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 3: Popup từ chối nhóm — kiểm tra lỗi (lý do trống)</div>
+
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 4: POPUP DUYỆT ĐƠN LẺ — XÁC NHẬN -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw4">
+        <div class="screen-label">MS-W-DKTS01 — Popup Duyệt đồng ý · TRẠNG THÁI: Xác nhận đơn lẻ</div>
+
+        <div class="browser">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                </div>
+                <div class="browser-url">https://dms.finviet.com.vn/tai-san/duyet-dang-ky</div>
+            </div>
+            <div class="app">
+
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                    </div>
+                </aside>
+
+                <div class="main" style="position:relative;">
+                    <div style="filter:blur(2px);pointer-events:none;">
+                        <div class="topbar">
+                            <div class="breadcrumb"><a href="#">Trang chủ</a> / Đăng ký cấp phát</div>
+                        </div>
+                        <div class="page">
+                            <div class="page-header">
+                                <div>
+                                    <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                </div>
+                            </div>
+                            <div class="filter-card" style="height:50px;"></div>
+                            <div class="table-container" style="height:280px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm modal -->
+                    <div class="modal-overlay">
+                        <div class="confirm-modal">
+                            <div class="modal-body" style="padding:24px;">
+                                <div class="confirm-icon">✅</div>
+                                <div class="confirm-title">Xác nhận duyệt đơn</div>
+                                <div class="confirm-desc" style="margin-bottom:16px;">
+                                    Bạn có chắc muốn duyệt đơn<br>
+                                    <strong>DKTS190520263847</strong>?<br><br>
+                                    Cửa hàng: <strong>Tạp hoá Minh Tuấn</strong><br>
+                                    Nhân viên: <strong>Nguyễn Văn An</strong><br><br>
+                                    Hành động này <span style="color:var(--error-500);font-weight:600;">không thể hoàn
+                                        tác</span>.
+                                </div>
+                                <div style="display:flex;gap:8px;justify-content:center;">
+                                    <button class="btn btn-secondary" style="min-width:100px;">Hủy</button>
+                                    <button class="btn btn-primary" style="min-width:100px;">✅ Xác nhận</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 4: Xác nhận duyệt đơn lẻ</div>
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 5: CHI TIẾT ĐƠN ĐĂNG KÝ (MS-W-DKTS02) — Chờ duyệt -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw5">
+        <div class="screen-label">MS-W-DKTS02 — Chi tiết đơn đăng ký · TRẠNG THÁI: Chờ duyệt</div>
+        <div class="browser">
+            <div class="browser-header"></div>
+            <div class="app">
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Danh mục</div>
+                        <div class="sidebar-item">📦 Sản phẩm</div>
+                        <div class="sidebar-item">👥 Khách hàng</div>
+                        <div class="sidebar-item">🏢 NPP</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub">📋 Danh sách tài sản</div>
+                        <div class="sidebar-item sub">🏭 Kho tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                        <div class="sidebar-item sub">📄 Phiếu giao nhận</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Báo cáo</div>
+                        <div class="sidebar-item">📈 Doanh số</div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Hệ thống</div>
+                        <div class="sidebar-item">⚙ Cấu hình</div>
+                    </div>
+                </aside>
+
+                <div class="main">
+                    <div class="topbar">
+                        <div class="breadcrumb">
+                            <a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / <a href="#">Đăng ký cấp phát</a> /
+                            DKTS190520263847
+                        </div>
+                        <div class="topbar-actions">
+                            <button class="btn btn-secondary">← Quay lại</button>
+                            <button class="btn btn-danger-outline">❌ Từ chối</button>
+                            <button class="btn btn-primary">✅ Duyệt đồng ý</button>
+                            <div class="user-info">
+                                <div class="avatar">AT</div>
+                                <span>Quản trị NPP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <!-- Card 1: Thông tin đơn -->
+                        <div class="detail-card">
+                            <div class="detail-card-title">📋 Thông tin đơn</div>
+                            <div class="detail-grid cols-3">
+                                <div class="detail-field">
+                                    <div class="detail-label">* Công ty</div>
+                                    <div class="detail-value">Finviet Corp</div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Mã đơn</div>
+                                    <div class="detail-value mono">DKTS190520263847 <span class="copy-icon"
+                                            style="cursor:pointer;">⎘</span></div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Trạng thái</div>
+                                    <div class="detail-value"><span class="badge badge-pending">⏳ Chờ duyệt</span></div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Nhân viên</div>
+                                    <div class="detail-value">
+                                        <a class="cell-link">Nguyễn Văn An</a>
+                                    </div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Cửa hàng</div>
+                                    <div class="detail-value">
+                                        <a class="cell-link">Tạp hoá Minh Tuấn</a>
+                                    </div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Ngày đăng ký</div>
+                                    <div class="detail-value">19-05-2026 09:14:00</div>
+                                </div>
+								<div class="detail-field">
+                                    <div class="detail-label">Ngày cấp phát</div>
+                                    <div class="detail-value">19-05-2026 10:14:00</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:16px;border-top:1px solid var(--neutral-100);padding-top:14px;">
+                                <div class="detail-label" style="margin-bottom:6px;">Ghi chú của nhân viên</div>
+                                <div
+                                    style="font-size:13px;color:var(--neutral-900);background:var(--neutral-50);border:1px solid var(--neutral-200);border-radius:6px;padding:10px 14px;line-height:1.5;">
+                                    Cửa hàng cần bổ sung tủ mát cho mùa hè và kệ trưng bày thêm để đẩy doanh số. Đề nghị
+                                    ưu tiên duyệt trước 20/05.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Chi tiết tài sản -->
+                        <div class="detail-card">
+                            <div class="detail-card-title">📦 Chi tiết tài sản đăng ký</div>
+                            <div style="overflow-x:auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:40px;text-align:center;">STT</th>
+                                            <th style="min-width:130px;">Nhóm tài sản</th>
+                                            <th style="min-width:120px;">Loại tài sản</th>
+                                            <th style="min-width:100px;">Mã tài sản</th>
+                                            <th style="min-width:96px;text-align:center;">Mã QR </th>
+                                            <th style="min-width:180px;">Tên tài sản</th>
+                                            <th style="text-align:center;white-space:nowrap;">SL đăng ký</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align:center;">1</td>
+                                            <td>Thiết bị làm lạnh</td>
+                                            <td>Tủ mát</td>
+                                            <td class="code" style="font-size:11px;">TS-TM-001</td>
+                                            <td style="text-align:center;">
+                                                <span class="qr-serial" style="font-size:12px;">QR-TM-2026-0001</span>
+                                            </td>
+                                            <td>Tủ mát Finviet 100L</td>
+
+                                            <td style="text-align:center;font-weight:600;color:var(--neutral-400);"
+                                                title="Tài sản định danh: SL luôn = 1">1 </td>
+
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;">2</td>
+                                            <td>Vật dụng POSM</td>
+                                            <td>Kệ trưng bày</td>
+                                            <td class="code" style="font-size:11px;">TS-KB-024</td>
+                                            <td style="text-align:center;"></td>
+                                            <td>Kệ trưng bày POSM A4</td>
+
+                                            <td style="text-align:center;font-weight:600;">5</td>
+                                            </td>
+                                          
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;">3</td>
+                                            <td>Vật dụng POSM</td>
+                                            <td>Standee</td>
+                                            <td class="code" style="font-size:11px;">TS-SD-007</td>
+                                            <td style="text-align:center;"></td>
+                                            <td>Standee đứng Finviet 60×160</td>
+
+                                            <td style="text-align:center;font-weight:600;">2</td>
+                                            </td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <!-- Card 3: Thông tin xử lý -->
+                        <div class="detail-card">
+                            <div class="detail-card-title">🔍 Thông tin xử lý</div>
+                            <div class="detail-grid cols-3">
+                                <div class="detail-field">
+                                    <div class="detail-label">Người tạo</div>
+                                    <div class="detail-value"><a class="cell-link">Nguyễn Văn An</a></div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Ngày tạo</div>
+                                    <div class="detail-value">19-05-2026 09:14:00</div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Người cập nhật</div>
+                                    <div class="detail-value muted">—</div>
+                                </div>
+                                <div class="detail-field">
+                                    <div class="detail-label">Ngày cập nhật</div>
+                                    <div class="detail-value muted">—</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:14px;border-top:1px solid var(--neutral-100);padding-top:14px;">
+                                <div class="detail-label" style="margin-bottom:6px;">Lý do từ chối</div>
+                                <div class="detail-value muted">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /main -->
+            </div><!-- /app -->
+        </div><!-- /browser -->
+    </div><!-- /sw5 -->
+
+    <div class="hint">MS-W-DKTS02 · Trạng thái 5: Chi tiết đơn — Chờ duyệt</div>
+
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 6: LỖI TỒN KHO — ĐƠN LẺ (sau khi click Xác nhận duyệt) -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw6">
+        <div class="screen-label">MS-W-DKTS01 — Duyệt đơn lẻ · TRẠNG THÁI: Lỗi tồn kho</div>
+        <div class="browser">
+            <div class="browser-header"></div>
+            <div class="app">
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                    </div>
+                </aside>
+                <div class="main" style="position:relative;">
+                    <div style="filter:blur(2px);pointer-events:none;">
+                        <div class="topbar">
+                            <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / Đăng ký cấp
+                                phát</div>
+                            <div class="topbar-actions">
+                                <div class="user-info">
+                                    <div class="avatar">AT</div><span>Quản trị NPP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page">
+                            <div class="page-header">
+                                <div>
+                                    <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                </div>
+                            </div>
+                            <div class="filter-card" style="height:50px;"></div>
+                            <div class="table-container" style="height:260px;"></div>
+                        </div>
+                    </div>
+                    <!-- Error modal: lỗi tồn kho đơn lẻ -->
+                    <div class="modal-overlay">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <div class="modal-title">⚠ Không thể duyệt đơn</div>
+                                <div class="modal-close">✕</div>
+                            </div>
+                            <div class="modal-body">
+                                <div style="text-align:center;padding:8px 0 16px;">
+                                    <div style="font-size:32px;margin-bottom:8px;">🔒</div>
+                                    <div style="font-size:15px;font-weight:700;color:var(--error-700);">Mã QR không khả
+                                        dụng</div>
+                                    <div style="font-size:12px;color:var(--neutral-500);margin-top:4px;">Đơn
+                                        <strong>DKTS190520263847</strong> không thể duyệt
+                                    </div>
+                                </div>
+                                <div
+                                    style="font-size:13px;color:var(--neutral-700);margin-bottom:10px;font-weight:500;">
+                                    Tài sản định danh không khả dụng:</div>
+                                <div class="stock-error-row">
+                                    <div
+                                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                        <span style="font-weight:600;color:var(--neutral-900);">Tủ mát Finviet
+                                            100L</span>
+                                        <span class="badge badge-rejected">Không khả dụng</span>
+                                    </div>
+                                    <div style="font-size:12px;color:var(--neutral-500);line-height:1.6;">
+                                        Mã QR: <strong
+                                            style="color:var(--neutral-800);font-family:monospace;">QR-TM-2026-0001</strong>
+                                        &nbsp;·&nbsp; Trạng thái: <strong style="color:var(--error-600);">Đã cấp phát
+                                            cho đơn khác</strong>
+                                    </div>
+                                </div>
+                                <div
+                                    style="background:var(--neutral-50);border:1px solid var(--neutral-200);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--neutral-500);margin-top:12px;line-height:1.5;">
+                                    💡 Tài sản định danh chỉ có thể cấp phát khi mã QR đang ở trạng thái <strong>Sẵn
+                                        sàng</strong>.
+                                    Vui lòng kiểm tra lại trạng thái tài sản hoặc từ chối đơn và yêu cầu nhân viên chọn
+                                    mã QR khác.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary">Đóng</button>
+                                <button class="btn btn-danger-outline">❌ Từ chối đơn này</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /sw6 -->
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 6: Lỗi tồn kho đơn lẻ</div>
+
+
+    <!-- ================================================================ -->
+    <!-- MÀN HÌNH 7: PHÁT HIỆN LỖI NHÓM — DỪNG TOÀN BỘ (quét trước, chưa duyệt gì) -->
+    <!-- ================================================================ -->
+    <div class="screen-wrapper" id="sw7">
+        <div class="screen-label">MS-W-DKTS01 — Phát hiện lỗi tồn kho khi quét nhóm · TRẠNG THÁI: Dừng toàn bộ — chưa có
+            đơn
+            nào được duyệt</div>
+        <div class="browser">
+            <div class="browser-header"></div>
+            <div class="app">
+                <aside class="sidebar">
+                    <div class="sidebar-logo">📊 DMS Quản lý</div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title">Tài sản</div>
+                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
+                    </div>
+                </aside>
+                <div class="main" style="position:relative;">
+                    <div style="filter:blur(2px);pointer-events:none;">
+                        <div class="topbar">
+                            <div class="breadcrumb"><a href="#">Trang chủ</a> / Đăng ký cấp phát</div>
+                        </div>
+                        <div class="page">
+                            <div class="page-header">
+                                <div>
+                                    <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
+                                </div>
+                            </div>
+                            <div class="bulk-bar">
+                                <span class="bulk-count">✓ Đã chọn 4 đơn</span>
+                                <div class="bulk-actions">
+                                    <button class="btn btn-primary">✅ Duyệt đồng ý (4)</button>
+                                </div>
+                            </div>
+                            <div class="table-container" style="height:240px;"></div>
+                        </div>
+                    </div>
+                    <!-- Modal quét nhóm — phát hiện lỗi, dừng toàn bộ -->
+                    <div class="modal-overlay">
+                        <div class="modal" style="width:540px;">
+                            <div class="modal-header"
+                                style="background:var(--error-50);border-bottom:1px solid #fecaca;">
+                                <div class="modal-title" style="color:var(--error-700);">⚠ Phát hiện lỗi tồn kho — Dừng
+                                    toàn bộ</div>
+                                <div class="modal-close">✕</div>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Alert banner -->
+                                <div
+                                    style="background:var(--warning-50);border:1px solid #fde68a;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--warning-700);line-height:1.5;">
+                                    🔍 Hệ thống đã quét <strong>4 đơn</strong> và phát hiện <strong>2 đơn có lỗi tồn
+                                        kho</strong>.<br>
+                                    <strong>Chưa có đơn nào được duyệt.</strong> Vui lòng xem xét và xác nhận để tiếp
+                                    tục.
+                                </div>
+                                <!-- Summary stats -->
+                                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                                    <div
+                                        style="flex:1;text-align:center;background:var(--success-50);border:1px solid #a7f3d0;border-radius:8px;padding:12px;">
+                                        <div style="font-size:24px;font-weight:700;color:var(--success-700);">2</div>
+                                        <div style="font-size:12px;color:var(--success-700);margin-top:2px;">✅ Hợp lệ —
+                                            sẵn sàng duyệt</div>
+                                    </div>
+                                    <div
+                                        style="flex:1;text-align:center;background:var(--error-50);border:1px solid #fecaca;border-radius:8px;padding:12px;">
+                                        <div style="font-size:24px;font-weight:700;color:var(--error-700);">2</div>
+                                        <div style="font-size:12px;color:var(--error-700);margin-top:2px;">❌ Lỗi tồn kho
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Section: đơn hợp lệ -->
+                                <div
+                                    style="font-size:11px;font-weight:700;color:var(--neutral-500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">
+                                    Đơn hợp lệ</div>
+                                <div class="result-item">
+                                    <div class="result-icon">✅</div>
+                                    <div class="result-content">
+                                        <div class="result-title">DKTS190520261523 — Trần Thị Bích</div>
+                                        <div class="result-desc">Siêu thị Mini Ánh Ngân · Băng rôn treo 3×1m (2) · Tồn
+                                            kho đủ</div>
+                                    </div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-icon">✅</div>
+                                    <div class="result-content">
+                                        <div class="result-title">DKTS180520264291 — Lê Quốc Hùng</div>
+                                        <div class="result-desc">Tạp hoá Finviet Q.Tân Bình · Standee + Decal (5) · Tồn
+                                            kho đủ</div>
+                                    </div>
+                                </div>
+                                <!-- Section: đơn lỗi -->
+                                <div
+                                    style="font-size:11px;font-weight:700;color:var(--error-600);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 6px;">
+                                    Đơn có lỗi tồn kho</div>
+                                <div class="result-item"
+                                    style="background:var(--error-50);border:1px solid #fecaca;border-radius:6px;padding:8px 10px;">
+                                    <div class="result-icon">❌</div>
+                                    <div class="result-content">
+                                        <div class="result-title" style="color:var(--error-700);">DKTS190520263847 —
+                                            Nguyễn Văn An</div>
+                                        <div class="result-desc" style="color:var(--error-600);">Tủ mát Finviet 100L —
+                                            tồn kho: 2 / cần: 3 (thiếu 1)</div>
+                                    </div>
+                                </div>
+                                <div class="result-item"
+                                    style="background:var(--error-50);border:1px solid #fecaca;border-radius:6px;padding:8px 10px;margin-top:4px;">
+                                    <div class="result-icon">❌</div>
+                                    <div class="result-content">
+                                        <div class="result-title" style="color:var(--error-700);">DKTS170520268732 —
+                                            Phạm Hoài Nam</div>
+                                        <div class="result-desc" style="color:var(--error-600);">Ô che nắng Finviet —
+                                            tồn kho: 0 / cần: 2 (hết hàng)</div>
+                                    </div>
+                                </div>
+                                <div
+                                    style="font-size:12px;color:var(--neutral-500);margin-top:14px;padding-top:12px;border-top:1px solid var(--neutral-100);line-height:1.5;">
+                                    💡 Bạn có thể <strong>duyệt 2 đơn hợp lệ</strong> ngay bây giờ, hoặc
+                                    <strong>đóng</strong> để điều chỉnh lại danh sách trước khi duyệt.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary">Đóng</button>
+                                <button class="btn btn-primary">✅ Duyệt 2 đơn hợp lệ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /sw7 -->
+
+    <div class="hint">MS-W-DKTS01 · Trạng thái 7: Phát hiện lỗi nhóm — Dừng toàn bộ (2 lỗi / 2 hợp lệ · chưa duyệt gì)
+    </div>
+
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+
+</html>

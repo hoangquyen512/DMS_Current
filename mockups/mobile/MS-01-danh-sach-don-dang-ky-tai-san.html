@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[APP] Danh sách đơn đăng ký tài sản</title>
+<style>
+  /* ======= Design Tokens ======= */
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-500: #10B981;
+    --warning-500: #F59E0B;
+    --error-500: #EF4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ======= Phone Frame ======= */
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--neutral-0);
+    color: var(--neutral-900);
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+
+  /* ======= App Header ======= */
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+  .app-header .back-arrow { font-size: 22px; line-height: 1; }
+  .app-header .header-text { flex: 1; }
+  .app-header h1 { font-size: 16px; font-weight: 600; }
+  .app-header .subtitle { font-size: 12px; opacity: 0.85; margin-top: 1px; }
+
+  /* ======= Content ======= */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--neutral-50);
+    position: relative;
+  }
+
+  /* ======= Tabs / Status filter ======= */
+  .tabs {
+    display: flex;
+    padding: 8px 12px;
+    gap: 6px;
+    background: var(--neutral-0);
+    border-bottom: 1px solid var(--neutral-100);
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--neutral-500);
+    background: var(--neutral-100);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab.active {
+    background: var(--primary-500);
+    color: white;
+  }
+
+  /* ======= Card item ======= */
+  .card {
+    background: var(--neutral-0);
+    margin: 8px 16px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--neutral-100);
+  }
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: var(--neutral-500);
+    margin-top: 2px;
+  }
+
+  /* ======= Badge ======= */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .badge-pending { background: var(--warning-500); color: white; }
+  .badge-success { background: var(--success-500); color: white; }
+  .badge-error { background: var(--error-500); color: white; }
+  .badge-offline { background: var(--neutral-100); color: var(--neutral-500); }
+
+  /* ======= Order info row ======= */
+  .order-info {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0 0 0;
+    margin-top: 6px;
+    border-top: 1px solid var(--neutral-100);
+    font-size: 12px;
+  }
+  .order-info-item { color: var(--neutral-700); }
+  .order-info-item strong { color: var(--neutral-900); margin-left: 2px; }
+
+  /* ======= Mã đơn với copy icon ======= */
+  .code-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'SF Mono', 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--primary-500);
+    background: var(--primary-50);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ======= Section title ======= */
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--neutral-500);
+    padding: 12px 16px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ======= Bottom msg ======= */
+  .bottom-msg {
+    text-align: center;
+    padding: 24px 16px 80px;
+    color: var(--neutral-500);
+    font-size: 12px;
+  }
+
+  /* ======= FAB ======= */
+  .fab {
+    position: absolute;
+    bottom: 24px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--primary-500);
+    color: white;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+    line-height: 1;
+    padding-bottom: 2px;
+  }
+
+  /* ======= Empty state ======= */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 32px;
+    gap: 12px;
+  }
+  .empty-icon { font-size: 56px; opacity: 0.4; }
+  .empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    text-align: center;
+  }
+  .empty-desc {
+    font-size: 13px;
+    color: var(--neutral-500);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .btn-primary {
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  /* ======= Hint label ======= */
+  .hint {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'SF Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== PHONE 1: DEFAULT STATE — có đơn ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <div class="header-text">
+          <h1>Đăng ký tài sản</h1>
+          <div class="subtitle">Tạp hoá Finviet · CH001</div>
+        </div>
+      </div>
+
+      <!-- Status filter tabs -->
+      <div class="tabs">
+        <button class="tab active">Tất cả (4)</button>
+        <button class="tab">Chờ duyệt (2)</button>
+        <button class="tab">Đã duyệt (1)</button>
+        <button class="tab">Từ chối (1)</button>
+        <button class="tab">Đã hủy (0)</button>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <div class="section-title">Hôm nay — 15/05/2026</div>
+
+        <!-- Card 1: Chờ duyệt -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260515-0002 📋</span>
+            <span class="badge badge-pending">Chờ duyệt</span>
+          </div>
+          <div class="card-meta">Tạp hoá Finviet · CH001</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại tài sản <strong>2 loại</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>15/05/2026 08:32</strong></div>
+          </div>
+        </div>
+
+        <!-- Card 2: Chờ duyệt -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260515-0001 📋</span>
+            <span class="badge badge-pending">Chờ duyệt</span>
+          </div>
+          <div class="card-meta">Tạp hoá Finviet · CH001</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại tài sản <strong>1 loại</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>15/05/2026 07:15</strong></div>
+          </div>
+        </div>
+
+        <div class="section-title">Tuần trước</div>
+
+        <!-- Card 3: Đã duyệt -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260508-0003 📋</span>
+            <span class="badge badge-success">Đã duyệt</span>
+          </div>
+          <div class="card-meta">Tạp hoá Finviet · CH001</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại tài sản <strong>3 loại</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>08/05/2026 14:20</strong></div>
+          </div>
+        </div>
+
+        <!-- Card 4: Từ chối -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260506-0001 📋</span>
+            <span class="badge badge-error">Từ chối</span>
+          </div>
+          <div class="card-meta">Tạp hoá Finviet · CH001</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại tài sản <strong>1 loại</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>06/05/2026 09:45</strong></div>
+          </div>
+        </div>
+
+        <div class="bottom-msg">Đã hiển thị tất cả đơn</div>
+
+        <!-- FAB Tạo mới -->
+        <div class="fab">+</div>
+
+      </div><!-- /content -->
+    </div><!-- /phone-screen -->
+  </div>
+  <div class="hint">MS-01 — Danh sách đơn (Default State)</div>
+</div>
+
+<!-- ====== PHONE 2: EMPTY STATE — chưa có đơn ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <div class="header-text">
+          <h1>Đăng ký tài sản</h1>
+          <div class="subtitle">Tạp hoá Cô Hoa · CH023</div>
+        </div>
+      </div>
+
+      <!-- Status filter tabs -->
+      <div class="tabs">
+        <button class="tab active">Tất cả (0)</button>
+        <button class="tab">Chờ duyệt</button>
+        <button class="tab">Đã duyệt</button>
+        <button class="tab">Từ chối</button>
+        <button class="tab">Đã hủy</button>
+      </div>
+
+      <!-- Content: empty state -->
+      <div class="content">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">Chưa có đơn đăng ký</div>
+          <div class="empty-desc">Cửa hàng này chưa có đơn đăng ký tài sản nào. Nhấn để tạo đơn đăng ký mới.</div>
+          <button class="btn-primary">+ Tạo đơn mới</button>
+        </div>
+
+        <!-- FAB Tạo mới -->
+        <div class="fab">+</div>
+
+      </div><!-- /content -->
+    </div><!-- /phone-screen -->
+  </div>
+  <div class="hint">MS-01 — Danh sách đơn (Empty State)</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-DL01 - Quản lý đơn giao hàng</title>
+    <style>
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-100: #DBEAFE;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --primary-700: #1D4ED8;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-600: #4B5563;
+            --neutral-700: #374151;
+            --neutral-800: #1F2937;
+            --neutral-900: #111827;
+            --success-50: #ECFDF5;
+            --success-100: #D1FAE5;
+            --success-600: #059669;
+            --success-700: #047857;
+            --warning-50: #FFFBEB;
+            --warning-100: #FEF3C7;
+            --warning-600: #D97706;
+            --warning-700: #B45309;
+            --error-50: #FEF2F2;
+            --error-100: #FEE2E2;
+            --error-600: #DC2626;
+            --error-700: #B91C1C;
+            --info-50: #F0F9FF;
+            --info-100: #E0F2FE;
+            --info-700: #0369A1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--neutral-50);
+            color: var(--neutral-900);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            letter-spacing: 0;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 52px;
+            padding: 10px 28px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: white;
+        }
+
+        .breadcrumb {
+            color: var(--neutral-500);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neutral-700);
+            font-size: 13px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0EA5E9, #2563EB);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .page {
+            padding: 20px 28px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            color: var(--neutral-900);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            margin-top: 4px;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .header-actions,
+        .filter-actions,
+        .bulk-actions,
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 32px;
+            padding: 7px 13px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-600);
+        }
+
+        .btn-secondary {
+            border-color: var(--neutral-200);
+            background: white;
+            color: var(--neutral-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--neutral-50);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .filter-card {
+            margin-bottom: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: minmax(240px, 1.3fr) repeat(5, minmax(132px, 1fr)) auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .filter-row + .filter-row {
+            margin-top: 10px;
+            grid-template-columns: repeat(5, minmax(140px, 1fr)) auto;
+        }
+
+        .filter-field {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-label,
+        .form-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .filter-input,
+        .filter-select,
+        .form-textarea {
+            width: 100%;
+            min-height: 32px;
+            padding: 7px 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--neutral-800);
+            font: 13px inherit;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus,
+        .form-textarea:focus {
+            border-color: var(--primary-500);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        .filter-search {
+            padding-left: 34px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 11px center;
+        }
+
+        .filter-select {
+            padding-right: 28px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            min-height: 74px;
+            padding: 13px 14px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .stat-label {
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .stat-value {
+            margin-top: 4px;
+            color: var(--neutral-900);
+            font-size: 22px;
+            font-weight: 750;
+        }
+
+        .stat-note {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 11px;
+        }
+
+        .bulk-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            padding: 10px 14px;
+            border: 1px solid var(--primary-100);
+            border-radius: 8px;
+            background: var(--primary-50);
+        }
+
+        .bulk-count {
+            color: var(--primary-700);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .bulk-summary {
+            color: var(--primary-700);
+            font-size: 12px;
+        }
+
+        .bulk-actions {
+            margin-left: auto;
+        }
+
+        .workbench {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .section {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .section-title {
+            color: var(--neutral-900);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .section-meta {
+            margin-top: 3px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1380px;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+            color: var(--neutral-700);
+            font-size: 12px;
+            font-weight: 700;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--neutral-100);
+            color: var(--neutral-900);
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: #FAFBFC;
+        }
+
+        tbody tr.selected td {
+            background: var(--primary-50);
+        }
+
+        tbody tr.just-assigned td {
+            background: var(--success-50);
+        }
+
+        .col-check {
+            width: 40px;
+            text-align: center;
+        }
+
+        .code {
+            color: var(--primary-600);
+            font-family: "SF Mono", Consolas, monospace;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .name-main {
+            font-weight: 650;
+        }
+
+        .name-sub {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .amount {
+            font-weight: 700;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-warning {
+            border: 1px solid var(--warning-100);
+            background: var(--warning-50);
+            color: var(--warning-700);
+        }
+
+        .badge-success {
+            border: 1px solid var(--success-100);
+            background: var(--success-50);
+            color: var(--success-700);
+        }
+
+        .badge-info {
+            border: 1px solid var(--info-100);
+            background: var(--info-50);
+            color: var(--info-700);
+        }
+
+        .badge-neutral {
+            border: 1px solid var(--neutral-200);
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+
+        .badge-error {
+            border: 1px solid var(--error-100);
+            background: var(--error-50);
+            color: var(--error-700);
+        }
+
+        .action-link {
+            border: 0;
+            background: transparent;
+            color: var(--primary-600);
+            cursor: pointer;
+            font: 12px inherit;
+            font-weight: 650;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .summary-box {
+            min-height: 64px;
+            padding: 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: var(--neutral-50);
+        }
+
+        .summary-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+        }
+
+        .summary-value {
+            margin-top: 4px;
+            color: var(--neutral-900);
+            font-size: 16px;
+            font-weight: 750;
+        }
+
+        .summary-value.money {
+            font-size: 15px;
+        }
+
+        .selected-list,
+        .modal-order-list {
+            display: grid;
+            gap: 6px;
+            max-height: 168px;
+            margin-bottom: 12px;
+            overflow-y: auto;
+        }
+
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 9px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+        }
+
+        .selected-item strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--neutral-900);
+            font-family: "SF Mono", Consolas, monospace;
+            font-size: 11px;
+        }
+
+        .selected-item span {
+            color: var(--neutral-500);
+        }
+
+        .empty-selection {
+            display: grid;
+            min-height: 76px;
+            place-items: center;
+            border: 1px dashed var(--neutral-300);
+            border-radius: 8px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .driver-tools {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0 10px;
+        }
+
+        .driver-card-list {
+            display: grid;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .driver-card {
+            display: grid;
+            grid-template-columns: 36px minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .driver-card:hover {
+            border-color: var(--primary-100);
+            background: var(--primary-50);
+        }
+
+        .driver-card.active {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.14);
+        }
+
+        .driver-avatar {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .driver-card.active .driver-avatar {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .driver-name {
+            color: var(--neutral-900);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .driver-meta {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        .driver-score {
+            min-width: 62px;
+            text-align: right;
+        }
+
+        .score-main {
+            color: var(--success-700);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .score-sub {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 11px;
+        }
+
+        .note {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .note.info {
+            border: 1px solid var(--info-100);
+            background: var(--info-50);
+            color: var(--info-700);
+        }
+
+        .note.warning {
+            border: 1px solid var(--warning-100);
+            background: var(--warning-50);
+            color: var(--warning-700);
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-top: 1px solid var(--neutral-200);
+            background: white;
+            color: var(--neutral-500);
+            font-size: 12px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .page-btn {
+            display: grid;
+            width: 28px;
+            height: 28px;
+            place-items: center;
+            border: 1px solid var(--neutral-200);
+            border-radius: 5px;
+            background: white;
+            color: var(--neutral-700);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .page-btn.active {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(17, 24, 39, 0.48);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(840px, 100%);
+            overflow: hidden;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 24px 68px rgba(17, 24, 39, 0.28);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .modal-title {
+            color: var(--neutral-900);
+            font-size: 16px;
+            font-weight: 750;
+        }
+
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--neutral-500);
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 18px 20px;
+        }
+
+        .modal-section-title {
+            margin: 14px 0 8px;
+            color: var(--neutral-800);
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .confirm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .confirm-box {
+            padding: 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: var(--neutral-50);
+        }
+
+        .confirm-label {
+            color: var(--neutral-500);
+            font-size: 11px;
+        }
+
+        .confirm-value {
+            margin-top: 5px;
+            color: var(--neutral-900);
+            font-size: 15px;
+            font-weight: 750;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 12px;
+        }
+
+        .form-textarea {
+            min-height: 76px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            justify-content: flex-end;
+            padding: 14px 20px;
+            border-top: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+        }
+
+        .toast {
+            position: fixed;
+            right: 28px;
+            bottom: 28px;
+            z-index: 110;
+            display: none;
+            align-items: flex-start;
+            gap: 10px;
+            width: 390px;
+            padding: 12px 14px;
+            border: 1px solid var(--success-100);
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 14px 32px rgba(17, 24, 39, 0.16);
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast-mark {
+            display: grid;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--success-50);
+            color: var(--success-700);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .toast-title {
+            color: var(--neutral-900);
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .toast-desc {
+            margin-top: 2px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1180px) {
+            .filter-row,
+            .filter-row + .filter-row,
+            .stat-row,
+            .workbench {
+                grid-template-columns: 1fr;
+            }
+
+            .driver-tools,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px 16px;
+            }
+
+            .page {
+                padding: 16px;
+            }
+
+            .page-header,
+            .bulk-bar,
+            .section-header,
+            .pagination,
+            .modal-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .header-actions,
+            .bulk-actions,
+            .filter-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .confirm-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                right: 16px;
+                bottom: 16px;
+                left: 16px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="breadcrumb">
+            <a href="#">Trang chủ</a> / <a href="#">Giao hàng</a> / Quản lý đơn giao hàng
+        </div>
+        <div class="user-info">
+            <div class="avatar">AD</div>
+            <span>Admin DMS</span>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Quản lý đơn giao hàng</h1>
+                <div class="page-subtitle">Theo dõi danh sách đơn giao hàng và phân bổ tài xế trực tiếp trên cùng một màn hình.</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" type="button" onclick="showToast('Đã xuất dữ liệu', 'File danh sách đơn giao hàng đang được chuẩn bị tải xuống.')">Xuất Excel</button>
+                <button class="btn btn-primary" type="button" onclick="suggestDriver()">Tự gợi ý tài xế</button>
+            </div>
+        </div>
+
+        <section class="filter-card">
+            <div class="filter-row">
+                <div class="filter-field">
+                    <label class="filter-label" for="searchInput">Mã đơn / cửa hàng</label>
+                    <input class="filter-input filter-search" id="searchInput" type="text" placeholder="Nhập mã đơn, tên cửa hàng, SĐT">
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="sourceFilter">Nguồn đơn</label>
+                    <select class="filter-select" id="sourceFilter">
+                        <option value="">Tất cả nguồn</option>
+                        <option value="Ecom">Ecom</option>
+                        <option value="DMS">DMS</option>
+                        <option value="OCR/PXK">OCR/PXK</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="areaFilter">Khu vực giao</label>
+                    <select class="filter-select" id="areaFilter">
+                        <option value="">Tất cả khu vực</option>
+                        <option value="Quận 1">Quận 1</option>
+                        <option value="Quận 3">Quận 3</option>
+                        <option value="Bình Thạnh">Bình Thạnh</option>
+                        <option value="Gò Vấp">Gò Vấp</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="deliveryStatusFilter">Trạng thái giao hàng</label>
+                    <select class="filter-select" id="deliveryStatusFilter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="Chờ phân bổ">Chờ phân bổ</option>
+                        <option value="Đã phân bổ">Đã phân bổ</option>
+                        <option value="Đang giao">Đang giao</option>
+                        <option value="Đã giao">Đã giao</option>
+                        <option value="Giao thất bại">Giao thất bại</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="paymentStatusFilter">Trạng thái thanh toán</label>
+                    <select class="filter-select" id="paymentStatusFilter">
+                        <option value="">Tất cả</option>
+                        <option value="Chờ thanh toán">Chờ thanh toán</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                        <option value="COD">COD</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="deliveryDate">Ngày giao</label>
+                    <input class="filter-input" id="deliveryDate" type="text" value="15-06-2026">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-secondary" type="button" onclick="resetFilters()">Làm mới</button>
+                    <button class="btn btn-primary" type="button" onclick="applyFilters()">Tìm kiếm</button>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-field">
+                    <label class="filter-label" for="driverFilterTop">Tài xế</label>
+                    <select class="filter-select" id="driverFilterTop">
+                        <option value="">Tất cả tài xế</option>
+                        <option value="Nguyễn Văn Dũng">Nguyễn Văn Dũng</option>
+                        <option value="Lê Thanh Tùng">Lê Thanh Tùng</option>
+                        <option value="Phạm Hoàng Nam">Phạm Hoàng Nam</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="routeFilter">Tuyến / vùng</label>
+                    <select class="filter-select" id="routeFilter">
+                        <option value="">Tất cả tuyến / vùng</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q3">Q3</option>
+                        <option value="Bình Thạnh">Bình Thạnh</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="paymentMethodFilter">Phương thức thanh toán</label>
+                    <select class="filter-select" id="paymentMethodFilter">
+                        <option value="">Tất cả</option>
+                        <option value="EcoPay">EcoPay</option>
+                        <option value="COD">COD</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="priorityFilter">Ưu tiên</label>
+                    <select class="filter-select" id="priorityFilter">
+                        <option value="">Tất cả</option>
+                        <option value="Giao trong ngày">Giao trong ngày</option>
+                        <option value="Quá SLA">Quá SLA</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label class="filter-label" for="amountFilter">Giá trị đơn</label>
+                    <select class="filter-select" id="amountFilter">
+                        <option value="">Tất cả</option>
+                        <option value="low">Dưới 1 triệu</option>
+                        <option value="mid">1 đến 5 triệu</option>
+                        <option value="high">Trên 5 triệu</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-secondary" type="button" onclick="showToast('Đã lưu bộ lọc', 'Bộ lọc quản lý đơn giao hàng đã được lưu.')">Lưu bộ lọc</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="stat-row">
+            <div class="stat-card">
+                <div class="stat-label">Tổng đơn hiển thị</div>
+                <div class="stat-value" id="totalVisibleStat">9</div>
+                <div class="stat-note">Bao gồm mọi trạng thái giao hàng</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Chờ phân bổ</div>
+                <div class="stat-value" id="pendingAssignStat">4</div>
+                <div class="stat-note">Có thể chọn để gán tài xế</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Đang giao</div>
+                <div class="stat-value" id="inDeliveryStat">2</div>
+                <div class="stat-note">Theo dõi trạng thái App Salesman</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Đã chọn phân bổ</div>
+                <div class="stat-value" id="selectedStat">3</div>
+                <div class="stat-note">Tổng tiền: <span id="selectedMoneyStat">8.750.000đ</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">EcoPay chờ thu</div>
+                <div class="stat-value" id="ecopayPendingStat">5</div>
+                <div class="stat-note">Tổng giá trị <span id="ecopayMoneyStat">16.950.000đ</span></div>
+            </div>
+        </section>
+
+        <div class="bulk-bar">
+            <div class="bulk-count">Đã chọn <span id="selectedCountTop">3</span> đơn chờ phân bổ</div>
+            <div class="bulk-summary">Khu vực: <span id="selectedAreasTop">Quận 1, Quận 3</span>. Tổng tiền cần thu: <strong id="selectedMoneyTop">8.750.000đ</strong></div>
+            <div class="bulk-actions">
+                <button class="btn btn-secondary" type="button" onclick="clearSelection()">Bỏ chọn</button>
+                <button class="btn btn-primary" id="assignTopBtn" type="button" onclick="openConfirmModal()">Gán tài xế</button>
+            </div>
+        </div>
+
+        <div class="workbench">
+            <section class="section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Danh sách đơn giao hàng</div>
+                        <div class="section-meta" id="tableMeta">Hiển thị 1-9 / 128 đơn giao hàng</div>
+                    </div>
+                    <div class="section-meta">Chọn các đơn "Chờ phân bổ", sau đó bấm "Gán tài xế" để chọn tài xế trong popup</div>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="col-check"><input id="selectAll" type="checkbox" checked onchange="toggleAll(this)"></th>
+                                <th>Mã đơn giao</th>
+                                <th>Nguồn</th>
+                                <th>Cửa hàng nhận</th>
+                                <th>Địa chỉ giao</th>
+                                <th>Hẹn giao</th>
+                                <th>Tài xế</th>
+                                <th>Giao hàng</th>
+                                <th>Thanh toán</th>
+                                <th style="text-align:right;">Số tiền</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderBody">
+                            <tr class="selected" data-order="DO260615001" data-source="Ecom" data-store="Tạp hóa Minh Anh" data-area="Quận 1" data-route="Q1" data-amount="3200000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Chờ phân bổ" data-priority="Giao trong ngày" data-driver="" data-assignable="true">
+                                <td class="col-check"><input class="order-check" type="checkbox" checked onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615001</div><div class="name-sub">DH ECOM000381</div></td>
+                                <td><span class="badge badge-info">Ecom</span></td>
+                                <td><div class="name-main">Tạp hóa Minh Anh</div><div class="name-sub">CH001982 - 0908 221 788</div></td>
+                                <td><div class="name-main">42 Nguyễn Trãi</div><div class="name-sub">P. Bến Thành, Quận 1</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">09:00 - 11:00</div></td>
+                                <td class="driver-cell"><span class="name-sub">Chưa gán</span></td>
+                                <td class="delivery-cell"><span class="badge badge-warning">Chờ phân bổ</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">3.200.000đ</td>
+                                <td><button class="action-link" type="button" onclick="selectSingleOrder(this)">Gán nhanh</button></td>
+                            </tr>
+                            <tr class="selected" data-order="DO260615002" data-source="DMS" data-store="Mini Mart Hòa Bình" data-area="Quận 3" data-route="Q3" data-amount="2750000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Chờ phân bổ" data-priority="Giao trong ngày" data-driver="" data-assignable="true">
+                                <td class="col-check"><input class="order-check" type="checkbox" checked onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615002</div><div class="name-sub">DH DMS008412</div></td>
+                                <td><span class="badge badge-neutral">DMS</span></td>
+                                <td><div class="name-main">Mini Mart Hòa Bình</div><div class="name-sub">CH000734 - 0912 667 909</div></td>
+                                <td><div class="name-main">18 Võ Văn Tần</div><div class="name-sub">P. Võ Thị Sáu, Quận 3</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">13:00 - 15:00</div></td>
+                                <td class="driver-cell"><span class="name-sub">Chưa gán</span></td>
+                                <td class="delivery-cell"><span class="badge badge-warning">Chờ phân bổ</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">2.750.000đ</td>
+                                <td><button class="action-link" type="button" onclick="selectSingleOrder(this)">Gán nhanh</button></td>
+                            </tr>
+                            <tr class="selected" data-order="DO260615003" data-source="OCR/PXK" data-store="Cửa hàng Phúc Lộc" data-area="Quận 3" data-route="Q3" data-amount="2800000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Chờ phân bổ" data-priority="Giao trong ngày" data-driver="" data-assignable="true">
+                                <td class="col-check"><input class="order-check" type="checkbox" checked onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615003</div><div class="name-sub">PXK OCR00912</div></td>
+                                <td><span class="badge badge-warning">OCR/PXK</span></td>
+                                <td><div class="name-main">Cửa hàng Phúc Lộc</div><div class="name-sub">CH003118 - 0937 440 118</div></td>
+                                <td><div class="name-main">201 Cách Mạng Tháng 8</div><div class="name-sub">P. 4, Quận 3</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">Trước 17:00</div></td>
+                                <td class="driver-cell"><span class="name-sub">Chưa gán</span></td>
+                                <td class="delivery-cell"><span class="badge badge-warning">Chờ phân bổ</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">2.800.000đ</td>
+                                <td><button class="action-link" type="button" onclick="selectSingleOrder(this)">Gán nhanh</button></td>
+                            </tr>
+                            <tr data-order="DO260615004" data-source="Ecom" data-store="Tạp hóa Thiên Phúc" data-area="Bình Thạnh" data-route="Bình Thạnh" data-amount="650000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Chờ phân bổ" data-priority="Giao trong ngày" data-driver="" data-assignable="true">
+                                <td class="col-check"><input class="order-check" type="checkbox" onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615004</div><div class="name-sub">DH ECOM000382</div></td>
+                                <td><span class="badge badge-info">Ecom</span></td>
+                                <td><div class="name-main">Tạp hóa Thiên Phúc</div><div class="name-sub">CH002019 - 0903 119 220</div></td>
+                                <td><div class="name-main">91 Điện Biên Phủ</div><div class="name-sub">P. 15, Bình Thạnh</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">15:00 - 17:00</div></td>
+                                <td class="driver-cell"><span class="name-sub">Chưa gán</span></td>
+                                <td class="delivery-cell"><span class="badge badge-warning">Chờ phân bổ</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">650.000đ</td>
+                                <td><button class="action-link" type="button" onclick="selectSingleOrder(this)">Gán nhanh</button></td>
+                            </tr>
+                            <tr data-order="DO260615005" data-source="DMS" data-store="Bách hóa An Khang" data-area="Gò Vấp" data-route="Gò Vấp" data-amount="1250000" data-payment-method="COD" data-payment-status="COD" data-delivery-status="Đã phân bổ" data-priority="" data-driver="Phạm Hoàng Nam" data-assignable="false">
+                                <td class="col-check"><input class="order-check" type="checkbox" disabled onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615005</div><div class="name-sub">DH DMS008430</div></td>
+                                <td><span class="badge badge-neutral">DMS</span></td>
+                                <td><div class="name-main">Bách hóa An Khang</div><div class="name-sub">CH000522 - 0977 318 662</div></td>
+                                <td><div class="name-main">2A Phan Văn Trị</div><div class="name-sub">P. 10, Gò Vấp</div></td>
+                                <td><div class="name-main">16-06-2026</div><div class="name-sub">08:00 - 10:00</div></td>
+                                <td class="driver-cell"><div class="name-main">Phạm Hoàng Nam</div><div class="name-sub">TX011 - 0934 551 011</div></td>
+                                <td class="delivery-cell"><span class="badge badge-info">Đã phân bổ</span></td>
+                                <td><span class="badge badge-neutral">COD</span></td>
+                                <td class="amount">1.250.000đ</td>
+                                <td><button class="action-link" type="button" onclick="reassignOrder(this)">Phân bổ lại</button></td>
+                            </tr>
+                            <tr data-order="DO260615006" data-source="Ecom" data-store="Siêu thị Mini Gia Hân" data-area="Quận 1" data-route="Q1" data-amount="6100000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Đang giao" data-priority="Quá SLA" data-driver="Nguyễn Văn Dũng" data-assignable="false">
+                                <td class="col-check"><input class="order-check" type="checkbox" disabled onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615006</div><div class="name-sub">DH ECOM000390</div></td>
+                                <td><span class="badge badge-info">Ecom</span></td>
+                                <td><div class="name-main">Siêu thị Mini Gia Hân</div><div class="name-sub">CH001045 - 0902 880 330</div></td>
+                                <td><div class="name-main">75 Hai Bà Trưng</div><div class="name-sub">P. Bến Nghé, Quận 1</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">Trước 12:00</div></td>
+                                <td class="driver-cell"><div class="name-main">Nguyễn Văn Dũng</div><div class="name-sub">TX001 - 0909 188 772</div></td>
+                                <td class="delivery-cell"><span class="badge badge-info">Đang giao</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">6.100.000đ</td>
+                                <td><button class="action-link" type="button" onclick="showToast('Đang giao', 'Đơn đang giao, không thể phân bổ lại trên màn hình này.')">Theo dõi</button></td>
+                            </tr>
+                            <tr data-order="DO260615007" data-source="OCR/PXK" data-store="Cửa hàng Thanh Tâm" data-area="Quận 1" data-route="Q1" data-amount="980000" data-payment-method="EcoPay" data-payment-status="Đã thanh toán" data-delivery-status="Đã giao" data-priority="" data-driver="Lê Thanh Tùng" data-assignable="false">
+                                <td class="col-check"><input class="order-check" type="checkbox" disabled onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615007</div><div class="name-sub">PXK OCR00918</div></td>
+                                <td><span class="badge badge-warning">OCR/PXK</span></td>
+                                <td><div class="name-main">Cửa hàng Thanh Tâm</div><div class="name-sub">CH003004 - 0944 120 778</div></td>
+                                <td><div class="name-main">19 Nguyễn Đình Chiểu</div><div class="name-sub">P. Đa Kao, Quận 1</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">Hoàn tất 14:20</div></td>
+                                <td class="driver-cell"><div class="name-main">Lê Thanh Tùng</div><div class="name-sub">TX006 - 0918 772 006</div></td>
+                                <td class="delivery-cell"><span class="badge badge-success">Đã giao</span></td>
+                                <td><span class="badge badge-success">EcoPay - Đã thanh toán</span></td>
+                                <td class="amount">980.000đ</td>
+                                <td><button class="action-link" type="button" onclick="showToast('Chi tiết đơn', 'Mở chi tiết giao hàng và chứng từ ảnh giao hàng.')">Chi tiết</button></td>
+                            </tr>
+                            <tr data-order="DO260615008" data-source="Ecom" data-store="Tạp hóa Bình Minh" data-area="Quận 3" data-route="Q3" data-amount="470000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Đang giao" data-priority="" data-driver="Nguyễn Văn Dũng" data-assignable="false">
+                                <td class="col-check"><input class="order-check" type="checkbox" disabled onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615008</div><div class="name-sub">DH ECOM000401</div></td>
+                                <td><span class="badge badge-info">Ecom</span></td>
+                                <td><div class="name-main">Tạp hóa Bình Minh</div><div class="name-sub">CH002441 - 0965 444 012</div></td>
+                                <td><div class="name-main">5 Lê Văn Sỹ</div><div class="name-sub">P. 13, Quận 3</div></td>
+                                <td><div class="name-main">16-06-2026</div><div class="name-sub">10:00 - 12:00</div></td>
+                                <td class="driver-cell"><div class="name-main">Nguyễn Văn Dũng</div><div class="name-sub">TX001 - 0909 188 772</div></td>
+                                <td class="delivery-cell"><span class="badge badge-info">Đang giao</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">470.000đ</td>
+                                <td><button class="action-link" type="button" onclick="showToast('Đang giao', 'Đơn đang giao, không thể phân bổ lại trên màn hình này.')">Theo dõi</button></td>
+                            </tr>
+                            <tr data-order="DO260615009" data-source="Ecom" data-store="Tạp hóa Tân Lập" data-area="Bình Thạnh" data-route="Bình Thạnh" data-amount="1550000" data-payment-method="EcoPay" data-payment-status="Chờ thanh toán" data-delivery-status="Giao thất bại" data-priority="" data-driver="Phạm Hoàng Nam" data-assignable="false">
+                                <td class="col-check"><input class="order-check" type="checkbox" disabled onchange="syncSelection()"></td>
+                                <td><div class="code">DO260615009</div><div class="name-sub">DH ECOM000408</div></td>
+                                <td><span class="badge badge-info">Ecom</span></td>
+                                <td><div class="name-main">Tạp hóa Tân Lập</div><div class="name-sub">CH002706 - 0988 401 778</div></td>
+                                <td><div class="name-main">22 Xô Viết Nghệ Tĩnh</div><div class="name-sub">P. 21, Bình Thạnh</div></td>
+                                <td><div class="name-main">15-06-2026</div><div class="name-sub">Khách hẹn lại</div></td>
+                                <td class="driver-cell"><div class="name-main">Phạm Hoàng Nam</div><div class="name-sub">TX011 - 0934 551 011</div></td>
+                                <td class="delivery-cell"><span class="badge badge-error">Giao thất bại</span></td>
+                                <td><span class="badge badge-warning">EcoPay - Chờ thu</span></td>
+                                <td class="amount">1.550.000đ</td>
+                                <td><button class="action-link" type="button" onclick="reassignOrder(this)">Phân bổ lại</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <span>Hiển thị 1-9 / tổng 128 đơn giao hàng</span>
+                    <div class="pagination-controls">
+                        <button class="page-btn" type="button">&lt;</button>
+                        <button class="page-btn active" type="button">1</button>
+                        <button class="page-btn" type="button">2</button>
+                        <button class="page-btn" type="button">3</button>
+                        <button class="page-btn" type="button">&gt;</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Gán tài xế cho đơn giao hàng</div>
+                <button class="modal-close" type="button" onclick="closeConfirmModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-grid">
+                    <div class="confirm-box">
+                        <div class="confirm-label">Số đơn</div>
+                        <div class="confirm-value"><span id="modalOrderCount">0</span> đơn</div>
+                    </div>
+                    <div class="confirm-box">
+                        <div class="confirm-label">Tổng tiền cần thu</div>
+                        <div class="confirm-value" id="modalTotalMoney">0đ</div>
+                    </div>
+                    <div class="confirm-box">
+                        <div class="confirm-label">Tài xế</div>
+                        <div class="confirm-value" id="modalDriverName">-</div>
+                    </div>
+                </div>
+
+                <div class="modal-section-title">Chọn tài xế</div>
+                <div class="driver-tools">
+                    <div class="filter-field">
+                        <label class="filter-label" for="assignedDriverSelect">* Tài xế nhận đơn</label>
+                        <select class="filter-select" id="assignedDriverSelect" onchange="selectDriverFromDropdown(this.value)">
+                            <option value="">-- Chọn tài xế --</option>
+                            <option value="TX001">TX001 - Nguyễn Văn Dũng - Q1, Q3 - 0909 188 772</option>
+                            <option value="TX006">TX006 - Lê Thanh Tùng - Q1 - 0918 772 006</option>
+                            <option value="TX011">TX011 - Phạm Hoàng Nam - Q3, Bình Thạnh - 0934 551 011</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label" for="driverSearch">Tìm tài xế</label>
+                        <input class="filter-input filter-search" id="driverSearch" type="text" placeholder="Tên, mã NV, SĐT tài xế" oninput="filterDrivers()">
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label" for="driverSideFilter">Lọc tài xế</label>
+                        <select class="filter-select" id="driverSideFilter" onchange="filterDrivers()">
+                            <option>Phù hợp khu vực đang chọn</option>
+                            <option>Tất cả tài xế đang hoạt động</option>
+                            <option>Tài xế còn ít đơn nhất</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="driver-card-list">
+                    <div class="driver-card" data-code="TX001" data-name="Nguyễn Văn Dũng" data-phone="0909 188 772" onclick="chooseDriver(this)">
+                        <div class="driver-avatar">NV</div>
+                        <div>
+                            <div class="driver-name">Nguyễn Văn Dũng</div>
+                            <div class="driver-meta">TX001 - Q1, Q3 - 4 đơn đang giao</div>
+                        </div>
+                        <div class="driver-score">
+                            <div class="score-main">Phù hợp</div>
+                            <div class="score-sub">92%</div>
+                        </div>
+                    </div>
+
+                    <div class="driver-card" data-code="TX006" data-name="Lê Thanh Tùng" data-phone="0918 772 006" onclick="chooseDriver(this)">
+                        <div class="driver-avatar">LT</div>
+                        <div>
+                            <div class="driver-name">Lê Thanh Tùng</div>
+                            <div class="driver-meta">TX006 - Q1 - 2 đơn đang giao</div>
+                        </div>
+                        <div class="driver-score">
+                            <div class="score-main">Tốt</div>
+                            <div class="score-sub">84%</div>
+                        </div>
+                    </div>
+
+                    <div class="driver-card" data-code="TX011" data-name="Phạm Hoàng Nam" data-phone="0934 551 011" onclick="chooseDriver(this)">
+                        <div class="driver-avatar">PH</div>
+                        <div>
+                            <div class="driver-name">Phạm Hoàng Nam</div>
+                            <div class="driver-meta">TX011 - Q3, Bình Thạnh - 6 đơn đang giao</div>
+                        </div>
+                        <div class="driver-score">
+                            <div class="score-main">Khá</div>
+                            <div class="score-sub">71%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section-title">Đơn hàng sẽ được phân bổ</div>
+                <div class="section" style="margin-bottom: 12px;">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Danh sách đơn đã chọn</div>
+                            <div class="section-meta" id="modalDriverMeta">-</div>
+                        </div>
+                        <span class="badge badge-warning" id="modalReadyBadge">Chưa chọn tài xế</span>
+                    </div>
+                    <div class="modal-order-list" id="modalOrderList"></div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="assignNote">Ghi chú phân bổ</label>
+                    <textarea class="form-textarea" id="assignNote" placeholder="Nhập ghi chú nếu cần">Ưu tiên giao trong ngày, thu qua EcoPay nếu đơn có payment request.</textarea>
+                </div>
+                <div class="note warning">Sau khi xác nhận, trạng thái giao hàng chuyển thành "Đã phân bổ" và đơn hiển thị trên App Salesman của tài xế.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="closeConfirmModal()">Hủy</button>
+                <button class="btn btn-primary" id="confirmAssignBtn" type="button" onclick="confirmAssign()" disabled>Xác nhận gán</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <div class="toast-mark">✓</div>
+        <div>
+            <div class="toast-title" id="toastTitle">Gán tài xế thành công</div>
+            <div class="toast-desc" id="toastDesc">Đơn giao hàng đã được gửi đến App Salesman.</div>
+        </div>
+    </div>
+
+    <script>
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+        }
+
+        function visibleRows() {
+            return Array.from(document.querySelectorAll('#orderBody tr')).filter(function (row) {
+                return row.style.display !== 'none';
+            });
+        }
+
+        function assignableRows() {
+            return visibleRows().filter(function (row) {
+                return row.dataset.assignable === 'true';
+            });
+        }
+
+        function getSelectedRows() {
+            return assignableRows().filter(function (row) {
+                var checkbox = row.querySelector('.order-check');
+                return checkbox && checkbox.checked && !checkbox.disabled;
+            });
+        }
+
+        function getActiveDriver() {
+            return document.querySelector('.driver-card.active');
+        }
+
+        function getDriverData() {
+            var driver = getActiveDriver();
+            if (!driver) return null;
+            return {
+                code: driver.dataset.code,
+                name: driver.dataset.name,
+                phone: driver.dataset.phone
+            };
+        }
+
+        function syncSelection() {
+            var rows = Array.from(document.querySelectorAll('#orderBody tr'));
+            var selectedRows = getSelectedRows();
+            var total = 0;
+            var ecopayPendingCount = 0;
+            var ecopayPendingMoney = 0;
+            var inDeliveryCount = 0;
+            var selectedAreas = [];
+
+            rows.forEach(function (row) {
+                var checkbox = row.querySelector('.order-check');
+                var isSelected = checkbox && checkbox.checked && !checkbox.disabled && row.style.display !== 'none';
+                row.classList.toggle('selected', Boolean(isSelected));
+
+                if (row.style.display !== 'none' && row.dataset.deliveryStatus === 'Đang giao') {
+                    inDeliveryCount += 1;
+                }
+                if (row.style.display !== 'none' && row.dataset.paymentMethod === 'EcoPay' && row.dataset.paymentStatus === 'Chờ thanh toán') {
+                    ecopayPendingCount += 1;
+                    ecopayPendingMoney += Number(row.dataset.amount || 0);
+                }
+            });
+
+            selectedRows.forEach(function (row) {
+                total += Number(row.dataset.amount || 0);
+                if (row.dataset.area && !selectedAreas.includes(row.dataset.area)) {
+                    selectedAreas.push(row.dataset.area);
+                }
+            });
+
+            var money = formatCurrency(total);
+            var areaText = selectedAreas.length ? selectedAreas.join(', ') : '-';
+            var visible = visibleRows();
+            var pendingAssignable = assignableRows();
+
+            document.getElementById('totalVisibleStat').textContent = visible.length;
+            document.getElementById('pendingAssignStat').textContent = pendingAssignable.length;
+            document.getElementById('inDeliveryStat').textContent = inDeliveryCount;
+            document.getElementById('selectedStat').textContent = selectedRows.length;
+            document.getElementById('selectedCountTop').textContent = selectedRows.length;
+            document.getElementById('selectedMoneyStat').textContent = money;
+            document.getElementById('selectedMoneyTop').textContent = money;
+            document.getElementById('selectedAreasTop').textContent = areaText;
+            document.getElementById('ecopayPendingStat').textContent = ecopayPendingCount;
+            document.getElementById('ecopayMoneyStat').textContent = formatCurrency(ecopayPendingMoney);
+            document.getElementById('tableMeta').textContent = 'Hiển thị ' + visible.length + ' / 128 đơn giao hàng';
+
+            var canAssign = selectedRows.length > 0;
+            document.getElementById('assignTopBtn').disabled = !canAssign;
+
+            var selectableCheckboxes = assignableRows().map(function (row) {
+                return row.querySelector('.order-check');
+            });
+            var selectAll = document.getElementById('selectAll');
+            selectAll.checked = selectableCheckboxes.length > 0 && selectableCheckboxes.every(function (checkbox) { return checkbox.checked; });
+            selectAll.indeterminate = !selectAll.checked && selectableCheckboxes.some(function (checkbox) { return checkbox.checked; });
+        }
+
+        function toggleAll(source) {
+            assignableRows().forEach(function (row) {
+                row.querySelector('.order-check').checked = source.checked;
+            });
+            syncSelection();
+        }
+
+        function clearSelection() {
+            assignableRows().forEach(function (row) {
+                row.querySelector('.order-check').checked = false;
+            });
+            syncSelection();
+        }
+
+        function chooseDriver(card) {
+            document.querySelectorAll('.driver-card').forEach(function (driverCard) {
+                driverCard.classList.remove('active');
+            });
+            card.classList.add('active');
+            var driverSelect = document.getElementById('assignedDriverSelect');
+            if (driverSelect) driverSelect.value = card.dataset.code;
+            updateModalDriverState();
+        }
+
+        function selectDriverFromDropdown(driverCode) {
+            if (!driverCode) {
+                document.querySelectorAll('.driver-card').forEach(function (driverCard) {
+                    driverCard.classList.remove('active');
+                });
+                updateModalDriverState();
+                return;
+            }
+            var card = document.querySelector('.driver-card[data-code="' + driverCode + '"]');
+            if (card) chooseDriver(card);
+        }
+
+        function updateModalDriverState() {
+            var driver = getDriverData();
+            var driverName = document.getElementById('modalDriverName');
+            var driverMeta = document.getElementById('modalDriverMeta');
+            var readyBadge = document.getElementById('modalReadyBadge');
+            var confirmButton = document.getElementById('confirmAssignBtn');
+
+            if (!driver) {
+                driverName.textContent = '-';
+                driverMeta.textContent = 'Chưa chọn tài xế nhận đơn';
+                readyBadge.textContent = 'Chưa chọn tài xế';
+                readyBadge.className = 'badge badge-warning';
+                confirmButton.disabled = true;
+                return;
+            }
+
+            driverName.textContent = driver.name;
+            driverMeta.textContent = driver.code + ' - ' + driver.name + ' - ' + driver.phone;
+            readyBadge.textContent = 'Sẵn sàng gán';
+            readyBadge.className = 'badge badge-success';
+            confirmButton.disabled = false;
+        }
+
+        function selectSingleOrder(button) {
+            clearSelection();
+            var row = button.closest('tr');
+            if (row.dataset.assignable !== 'true') return;
+            row.querySelector('.order-check').checked = true;
+            syncSelection();
+            openConfirmModal();
+        }
+
+        function reassignOrder(button) {
+            var row = button.closest('tr');
+            row.dataset.assignable = 'true';
+            row.dataset.deliveryStatus = 'Chờ phân bổ';
+            row.querySelector('.order-check').disabled = false;
+            row.querySelector('.order-check').checked = true;
+            row.querySelector('.delivery-cell').innerHTML = '<span class="badge badge-warning">Chờ phân bổ</span>';
+            row.querySelector('.driver-cell').innerHTML = '<span class="name-sub">Chưa gán lại</span>';
+            button.textContent = 'Gán nhanh';
+            button.setAttribute('onclick', 'selectSingleOrder(this)');
+            showToast('Đã đưa về chờ phân bổ', row.dataset.order + ' có thể chọn để gán tài xế mới.');
+            syncSelection();
+        }
+
+        function openConfirmModal() {
+            var selectedRows = getSelectedRows();
+            if (!selectedRows.length) {
+                showToast('Chưa chọn đơn hàng', 'Vui lòng chọn ít nhất một đơn chờ phân bổ.');
+                return;
+            }
+
+            var total = selectedRows.reduce(function (sum, row) {
+                return sum + Number(row.dataset.amount || 0);
+            }, 0);
+
+            document.getElementById('modalOrderCount').textContent = selectedRows.length;
+            document.getElementById('modalTotalMoney').textContent = formatCurrency(total);
+            document.getElementById('modalOrderList').innerHTML = selectedRows.map(function (row) {
+                return '<div class="selected-item">' +
+                    '<div><strong>' + row.dataset.order + '</strong><span>' + row.dataset.store + ' - ' + row.dataset.area + '</span></div>' +
+                    '<span>' + formatCurrency(Number(row.dataset.amount || 0)) + '</span>' +
+                '</div>';
+            }).join('');
+
+            document.getElementById('assignedDriverSelect').value = '';
+            document.getElementById('driverSearch').value = '';
+            document.querySelectorAll('.driver-card').forEach(function (card) {
+                card.classList.remove('active');
+                card.style.display = '';
+            });
+            updateModalDriverState();
+
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        function confirmAssign() {
+            var selectedRows = getSelectedRows();
+            var driver = getDriverData();
+            if (!selectedRows.length) return;
+            if (!driver) {
+                showToast('Chưa chọn tài xế', 'Vui lòng chọn tài xế nhận đơn trong popup trước khi xác nhận.');
+                return;
+            }
+
+            selectedRows.forEach(function (row) {
+                row.classList.remove('selected');
+                row.classList.add('just-assigned');
+                row.dataset.assignable = 'false';
+                row.dataset.deliveryStatus = 'Đã phân bổ';
+                row.dataset.driver = driver.name;
+                row.querySelector('.delivery-cell').innerHTML = '<span class="badge badge-info">Đã phân bổ</span>';
+                row.querySelector('.driver-cell').innerHTML =
+                    '<div class="name-main">' + driver.name + '</div><div class="name-sub">' + driver.code + ' - ' + driver.phone + '</div>';
+                var checkbox = row.querySelector('.order-check');
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                var action = row.querySelector('.action-link');
+                action.textContent = 'Phân bổ lại';
+                action.setAttribute('onclick', 'reassignOrder(this)');
+            });
+
+            closeConfirmModal();
+            syncSelection();
+            showToast('Gán tài xế thành công', selectedRows.length + ' đơn giao hàng đã được gửi đến App Salesman của tài xế ' + driver.name + '.');
+        }
+
+        function showToast(title, desc) {
+            var toast = document.getElementById('toast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastDesc').textContent = desc;
+            toast.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(function () {
+                toast.classList.remove('show');
+            }, 3200);
+        }
+
+        function suggestDriver() {
+            if (!getSelectedRows().length) {
+                showToast('Chưa chọn đơn hàng', 'Vui lòng chọn ít nhất một đơn chờ phân bổ trước khi gợi ý tài xế.');
+                return;
+            }
+            openConfirmModal();
+            var firstDriver = document.querySelector('.driver-card');
+            if (firstDriver) chooseDriver(firstDriver);
+            showToast('Đã gợi ý tài xế', 'Hệ thống ưu tiên tài xế phù hợp nhất với khu vực và tải đơn hiện tại.');
+        }
+
+        function resetFilters() {
+            ['searchInput', 'deliveryDate'].forEach(function (id) {
+                if (id === 'searchInput') document.getElementById(id).value = '';
+                if (id === 'deliveryDate') document.getElementById(id).value = '15-06-2026';
+            });
+            ['sourceFilter', 'areaFilter', 'deliveryStatusFilter', 'paymentStatusFilter', 'driverFilterTop', 'routeFilter', 'paymentMethodFilter', 'priorityFilter', 'amountFilter'].forEach(function (id) {
+                document.getElementById(id).selectedIndex = 0;
+            });
+            document.querySelectorAll('#orderBody tr').forEach(function (row) {
+                row.style.display = '';
+            });
+            syncSelection();
+            showToast('Đã làm mới bộ lọc', 'Danh sách đơn giao hàng đã trở về điều kiện mặc định.');
+        }
+
+        function applyFilters() {
+            var keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+            var source = document.getElementById('sourceFilter').value;
+            var area = document.getElementById('areaFilter').value;
+            var deliveryStatus = document.getElementById('deliveryStatusFilter').value;
+            var paymentStatus = document.getElementById('paymentStatusFilter').value;
+            var driver = document.getElementById('driverFilterTop').value;
+            var route = document.getElementById('routeFilter').value;
+            var paymentMethod = document.getElementById('paymentMethodFilter').value;
+            var priority = document.getElementById('priorityFilter').value;
+            var amountRange = document.getElementById('amountFilter').value;
+
+            document.querySelectorAll('#orderBody tr').forEach(function (row) {
+                var amount = Number(row.dataset.amount || 0);
+                var matchAmount = true;
+                if (amountRange === 'low') matchAmount = amount < 1000000;
+                if (amountRange === 'mid') matchAmount = amount >= 1000000 && amount <= 5000000;
+                if (amountRange === 'high') matchAmount = amount > 5000000;
+
+                var visible =
+                    (!keyword || row.textContent.toLowerCase().includes(keyword)) &&
+                    (!source || row.dataset.source === source) &&
+                    (!area || row.dataset.area === area) &&
+                    (!deliveryStatus || row.dataset.deliveryStatus === deliveryStatus) &&
+                    (!paymentStatus || row.dataset.paymentStatus === paymentStatus) &&
+                    (!driver || row.dataset.driver === driver) &&
+                    (!route || row.dataset.route === route) &&
+                    (!paymentMethod || row.dataset.paymentMethod === paymentMethod) &&
+                    (!priority || row.dataset.priority === priority) &&
+                    matchAmount;
+
+                row.style.display = visible ? '' : 'none';
+            });
+            syncSelection();
+            showToast('Đã áp dụng tìm kiếm', 'Danh sách đang hiển thị theo điều kiện vừa nhập.');
+        }
+
+        function filterDrivers() {
+            var keyword = document.getElementById('driverSearch').value.trim().toLowerCase();
+            document.querySelectorAll('.driver-card').forEach(function (card) {
+                var text = card.textContent.toLowerCase();
+                card.style.display = !keyword || text.includes(keyword) ? '' : 'none';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', syncSelection);
+    </script>
+</body>
+</html>

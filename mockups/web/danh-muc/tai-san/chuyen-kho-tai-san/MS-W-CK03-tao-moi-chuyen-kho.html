@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] Tạo mới phiếu Chuyển kho tài sản — DMS Portal</title>
+    <style>
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --primary-700: #1D4ED8;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            --success-500: #10B981;
+            --warning-500: #F59E0B;
+            --error-500: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            padding: 32px;
+        }
+
+        .browser {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .browser-header {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-dot:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .browser-dot:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .browser-dot:nth-child(3) {
+            background: #28c840;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: var(--neutral-700);
+            border: 1px solid #d0d0d0;
+        }
+
+        .app {
+            display: flex;
+            height: 1000px;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: var(--neutral-900);
+            color: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 20px 16px;
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .sidebar-section {
+            padding: 16px 8px 8px;
+        }
+
+        .sidebar-section-title {
+            padding: 0 8px 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-item {
+            padding: 10px 12px;
+            margin: 2px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item.active {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .sidebar-sub {
+            padding: 6px 12px 6px 36px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .sidebar-sub.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main {
+            flex: 1;
+            background: var(--neutral-50);
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: white;
+            padding: 12px 32px;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--neutral-500);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-500);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--neutral-700);
+        }
+
+        .page {
+            padding: 24px 32px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--primary-500);
+            border: none;
+            padding: 4px 0;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        /* Form card */
+        .form-card {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--neutral-100);
+            background: var(--neutral-50);
+        }
+
+        .form-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .form-card-body {
+            padding: 20px;
+        }
+
+        /* Form grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+
+        .form-required {
+            color: var(--error-500);
+            margin-left: 2px;
+        }
+
+        .form-input {
+            padding: 8px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--neutral-900);
+            background: white;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-500);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-50);
+        }
+
+        .form-input[readonly],
+        .form-input[disabled] {
+            background: var(--neutral-100);
+            color: var(--neutral-500);
+            cursor: not-allowed;
+        }
+
+        .form-select {
+            padding: 8px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--neutral-900);
+            background: white;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-500);
+            outline: none;
+        }
+
+        .form-textarea {
+            padding: 8px 12px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--neutral-900);
+            background: white;
+            width: 100%;
+            resize: vertical;
+            min-height: 72px;
+        }
+
+        .form-hint {
+            font-size: 11px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        .form-error {
+            font-size: 11px;
+            color: var(--error-500);
+            margin-top: 2px;
+        }
+
+        /* Section divider */
+        .section-divider {
+            padding: 14px 20px;
+            background: var(--neutral-50);
+            border-top: 1px solid var(--neutral-100);
+            border-bottom: 1px solid var(--neutral-100);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-top: 20px;
+        }
+
+        /* Asset table inside form */
+        .asset-table-wrapper {
+            border: 1px solid var(--neutral-200);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--neutral-50);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        td {
+            padding: 11px 14px;
+            font-size: 13px;
+            color: var(--neutral-900);
+            border-bottom: 1px solid var(--neutral-100);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .num-input {
+            width: 90px;
+            padding: 5px 8px;
+            border: 1px solid var(--neutral-200);
+            border-radius: 4px;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .delete-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--error-500);
+            font-size: 16px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: #fef2f2;
+        }
+
+        /* Footer action bar */
+        .form-footer {
+            background: white;
+            border-top: 1px solid var(--neutral-200);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .btn {
+            padding: 9px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-700);
+            border-color: var(--neutral-200);
+        }
+
+        .badge-asset {
+            background: var(--primary-50);
+            color: var(--primary-700);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: var(--primary-50);
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--primary-700);
+            margin-bottom: 16px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .state-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            margin-top: 32px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .state-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 16px;
+            font-family: 'SF Mono', monospace;
+        }
+    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+</head>
+
+<body class="portal-page" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+
+    <!-- ===== STATE 1: FORM TẠO MỚI ĐÃ ĐIỀN ĐỦ DỮ LIỆU (Loại = Cấp phát) ===== -->
+    <div class="state-title">STATE 1 — Tạo mới phiếu (Loại = Cấp phát, đã điền đủ thông tin)</div>
+
+    <div class="browser">
+        <div class="browser-header">
+            <div class="browser-dots">
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+            </div>
+            <div class="browser-url">https://dms.finviet.com.vn/tai-san/chuyen-kho/tao-moi</div>
+        </div>
+        <div class="app">
+            <aside class="sidebar">
+                <div class="sidebar-logo">📊 DMS Portal</div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Danh mục</div>
+                    <div class="sidebar-item">🏭 Sản phẩm</div>
+                    <div class="sidebar-item">🏢 Nhà phân phối</div>
+                    <div class="sidebar-item active">🗄️ Tài sản</div>
+                    <div class="sidebar-sub">📋 Danh sách tài sản</div>
+                    <div class="sidebar-sub">📥 Nhập kho tài sản</div>
+                    <div class="sidebar-sub">📤 Xuất kho tài sản</div>
+                    <div class="sidebar-sub active">🔄 Chuyển kho tài sản</div>
+                </div>
+            </aside>
+            <div class="main">
+                <div class="topbar">
+                    <div class="breadcrumb">
+                        <a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / <a href="#">Chuyển kho tài sản</a> / Tạo
+                        mới
+                    </div>
+                    <div class="topbar-actions">
+                        <div class="user-info">
+                            <div class="avatar">AT</div><span>Admin Test</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <button class="btn-back">‹ Quay lại danh sách</button>
+                    <div class="page-title">Tạo mới phiếu chuyển kho</div>
+
+                    <!-- Section: Thông tin phiếu -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-title">📄 Thông tin phiếu</div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Công ty</label>
+                                    <select class="form-select">
+                                        <option selected>CTY001 — Finviet HCM</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mã chuyển kho</label>
+                                    <input type="text" class="form-input" value="CK0012346" readonly>
+                                    <span class="form-hint">Mã được hệ thống tự sinh, không thể chỉnh sửa</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Ngày chuyển
+                                        kho</label>
+                                    <input type="text" class="form-input" value="12-05-2026">
+                                    <span class="form-hint">Cho phép từ 01-05-2026 đến tương lai</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Loại chuyển
+                                        kho</label>
+                                    <select class="form-select">
+                                        <option>-- Chọn loại --</option>
+                                        <option selected>Cấp phát</option>
+                                        <option>Thu hồi</option>
+                                        <option>Chuyển kho ngang cấp</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Lý do chuyển
+                                        kho</label>
+                                    <select class="form-select">
+                                        <option selected>Cấp phát định kỳ</option>
+                                        <option>Cấp phát theo yêu cầu</option>
+                                        <option>Thu hồi định kỳ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label class="form-label">Ghi chú</label>
+                                    <textarea class="form-textarea"
+                                        style="min-height:80px;">Cấp phát cho NPP Miền Nam Q2/2026</textarea>
+                                    <span class="form-hint">Tối đa 500 ký tự</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Kho (dynamic theo Loại chuyển kho) -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-title">🔄 Thông tin kho</div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Loại kho
+                                        nguồn</label>
+                                    <select class="form-select">
+                                        <option>Công ty</option>
+                                        <option selected>NPP</option>
+                                        <option>Nhân viên</option>
+                                        <option>Cửa hàng</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Chi tiết kho
+                                        nguồn</label>
+                                    <select class="form-select">
+                                        <option selected>NPP002 — Miền Nam</option>
+                                        <option>NPP001 — Hà Nội</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="opacity:0.4; pointer-events:none;"></div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Loại kho đích</label>
+                                    <select class="form-select">
+                                        <option>Công ty</option>
+                                        <option>NPP</option>
+                                        <option selected>Nhân viên</option>
+                                        <option>Cửa hàng</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Chi tiết kho
+                                        đích</label>
+                                    <select class="form-select">
+                                        <option selected>NV023 — Trần Thị C</option>
+                                        <option>NV015 — Nguyễn Văn A</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Danh sách tài sản -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-title">📦 Danh sách tài sản <span class="form-required">*</span></div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-secondary" style="font-size:13px; padding:6px 14px;">📥
+                                    Import</button>
+                                <button class="btn btn-secondary" style="font-size:13px; padding:6px 14px;">➕ Chọn tài
+                                    sản</button>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <input type="text" class="filter-input" style="width:300px;"
+                                    placeholder="Tìm theo Mã, Tên, QR Code">
+                                <span style="font-size:12px; color:var(--neutral-500);">2 tài sản</span>
+                            </div>
+                            <div class="asset-table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã tài sản</th>
+                                            <th>Tên tài sản</th>
+                                            <th>Nhóm tài sản</th>
+                                            <th>Loại tài sản</th>
+                                            <th>QR Code</th>
+                                            <th style="text-align:right;">Tồn kho nguồn</th>
+                                            <th style="text-align:right; width:110px;"><span
+                                                    class="form-required">*</span> Số lượng</th>
+                                            <th style="width:40px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td style="font-family:monospace; color:var(--primary-600);">TS0001</td>
+                                            <td>Tủ lạnh Sanyo 300L</td>
+                                            <td><span class="badge-asset">Điện lạnh</span></td>
+                                            <td>Định danh</td>
+                                            <td
+                                                style="font-family:monospace; font-size:12px; color:var(--neutral-500);">
+                                                QR-TS0001-001</td>
+                                            <td style="text-align:right; color:var(--neutral-500);">5</td>
+                                            <td style="text-align:right;"><input type="number" class="num-input"
+                                                    value="2"></td>
+                                            <td><button class="delete-btn">🗑</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td style="font-family:monospace; color:var(--primary-600);">TS0010</td>
+                                            <td>Bảng hiệu Finviet A2</td>
+                                            <td><span class="badge-asset">Vật dụng</span></td>
+                                            <td>Không định danh</td>
+                                            <td
+                                                style="font-family:monospace; font-size:12px; color:var(--neutral-500);">
+                                                —</td>
+                                            <td style="text-align:right; color:var(--neutral-500);">200</td>
+                                            <td style="text-align:right;"><input type="number" class="num-input"
+                                                    value="50"></td>
+                                            <td><button class="delete-btn">🗑</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div
+                                style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--neutral-500);">
+                                <span>Hiển thị 1–2 / 2 tài sản</span>
+                                <div style="display:flex; gap:4px;">
+                                    <button
+                                        style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:4px;background:white;font-size:12px;cursor:pointer;">‹</button>
+                                    <button
+                                        style="width:28px;height:28px;border:1px solid #3b82f6;border-radius:4px;background:#3b82f6;color:white;font-size:12px;cursor:pointer;">1</button>
+                                    <button
+                                        style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:4px;background:white;font-size:12px;cursor:pointer;">›</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button class="btn btn-secondary">✖ Hủy</button>
+                        <button class="btn btn-primary">💾 Lưu phiếu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STATE 2: FORM MỚI CHƯA ĐIỀN + ERROR VALIDATION ===== -->
+    <div class="state-title" style="margin-top:48px;">STATE 2 — Form rỗng, hiển thị lỗi validate sau khi nhấn Lưu</div>
+
+    <div class="browser">
+        <div class="browser-header">
+            <div class="browser-dots">
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+                <div class="browser-dot"></div>
+            </div>
+            <div class="browser-url">https://dms.finviet.com.vn/tai-san/chuyen-kho/tao-moi</div>
+        </div>
+        <div class="app" style="height:700px;">
+            <aside class="sidebar">
+                <div class="sidebar-logo">📊 DMS Portal</div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Danh mục</div>
+                    <div class="sidebar-item active">🗄️ Tài sản</div>
+                    <div class="sidebar-sub active">🔄 Chuyển kho tài sản</div>
+                </div>
+            </aside>
+            <div class="main">
+                <div class="topbar">
+                    <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / <a href="#">Chuyển kho
+                            tài sản</a> / Tạo mới</div>
+                    <div class="topbar-actions">
+                        <div class="user-info">
+                            <div class="avatar">AT</div><span>Admin Test</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <button class="btn-back">‹ Quay lại danh sách</button>
+                    <div class="page-title">Tạo mới phiếu chuyển kho</div>
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-title">📄 Thông tin phiếu</div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Công ty</label>
+                                    <select class="form-select" style="border-color:var(--error-500);">
+                                        <option value="">-- Chọn công ty --</option>
+                                    </select>
+                                    <span class="form-error">⚠ Vui lòng chọn Công ty</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mã chuyển kho</label>
+                                    <input type="text" class="form-input" placeholder="Hệ thống tự sinh" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Ngày chuyển
+                                        kho</label>
+                                    <input type="text" class="form-input" style="border-color:var(--error-500);"
+                                        placeholder="dd-MM-yyyy">
+                                    <span class="form-error">⚠ Vui lòng chọn Ngày chuyển kho</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Loại chuyển
+                                        kho</label>
+                                    <select class="form-select" style="border-color:var(--error-500);">
+                                        <option value="">-- Chọn loại --</option>
+                                    </select>
+                                    <span class="form-error">⚠ Vui lòng chọn Loại chuyển kho</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><span class="form-required">*</span> Lý do chuyển
+                                        kho</label>
+                                    <select class="form-select" style="border-color:var(--error-500);">
+                                        <option value="">-- Chọn lý do --</option>
+                                    </select>
+                                    <span class="form-error">⚠ Vui lòng chọn Lý do chuyển kho</span>
+                                </div>
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label class="form-label">Ghi chú</label>
+                                    <textarea class="form-textarea" style="min-height:80px;"
+                                        placeholder="Nhập ghi chú (tùy chọn)"></textarea>
+                                    <span class="form-hint">Tối đa 500 ký tự</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Error danh sách tài sản -->
+                    <div class="form-card" style="border-color: var(--error-500);">
+                        <div class="form-card-header" style="background: #fef2f2; border-bottom-color: #fecaca;">
+                            <div class="form-card-title" style="color: #b91c1c;">📦 Danh sách tài sản <span
+                                    class="form-required">*</span></div>
+                            <div style="display:flex; gap:8px; opacity:0.5;">
+                                <button class="btn btn-secondary" style="font-size:13px; padding:6px 14px;" disabled>📥
+                                    Import</button>
+                                <button class="btn btn-secondary" style="font-size:13px; padding:6px 14px;" disabled>➕
+                                    Chọn tài sản</button>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div style="font-size:12px; color:var(--neutral-500); margin-bottom:8px;">Cần chọn Công ty
+                                trước khi thêm tài sản</div>
+                            <div style="padding: 24px; text-align: center; color: var(--error-500); font-size: 14px;">
+                                ⚠ Vui lòng chọn ít nhất một tài sản cho phiếu chuyển kho.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button class="btn btn-secondary">✖ Hủy</button>
+                        <button class="btn btn-primary">💾 Lưu phiếu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">mockups/web/MS-W-CK03-tao-moi-chuyen-kho.html — [WEB] Tạo mới phiếu Chuyển kho tài sản</div>
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+
+</html>

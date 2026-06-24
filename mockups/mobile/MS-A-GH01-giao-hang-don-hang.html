@@ -1,0 +1,2721 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[APP] Giao hàng — Danh sách đơn &amp; Giao hàng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+/* ── Design tokens (driver_app.html) ── */
+:root {
+  --c-bg: #F4F6FA; --c-surface: #FFFFFF;
+  --c-primary: #0D88CB; --c-primary-dk: #0A6FA8;
+  --c-primary-lt: #E8F4FA; --c-primary-ring: #B8DFF0;
+  --c-green: #10B981; --c-green-lt: #ECFDF5; --c-green-dk: #059669;
+  --c-amber: #F79009; --c-amber-lt: #FFFAEB;
+  --c-red: #F04438; --c-red-lt: #FEF3F2;
+  --c-text: #101828; --c-sub: #475467; --c-muted: #98A2B3;
+  --c-border: #E4E7EC; --c-border2: #D0D5DD; --c-overlay: rgba(16,24,40,.45);
+  --r: 14px; --r-sm: 8px;
+  --shadow: 0 1px 3px rgba(16,24,40,.1), 0 1px 2px rgba(16,24,40,.06);
+  --shadow-lg: 0 12px 40px rgba(16,24,40,.16);
+  --ff: 'Inter', sans-serif;
+  /* legacy aliases */
+  --primary-50: var(--c-primary-lt); --primary-100: var(--c-primary-ring);
+  --primary-500: var(--c-primary); --primary-600: var(--c-primary-dk); --primary-700: var(--c-primary-dk);
+  --neutral-0: var(--c-surface); --neutral-50: var(--c-bg); --neutral-100: #F2F4F7;
+  --neutral-200: var(--c-border); --neutral-300: var(--c-border2); --neutral-500: var(--c-muted);
+  --neutral-600: var(--c-sub); --neutral-700: var(--c-sub); --neutral-900: var(--c-text);
+  --success-50: var(--c-green-lt); --success-500: var(--c-green); --success-700: var(--c-green-dk);
+  --warning-50: var(--c-amber-lt); --warning-700: #B45309;
+  --info-50: var(--c-primary-lt); --info-700: var(--c-primary);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+input, select, button { font-family: inherit; font-size: inherit; }
+body {
+  font-family: var(--ff); background: #1A1D27; min-height: 100vh; padding: 24px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.phone {
+  width: 390px; background: var(--c-bg); border-radius: 44px; overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 0 10px #111318, 0 0 0 12px #2A2D3A, var(--shadow-lg);
+}
+.phone::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 34px; background: #111318; border-radius: 0 0 20px 20px; z-index: 100;
+}
+.phone-screen {
+  background: var(--c-bg); overflow: hidden; height: 844px; position: relative;
+  display: flex; flex-direction: column;
+}
+.view {
+  position: absolute; inset: 0; display: none; flex-direction: column;
+  background: var(--c-bg); overflow-x: hidden;
+}
+.view.active { display: flex; }
+
+.status-bar {
+  height: 50px; padding: 14px 24px 0; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; font-weight: 600; background: var(--c-surface); color: var(--c-text);
+  z-index: 2;
+}
+.status-bar.blue { background: var(--c-surface); color: var(--c-text); }
+.status-bar .icons, .status-right { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--c-text); }
+
+.app-top {
+  background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0; padding: 0 20px 14px;
+}
+
+.driver-bar {
+  padding: 4px 0 0; display: flex; align-items: center; gap: 12px;
+}
+.driver-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dk));
+  color: white; display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow);
+}
+.driver-avatar svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.driver-info { flex: 1; min-width: 0; }
+.driver-greeting { font-size: 11px; color: var(--c-muted); font-weight: 500; margin-bottom: 1px; }
+.driver-name { font-size: 17px; font-weight: 600; color: var(--c-text); line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.driver-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--c-sub); margin-top: 2px; }
+.driver-role {
+  display: inline-flex; padding: 2px 8px; border-radius: 20px;
+  background: var(--c-primary-lt); color: var(--c-primary); font-weight: 600; font-size: 10px;
+}
+.driver-npp { color: var(--c-sub); font-weight: 500; }
+.driver-date {
+  flex-shrink: 0; text-align: right; padding: 6px 10px; border-radius: var(--r-sm);
+  background: var(--c-bg); border: 1px solid var(--c-border);
+  font-size: 11px; font-weight: 600; color: var(--c-sub); line-height: 1.3;
+}
+.driver-date .day-label { display: block; font-size: 10px; font-weight: 500; color: var(--c-muted); margin-bottom: 1px; }
+
+.summary-strip {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dk) 100%);
+  padding: 14px 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+}
+.sum-item { text-align: center; }
+.sum-num { font-size: 22px; font-weight: 700; color: #fff; }
+.sum-lbl { font-size: 10px; color: rgba(255,255,255,.72); margin-top: 2px; letter-spacing: .3px; text-transform: uppercase; }
+
+.list-search-wrap { padding: 12px 16px 0; background: var(--c-surface); }
+.list-search {
+  width: 100%; padding: 10px 12px 10px 38px; border: 1px solid var(--c-border2);
+  border-radius: var(--r-sm); font-size: 13px; color: var(--c-text); background: var(--c-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2398A2B3' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 12px center; outline: none;
+}
+.list-search:focus { border-color: var(--c-primary); box-shadow: 0 0 0 3px var(--c-primary-ring); background: var(--c-surface); }
+.list-search::placeholder { color: var(--c-muted); }
+
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; background: var(--c-bg); -webkit-overflow-scrolling: touch; }
+.content::-webkit-scrollbar { display: none; }
+.content.pad-nav { padding-bottom: 72px; }
+.content.pad-footer { padding-bottom: 80px; }
+
+.status-chips-wrap { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding-bottom: 12px; }
+.filter-chips { display: flex; gap: 8px; padding: 12px 16px 0; overflow-x: auto; }
+.filter-chips-row2 { padding-top: 8px; padding-bottom: 0; }
+.filter-chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 1; min-width: 0; text-align: center; padding: 6px 10px; border-radius: 20px;
+  border: 1px solid var(--c-border2); font-size: 12px; font-weight: 500; color: var(--c-sub);
+  background: var(--c-surface); cursor: pointer; white-space: nowrap; transition: all .15s;
+}
+.chip.active { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.chip .cnt { display: inline; margin-left: 2px; font-size: 11px; opacity: .85; }
+.chip:not(.active) .cnt { opacity: 1; }
+
+.section-head-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; gap: 8px; }
+.section-head { font-size: 11px; font-weight: 600; color: var(--c-muted); letter-spacing: .5px; text-transform: uppercase; }
+.section-head::after { display: none; }
+.section-head .sub { font-size: 11px; font-weight: 600; color: var(--c-muted); margin-left: 4px; text-transform: none; letter-spacing: 0; }
+.section-map-btn {
+  width: 36px; height: 36px; border-radius: var(--r-sm); border: 1px solid var(--c-border2);
+  background: var(--c-surface); color: var(--c-primary); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); transition: all .15s;
+}
+.section-map-btn:active { transform: scale(.96); background: var(--c-primary-lt); }
+.btn-reject-mode {
+  padding: 6px 10px; border-radius: var(--r-sm); border: 1px solid var(--c-border2);
+  background: var(--c-surface); color: var(--c-red); font-size: 11px; font-weight: 600; cursor: pointer;
+  white-space: nowrap;
+}
+.btn-reject-mode.active { background: var(--c-red-lt); border-color: #FECACA; }
+.card-select-wrap {
+  display: none; align-items: flex-start; padding: 14px 0 0 14px; flex-shrink: 0;
+}
+.card-select-wrap input { width: 18px; height: 18px; accent-color: var(--c-primary); margin-top: 2px; }
+#viewList.reject-mode .card-select-wrap { display: flex; }
+#viewList.reject-mode .delivery-card[data-status="delivered"],
+#viewList.reject-mode .delivery-card[data-status="failed"] { opacity: .45; pointer-events: none; }
+#viewList.reject-mode .delivery-card[data-status="delivered"] .card-select-wrap,
+#viewList.reject-mode .delivery-card[data-status="failed"] .card-select-wrap { display: none; }
+.reject-bar {
+  display: none; position: absolute; left: 0; right: 0; bottom: 60px; z-index: 20;
+  padding: 10px 16px; background: var(--c-surface); border-top: 1px solid var(--c-border);
+  box-shadow: 0 -4px 16px rgba(16,24,40,.08); align-items: center; gap: 10px;
+}
+.reject-bar.show { display: flex; }
+.reject-bar-info { flex: 1; font-size: 12px; font-weight: 600; color: var(--c-sub); }
+.reject-bar .btn-delivery { flex: 0 0 auto; padding: 10px 14px; font-size: 13px; width: auto; min-width: 96px; }
+.reject-bar .btn-delivery.secondary { min-width: 72px; }
+#viewList.reject-mode .delivery-card-actions { pointer-events: none; opacity: .55; }
+#viewList.reject-mode .btn-map { pointer-events: none; }
+
+.confirm-layer {
+  position: absolute; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center;
+  background: var(--c-overlay); padding: 24px;
+}
+.confirm-layer.open { display: flex; }
+.confirm-box {
+  width: 100%; max-width: 320px; background: var(--c-surface); border-radius: var(--r);
+  padding: 20px 18px; box-shadow: var(--shadow-lg);
+}
+.confirm-title { font-size: 16px; font-weight: 700; color: var(--c-text); margin-bottom: 8px; }
+.confirm-text { font-size: 13px; color: var(--c-sub); line-height: 1.5; margin-bottom: 16px; }
+.confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.reason-option {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; margin-bottom: 8px;
+  background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-sm); cursor: pointer;
+}
+.reason-option.selected { border-color: var(--c-primary); background: var(--c-primary-lt); }
+.reason-option input { margin-top: 2px; accent-color: var(--c-primary); }
+.reason-option span { font-size: 13px; color: var(--c-text); line-height: 1.4; }
+
+.exception-actions {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px 10px; margin-top: -4px;
+}
+.exception-actions .btn-delivery { font-size: 12px; padding: 10px 8px; }
+.exception-actions .btn-delivery.danger { color: var(--c-red); border-color: #FECACA; background: var(--c-red-lt); }
+.exception-actions .btn-delivery.warn { color: #B45309; border-color: #FDE68A; background: var(--c-amber-lt); }
+
+.delivery-card-head { display: flex; align-items: flex-start; gap: 8px; padding: 14px 14px 0; }
+.delivery-card {
+  background: var(--c-surface); border-radius: var(--r); border: 1px solid var(--c-border);
+  box-shadow: var(--shadow); overflow: visible; display: flex; flex-direction: row; align-items: stretch;
+}
+#orderCards { padding: 0 16px 12px; display: flex; flex-direction: column; gap: 10px; }
+.delivery-card-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.delivery-card-pin { color: var(--c-primary); display: flex; align-items: center; margin-top: 2px; flex-shrink: 0; }
+.delivery-card-pin i { font-size: 16px; }
+.delivery-card-title-wrap { flex: 1; min-width: 0; }
+.delivery-card-title { font-size: 15px; font-weight: 600; color: var(--c-text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.delivery-card-meta { font-size: 11px; font-weight: 600; color: var(--c-muted); letter-spacing: .4px; margin-top: 2px; }
+.delivery-card-side { text-align: right; flex-shrink: 0; }
+.delivery-distance { font-size: 11px; font-weight: 600; color: var(--c-primary); }
+.delivery-card-body { padding: 6px 14px 0 14px; }
+.delivery-phone { font-size: 13px; color: var(--c-sub); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.delivery-address { font-size: 12px; color: var(--c-sub); line-height: 1.45; display: flex; align-items: flex-start; gap: 4px; }
+.delivery-card-foot {
+  padding: 10px 14px; border-top: 1px solid var(--c-border);
+  display: flex; align-items: center; justify-content: space-between; margin-top: 8px;
+}
+.delivery-amount { font-size: 16px; font-weight: 700; color: var(--c-text); }
+.delivery-amount span { font-size: 11px; font-weight: 400; color: var(--c-muted); }
+.delivery-pay-status { font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+.delivery-pay-status.is-paid { color: var(--c-green-dk); }
+.delivery-pay-status.is-unpaid { color: #B45309; }
+.info-value-amount-pay { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.info-pay-sep { color: var(--c-muted); font-weight: 400; }
+.rp-card-amt-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.delivery-card-actions { padding: 10px 14px 14px; }
+.delivery-card-actions-split { display: flex; gap: 8px; }
+.delivery-card-actions-split .btn-delivery {
+  flex: 1; min-width: 0; width: auto; font-size: 13px; padding: 11px 8px;
+}
+.delivery-card-actions-split .btn-map { flex: 1; min-width: 0; }
+
+.btn-delivery {
+  width: 100%; padding: 12px; border: none; border-radius: var(--r-sm);
+  background: var(--c-primary); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px; transition: all .15s;
+}
+.btn-delivery:active { transform: scale(.97); }
+.btn-delivery.secondary {
+  background: transparent; color: var(--c-sub); border: 1.5px solid var(--c-border2);
+}
+.btn-delivery:disabled { background: var(--c-border); color: var(--c-muted); cursor: not-allowed; transform: none; }
+
+.badge { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+.badge-wait { background: var(--c-amber-lt); color: #B45309; border: none; }
+.badge-delivering { background: var(--c-primary-lt); color: var(--c-primary); border: none; }
+.badge-delivered { background: var(--c-green-lt); color: var(--c-green-dk); border: none; }
+.badge-failed { background: var(--c-red-lt); color: var(--c-red); border: none; }
+.badge-paid { background: var(--c-green-lt); color: var(--c-green-dk); border: none; }
+.badge-prepaid { background: var(--c-green-lt); color: var(--c-green-dk); border: none; }
+.prepaid-notice {
+  margin: 0 0 12px; padding: 12px 14px; border-radius: var(--r-sm);
+  background: var(--c-green-lt); border: 1px solid rgba(22, 163, 74, .25);
+  font-size: 13px; color: var(--c-green-dk); line-height: 1.45;
+}
+.prepaid-notice strong { display: block; margin-bottom: 4px; font-size: 14px; }
+.badge-source { background: var(--c-bg); color: var(--c-sub); border: 1px solid var(--c-border2); font-weight: 600; }
+.badge-source-ocr { background: var(--c-primary-lt); color: var(--c-primary); border: none; }
+
+.bottom-msg { text-align: center; padding: 20px 16px; color: var(--c-muted); font-size: 12px; }
+.bottom-nav {
+  flex-shrink: 0; height: 60px; background: var(--c-surface); border-top: 1px solid var(--c-border);
+  display: flex; align-items: center; padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 0; font-size: 11px; color: var(--c-muted); cursor: pointer; border: none; background: none;
+  transition: color .15s;
+}
+.nav-item.active { color: var(--c-primary); font-weight: 600; }
+.nav-item .nav-icon, .nav-item i { font-size: 22px; line-height: 1; }
+
+.detail-header {
+  background: var(--c-surface); color: var(--c-text); padding: 0 20px; height: 56px;
+  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.detail-header .back {
+  width: 36px; height: 36px; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  color: var(--c-text); font-size: 20px; transition: background .15s;
+}
+.detail-header .back:hover { background: var(--c-bg); }
+.detail-header .hdr-center { flex: 1; text-align: center; }
+.detail-header h1 { font-size: 17px; font-weight: 600; color: var(--c-text); }
+.detail-header .step { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+
+.step-bar {
+  display: flex; align-items: flex-start; padding: 14px 12px 16px;
+  background: var(--c-surface); border-bottom: 1px solid var(--c-border); flex-shrink: 0;
+}
+.step-item {
+  flex: 1; position: relative; display: flex; flex-direction: column;
+  align-items: center; gap: 6px; font-size: 10px; color: var(--c-muted); z-index: 1;
+}
+.step-item::before {
+  content: ''; position: relative; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--c-border); flex-shrink: 0; z-index: 2;
+}
+.step-item::after {
+  content: ''; position: absolute; top: 9px; left: calc(50% + 9px);
+  width: calc(100% - 18px); height: 2px; background: var(--c-border); z-index: 0;
+}
+.step-item:last-child::after { display: none; }
+.step-item.done { color: var(--c-green-dk); }
+.step-item.done::before { background: var(--c-green); }
+.step-item.done::after { background: var(--c-green); }
+.step-item.active { color: var(--c-primary); font-weight: 600; }
+.step-item.active::before { background: var(--c-primary); box-shadow: 0 0 0 4px var(--c-primary-ring); }
+.step-line { display: none; }
+
+.info-card {
+  background: var(--c-surface); margin: 12px 16px 0; border-radius: var(--r);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow); overflow: hidden;
+}
+.info-card-title {
+  padding: 10px 14px; font-size: 11px; font-weight: 600; color: var(--c-muted);
+  letter-spacing: .5px; text-transform: uppercase;
+  background: var(--c-bg); border-bottom: 1px solid var(--c-border);
+}
+.info-row {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 11px 14px; border-bottom: 1px solid var(--c-border); gap: 12px; font-size: 13px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 12px; color: var(--c-sub); flex-shrink: 0; min-width: 90px; }
+.info-value { flex: 1; color: var(--c-text); font-weight: 500; text-align: right; font-size: 13px; }
+.info-value.mono { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--c-primary); }
+.info-value.highlight { color: var(--c-primary); font-weight: 700; font-size: 16px; }
+
+.product-list { padding: 0; }
+.product-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--c-border); font-size: 13px; gap: 10px;
+}
+.product-item:last-child { border-bottom: none; }
+.product-thumb { display: none; }
+.product-info { flex: 1; min-width: 0; }
+.product-name { font-weight: 500; color: var(--c-text); margin-bottom: 2px; }
+.product-sku { font-size: 11px; color: var(--c-muted); font-family: 'SF Mono', Consolas, monospace; margin-bottom: 2px; }
+.product-qty { color: var(--c-sub); font-size: 12px; }
+.product-price { font-weight: 600; color: var(--c-text); white-space: nowrap; }
+
+.photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 14px; }
+.photo-slot {
+  aspect-ratio: 1; border-radius: var(--r-sm); border: 1.5px dashed var(--c-border2);
+  background: var(--c-bg); display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 4px; font-size: 10px; color: var(--c-muted); cursor: pointer;
+  transition: border-color .15s; position: relative; overflow: hidden;
+}
+.photo-slot:hover { border-color: var(--c-primary); }
+.photo-slot.filled { border-style: solid; border-color: var(--c-green); padding: 0; }
+.photo-thumb {
+  width: 100%; height: 100%; background: linear-gradient(160deg, #C7DDF6, #94a3b8);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+.photo-overlay {
+  position: absolute; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.55);
+  color: #fff; font-size: 8px; line-height: 1.35; padding: 5px 6px;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+.photo-overlay .po-time { font-size: 9px; font-weight: 600; margin-top: 1px; }
+.photo-slot .cam { font-size: 22px; color: var(--c-muted); }
+
+.map-strip {
+  height: auto; min-height: 72px; background: linear-gradient(135deg, #E5F4FA 0%, #C5E8F5 100%);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--c-border); flex-shrink: 0;
+}
+.map-view-body { flex: 1; display: flex; flex-direction: column; background: var(--c-bg); overflow-y: auto; }
+.map-placeholder {
+  flex: 0 0 240px; margin: 12px 16px; border-radius: var(--r); border: 1px solid var(--c-border);
+  background: linear-gradient(135deg, #E5F4FA 0%, #C5E8F5 100%);
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.map-route-line {
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 400'%3E%3Cpath d='M60 340 Q120 280 100 200 T180 80' fill='none' stroke='%230D88CB' stroke-width='4' stroke-dasharray='8 6'/%3E%3Ccircle cx='60' cy='340' r='10' fill='%2310B981'/%3E%3Ccircle cx='180' cy='80' r='10' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.map-pin-label {
+  position: absolute; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: var(--r-sm);
+  background: var(--c-surface); box-shadow: var(--shadow);
+}
+.map-pin-label.start { bottom: 20px; left: 16px; color: var(--c-green-dk); }
+.map-pin-label.end { top: 20px; right: 16px; color: var(--c-red); }
+.map-nav-card {
+  margin: 0 16px 12px; padding: 14px; background: var(--c-surface); border-radius: var(--r);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.map-nav-card .store-name { font-size: 15px; font-weight: 600; color: var(--c-text); }
+.map-nav-card .store-addr { font-size: 12px; color: var(--c-sub); margin-top: 4px; line-height: 1.4; }
+.map-multi-pins {
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 360'%3E%3Cpath d='M160 300 Q100 220 80 160 T120 60 Q160 40 200 80 T240 180 T180 260' fill='none' stroke='%230D88CB' stroke-width='3' stroke-dasharray='6 5' opacity='0.5'/%3E%3Ccircle cx='160' cy='300' r='9' fill='%2310B981'/%3E%3Ccircle cx='120' cy='60' r='8' fill='%23F04438'/%3E%3Ccircle cx='200' cy='80' r='8' fill='%23F04438'/%3E%3Ccircle cx='240' cy='180' r='8' fill='%23F04438'/%3E%3Ccircle cx='180' cy='260' r='8' fill='%23F04438'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.map-store-list { margin: 0 16px 16px; }
+.map-store-item {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-sm);
+  margin-bottom: 8px; font-size: 12px; box-shadow: var(--shadow);
+}
+.map-store-item .pin-num {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--c-primary); color: #fff;
+  font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.map-store-item .store-info { flex: 1; min-width: 0; }
+.map-store-item .store-info strong { display: block; font-size: 13px; font-weight: 600; color: var(--c-text); }
+.map-store-item .store-info span { color: var(--c-muted); font-size: 11px; }
+
+.payment-summary {
+  margin: 12px 16px; padding: 20px; border-radius: var(--r); color: #fff; text-align: center;
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dk) 100%); box-shadow: var(--shadow);
+}
+.payment-summary.success { background: linear-gradient(135deg, var(--c-green), var(--c-green-dk)); }
+.payment-summary .label { font-size: 12px; opacity: .9; }
+.payment-summary .amount { font-size: 28px; font-weight: 700; margin: 6px 0; letter-spacing: -.3px; }
+.payment-summary .sub { font-size: 12px; opacity: .85; }
+
+.qr-box {
+  margin: 0 16px 12px; padding: 20px;
+  background: linear-gradient(145deg, var(--c-primary-lt), var(--c-primary-ring));
+  border-radius: var(--r); border: 1px solid var(--c-primary-ring);
+  display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;
+}
+.qr-box.hidden { display: none !important; }
+.pay-cash-panel {
+  display: none; margin: 0 16px 12px; padding: 24px 20px;
+  background: var(--c-surface); border-radius: var(--r); border: 1px solid var(--c-border);
+  box-shadow: var(--shadow); text-align: center;
+}
+.pay-cash-panel.show { display: block; }
+.pay-cash-panel i { font-size: 44px; color: var(--c-green); display: block; margin-bottom: 10px; }
+.pay-cash-panel strong { display: block; font-size: 16px; color: var(--c-text); margin-bottom: 6px; }
+.pay-cash-panel p { font-size: 12px; color: var(--c-sub); line-height: 1.5; }
+.qr-amount { font-size: 24px; font-weight: 700; color: var(--c-primary); letter-spacing: -.3px; }
+.qr-id { font-size: 12px; color: var(--c-sub); }
+.qr-image {
+  width: 160px; height: 160px; border-radius: var(--r-sm); background: #fff;
+  padding: 10px; box-shadow: var(--shadow); margin: 0;
+}
+.qr-image svg { width: 140px; height: 140px; display: block; }
+.qr-status {
+  display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px;
+  background: rgba(255,255,255,.7); font-size: 13px; font-weight: 600; color: var(--c-sub);
+}
+.qr-status.success { background: var(--c-green-lt); color: var(--c-green-dk); }
+.qr-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-amber); animation: pulse 1.2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+.pay-methods { display: flex; gap: 8px; padding: 0 16px 10px; }
+.pay-method {
+  flex: 1; padding: 12px 8px; border-radius: var(--r-sm); border: 1.5px solid var(--c-border2);
+  background: var(--c-surface); text-align: center; font-size: 11px; color: var(--c-sub); cursor: pointer;
+  transition: all .15s;
+}
+.pay-method.active { border-color: var(--c-primary); background: var(--c-primary-lt); color: var(--c-primary); font-weight: 600; }
+.pay-method .pm-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+.sticky-footer {
+  flex-shrink: 0; padding: 12px 16px 16px; background: var(--c-surface);
+  border-top: 1px solid var(--c-border); display: flex; gap: 8px;
+}
+.sticky-footer .btn-delivery { flex: 1; }
+
+.empty-state { text-align: center; padding: 60px 24px; }
+.empty-icon { font-size: 40px; margin-bottom: 10px; color: var(--c-border2); }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--c-sub); margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: var(--c-muted); line-height: 1.5; }
+
+.toast {
+  position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #101828; color: #fff; padding: 10px 18px; border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 500; white-space: nowrap; opacity: 0;
+  transition: all .25s; pointer-events: none; z-index: 999;
+  display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-lg);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.hint { color: rgba(255,255,255,.45); font-size: 11px; text-align: center; margin-top: 12px; }
+
+/* ===== Báo cáo đơn giao hàng ===== */
+.rp-page-title {
+  padding: 4px 20px 10px; background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+}
+.rp-page-title h2 { font-size: 17px; font-weight: 600; color: var(--c-text); }
+.rp-page-title p { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+.rp-date-range {
+  padding: 12px 16px; background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+  display: flex; align-items: stretch; gap: 8px;
+}
+.rp-date-field {
+  flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--c-border2); border-radius: var(--r-sm);
+  background: var(--c-bg); cursor: pointer; text-align: left;
+}
+.rp-date-lbl { display: block; font-size: 10px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .3px; }
+.rp-date-val { display: block; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--c-text); }
+.rp-date-sep { display: flex; align-items: center; color: var(--c-muted); font-weight: 600; padding-top: 14px; flex-shrink: 0; }
+.rp-chips-wrap { padding-bottom: 12px; }
+.rp-list-head { padding: 14px 16px 8px; font-size: 11px; font-weight: 600; color: var(--c-muted); letter-spacing: .5px; text-transform: uppercase; }
+.rp-card {
+  margin: 0 16px 10px; padding: 14px; border-radius: var(--r); background: var(--c-surface);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow); cursor: pointer;
+}
+.rp-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.rp-card-code { font-size: 12px; font-weight: 600; color: var(--c-primary); font-family: 'SF Mono', Consolas, monospace; }
+.rp-card-store { margin-top: 3px; font-size: 15px; font-weight: 600; color: var(--c-text); }
+.rp-card-meta { font-size: 12px; color: var(--c-sub); display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 8px; }
+.rp-card-meta i { font-size: 14px; vertical-align: -2px; }
+.rp-card-foot { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-border); font-size: 12px; color: var(--c-muted); display: flex; justify-content: space-between; align-items: center; }
+.rp-card-foot strong { color: var(--c-sub); font-weight: 600; }
+.rp-card-amt { font-size: 14px; font-weight: 700; color: var(--c-text); }
+
+/* ===== OCR ===== */
+.ocr-quick-card {
+  margin: 12px 16px 12px; padding: 14px; border-radius: var(--r);
+  background: var(--c-surface); border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.ocr-quick-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.ocr-scan-icon {
+  width: 46px; height: 46px; border-radius: 12px; background: var(--c-primary-lt);
+  color: var(--c-primary); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.ocr-quick-title { font-size: 15px; font-weight: 600; color: var(--c-text); }
+.ocr-quick-meta { margin-top: 3px; font-size: 12px; color: var(--c-muted); line-height: 1.35; }
+.ocr-list-title {
+  padding: 0 16px 10px; font-size: 11px; font-weight: 600; color: var(--c-muted);
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.ocr-list-title::after { display: none; }
+.ocr-order-card {
+  margin: 0 16px 10px; padding: 14px; border-radius: var(--r);
+  background: var(--c-surface); border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.ocr-store-name { font-size: 15px; font-weight: 600; color: var(--c-text); display: flex; align-items: center; gap: 6px; }
+.ocr-scan-icon i { font-size: 24px; }
+.ocr-status-tag { display: inline-flex; margin: 6px 0 8px; border-radius: 20px; padding: 3px 9px; font-size: 11px; font-weight: 600; }
+.ocr-tag-warning { background: var(--c-amber-lt); color: #B45309; }
+.ocr-tag-info { background: var(--c-primary-lt); color: var(--c-primary); }
+.ocr-tag-success { background: var(--c-green-lt); color: var(--c-green-dk); }
+.ocr-card-line { font-size: 13px; color: var(--c-sub); padding: 2px 0; }
+.ocr-card-line.muted { font-size: 12px; color: var(--c-muted); }
+.ocr-amount-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+.ocr-amount-box { border-radius: var(--r-sm); background: var(--c-bg); border: 1px solid var(--c-border); padding: 9px; }
+.ocr-amount-label { font-size: 10px; color: var(--c-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+.ocr-amount-value { margin-top: 3px; font-size: 14px; font-weight: 700; color: var(--c-text); }
+.ocr-product-summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  border-radius: var(--r-sm); background: var(--c-bg); border: 1px solid var(--c-border);
+  padding: 9px 10px; margin-bottom: 10px;
+}
+.ocr-product-summary strong { display: block; font-size: 12px; font-weight: 600; color: var(--c-text); }
+.ocr-product-summary .sum-val { color: var(--c-primary); font-weight: 700; white-space: nowrap; font-size: 13px; }
+.ocr-card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ocr-card-actions.single { grid-template-columns: 1fr; }
+.ocr-hidden { display: none !important; }
+.sheet-layer { position: absolute; inset: 0; z-index: 60; display: none; background: var(--c-overlay); }
+.sheet-layer.open { display: block; }
+.bottom-sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; max-height: 92%; min-height: 72%;
+  background: var(--c-surface); border-radius: 22px 22px 0 0;
+  box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden;
+  animation: sheetIn .18s ease-out;
+}
+@keyframes sheetIn { from { transform: translateY(20px); opacity: .7; } to { transform: translateY(0); opacity: 1; } }
+.sheet-header { padding: 14px 16px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--c-border); }
+.sheet-title { font-size: 17px; font-weight: 600; color: var(--c-text); }
+.sheet-close {
+  width: 32px; height: 32px; border: none; border-radius: 50%;
+  background: var(--c-bg); color: var(--c-sub); font-size: 16px; cursor: pointer;
+}
+.sheet-body { flex: 1; min-height: 0; overflow-y: auto; background: var(--c-bg); padding: 14px 16px; }
+.camera-view { height: 300px; border-radius: 18px; background: linear-gradient(140deg, #1e293b, #0f172a); position: relative; overflow: hidden; }
+.scan-line {
+  position: absolute; left: 36px; right: 36px; top: 50px; height: 2px;
+  background: var(--c-primary); box-shadow: 0 0 16px rgba(13,136,203,.75); animation: scanMove 2.2s linear infinite;
+}
+@keyframes scanMove { 0% { transform: translateY(0); opacity: .35; } 45% { transform: translateY(170px); opacity: 1; } 100% { transform: translateY(0); opacity: .35; } }
+.doc-frame { position: absolute; left: 32px; right: 32px; top: 40px; bottom: 36px; border-radius: 12px; border: 2px dashed rgba(255,255,255,.82); }
+.paper { position: absolute; left: 50px; right: 50px; top: 58px; bottom: 54px; border-radius: 8px; background: #f9fafb; transform: rotate(-1.5deg); padding: 16px; }
+.paper-line { height: 7px; border-radius: 99px; background: #d5dce7; margin-bottom: 10px; }
+.paper-line.short { width: 55%; } .paper-line.mid { width: 78%; }
+.paper-total { margin-top: 14px; height: 24px; border-radius: 8px; background: var(--c-green-lt); border: 1px solid #A7F3D0; }
+.camera-caption { margin-top: 12px; border-radius: 12px; background: var(--c-surface); border: 1px solid var(--c-border); padding: 12px; }
+.caption-title { font-size: 13px; font-weight: 600; color: var(--c-text); }
+.caption-text { margin-top: 4px; font-size: 12px; color: var(--c-muted); line-height: 1.45; }
+.sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--c-surface); padding: 12px 16px 16px; border-top: 1px solid var(--c-border); }
+.sheet-actions.hidden { display: none; }
+.ocr-camera, .ocr-result-edit, .ocr-result-preview { display: none; }
+.ocr-camera.active, .ocr-result-edit.active, .ocr-result-preview.active { display: block; }
+.sheet-actions.single-col { grid-template-columns: 1fr; padding-top: 0; }
+.preview-link-row { padding: 0 0 12px; }
+.preview-link-btn {
+  width: 100%; padding: 11px; border-radius: var(--r-sm); border: 1.5px solid var(--c-border2);
+  background: var(--c-surface); color: var(--c-primary); font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.preview-link-btn i { margin-right: 4px; }
+.result-summary { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 13px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.result-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.result-code { font-size: 16px; font-weight: 700; color: var(--c-text); }
+.confidence { border-radius: 20px; background: var(--c-green-lt); color: var(--c-green-dk); font-size: 11px; font-weight: 700; padding: 5px 8px; }
+.editable-note { margin-bottom: 10px; border-radius: 10px; background: var(--c-amber-lt); border: 1px solid #F5D58B; color: #8A5700; padding: 10px 12px; font-size: 12px; line-height: 1.4; font-weight: 600; }
+.field-card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); }
+.field-row { display: grid; grid-template-columns: 96px 1fr; gap: 8px; min-height: 44px; padding: 10px 12px; border-bottom: 1px solid var(--c-border); align-items: center; }
+.field-row:last-child { border-bottom: none; }
+.field-label { color: var(--c-muted); font-size: 12px; font-weight: 600; }
+.edit-field { width: 100%; border: 1px solid var(--c-border2); background: var(--c-bg); border-radius: var(--r-sm); padding: 8px 10px; color: var(--c-text); font-size: 13px; font-weight: 600; text-align: right; outline: none; }
+.edit-field:focus { border-color: var(--c-primary); box-shadow: 0 0 0 3px var(--c-primary-ring); background: var(--c-surface); }
+textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
+.product-card-ocr { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); }
+.product-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; border-bottom: 1px solid var(--c-border); }
+.product-card-title { font-size: 14px; font-weight: 600; }
+.product-card-count { border-radius: 20px; background: var(--c-primary-lt); color: var(--c-primary); font-size: 11px; font-weight: 700; padding: 5px 8px; }
+.product-item-ocr { padding: 11px 12px; border-bottom: 1px solid var(--c-border); }
+.product-item-ocr:last-of-type { border-bottom: none; }
+.product-item-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--c-border);
+}
+.product-item-foot .product-total-wrap { flex: 1; min-width: 0; }
+.product-item-foot .remove-product-btn { width: auto; min-width: 56px; margin-top: 0; padding: 0 10px; flex-shrink: 0; }
+.field-readonly {
+  width: 100%; border: none; background: var(--c-bg); border-radius: var(--r-sm);
+  padding: 8px 10px; color: var(--c-text); font-size: 13px; font-weight: 600; text-align: right;
+}
+.mini-label { display: block; margin-bottom: 3px; color: var(--c-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+.product-input { width: 100%; border: 1px solid var(--c-border2); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); outline: none; padding: 7px 8px; font-size: 12px; font-weight: 600; }
+.product-input:focus { border-color: var(--c-primary); background: var(--c-surface); box-shadow: 0 0 0 3px var(--c-primary-ring); }
+.product-calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+.product-total-input { background: var(--c-primary-lt); text-align: right; }
+.remove-product-btn { width: 100%; min-height: 28px; margin-top: 6px; border: 1px solid #FECACA; border-radius: var(--r-sm); background: var(--c-red-lt); color: var(--c-red); font-size: 11px; font-weight: 700; cursor: pointer; }
+.product-add-row { padding: 10px 12px; border-bottom: 1px solid var(--c-border); }
+.product-total-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; background: var(--c-bg); border-top: 1px solid var(--c-border); }
+.delivery-note-ocr { background: var(--c-primary-lt); border: 1px solid var(--c-primary-ring); border-radius: 12px; padding: 12px; margin-bottom: 6px; }
+.delivery-note-ocr strong { display: block; font-size: 13px; font-weight: 600; color: var(--c-text); margin-bottom: 4px; }
+.delivery-note-ocr span { font-size: 12px; color: var(--c-sub); line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="phone-screen" id="phoneScreen">
+
+    <!-- ===== VIEW: Danh sách đơn ===== -->
+    <div class="view active" id="viewList">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="app-top">
+        <div class="driver-bar">
+          <div class="driver-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div class="driver-info">
+            <div class="driver-greeting">Xin chào 👋</div>
+            <div class="driver-name">Nguyễn Văn Tài</div>
+            <div class="driver-meta">
+              <span class="driver-role">Tài xế</span>
+            </div>
+          </div>
+          <div class="driver-date">
+            <span class="day-label">Hôm nay</span>
+            16/06/2026
+          </div>
+        </div>
+      </div>
+      <div class="content pad-nav" id="listContent">
+        <div class="summary-strip">
+          <div class="sum-item"><div class="sum-num">5</div><div class="sum-lbl">Hôm nay</div></div>
+          <div class="sum-item"><div class="sum-num">1</div><div class="sum-lbl">Đang giao</div></div>
+          <div class="sum-item"><div class="sum-num">1</div><div class="sum-lbl">Hoàn thành</div></div>
+        </div>
+        <div class="list-search-wrap">
+          <input class="list-search" id="listSearch" type="text" placeholder="Tìm mã CH, tên CH, SĐT, mã đơn giao hàng"/>
+        </div>
+        <div class="status-chips-wrap" id="statusChipsWrap">
+          <div class="filter-chips" id="filterChipsRow1">
+            <button class="chip active" type="button" data-filter="all">Tất cả <span class="cnt">5</span></button>
+            <button class="chip" type="button" data-filter="wait">Chưa giao <span class="cnt">2</span></button>
+            <button class="chip" type="button" data-filter="delivering">Đang giao <span class="cnt">1</span></button>
+          </div>
+          <div class="filter-chips filter-chips-row2" id="filterChipsRow2">
+            <button class="chip" type="button" data-filter="delivered">Hoàn thành <span class="cnt">1</span></button>
+            <button class="chip" type="button" data-filter="failed">Thất bại <span class="cnt">0</span></button>
+          </div>
+        </div>
+        <div class="section-head-row" id="listSectionRow">
+          <div class="section-head" id="listSectionTitle">Đơn cần giao hôm nay <span class="sub">(5/5)</span></div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-reject-mode" id="btnRejectMode" type="button">Từ chối nhận đơn</button>
+            <button class="section-map-btn" type="button" data-go="listmap" title="Xem bản đồ cửa hàng"><i class="ti ti-map-2"></i></button>
+          </div>
+        </div>
+        <div id="orderCards">
+
+          <div class="delivery-card" data-status="wait" data-search="hao sua store 0328839644 dlo-20260616-001"
+            data-order="DLO-20260616-001" data-so="SO-20260615-8821" data-source="DMS" data-pxk=""
+            data-store-code="CH-HCM-8821" data-store-name="Hào Sữa Store" data-phone="0328839644"
+            data-address="34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM" data-amount="2450000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Hào Sữa Store <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-001</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">1.2 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0328839644</div>
+              <div class="delivery-address">34 Hoàng Việt, Phường 04, Quận Tân Bình, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">2.450.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="Hào Sữa Store" data-address="34 Hoàng Việt, Phường 04, Quận Tân Bình, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info" data-order="DLO-20260616-001">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="delivering" data-search="ch minh phat 0901234567 dlo-20260616-004"
+            data-order="DLO-20260616-004" data-so="SO-20260614-7710" data-source="Ecom" data-pxk=""
+            data-store-code="CH-HCM-4412" data-store-name="CH Minh Phát" data-phone="0901234567"
+            data-address="120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM" data-amount="18750000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">CH Minh Phát <span class="badge badge-delivering">Đang giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-004</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">3.8 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0901234567</div>
+              <div class="delivery-address">120 Lý Tự Trọng, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">18.750.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="CH Minh Phát" data-address="120 Lý Tự Trọng, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery secondary" type="button" data-go="photo" data-resume="1">Tiếp tục giao</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="wait" data-search="tap hoa co lan 0912345678 dlo-20260616-007"
+            data-order="DLO-20260616-007" data-so="SO-20260615-9033" data-source="Merchant" data-pxk=""
+            data-store-code="CH-HCM-3301" data-store-name="Tạp hoá Cô Lan" data-phone="0912345678"
+            data-address="56 Nguyễn Huệ, P. Bến Nghé, Q. 1, TP.HCM" data-amount="890000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Tạp hoá Cô Lan <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-007</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">5.1 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0912345678</div>
+              <div class="delivery-address">56 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">890.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="Tạp hoá Cô Lan" data-address="56 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="delivered" data-search="tap hoa ong nam 0987654321 dlo-20260616-003"
+            data-order="DLO-20260616-003" data-so="SO-20260613-6602" data-source="DMS" data-pxk=""
+            data-store-code="CH-HCM-1190" data-store-name="Tạp hoá Ông Năm" data-phone="0987654321"
+            data-address="88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM" data-amount="1120000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Tạp hoá Ông Năm <span class="badge badge-delivered">Hoàn thành</span></div>
+                <div class="delivery-card-meta">DLO-20260616-003</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">2.4 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0987654321</div>
+              <div class="delivery-address">88 Cách Mạng Tháng 8, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">1.120.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-paid">Đã thanh toán</span>
+            </div>
+            <div class="delivery-card-actions">
+              <button class="btn-delivery secondary" type="button" data-go="done">Xem chi tiết</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="wait" data-prepaid="1" data-prepaid-ref="EP-20260612-557901"
+            data-search="ch lan anh 0909887766 dlo-20260616-010"
+            data-order="DLO-20260616-010" data-so="SO-20260612-9901" data-source="Ecom" data-pxk=""
+            data-store-code="CH-HCM-7788" data-store-name="CH Lan Anh" data-phone="0909887766"
+            data-address="45 Nguyễn Thị Minh Khai, P. Bến Nghé, Q. 1, TP.HCM" data-amount="8450000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">CH Lan Anh <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-010</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">4.2 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0909887766</div>
+              <div class="delivery-address">45 Nguyễn Thị Minh Khai, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">8.450.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-paid">Đã thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="CH Lan Anh" data-address="45 Nguyễn Thị Minh Khai, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="bottom-msg" id="listBottomMsg">Đã hết thông tin</div>
+        <div class="empty-state" id="listEmpty" style="display:none;">
+          <div class="empty-icon"><i class="ti ti-package"></i></div>
+          <div class="empty-title">Không có đơn cần giao</div>
+          <div class="empty-desc">Bạn chưa được gán đơn giao hàng nào cho hôm nay.<br>Vui lòng liên hệ điều phối NPP.</div>
+        </div>
+      </div>
+      <div class="reject-bar" id="rejectBar">
+        <div class="reject-bar-info" id="rejectCount">0 đơn đã chọn</div>
+        <button class="btn-delivery secondary" type="button" id="btnCancelReject">Hủy</button>
+        <button class="btn-delivery" type="button" id="btnConfirmReject" disabled>Xác nhận</button>
+      </div>
+      <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" data-nav="list" data-go="list"><i class="ti ti-truck-delivery"></i>Giao hàng</div>
+        <div class="nav-item" data-nav="report" data-go="report"><i class="ti ti-chart-bar"></i>Báo cáo</div>
+        <div class="nav-item" data-nav="ocr" data-go="ocr"><i class="ti ti-scan"></i>OCR</div>
+        <div class="nav-item" data-nav="other"><i class="ti ti-layout-grid"></i>Khác</div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: OCR đơn giao hàng ===== -->
+    <div class="view" id="viewOcr">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="app-top">
+        <div class="driver-bar">
+          <div class="driver-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div class="driver-info">
+            <div class="driver-greeting">Xin chào 👋</div>
+            <div class="driver-name">Nguyễn Văn Tài</div>
+            <div class="driver-meta"><span class="driver-role">Tài xế</span></div>
+          </div>
+          <div class="driver-date"><span class="day-label">Hôm nay</span>16/06/2026</div>
+        </div>
+      </div>
+      <div class="content pad-nav" style="background:var(--neutral-50);">
+        <div class="ocr-quick-card" id="ocrQuickScanCard">
+          <div class="ocr-quick-head">
+            <div class="ocr-scan-icon"><i class="ti ti-scan"></i></div>
+            <div>
+              <div class="ocr-quick-title">Quét PXK/Đơn hàng</div>
+              <div class="ocr-quick-meta">OCR thông tin đơn → tạo đơn giao → chuyển sang tab Giao hàng.</div>
+            </div>
+          </div>
+          <button class="btn-delivery" type="button" id="scanButton">Quét OCR</button>
+        </div>
+        <div class="ocr-list-title" id="ocrListTitle">Đơn đã quét (2)</div>
+        <div id="ocrOrderList">
+          <article class="ocr-order-card" data-scan-id="scan-001">
+            <div class="ocr-order-top">
+              <div class="ocr-store-name"><i class="ti ti-map-pin"></i> Hào Sữa Store</div>
+            </div>
+            <div class="ocr-status-tag ocr-tag-success">Đã tạo DLO-20260616-001</div>
+            <div class="ocr-card-line">0328839644</div>
+            <div class="ocr-card-line muted">34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh</div>
+            <div class="ocr-amount-row">
+              <div class="ocr-amount-box"><div class="ocr-amount-label">Mã chứng từ</div><div class="ocr-amount-value">PXK-09126</div></div>
+              <div class="ocr-amount-box"><div class="ocr-amount-label">Tổng tiền đơn</div><div class="ocr-amount-value">1.850.000đ</div></div>
+            </div>
+            <div class="ocr-product-summary">
+              <div><strong>Sản phẩm OCR</strong><span style="display:block;color:var(--neutral-500);">3 dòng hàng · 38 đơn vị</span></div>
+              <div class="sum-val">1.850.000đ</div>
+            </div>
+            <div class="ocr-card-actions single">
+              <button class="btn-delivery secondary" type="button" data-open-result data-readonly="1">Xem lại OCR</button>
+            </div>
+          </article>
+          <article class="ocr-order-card" data-scan-id="scan-002">
+            <div class="ocr-order-top">
+              <div class="ocr-store-name"><i class="ti ti-map-pin"></i> CH ip 140</div>
+            </div>
+            <div class="ocr-status-tag ocr-tag-success">Đã tạo DLO-20260616-008</div>
+            <div class="ocr-card-line">0399988940</div>
+            <div class="ocr-card-line muted">12 Lê Lợi, Phường Bến Thành, TP. Hồ Chí Minh</div>
+            <div class="ocr-amount-row">
+              <div class="ocr-amount-box"><div class="ocr-amount-label">Mã chứng từ</div><div class="ocr-amount-value">SO-240616</div></div>
+              <div class="ocr-amount-box"><div class="ocr-amount-label">Tổng tiền đơn</div><div class="ocr-amount-value">920.000đ</div></div>
+            </div>
+            <div class="ocr-product-summary">
+              <div><strong>Sản phẩm OCR</strong><span style="display:block;color:var(--neutral-500);">2 dòng hàng · 15 đơn vị</span></div>
+              <div class="sum-val">920.000đ</div>
+            </div>
+            <div class="ocr-card-actions single">
+              <button class="btn-delivery secondary" type="button" data-open-result data-readonly="1">Xem lại OCR</button>
+            </div>
+          </article>
+        </div>
+        <div class="empty-state" id="ocrEmpty" style="display:none;padding:40px 24px;">
+          <div class="empty-icon"><i class="ti ti-scan"></i></div>
+          <div class="empty-title">Chưa có đơn quét</div>
+          <div class="empty-desc">Quét PXK hoặc đơn hàng để lưu lại thông tin OCR tại đây.</div>
+        </div>
+      </div>
+      <div class="bottom-nav" id="bottomNavOcr">
+        <div class="nav-item" data-nav="list" data-go="list"><i class="ti ti-truck-delivery"></i>Giao hàng</div>
+        <div class="nav-item" data-nav="report" data-go="report"><i class="ti ti-chart-bar"></i>Báo cáo</div>
+        <div class="nav-item active" data-nav="ocr" data-go="ocr"><i class="ti ti-scan"></i>OCR</div>
+        <div class="nav-item" data-nav="other"><i class="ti ti-layout-grid"></i>Khác</div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Báo cáo đơn giao hàng ===== -->
+    <div class="view" id="viewReport">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="app-top">
+        <div class="driver-bar">
+          <div class="driver-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div class="driver-info">
+            <div class="driver-greeting">Xin chào 👋</div>
+            <div class="driver-name">Nguyễn Văn Tài</div>
+            <div class="driver-meta"><span class="driver-role">Tài xế</span></div>
+          </div>
+          <div class="driver-date"><span class="day-label">Hôm nay</span>16/06/2026</div>
+        </div>
+        <div class="rp-page-title">
+          <h2>Báo cáo</h2>
+          <p>Danh sách đơn giao hàng theo khoảng thời gian</p>
+        </div>
+      </div>
+      <div class="content pad-nav">
+        <div class="rp-date-range">
+          <button class="rp-date-field" type="button" id="rpFromDate">
+            <span class="rp-date-lbl">Từ ngày</span>
+            <span class="rp-date-val" id="rpFromDateVal">01/06/2026</span>
+          </button>
+          <span class="rp-date-sep">–</span>
+          <button class="rp-date-field" type="button" id="rpToDate">
+            <span class="rp-date-lbl">Đến ngày</span>
+            <span class="rp-date-val" id="rpToDateVal">16/06/2026</span>
+          </button>
+        </div>
+        <div class="status-chips-wrap rp-chips-wrap" id="rpStatusChipsWrap">
+          <div class="filter-chips" id="rpChipsRow1">
+            <button class="chip active" type="button" data-rp-filter="all">Tất cả <span class="cnt">6</span></button>
+            <button class="chip" type="button" data-rp-filter="wait">Chưa giao <span class="cnt">1</span></button>
+            <button class="chip" type="button" data-rp-filter="delivering">Đang giao <span class="cnt">1</span></button>
+          </div>
+          <div class="filter-chips filter-chips-row2" id="rpChipsRow2">
+            <button class="chip" type="button" data-rp-filter="delivered">Hoàn thành <span class="cnt">3</span></button>
+            <button class="chip" type="button" data-rp-filter="failed">Thất bại <span class="cnt">1</span></button>
+          </div>
+        </div>
+        <div class="rp-list-head" id="rpListHead">Danh sách đơn giao hàng (6)</div>
+        <div id="rpOrderList">
+          <article class="rp-card" data-status="delivered" data-date="2026-06-16" data-order="DLO-20260616-003">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260616-003</div><div class="rp-card-store">Tạp hoá Ông Năm</div></div>
+              <span class="badge badge-delivered">Hoàn thành</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0987654321</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">1.120.000 đ</span><span class="delivery-pay-status is-paid">Đã thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="delivering" data-date="2026-06-16" data-order="DLO-20260616-004">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260616-004</div><div class="rp-card-store">CH Minh Phát</div></div>
+              <span class="badge badge-delivering">Đang giao</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0901234567</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>Ecom</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">18.750.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="wait" data-date="2026-06-16" data-order="DLO-20260616-001">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260616-001</div><div class="rp-card-store">Hào Sữa Store</div></div>
+              <span class="badge badge-wait">Chưa giao</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0328839644</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">2.450.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="delivered" data-date="2026-06-15" data-order="DLO-20260615-021">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260615-021</div><div class="rp-card-store">CH Minh Phát</div></div>
+              <span class="badge badge-delivered">Hoàn thành</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 15/06/2026</span><span><i class="ti ti-phone"></i> 0901234567</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>Ecom</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">8.750.000 đ</span><span class="delivery-pay-status is-paid">Đã thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="failed" data-date="2026-06-14" data-order="DLO-20260614-008">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260614-008</div><div class="rp-card-store">Tạp hoá Cô Lan</div></div>
+              <span class="badge badge-failed">Thất bại</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 14/06/2026</span><span><i class="ti ti-phone"></i> 0912345678</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>Merchant</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">890.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="delivered" data-date="2026-06-13" data-order="DLO-20260613-055">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260613-055</div><div class="rp-card-store">Siêu thị Mai Anh</div></div>
+              <span class="badge badge-delivered">Hoàn thành</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 13/06/2026</span><span><i class="ti ti-phone"></i> 0905112233</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">3.280.000 đ</span><span class="delivery-pay-status is-paid">Đã thanh toán</span></span></div>
+          </article>
+        </div>
+        <div class="bottom-msg" id="rpBottomMsg">Đã hết thông tin</div>
+        <div class="empty-state" id="rpEmpty" style="display:none;">
+          <div class="empty-icon"><i class="ti ti-package"></i></div>
+          <div class="empty-title">Không có đơn giao hàng</div>
+          <div class="empty-desc">Không tìm thấy đơn giao hàng nào<br>trong khoảng thời gian và trạng thái đã chọn.</div>
+        </div>
+      </div>
+      <div class="bottom-nav" id="bottomNavReport">
+        <div class="nav-item" data-nav="list" data-go="list"><i class="ti ti-truck-delivery"></i>Giao hàng</div>
+        <div class="nav-item active" data-nav="report" data-go="report"><i class="ti ti-chart-bar"></i>Báo cáo</div>
+        <div class="nav-item" data-nav="ocr" data-go="ocr"><i class="ti ti-scan"></i>OCR</div>
+        <div class="nav-item" data-nav="other"><i class="ti ti-layout-grid"></i>Khác</div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Chi tiết đơn giao hàng (Báo cáo) ===== -->
+    <div class="view" id="viewReportDetail">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Chi tiết đơn giao hàng</h1>
+          <div class="step" id="rpDetailCode">DLO-20260616-003</div>
+        </div>
+      </div>
+      <div class="content pad-footer">
+        <div class="info-card" style="margin-top:12px;">
+          <div class="info-card-title">Thông tin đơn</div>
+          <div class="info-row"><span class="info-label">Mã đơn giao hàng</span><span class="info-value mono" id="rpDetOrder">DLO-20260616-003</span></div>
+          <div class="info-row"><span class="info-label">Trạng thái</span><span class="info-value" id="rpDetStatus"><span class="badge badge-delivered">Hoàn thành</span></span></div>
+          <div class="info-row"><span class="info-label">Ngày giao</span><span class="info-value" id="rpDetDate">16/06/2026</span></div>
+          <div class="info-row"><span class="info-label">Nguồn đơn hàng</span><span class="info-value" id="rpDetSource">DMS</span></div>
+          <div class="info-row"><span class="info-label">Mã SO</span><span class="info-value mono" id="rpDetSo">SO-20260613-6602</span></div>
+          <div class="info-row"><span class="info-label">PXK/HD</span><span class="info-value mono" id="rpDetPxk">—</span></div>
+          <div class="info-row"><span class="info-label">Tiền cần thu</span><span class="info-value info-value-amount-pay"><span class="highlight" id="rpDetAmount">1.120.000 đ</span><span class="info-pay-sep">·</span><span class="delivery-pay-status is-paid" id="rpDetPayStatus">Đã thanh toán</span></span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Cửa hàng</div>
+          <div class="info-row"><span class="info-label">Mã CH</span><span class="info-value mono" id="rpDetStoreCode">CH-HCM-1190</span></div>
+          <div class="info-row"><span class="info-label">Tên CH</span><span class="info-value" id="rpDetStoreName">Tạp hoá Ông Năm</span></div>
+          <div class="info-row"><span class="info-label">SĐT</span><span class="info-value" id="rpDetPhone">0987654321</span></div>
+          <div class="info-row"><span class="info-label">Địa chỉ</span><span class="info-value" id="rpDetAddress">88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM</span></div>
+        </div>
+        <div class="delivery-note-ocr" id="rpDetNote" style="margin:12px 16px;">
+          <strong>Ghi chú</strong>
+          <span id="rpDetNoteText">Giao hàng và thu tiền thành công lúc 09:44.</span>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery" type="button" data-go="report">Quay lại báo cáo</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Bản đồ tất cả cửa hàng ===== -->
+    <div class="view" id="viewListMap">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Bản đồ cửa hàng</h1>
+          <div class="step">5 cửa hàng cần giao hôm nay</div>
+        </div>
+      </div>
+      <div class="map-view-body">
+        <div class="map-placeholder">
+          <div class="map-multi-pins"></div>
+          <span class="map-pin-label start"><i class="ti ti-current-location"></i> Vị trí của bạn</span>
+        </div>
+        <div class="map-store-list">
+          <div class="map-store-item"><span class="pin-num">1</span><div class="store-info"><strong>Hào Sữa Store</strong><span>1.2 km · Chưa giao</span></div></div>
+          <div class="map-store-item"><span class="pin-num">2</span><div class="store-info"><strong>CH Minh Phát</strong><span>3.8 km · Đang giao</span></div></div>
+          <div class="map-store-item"><span class="pin-num">3</span><div class="store-info"><strong>Tạp hoá Cô Lan</strong><span>5.1 km · Chưa giao</span></div></div>
+          <div class="map-store-item"><span class="pin-num">4</span><div class="store-info"><strong>Tạp hoá Ông Năm</strong><span>2.4 km · Hoàn thành</span></div></div>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery" type="button" data-go="list">Quay lại danh sách</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Bản đồ dẫn đường ===== -->
+    <div class="view" id="viewMap">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Bản đồ dẫn đường</h1>
+          <div class="step">Từ vị trí hiện tại → cửa hàng</div>
+        </div>
+      </div>
+      <div class="map-view-body">
+        <div class="map-placeholder">
+          <div class="map-route-line"></div>
+          <span class="map-pin-label start"><i class="ti ti-current-location"></i> Vị trí của bạn</span>
+          <span class="map-pin-label end">🏪 <span id="mapStoreName">Cửa hàng</span></span>
+        </div>
+        <div class="map-nav-card">
+          <div class="store-name" id="mapStoreTitle">—</div>
+          <div class="store-addr" id="mapStoreAddr">—</div>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery secondary" type="button" data-go="list">Quay lại</button>
+        <button class="btn-delivery" type="button" id="btnOpenNav">Mở Google Maps</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Thông tin đơn (Bước 1) ===== -->
+    <div class="view" id="viewInfo">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Giao hàng</h1>
+          <div class="step" id="infoStepLabel">Bước 1/3 · Thông tin đơn</div>
+        </div>
+      </div>
+      <div class="step-bar" id="stepBarInfo">
+        <div class="step-item active"><span class="step-line"></span>Thông tin</div>
+        <div class="step-item"><span class="step-line"></span>Chụp ảnh</div>
+        <div class="step-item" id="infoStepPayment">Thanh toán</div>
+      </div>
+      <div class="content pad-footer">
+        <div class="prepaid-notice" id="infoPrepaidNotice" style="display:none;">
+          <strong>Đơn đã thanh toán khi đặt hàng</strong>
+          Khách đã thanh toán trước — sau khi chụp ảnh giao hàng, hệ thống hoàn tất đơn mà không cần quét QR.
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Thông tin đơn giao</div>
+          <div class="info-row"><span class="info-label">Mã đơn giao</span><span class="info-value mono" id="infoOrderCode">DLO-20260616-001</span></div>
+          <div class="info-row"><span class="info-label">Mã SO gốc</span><span class="info-value mono" id="infoSoCode">SO-20260615-8821</span></div>
+          <div class="info-row"><span class="info-label">Nguồn đơn hàng</span><span class="info-value" id="infoOrderSource">DMS</span></div>
+          <div class="info-row" id="infoPxkRow"><span class="info-label">PXK/HD</span><span class="info-value mono" id="infoPxkDoc">—</span></div>
+          <div class="info-row"><span class="info-label">Trạng thái</span><span class="info-value"><span class="badge badge-wait" id="infoStatusBadge">Chưa giao</span></span></div>
+          <div class="info-row"><span class="info-label">Ngày giao</span><span class="info-value">16/06/2026</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Khách hàng / Cửa hàng</div>
+          <div class="info-row"><span class="info-label">Mã CH</span><span class="info-value mono" id="infoStoreCode">CH-HCM-8821</span></div>
+          <div class="info-row"><span class="info-label">Tên CH</span><span class="info-value" id="infoStoreName">Hào Sữa Store</span></div>
+          <div class="info-row"><span class="info-label">SĐT</span><span class="info-value" id="infoPhone">0328839644</span></div>
+          <div class="info-row"><span class="info-label">Địa chỉ</span><span class="info-value" id="infoAddress">34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM</span></div>
+          <div class="info-row"><span class="info-label">Khoảng cách</span><span class="info-value highlight">1.2 km</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Sản phẩm (3 mặt hàng)</div>
+          <div class="product-list">
+            <div class="product-item"><div class="product-thumb">🥛</div><div class="product-info"><div class="product-name">Sữa tươi TH 180ml</div><div class="product-sku">SKU-TH-SUA180 · Thùng</div><div class="product-qty">SL: 24</div></div><div class="product-price">960.000 đ</div></div>
+            <div class="product-item"><div class="product-thumb">🧃</div><div class="product-info"><div class="product-name">Nước cam Tropicana 1L</div><div class="product-sku">SKU-TP-CAM1L · Chai</div><div class="product-qty">SL: 12</div></div><div class="product-price">720.000 đ</div></div>
+            <div class="product-item"><div class="product-thumb">🍪</div><div class="product-info"><div class="product-name">Bánh quy Oreo 133g</div><div class="product-sku">SKU-OR-133G · Gói</div><div class="product-qty">SL: 20</div></div><div class="product-price">770.000 đ</div></div>
+          </div>
+          <div class="info-row" style="background:var(--neutral-50);">
+            <span class="info-label">Tổng tiền</span>
+            <span class="info-value info-value-amount-pay">
+              <span class="highlight" id="infoTotalAmount">2.450.000 đ</span>
+              <span class="info-pay-sep">·</span>
+              <span class="delivery-pay-status is-unpaid" id="infoPayStatus">Chưa thanh toán</span>
+            </span>
+          </div>
+          <div class="info-row" id="infoCodRow"><span class="info-label">Cần thu COD</span><span class="info-value highlight" style="color:var(--warning-700);" id="infoCodAmount">2.450.000 đ</span></div>
+          <div class="info-row" id="infoPrepaidRefRow" style="display:none;"><span class="info-label">Mã GD</span><span class="info-value mono" id="infoPrepaidRef">—</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Ghi chú giao hàng</div>
+          <div class="info-row"><span class="info-value" style="color:var(--neutral-600);font-weight:400;">Giao buổi sáng, gọi trước 15 phút. Cửa hàng đóng cửa sau 11h30.</span></div>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery secondary" type="button" onclick="showToast('Đang gọi 0328839644...')">Gọi KH</button>
+        <button class="btn-delivery" type="button" data-go="photo" id="btnStartDelivery">Bắt đầu giao hàng</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Chụp ảnh (Bước 2) ===== -->
+    <div class="view" id="viewPhoto">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="info"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Giao hàng</h1>
+          <div class="step" id="photoStepLabel">Bước 2/3 · Chụp ảnh giao hàng</div>
+        </div>
+      </div>
+      <div class="step-bar" id="stepBarPhoto">
+        <div class="step-item done"><span class="step-line"></span>Thông tin</div>
+        <div class="step-item active"><span class="step-line"></span>Chụp ảnh</div>
+        <div class="step-item" id="photoStepPayment">Thanh toán</div>
+      </div>
+      <div class="content pad-footer">
+        <div class="info-card" style="margin-top:10px;">
+          <div class="info-card-title" id="photoOrderTitle">DLO-20260616-001 · Hào Sữa Store</div>
+          <div class="info-row"><span class="info-label">Trạng thái</span><span class="info-value"><span class="badge badge-delivering">Đang giao</span></span></div>
+          <div class="info-row">
+            <span class="info-label">Tổng tiền</span>
+            <span class="info-value info-value-amount-pay">
+              <span class="highlight" id="photoTotalAmount">2.450.000 đ</span>
+              <span class="info-pay-sep">·</span>
+              <span class="delivery-pay-status is-unpaid" id="photoPayStatus">Chưa thanh toán</span>
+            </span>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">* Ảnh giao hàng <span style="font-weight:400;color:var(--neutral-500);">(bắt buộc ≥ 1, tối đa 5)</span></div>
+          <div class="photo-grid" id="photoGrid">
+            <div class="photo-slot" data-slot="0"><i class="ti ti-camera cam"></i>Chụp ảnh</div>
+            <div class="photo-slot" data-slot="1"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="2"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="3"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="4"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Chữ ký xác nhận (tuỳ chọn)</div>
+          <div style="margin:12px;height:100px;border:1.5px dashed var(--neutral-300);border-radius:10px;background:var(--neutral-50);display:flex;align-items:center;justify-content:center;color:var(--neutral-400);font-size:13px;">Ký tên tại đây</div>
+        </div>
+      </div>
+      <div class="exception-actions">
+        <button class="btn-delivery secondary danger" type="button" id="btnNotReceive">Không nhận</button>
+        <button class="btn-delivery secondary warn" type="button" id="btnReschedule">Hẹn giao lại</button>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery secondary" type="button" id="btnAddPhoto">Chụp thêm</button>
+        <button class="btn-delivery" type="button" id="btnToPayment" disabled>Tiếp tục thanh toán</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Thanh toán (Bước 3) ===== -->
+    <div class="view" id="viewPayment">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="photo"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Giao hàng</h1>
+          <div class="step">Bước 3/3 · Thanh toán</div>
+        </div>
+      </div>
+      <div class="step-bar">
+        <div class="step-item done"><span class="step-line"></span>Thông tin</div>
+        <div class="step-item done"><span class="step-line"></span>Chụp ảnh</div>
+        <div class="step-item active">Thanh toán</div>
+      </div>
+      <div class="content pad-footer">
+        <div class="payment-summary" id="paySummary">
+          <div class="label">Số tiền cần thu</div>
+          <div class="amount">2.450.000 đ</div>
+          <div class="sub">DLO-20260616-001 · Hào Sữa Store</div>
+        </div>
+        <div class="pay-methods" id="payMethods">
+          <button class="pay-method active" type="button" data-pay="qr"><span class="pm-icon"><i class="ti ti-qrcode"></i></span>EcoPay QR</button>
+          <button class="pay-method" type="button" data-pay="cash"><span class="pm-icon"><i class="ti ti-cash"></i></span>Thu tiền mặt</button>
+        </div>
+        <div class="qr-box" id="qrBox">
+          <div class="qr-image" aria-hidden="true">
+            <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
+              <rect x="18" y="18" width="30" height="30" rx="2" fill="#0D88CB"/>
+              <rect x="82" y="8" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
+              <rect x="92" y="18" width="30" height="30" rx="2" fill="#0D88CB"/>
+              <rect x="8" y="82" width="50" height="50" rx="4" fill="none" stroke="#0D88CB" stroke-width="4"/>
+              <rect x="18" y="92" width="30" height="30" rx="2" fill="#0D88CB"/>
+              <rect x="82" y="82" width="8" height="8" fill="#0D88CB"/><rect x="94" y="82" width="8" height="8" fill="#0D88CB"/>
+              <rect x="106" y="82" width="8" height="8" fill="#0D88CB"/><rect x="118" y="82" width="14" height="8" fill="#0D88CB"/>
+              <rect x="82" y="94" width="8" height="8" fill="#0D88CB"/><rect x="106" y="94" width="8" height="8" fill="#0D88CB"/>
+              <rect x="82" y="106" width="8" height="8" fill="#0D88CB"/><rect x="94" y="106" width="20" height="8" fill="#0D88CB"/>
+              <rect x="118" y="106" width="14" height="8" fill="#0D88CB"/><rect x="82" y="118" width="20" height="14" fill="#0D88CB"/>
+              <rect x="106" y="118" width="8" height="14" fill="#0D88CB"/><rect x="66" y="8" width="8" height="8" fill="#0D88CB"/>
+              <rect x="66" y="20" width="8" height="8" fill="#0D88CB"/><rect x="66" y="44" width="8" height="8" fill="#0D88CB"/>
+              <rect x="66" y="56" width="8" height="20" fill="#0D88CB"/><rect x="66" y="82" width="8" height="8" fill="#0D88CB"/>
+            </svg>
+          </div>
+          <div class="qr-amount">2.450.000 VNĐ</div>
+          <div class="qr-id">DLO-20260616-001 · EcoPay</div>
+          <div class="qr-status" id="qrStatus"><i class="ti ti-clock"></i> Chờ khách quét thanh toán...</div>
+        </div>
+        <div class="pay-cash-panel" id="cashPanel">
+          <i class="ti ti-cash"></i>
+          <strong>Thu tiền mặt</strong>
+          <p>Xác nhận đã thu đủ <strong>2.450.000 VNĐ</strong> từ khách hàng<br>trước khi hoàn tất giao hàng.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Kiểm tra trước khi thu</div>
+          <div class="info-row"><span class="info-label">Tổng đơn</span><span class="info-value">2.450.000 đ</span></div>
+          <div class="info-row"><span class="info-label">Còn phải thu</span><span class="info-value highlight" style="color:var(--warning-700);">2.450.000 đ</span></div>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery secondary" type="button" id="btnRegenQr">Tạo lại QR</button>
+        <button class="btn-delivery" type="button" data-go="done" id="btnComplete" disabled>Hoàn tất giao hàng</button>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: Hoàn tất ===== -->
+    <div class="view" id="viewDone">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Giao hàng</h1>
+          <div class="step">Hoàn tất</div>
+        </div>
+      </div>
+      <div class="step-bar" id="stepBarDone">
+        <div class="step-item done"><span class="step-line"></span>Thông tin</div>
+        <div class="step-item done"><span class="step-line"></span>Chụp ảnh</div>
+        <div class="step-item done" id="doneStepPayment">Thanh toán</div>
+      </div>
+      <div class="content pad-footer">
+        <div class="payment-summary success">
+          <div class="label" id="doneSummaryLabel">✓ Thanh toán thành công</div>
+          <div class="amount" id="doneAmount">2.450.000 đ</div>
+          <div class="sub" id="donePayRef">EcoPay · Mã GD: EP-202606160944881</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Tóm tắt giao hàng</div>
+          <div class="info-row"><span class="info-label">Mã đơn giao</span><span class="info-value mono" id="doneOrderCode">DLO-20260616-001</span></div>
+          <div class="info-row"><span class="info-label">Cửa hàng</span><span class="info-value" id="doneStoreName">Hào Sữa Store</span></div>
+          <div class="info-row"><span class="info-label">Trạng thái</span><span class="info-value"><span class="badge badge-paid">Đã thanh toán</span></span></div>
+          <div class="info-row"><span class="info-label">Ảnh giao hàng</span><span class="info-value" id="donePhotoCount">1 ảnh · GPS ✓</span></div>
+          <div class="info-row"><span class="info-label">Hoàn tất lúc</span><span class="info-value">16/06/2026 09:44:02</span></div>
+        </div>
+        <div class="qr-box" style="cursor:default;">
+          <div style="font-size:44px;margin-bottom:8px;color:var(--c-green);"><i class="ti ti-circle-check-filled"></i></div>
+          <div style="font-size:15px;font-weight:700;color:var(--success-700);">Giao hàng hoàn tất</div>
+          <div style="font-size:12px;color:var(--neutral-500);margin-top:6px;line-height:1.5;">Đơn đã cập nhật trên DMS.<br>Quay về danh sách để giao đơn tiếp theo.</div>
+        </div>
+      </div>
+      <div class="sticky-footer">
+        <button class="btn-delivery" type="button" data-go="list">Về danh sách đơn</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Xác nhận từ chối nhận đơn -->
+    <div class="confirm-layer" id="rejectConfirmLayer">
+      <div class="confirm-box">
+        <div class="confirm-title">Xác nhận từ chối</div>
+        <div class="confirm-text">Bạn có muốn từ chối các đơn hàng này không?</div>
+        <div class="confirm-actions">
+          <button class="btn-delivery secondary" type="button" id="rejectConfirmNo">Không</button>
+          <button class="btn-delivery" type="button" id="rejectConfirmYes">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chọn lý do Không nhận / Hẹn giao lại -->
+    <div class="sheet-layer" id="reasonSheet">
+      <div class="bottom-sheet" role="dialog">
+        <div class="sheet-header">
+          <div class="sheet-title" id="reasonSheetTitle">Chọn lý do</div>
+          <button class="sheet-close" type="button" id="closeReasonSheet" aria-label="Đóng">✕</button>
+        </div>
+        <div class="sheet-body" id="reasonList"></div>
+        <div class="sheet-actions single-col">
+          <button class="btn-delivery" type="button" id="reasonConfirmBtn" disabled>Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== OCR Bottom Sheet ===== -->
+    <div class="sheet-layer" id="ocrSheet">
+      <div class="bottom-sheet" role="dialog" aria-labelledby="sheetTitle">
+        <div class="sheet-header">
+          <div class="sheet-title" id="sheetTitle">OCR đơn giao hàng</div>
+          <button class="sheet-close" type="button" id="closeSheet" aria-label="Đóng">✕</button>
+        </div>
+        <div class="sheet-body">
+          <section class="ocr-camera active" id="ocrCameraStep">
+            <div class="camera-view">
+              <div class="doc-frame"></div>
+              <div class="paper">
+                <div class="paper-line short"></div>
+                <div class="paper-line"></div>
+                <div class="paper-line mid"></div>
+                <div class="paper-line"></div>
+                <div class="paper-line short"></div>
+                <div class="paper-total"></div>
+              </div>
+              <div class="scan-line"></div>
+            </div>
+            <div class="camera-caption">
+              <div class="caption-title">Phiếu xuất kho / đơn hàng</div>
+              <div class="caption-text">Canh đủ 4 góc chứng từ, hệ thống sẽ đọc thông tin cửa hàng, địa chỉ, sản phẩm và số tiền thu hộ.</div>
+            </div>
+          </section>
+          <section class="ocr-result-edit" id="ocrResultEdit">
+            <div class="result-summary">
+              <div class="result-head">
+                <div>
+                  <div class="result-code" id="ocrDocCode">PXK-240616-09126</div>
+                  <div class="ocr-quick-meta" id="ocrResultMeta">Nguồn: OCR từ phiếu xuất kho · 3 sản phẩm</div>
+                </div>
+                <span class="confidence">Tin cậy 96%</span>
+              </div>
+            </div>
+            <div class="editable-note" id="ocrEditableNote">Thông tin OCR có thể chỉnh lại trước khi tạo đơn giao.</div>
+            <div class="field-card" id="ocrEditFields">
+              <div class="field-row"><label class="field-label" for="ocrStoreInput">Cửa hàng</label><input class="edit-field" id="ocrStoreInput" value="Hào Sữa Store"></div>
+              <div class="field-row"><label class="field-label" for="ocrPhoneInput">Số điện thoại</label><input class="edit-field" id="ocrPhoneInput" value="0328839644"></div>
+              <div class="field-row"><label class="field-label" for="ocrAddressInput">Địa chỉ giao</label><textarea class="edit-field" id="ocrAddressInput">34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh</textarea></div>
+              <div class="field-row"><label class="field-label" for="ocrAmountInput">Tiền thu hộ</label><input class="edit-field" id="ocrAmountInput" value="1.850.000đ"></div>
+              <div class="field-row">
+                <span class="field-label">Tài xế</span>
+                <span class="field-readonly" id="ocrDriverDisplay">Nguyễn Văn Tài · TX001</span>
+              </div>
+            </div>
+            <div class="product-card-ocr" id="ocrProductCard">
+              <div class="product-card-head">
+                <div class="product-card-title">Sản phẩm OCR</div>
+                <div class="product-card-count" id="productCountLabel">3 dòng hàng</div>
+              </div>
+              <div class="product-item-ocr" data-product-row>
+                <label><span class="mini-label">Mã SP</span><input class="product-input" data-product-code value="GP900"></label>
+                <label style="display:block;margin-top:6px;"><span class="mini-label">Tên SP</span><input class="product-input" data-product-name value="Sữa bột Grow Plus 900g"></label>
+                <div class="product-calc-row">
+                  <label><span class="mini-label">SL</span><input class="product-input" data-product-qty inputmode="numeric" value="4"></label>
+                  <label><span class="mini-label">Đơn giá</span><input class="product-input" data-product-price inputmode="numeric" value="320.000đ"></label>
+                </div>
+                <div class="product-item-foot">
+                  <div class="product-total-wrap">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-total-input" data-product-total value="1.280.000đ" readonly>
+                  </div>
+                  <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                </div>
+              </div>
+              <div class="product-item-ocr" data-product-row>
+                <label><span class="mini-label">Mã SP</span><input class="product-input" data-product-code value="VNM180"></label>
+                <label style="display:block;margin-top:6px;"><span class="mini-label">Tên SP</span><input class="product-input" data-product-name value="Sữa tươi Vinamilk 180ml"></label>
+                <div class="product-calc-row">
+                  <label><span class="mini-label">SL</span><input class="product-input" data-product-qty inputmode="numeric" value="24"></label>
+                  <label><span class="mini-label">Đơn giá</span><input class="product-input" data-product-price inputmode="numeric" value="10.000đ"></label>
+                </div>
+                <div class="product-item-foot">
+                  <div class="product-total-wrap">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-total-input" data-product-total value="240.000đ" readonly>
+                  </div>
+                  <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                </div>
+              </div>
+              <div class="product-item-ocr" data-product-row>
+                <label><span class="mini-label">Mã SP</span><input class="product-input" data-product-code value="MILO4"></label>
+                <label style="display:block;margin-top:6px;"><span class="mini-label">Tên SP</span><input class="product-input" data-product-name value="Milo lốc 4 hộp"></label>
+                <div class="product-calc-row">
+                  <label><span class="mini-label">SL</span><input class="product-input" data-product-qty inputmode="numeric" value="10"></label>
+                  <label><span class="mini-label">Đơn giá</span><input class="product-input" data-product-price inputmode="numeric" value="33.000đ"></label>
+                </div>
+                <div class="product-item-foot">
+                  <div class="product-total-wrap">
+                    <span class="mini-label">Thành tiền</span>
+                    <input class="product-input product-total-input" data-product-total value="330.000đ" readonly>
+                  </div>
+                  <button class="remove-product-btn" type="button" data-remove-product>Xóa</button>
+                </div>
+              </div>
+              <div class="product-add-row">
+                <button class="btn-delivery secondary" type="button" id="addProductButton" style="width:100%;">+ Thêm sản phẩm</button>
+              </div>
+              <div class="product-total-row">
+                <div class="product-card-title" style="font-size:12px;color:var(--neutral-500);">Tổng tiền đơn hàng</div>
+                <input class="product-input product-total-input" id="ocrProductTotalInput" value="1.850.000đ" readonly style="width:120px;text-align:right;">
+              </div>
+            </div>
+            <div class="delivery-note-ocr" id="ocrEditNote">
+              <strong>Thanh toán khi giao hàng</strong>
+              <span>Màn OCR chỉ tạo thông tin đơn giao. QR thanh toán sẽ hiển thị ở bước giao hàng.</span>
+            </div>
+            <div class="preview-link-row">
+              <button class="preview-link-btn" type="button" id="previewOrderButton"><i class="ti ti-eye"></i> Xem lại đơn OCR</button>
+            </div>
+          </section>
+          <section class="ocr-result-preview" id="ocrResultPreview">
+            <div class="result-summary">
+              <div class="result-head">
+                <div>
+                  <div class="result-code" id="previewDocCode">PXK-240616-09126</div>
+                  <div class="ocr-quick-meta" id="previewMeta">Nguồn: OCR từ phiếu xuất kho · 3 sản phẩm</div>
+                </div>
+                <span class="confidence">Tin cậy 96%</span>
+              </div>
+            </div>
+            <div class="info-card" style="margin:0 0 12px;">
+              <div class="info-card-title">Thông tin OCR</div>
+              <div class="info-row"><span class="info-label">Cửa hàng</span><span class="info-value" id="previewStore">—</span></div>
+              <div class="info-row"><span class="info-label">Số điện thoại</span><span class="info-value" id="previewPhone">—</span></div>
+              <div class="info-row"><span class="info-label">Địa chỉ giao</span><span class="info-value" id="previewAddress">—</span></div>
+              <div class="info-row"><span class="info-label">Tiền thu hộ</span><span class="info-value highlight" id="previewAmount">—</span></div>
+              <div class="info-row"><span class="info-label">Tài xế</span><span class="info-value" id="previewDriver">—</span></div>
+            </div>
+            <div class="info-card" style="margin:0 0 12px;">
+              <div class="info-card-title" id="previewProductTitle">Sản phẩm (3 mặt hàng)</div>
+              <div class="product-list" id="ocrPreviewProductList"></div>
+              <div class="info-row" style="background:var(--neutral-50);"><span class="info-label">Tổng tiền đơn hàng</span><span class="info-value highlight" id="previewTotal">—</span></div>
+            </div>
+            <div class="delivery-note-ocr">
+              <strong>Thanh toán khi giao hàng</strong>
+              <span>Màn OCR chỉ tạo thông tin đơn giao. QR thanh toán sẽ hiển thị ở bước giao hàng.</span>
+            </div>
+          </section>
+        </div>
+        <div class="sheet-actions" id="cameraActions">
+          <button class="btn-delivery secondary" type="button" id="cancelOcr">Hủy</button>
+          <button class="btn-delivery" type="button" id="captureButton">Xác nhận</button>
+        </div>
+        <div class="sheet-actions hidden" id="editActions">
+          <button class="btn-delivery secondary" type="button" id="retakeButton">Quét lại</button>
+          <button class="btn-delivery" type="button" id="createOrderButton">Tạo đơn giao</button>
+        </div>
+        <div class="sheet-actions hidden" id="previewActions">
+          <button class="btn-delivery secondary" type="button" id="backToEditButton">Quay lại chỉnh sửa</button>
+          <button class="btn-delivery" type="button" id="createFromPreviewButton">Tạo đơn giao</button>
+        </div>
+        <div class="sheet-actions hidden single-col" id="previewReadonlyActions">
+          <button class="btn-delivery" type="button" id="closePreviewButton">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hint">MS-A-GH01 · Trạng thái TT: Đã/Chưa thanh toán hiển thị ngang hàng số tiền</div>
+
+<script>
+(function(){
+  var photoCount = 0;
+  var paid = false;
+  var payMode = 'qr';
+  var resumeMode = false;
+  var activeDeliveryCard = null;
+  var rejectMode = false;
+  var reasonSheetMode = '';
+  var selectedReason = '';
+
+  var REASONS_NOT_RECEIVE = [
+    'Khách từ chối nhận hàng',
+    'Cửa hàng đóng cửa',
+    'Không liên lạc được / sai địa chỉ',
+    'Hàng hư hỏng / thiếu hàng',
+    'Khác'
+  ];
+  var REASONS_RESCHEDULE = [
+    'Khách vắng mặt',
+    'Cửa hàng chưa sẵn sàng nhận',
+    'Khách yêu cầu giao ca khác',
+    'Thời tiết / giao thông',
+    'Khác'
+  ];
+
+  var views = {
+    list: document.getElementById('viewList'),
+    listmap: document.getElementById('viewListMap'),
+    map: document.getElementById('viewMap'),
+    ocr: document.getElementById('viewOcr'),
+    report: document.getElementById('viewReport'),
+    reportdetail: document.getElementById('viewReportDetail'),
+    info: document.getElementById('viewInfo'),
+    photo: document.getElementById('viewPhoto'),
+    payment: document.getElementById('viewPayment'),
+    done: document.getElementById('viewDone')
+  };
+
+  function setBottomNav(active){
+    document.querySelectorAll('#bottomNav .nav-item, #bottomNavOcr .nav-item, #bottomNavReport .nav-item').forEach(function(el){
+      el.classList.toggle('active', el.dataset.nav === active);
+    });
+  }
+
+  function photoOverlayHtml(){
+    var now = new Date();
+    var d = ('0'+now.getDate()).slice(-2)+'/'+('0'+(now.getMonth()+1)).slice(-2)+'/'+now.getFullYear();
+    var t = ('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2)+':'+('0'+now.getSeconds()).slice(-2);
+    return '<div class="photo-thumb"><i class="ti ti-photo" style="font-size:28px;color:#6B9ED8;opacity:.7"></i></div>'+
+      '<div class="photo-overlay">10.8012, 106.6658<div class="po-time">'+d+' '+t+'</div></div>';
+  }
+
+  function goTo(name, opts){
+    opts = opts || {};
+    Object.keys(views).forEach(function(k){ views[k].classList.remove('active'); });
+    if(views[name]) views[name].classList.add('active');
+
+    if(name === 'photo' && opts.resume){
+      photoCount = 1;
+      updatePhotoUI();
+    }
+    if(name === 'list'){
+      resetFlow();
+      setBottomNav('list');
+    } else if(name === 'ocr'){
+      setBottomNav('ocr');
+    } else if(name === 'report'){
+      setBottomNav('report');
+    } else if(name === 'listmap'){
+      setBottomNav('');
+    } else {
+      setBottomNav('');
+    }
+    if(name === 'payment'){
+      syncPaymentFromCard();
+      resetPaymentUI();
+    }
+    if(name === 'photo' || name === 'info'){
+      updateDeliveryFlowUI();
+    }
+  }
+
+  function resetFlow(){
+    photoCount = resumeMode ? 1 : 0;
+    paid = false;
+    payMode = 'qr';
+    resumeMode = false;
+    updatePhotoUI();
+    resetPaymentUI();
+    document.querySelectorAll('.pay-method').forEach(function(el){
+      el.classList.toggle('active', el.dataset.pay === 'qr');
+    });
+  }
+
+  function resetPaymentUI(){
+    paid = false;
+    var qrStatus = document.getElementById('qrStatus');
+    qrStatus.className = 'qr-status';
+    qrStatus.innerHTML = '<i class="ti ti-clock"></i> Chờ khách quét thanh toán...';
+    document.getElementById('btnComplete').disabled = true;
+    document.getElementById('paySummary').className = 'payment-summary';
+    syncPaymentFromCard();
+    applyPayModeUI();
+  }
+
+  function applyPayModeUI(){
+    var qrBox = document.getElementById('qrBox');
+    var cashPanel = document.getElementById('cashPanel');
+    var btnRegen = document.getElementById('btnRegenQr');
+    if(payMode === 'cash'){
+      qrBox.classList.add('hidden');
+      cashPanel.classList.add('show');
+      if(btnRegen) btnRegen.style.display = 'none';
+      document.getElementById('btnComplete').disabled = false;
+    } else {
+      qrBox.classList.remove('hidden');
+      cashPanel.classList.remove('show');
+      if(btnRegen) btnRegen.style.display = '';
+      if(!paid) document.getElementById('btnComplete').disabled = true;
+    }
+  }
+
+  function updatePhotoUI(){
+    var slots = document.querySelectorAll('#photoGrid .photo-slot');
+    slots.forEach(function(slot, i){
+      if(i < photoCount){
+        slot.classList.add('filled');
+        slot.innerHTML = photoOverlayHtml();
+      } else {
+        slot.classList.remove('filled');
+        slot.innerHTML = (i === 0 ? '<i class="ti ti-camera cam"></i>Chụp ảnh' : '<i class="ti ti-camera cam"></i>Thêm ảnh');
+      }
+    });
+    document.getElementById('btnToPayment').disabled = photoCount < 1;
+    document.getElementById('donePhotoCount').textContent = photoCount + ' ảnh · GPS ✓';
+  }
+
+  function addPhoto(){
+    if(photoCount >= 5) { showToast('Tối đa 5 ảnh'); return; }
+    photoCount++;
+    updatePhotoUI();
+    showToast('Đã chụp ảnh · GPS ghi nhận');
+  }
+
+  window.showToast = function(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2200);
+  };
+
+  /* Navigation clicks */
+  document.getElementById('phoneScreen').addEventListener('click', function(e){
+    if(rejectMode && e.target.closest('[data-go]') && !e.target.closest('#rejectBar') && !e.target.closest('#btnRejectMode')){
+      e.stopPropagation();
+      return;
+    }
+    var goEl = e.target.closest('[data-go]');
+    if(!goEl) return;
+    var target = goEl.dataset.go;
+    if(target === 'map'){
+      document.getElementById('mapStoreName').textContent = goEl.dataset.store || 'Cửa hàng';
+      document.getElementById('mapStoreTitle').textContent = goEl.dataset.store || '—';
+      document.getElementById('mapStoreAddr').textContent = goEl.dataset.address || '—';
+      goTo('map');
+      return;
+    }
+    if(target === 'listmap'){
+      goTo('listmap');
+      return;
+    }
+    if(target === 'photo' && goEl.dataset.resume){
+      resumeMode = true;
+      activeDeliveryCard = goEl.closest('.delivery-card') || activeDeliveryCard;
+      goTo('photo', { resume: true });
+      return;
+    }
+    if(target === 'info'){
+      var card = goEl.closest('.delivery-card');
+      populateInfoFromCard(card);
+      goTo('info');
+      return;
+    }
+    goTo(target);
+  });
+
+  document.getElementById('btnOpenNav').addEventListener('click', function(){
+    showToast('Đang mở ứng dụng bản đồ để dẫn đường...');
+  });
+
+  function applyListFilters(){
+    var chip = document.querySelector('#statusChipsWrap .chip.active');
+    var f = chip ? chip.dataset.filter : 'all';
+    var q = document.getElementById('listSearch').value.trim().toLowerCase();
+    var cards = document.querySelectorAll('#orderCards .delivery-card');
+    var empty = document.getElementById('listEmpty');
+    var cardsWrap = document.getElementById('orderCards');
+    var bottomMsg = document.getElementById('listBottomMsg');
+    var sectionRow = document.getElementById('listSectionRow');
+
+    empty.style.display = 'none';
+    sectionRow.style.display = 'flex';
+    cardsWrap.style.display = 'block';
+    var visible = 0;
+    cards.forEach(function(card){
+      var statusOk = f === 'all' || card.dataset.status === f;
+      var searchOk = !q || (card.dataset.search || '').indexOf(q) >= 0;
+      var show = statusOk && searchOk;
+      card.style.display = show ? 'flex' : 'none';
+      if(show) visible++;
+    });
+    bottomMsg.style.display = visible ? 'block' : 'none';
+    if(!visible){
+      empty.style.display = 'block';
+      empty.querySelector('.empty-title').textContent = q ? 'Không tìm thấy kết quả' : 'Không có đơn phù hợp';
+      cardsWrap.style.display = 'none';
+      bottomMsg.style.display = 'none';
+      sectionRow.style.display = 'none';
+    } else {
+      empty.querySelector('.empty-title').textContent = 'Không có đơn phù hợp';
+    }
+    var title = document.getElementById('listSectionTitle');
+    if(title) title.innerHTML = 'Đơn cần giao hôm nay <span class="sub">(' + visible + '/' + cards.length + ')</span>';
+  }
+
+  document.getElementById('bottomNav').addEventListener('click', function(e){
+    var nav = e.target.closest('.nav-item[data-go]');
+    if(!nav) return;
+    goTo(nav.dataset.go);
+  });
+
+  document.getElementById('bottomNavOcr').addEventListener('click', function(e){
+    var nav = e.target.closest('.nav-item[data-go]');
+    if(!nav) return;
+    goTo(nav.dataset.go);
+  });
+
+  document.getElementById('bottomNavReport').addEventListener('click', function(e){
+    var nav = e.target.closest('.nav-item[data-go]');
+    if(!nav) return;
+    goTo(nav.dataset.go);
+  });
+
+  /* ===== Báo cáo đơn giao hàng ===== */
+  var rpFromIso = '2026-06-01';
+  var rpToIso = '2026-06-16';
+  var rpStatusLabels = {
+    wait: { text: 'Chưa giao', cls: 'badge badge-wait' },
+    delivering: { text: 'Đang giao', cls: 'badge badge-delivering' },
+    delivered: { text: 'Hoàn thành', cls: 'badge badge-delivered' },
+    failed: { text: 'Thất bại', cls: 'badge badge-failed' }
+  };
+  var rpDetailData = {
+    'DLO-20260616-003': {
+      status: 'delivered', date: '16/06/2026', source: 'DMS', so: 'SO-20260613-6602', pxk: '—',
+      amount: '1.120.000 đ', storeCode: 'CH-HCM-1190', storeName: 'Tạp hoá Ông Năm',
+      phone: '0987654321', address: '88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM',
+      note: 'Giao hàng và thu tiền thành công lúc 09:44.'
+    },
+    'DLO-20260616-004': {
+      status: 'delivering', date: '16/06/2026', source: 'Ecom', so: 'SO-20260614-7710', pxk: '—',
+      amount: '18.750.000 đ', storeCode: 'CH-HCM-4412', storeName: 'CH Minh Phát',
+      phone: '0901234567', address: '120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM',
+      note: 'Đang giao — đã chụp ảnh xác nhận đến cửa hàng.'
+    },
+    'DLO-20260616-001': {
+      status: 'wait', date: '16/06/2026', source: 'DMS', so: 'SO-20260615-8821', pxk: '—',
+      amount: '2.450.000 đ', storeCode: 'CH-HCM-8821', storeName: 'Hào Sữa Store',
+      phone: '0328839644', address: '34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM',
+      note: 'Chưa bắt đầu giao hàng.'
+    },
+    'DLO-20260615-021': {
+      status: 'delivered', date: '15/06/2026', source: 'Ecom', so: 'SO-20260614-7710', pxk: '—',
+      amount: '8.750.000 đ', storeCode: 'CH-HCM-4412', storeName: 'CH Minh Phát',
+      phone: '0901234567', address: '120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM',
+      note: 'Hoàn tất giao hàng lúc 16:20.'
+    },
+    'DLO-20260614-008': {
+      status: 'failed', date: '14/06/2026', source: 'Merchant', so: 'SO-20260613-9011', pxk: '—',
+      amount: '890.000 đ', storeCode: 'CH-HCM-3301', storeName: 'Tạp hoá Cô Lan',
+      phone: '0912345678', address: '56 Nguyễn Huệ, P. Bến Nghé, Q. 1, TP.HCM',
+      note: 'Không nhận hàng — Cửa hàng đóng cửa.'
+    },
+    'DLO-20260613-055': {
+      status: 'delivered', date: '13/06/2026', source: 'DMS', so: 'SO-20260612-4402', pxk: 'PXK-240612-1188',
+      amount: '3.280.000 đ', storeCode: 'CH-HCM-5520', storeName: 'Siêu thị Mai Anh',
+      phone: '0905112233', address: '12 Võ Văn Tần, P. 6, Q. 3, TP.HCM',
+      note: 'Giao hàng thành công — thu tiền mặt.'
+    }
+  };
+
+  function rpCardInDateRange(card){
+    var d = card.dataset.date || '';
+    return d >= rpFromIso && d <= rpToIso;
+  }
+
+  function updateRpChipCounts(){
+    var cards = document.querySelectorAll('#rpOrderList .rp-card');
+    var all = 0, wait = 0, delivering = 0, delivered = 0, failed = 0;
+    cards.forEach(function(card){
+      if(!rpCardInDateRange(card)) return;
+      all++;
+      var st = card.dataset.status;
+      if(st === 'wait') wait++;
+      else if(st === 'delivering') delivering++;
+      else if(st === 'delivered') delivered++;
+      else if(st === 'failed') failed++;
+    });
+    document.querySelectorAll('#rpStatusChipsWrap .chip').forEach(function(chip){
+      var cnt = chip.querySelector('.cnt');
+      if(!cnt) return;
+      var f = chip.dataset.rpFilter;
+      if(f === 'all') cnt.textContent = all;
+      else if(f === 'wait') cnt.textContent = wait;
+      else if(f === 'delivering') cnt.textContent = delivering;
+      else if(f === 'delivered') cnt.textContent = delivered;
+      else if(f === 'failed') cnt.textContent = failed;
+    });
+  }
+
+  function openReportDetail(code){
+    var d = rpDetailData[code];
+    if(!d) return;
+    var st = rpStatusLabels[d.status] || rpStatusLabels.wait;
+    document.getElementById('rpDetailCode').textContent = code;
+    document.getElementById('rpDetOrder').textContent = code;
+    document.getElementById('rpDetStatus').innerHTML = '<span class="'+st.cls+'">'+st.text+'</span>';
+    document.getElementById('rpDetDate').textContent = d.date;
+    document.getElementById('rpDetSource').textContent = d.source;
+    document.getElementById('rpDetSo').textContent = d.so;
+    document.getElementById('rpDetPxk').textContent = d.pxk;
+    document.getElementById('rpDetAmount').textContent = d.amount;
+    applyPayStatusEl(document.getElementById('rpDetPayStatus'), { dataset: { status: d.status } });
+    document.getElementById('rpDetStoreCode').textContent = d.storeCode;
+    document.getElementById('rpDetStoreName').textContent = d.storeName;
+    document.getElementById('rpDetPhone').textContent = d.phone;
+    document.getElementById('rpDetAddress').textContent = d.address;
+    document.getElementById('rpDetNoteText').textContent = d.note;
+    goTo('reportdetail');
+  }
+
+  function applyRpFilters(){
+    var chip = document.querySelector('#rpStatusChipsWrap .chip.active');
+    var f = chip ? chip.dataset.rpFilter : 'all';
+    var cards = document.querySelectorAll('#rpOrderList .rp-card');
+    var visible = 0;
+    cards.forEach(function(card){
+      var inRange = rpCardInDateRange(card);
+      var matchStatus = f === 'all' || card.dataset.status === f;
+      var show = inRange && matchStatus;
+      card.style.display = show ? 'block' : 'none';
+      if(show) visible++;
+    });
+    document.getElementById('rpListHead').textContent = 'Danh sách đơn giao hàng (' + visible + ')';
+    document.getElementById('rpBottomMsg').style.display = visible ? 'block' : 'none';
+    document.getElementById('rpEmpty').style.display = visible ? 'none' : 'block';
+    document.getElementById('rpOrderList').style.display = visible ? 'block' : 'none';
+    updateRpChipCounts();
+  }
+
+  document.getElementById('rpStatusChipsWrap').addEventListener('click', function(e){
+    var chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#rpStatusChipsWrap .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    applyRpFilters();
+  });
+
+  document.getElementById('rpOrderList').addEventListener('click', function(e){
+    var card = e.target.closest('.rp-card');
+    if(!card || card.style.display === 'none') return;
+    openReportDetail(card.dataset.order);
+  });
+
+  document.getElementById('rpFromDate').addEventListener('click', function(){
+    showToast('Chọn Từ ngày');
+  });
+  document.getElementById('rpToDate').addEventListener('click', function(){
+    showToast('Chọn Đến ngày');
+  });
+
+  updateRpChipCounts();
+  applyRpFilters();
+
+  /* ===== OCR Logic (MS-A-DL03) ===== */
+  var ocrSheet = document.getElementById('ocrSheet');
+  var ocrCameraStep = document.getElementById('ocrCameraStep');
+  var ocrResultEdit = document.getElementById('ocrResultEdit');
+  var ocrResultPreview = document.getElementById('ocrResultPreview');
+  var cameraActions = document.getElementById('cameraActions');
+  var editActions = document.getElementById('editActions');
+  var previewActions = document.getElementById('previewActions');
+  var previewReadonlyActions = document.getElementById('previewReadonlyActions');
+  var captureButton = document.getElementById('captureButton');
+  var ocrListTitle = document.getElementById('ocrListTitle');
+  var ocrOrderList = document.getElementById('ocrOrderList');
+  var ocrEmpty = document.getElementById('ocrEmpty');
+  var deliveryOrderSeq = 8;
+  var ocrSheetMode = 'camera'; /* camera | edit | preview-edit | preview-readonly */
+
+  function openOcrSheet(step, opts){
+    opts = opts || {};
+    ocrSheet.classList.add('open');
+    if(step === 'result' && opts.readonly){
+      renderOcrPreview(getDefaultPreviewData());
+      setOcrSheetMode('preview-readonly');
+      return;
+    }
+    if(step === 'result'){
+      setOcrSheetMode('edit');
+      return;
+    }
+    setOcrSheetMode('camera');
+  }
+
+  function setOcrSheetMode(mode){
+    ocrSheetMode = mode;
+    var isCamera = mode === 'camera';
+    var isEdit = mode === 'edit';
+    var isPreview = mode === 'preview-edit' || mode === 'preview-readonly';
+    var isReadonlyPreview = mode === 'preview-readonly';
+
+    ocrCameraStep.classList.toggle('active', isCamera);
+    ocrResultEdit.classList.toggle('active', isEdit);
+    ocrResultPreview.classList.toggle('active', isPreview);
+
+    cameraActions.classList.toggle('hidden', !isCamera);
+    editActions.classList.toggle('hidden', !isEdit);
+    previewActions.classList.toggle('hidden', mode !== 'preview-edit');
+    previewReadonlyActions.classList.toggle('hidden', !isReadonlyPreview);
+
+    document.getElementById('sheetTitle').textContent = isPreview ? 'Xem lại đơn OCR' : 'OCR đơn giao hàng';
+  }
+
+  function closeOcrSheet(){
+    ocrSheet.classList.remove('open');
+    ocrSheetMode = 'camera';
+    captureButton.disabled = false;
+    captureButton.textContent = 'Xác nhận';
+    document.getElementById('sheetTitle').textContent = 'OCR đơn giao hàng';
+  }
+
+  function collectOcrFormData(){
+    var summary = getProductSummary();
+    var docEl = document.getElementById('ocrDocCode');
+    return {
+      docCode: docEl ? docEl.textContent.trim() : '',
+      store: fieldValue('ocrStoreInput', ''),
+      phone: fieldValue('ocrPhoneInput', ''),
+      address: fieldValue('ocrAddressInput', ''),
+      amount: fieldValue('ocrAmountInput', ''),
+      driver: document.getElementById('ocrDriverDisplay').textContent.trim(),
+      products: productRows().map(function(row){
+        return {
+          code: row.querySelector('[data-product-code]').value.trim(),
+          name: row.querySelector('[data-product-name]').value.trim(),
+          qty: row.querySelector('[data-product-qty]').value.trim(),
+          price: row.querySelector('[data-product-price]').value.trim(),
+          total: row.querySelector('[data-product-total]').value.trim()
+        };
+      }),
+      summary: summary
+    };
+  }
+
+  function getDefaultPreviewData(){
+    return {
+      docCode: 'PXK-240616-09126',
+      store: 'Hào Sữa Store',
+      phone: '0328839644',
+      address: '34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh',
+      amount: '1.850.000đ',
+      driver: 'Nguyễn Văn Tài · TX001',
+      products: [
+        { code: 'GP900', name: 'Sữa bột Grow Plus 900g', qty: '4', price: '320.000đ', total: '1.280.000đ' },
+        { code: 'VNM180', name: 'Sữa tươi Vinamilk 180ml', qty: '24', price: '10.000đ', total: '240.000đ' },
+        { code: 'MILO4', name: 'Milo lốc 4 hộp', qty: '10', price: '33.000đ', total: '330.000đ' }
+      ],
+      summary: { count: 3, qty: '38', formattedTotal: '1.850.000đ' }
+    };
+  }
+
+  function formatProductPriceDisplay(value){
+    var raw = String(value || '').replace(/\s*đ\s*$/i, '').trim();
+    return raw ? raw + ' đ' : '—';
+  }
+
+  function renderOcrPreview(data){
+    document.getElementById('previewDocCode').textContent = data.docCode || '—';
+    document.getElementById('previewMeta').textContent =
+      'Nguồn: OCR từ phiếu xuất kho · ' + (data.summary ? data.summary.count : data.products.length) + ' sản phẩm';
+    document.getElementById('previewStore').textContent = data.store || '—';
+    document.getElementById('previewPhone').textContent = data.phone || '—';
+    document.getElementById('previewAddress').textContent = data.address || '—';
+    document.getElementById('previewAmount').textContent = formatProductPriceDisplay(data.amount);
+    document.getElementById('previewDriver').textContent = data.driver || '—';
+    document.getElementById('previewProductTitle').textContent =
+      'Sản phẩm (' + (data.summary ? data.summary.count : data.products.length) + ' mặt hàng)';
+    document.getElementById('previewTotal').textContent =
+      formatProductPriceDisplay(data.summary ? data.summary.formattedTotal : data.amount);
+
+    var listHtml = data.products.map(function(p){
+      return '<div class="product-item"><div class="product-info">'+
+        '<div class="product-name">'+escapeHtml(p.name)+'</div>'+
+        '<div class="product-sku">'+escapeHtml(p.code)+'</div>'+
+        '<div class="product-qty">SL: '+escapeHtml(p.qty)+' · '+escapeHtml(p.price)+'</div>'+
+        '</div><div class="product-price">'+formatProductPriceDisplay(p.total)+'</div></div>';
+    }).join('');
+    document.getElementById('ocrPreviewProductList').innerHTML = listHtml;
+  }
+
+  function showOcrPreview(fromEdit){
+    renderOcrPreview(fromEdit ? collectOcrFormData() : getDefaultPreviewData());
+    setOcrSheetMode(fromEdit ? 'preview-edit' : 'preview-readonly');
+  }
+
+  function escapeHtml(value){
+    return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fieldValue(id, fallback){
+    var field = document.getElementById(id);
+    return field && field.value.trim() ? field.value.trim() : fallback;
+  }
+
+  function productRows(){ return Array.from(document.querySelectorAll('[data-product-row]')); }
+
+  function parseMoney(value){ return Number(String(value||'').replace(/[^\d-]/g,'')||0); }
+  function parseQty(value){ return Number(String(value||'').replace(/[^\d.,-]/g,'').replace(',','.')||0); }
+  function formatMoney(value){ return Math.round(Number(value||0)).toLocaleString('vi-VN')+'đ'; }
+  function formatQty(value){
+    var qty = Number(value||0);
+    return Number.isInteger(qty) ? String(qty) : qty.toFixed(2);
+  }
+
+  function getProductSummary(){
+    var total = 0, qty = 0;
+    productRows().forEach(function(row){
+      var qtyField = row.querySelector('[data-product-qty]');
+      var priceField = row.querySelector('[data-product-price]');
+      var totalField = row.querySelector('[data-product-total]');
+      var rowQty = parseQty(qtyField ? qtyField.value : 0);
+      var rowPrice = parseMoney(priceField ? priceField.value : 0);
+      var rowTotal = rowQty * rowPrice;
+      qty += rowQty; total += rowTotal;
+      if(totalField) totalField.value = formatMoney(rowTotal);
+    });
+    var countLabel = document.getElementById('productCountLabel');
+    var totalInput = document.getElementById('ocrProductTotalInput');
+    var amountInput = document.getElementById('ocrAmountInput');
+    var formattedTotal = formatMoney(total);
+    if(countLabel) countLabel.textContent = productRows().length + ' dòng hàng';
+    if(totalInput) totalInput.value = formattedTotal;
+    if(amountInput) amountInput.value = formattedTotal;
+    return { count: productRows().length, qty: formatQty(qty), formattedTotal: formattedTotal };
+  }
+
+  function productRowTemplate(){
+    return '<div class="product-item-ocr" data-product-row>'+
+      '<label><span class="mini-label">Mã SP</span><input class="product-input" data-product-code value=""></label>'+
+      '<label style="display:block;margin-top:6px;"><span class="mini-label">Tên SP</span><input class="product-input" data-product-name value=""></label>'+
+      '<div class="product-calc-row"><label><span class="mini-label">SL</span><input class="product-input" data-product-qty inputmode="numeric" value="1"></label>'+
+      '<label><span class="mini-label">Đơn giá</span><input class="product-input" data-product-price inputmode="numeric" value="0đ"></label></div>'+
+      '<div class="product-item-foot"><div class="product-total-wrap"><span class="mini-label">Thành tiền</span>'+
+      '<input class="product-input product-total-input" data-product-total value="0đ" readonly></div>'+
+      '<button class="remove-product-btn" type="button" data-remove-product>Xóa</button></div></div>';
+  }
+
+  function addProductRow(){
+    var addRow = document.querySelector('.product-add-row');
+    addRow.insertAdjacentHTML('beforebegin', productRowTemplate(productRows().length + 1));
+    getProductSummary();
+  }
+
+  function formatDisplayAmount(value){
+    return Math.round(Number(value||0)).toLocaleString('vi-VN');
+  }
+
+  function isPrepaidOrder(card){
+    card = card || activeDeliveryCard;
+    return !!(card && card.dataset.prepaid === '1');
+  }
+
+  function getPaymentStatus(card){
+    card = card || activeDeliveryCard;
+    if(!card) return { paid: false, text: 'Chưa thanh toán' };
+    if(card.dataset.prepaid === '1' || card.dataset.status === 'delivered'){
+      return { paid: true, text: 'Đã thanh toán' };
+    }
+    return { paid: false, text: 'Chưa thanh toán' };
+  }
+
+  function applyPayStatusEl(el, card){
+    if(!el) return;
+    var st = getPaymentStatus(card);
+    el.textContent = st.text;
+    el.className = 'delivery-pay-status ' + (st.paid ? 'is-paid' : 'is-unpaid');
+  }
+
+  function syncCardPayStatusFoot(card){
+    if(!card) return;
+    var foot = card.querySelector('.delivery-card-foot');
+    if(!foot) return;
+    var statusEl = foot.querySelector('.delivery-pay-status');
+    if(!statusEl){
+      statusEl = document.createElement('span');
+      statusEl.className = 'delivery-pay-status';
+      foot.appendChild(statusEl);
+    }
+    applyPayStatusEl(statusEl, card);
+  }
+
+  function updateDeliveryFlowUI(){
+    var prepaid = isPrepaidOrder();
+    var stepPayLabel = prepaid ? 'Hoàn tất' : 'Thanh toán';
+    ['infoStepPayment', 'photoStepPayment', 'doneStepPayment'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.textContent = stepPayLabel;
+    });
+    document.getElementById('infoStepLabel').textContent = prepaid ? 'Bước 1/2 · Thông tin đơn' : 'Bước 1/3 · Thông tin đơn';
+    document.getElementById('photoStepLabel').textContent = prepaid ? 'Bước 2/2 · Chụp ảnh giao hàng' : 'Bước 2/3 · Chụp ảnh giao hàng';
+    document.getElementById('btnToPayment').textContent = prepaid ? 'Hoàn tất giao hàng' : 'Tiếp tục thanh toán';
+    document.getElementById('infoPrepaidNotice').style.display = prepaid ? 'block' : 'none';
+  }
+
+  function syncPaymentFromCard(){
+    if(!activeDeliveryCard) return;
+    var amount = formatDisplayAmount(activeDeliveryCard.dataset.amount || 0);
+    var orderCode = activeDeliveryCard.dataset.order || '';
+    var storeName = activeDeliveryCard.dataset.storeName || '';
+    document.getElementById('paySummary').innerHTML =
+      '<div class="label">Số tiền cần thu</div><div class="amount">'+amount+' đ</div>' +
+      '<div class="sub">'+escapeHtml(orderCode)+' · '+escapeHtml(storeName)+'</div>';
+    document.querySelector('#qrBox .qr-amount').textContent = amount + ' VNĐ';
+    document.querySelector('#qrBox .qr-id').textContent = orderCode + ' · EcoPay';
+    document.querySelector('#cashPanel p').innerHTML =
+      'Xác nhận đã thu đủ <strong>'+amount+' VNĐ</strong> từ khách hàng<br>trước khi hoàn tất giao hàng.';
+    var checkRows = document.querySelectorAll('#viewPayment .info-card .info-row .info-value');
+    if(checkRows[0]) checkRows[0].textContent = amount + ' đ';
+    if(checkRows[1]) checkRows[1].textContent = amount + ' đ';
+  }
+
+  function completeDelivery(opts){
+    opts = opts || {};
+    if(activeDeliveryCard){
+      setCardStatus(activeDeliveryCard, 'delivered');
+      updateListSummary();
+    }
+    var prepaid = isPrepaidOrder();
+    var amount = activeDeliveryCard ? formatDisplayAmount(activeDeliveryCard.dataset.amount || 0) + ' đ' : '0 đ';
+    document.getElementById('doneSummaryLabel').textContent = prepaid ? '✓ Giao hàng hoàn tất' : '✓ Thanh toán thành công';
+    document.getElementById('doneAmount').textContent = amount;
+    if(prepaid){
+      document.getElementById('donePayRef').textContent =
+        'Đã thanh toán khi đặt hàng · Mã GD: ' + (activeDeliveryCard && activeDeliveryCard.dataset.prepaidRef ? activeDeliveryCard.dataset.prepaidRef : '—');
+    } else {
+      document.getElementById('donePayRef').textContent =
+        payMode === 'cash' ? 'Tiền mặt · Đã xác nhận thu đủ' : 'EcoPay · Mã GD: EP-202606160944881';
+    }
+    if(activeDeliveryCard){
+      document.getElementById('doneOrderCode').textContent = activeDeliveryCard.dataset.order || '—';
+      document.getElementById('doneStoreName').textContent = activeDeliveryCard.dataset.storeName || '—';
+    }
+    updateDeliveryFlowUI();
+    goTo('done');
+    if(opts.toast !== false){
+      showToast(prepaid ? 'Đã hoàn tất · Khách đã thanh toán khi đặt' : 'Giao hàng hoàn tất');
+    }
+  }
+
+  function syncCardBadge(card){
+    if(!card) return;
+    var badge = card.querySelector('.delivery-card-title .badge');
+    if(!badge) return;
+    var status = card.dataset.status || 'wait';
+    if(status === 'delivering'){
+      badge.textContent = 'Đang giao';
+      badge.className = 'badge badge-delivering';
+    } else if(status === 'delivered'){
+      badge.textContent = 'Hoàn thành';
+      badge.className = 'badge badge-delivered';
+    } else if(status === 'failed'){
+      badge.textContent = 'Thất bại';
+      badge.className = 'badge badge-failed';
+    } else {
+      badge.textContent = 'Chưa giao';
+      badge.className = 'badge badge-wait';
+    }
+  }
+
+  function setCardStatus(card, status){
+    if(!card) return;
+    card.dataset.status = status;
+    syncCardBadge(card);
+    syncCardPayStatusFoot(card);
+    updateCardActions(card);
+  }
+
+  function updateCardActions(card){
+    if(!card) return;
+    var status = card.dataset.status;
+    var actions = card.querySelector('.delivery-card-actions');
+    if(!actions) return;
+    if(status === 'delivered'){
+      actions.className = 'delivery-card-actions';
+      actions.innerHTML = '<button class="btn-delivery secondary" type="button" data-go="done">Xem chi tiết</button>';
+    } else if(status === 'failed'){
+      actions.className = 'delivery-card-actions';
+      actions.innerHTML = '<button class="btn-delivery secondary" type="button" disabled>Giao hàng thất bại</button>';
+    } else if(status === 'delivering'){
+      actions.className = 'delivery-card-actions delivery-card-actions-split';
+      var store = card.dataset.storeName || '';
+      var addr = card.dataset.address || '';
+      actions.innerHTML =
+        '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(store)+'" data-address="'+escapeHtml(addr)+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
+        '<button class="btn-delivery secondary" type="button" data-go="photo" data-resume="1">Tiếp tục giao</button>';
+    } else {
+      actions.className = 'delivery-card-actions delivery-card-actions-split';
+      var store2 = card.dataset.storeName || '';
+      var addr2 = card.dataset.address || '';
+      actions.innerHTML =
+        '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(store2)+'" data-address="'+escapeHtml(addr2)+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
+        '<button class="btn-delivery" type="button" data-go="info">Giao hàng</button>';
+    }
+  }
+
+  function removeCardFromDriverList(card){
+    if(card && card.parentNode) card.parentNode.removeChild(card);
+    updateListSummary();
+    applyListFilters();
+  }
+
+  function populateInfoFromCard(card){
+    if(!card) return;
+    activeDeliveryCard = card;
+    var source = card.dataset.source || 'DMS';
+    var pxk = card.dataset.pxk || '';
+    var orderCode = card.dataset.order || document.getElementById('infoOrderCode').textContent;
+    var soCode = card.dataset.so || '—';
+    var storeCode = card.dataset.storeCode || '—';
+    var storeName = card.dataset.storeName || '—';
+    var phone = card.dataset.phone || '—';
+    var address = card.dataset.address || '—';
+    var amount = formatDisplayAmount(card.dataset.amount || 0);
+
+    document.getElementById('infoOrderCode').textContent = orderCode;
+    document.getElementById('infoSoCode').textContent = soCode;
+    document.getElementById('infoOrderSource').innerHTML =
+      source === 'OCR'
+        ? '<span class="badge badge-source-ocr">OCR</span>'
+        : '<span class="badge badge-source">'+escapeHtml(source)+'</span>';
+    document.getElementById('infoPxkDoc').textContent = pxk || '—';
+    document.getElementById('infoStoreCode').textContent = storeCode;
+    document.getElementById('infoStoreName').textContent = storeName;
+    document.getElementById('infoPhone').textContent = phone;
+    document.getElementById('infoAddress').textContent = address;
+    document.getElementById('infoTotalAmount').textContent = amount + ' đ';
+    document.getElementById('photoOrderTitle').textContent = orderCode + ' · ' + storeName;
+    document.getElementById('photoTotalAmount').textContent = amount + ' đ';
+    applyPayStatusEl(document.getElementById('infoPayStatus'), card);
+    applyPayStatusEl(document.getElementById('photoPayStatus'), card);
+
+    var prepaid = card.dataset.prepaid === '1';
+    var paySt = getPaymentStatus(card);
+    document.getElementById('infoCodRow').style.display = paySt.paid ? 'none' : 'flex';
+    document.getElementById('infoPrepaidRefRow').style.display = prepaid ? 'flex' : 'none';
+    if(!paySt.paid){
+      document.getElementById('infoCodAmount').textContent = amount + ' đ';
+    }
+    if(prepaid){
+      document.getElementById('infoPrepaidRef').textContent = card.dataset.prepaidRef || '—';
+    }
+
+    var status = card.dataset.status || 'wait';
+    var badge = document.getElementById('infoStatusBadge');
+    if(status === 'delivering'){
+      badge.textContent = 'Đang giao';
+      badge.className = 'badge badge-delivering';
+    } else if(status === 'delivered'){
+      badge.textContent = 'Hoàn thành';
+      badge.className = 'badge badge-delivered';
+    } else if(status === 'failed'){
+      badge.textContent = 'Thất bại';
+      badge.className = 'badge badge-failed';
+    } else {
+      badge.textContent = 'Chưa giao';
+      badge.className = 'badge badge-wait';
+    }
+    updateDeliveryFlowUI();
+  }
+
+  function nextDeliveryCode(){
+    deliveryOrderSeq += 1;
+    var seq = String(deliveryOrderSeq).padStart(3, '0');
+    return 'DLO-20260616-' + seq;
+  }
+
+  function updateListSummary(){
+    var cards = document.querySelectorAll('#orderCards .delivery-card');
+    var wait = 0, delivering = 0, delivered = 0, failed = 0;
+    cards.forEach(function(card){
+      if(card.dataset.status === 'wait') wait++;
+      else if(card.dataset.status === 'delivering') delivering++;
+      else if(card.dataset.status === 'delivered') delivered++;
+      else if(card.dataset.status === 'failed') failed++;
+    });
+    var total = cards.length;
+    var strip = document.querySelector('#viewList .summary-strip');
+    if(strip){
+      var nums = strip.querySelectorAll('.sum-num');
+      if(nums[0]) nums[0].textContent = total;
+      if(nums[1]) nums[1].textContent = delivering;
+      if(nums[2]) nums[2].textContent = delivered;
+    }
+    document.querySelectorAll('#statusChipsWrap .chip').forEach(function(chip){
+      var cnt = chip.querySelector('.cnt');
+      if(!cnt) return;
+      if(chip.dataset.filter === 'all') cnt.textContent = total;
+      if(chip.dataset.filter === 'wait') cnt.textContent = wait;
+      if(chip.dataset.filter === 'delivering') cnt.textContent = delivering;
+      if(chip.dataset.filter === 'delivered') cnt.textContent = delivered;
+      if(chip.dataset.filter === 'failed') cnt.textContent = failed;
+    });
+    var title = document.getElementById('listSectionTitle');
+    if(title && !document.getElementById('listSearch').value.trim()) {
+      title.innerHTML = 'Đơn cần giao hôm nay <span class="sub">(' + total + '/' + total + ')</span>';
+    }
+  }
+
+  function addDeliveryCardFromOcr(store, phone, address, amountFormatted, dloCode, docCode){
+    var amountDisplay = formatDisplayAmount(parseMoney(amountFormatted));
+    var amountRaw = parseMoney(amountFormatted);
+    var searchKey = (store + ' ' + phone + ' ' + dloCode).toLowerCase();
+    var pxk = escapeHtml(docCode || '');
+    var html = '<div class="delivery-card" data-status="wait" data-search="'+escapeHtml(searchKey)+'"'+
+      ' data-order="'+escapeHtml(dloCode)+'" data-so="" data-source="OCR" data-pxk="'+pxk+'"'+
+      ' data-store-code="" data-store-name="'+store+'" data-phone="'+phone+'" data-address="'+address+'"'+
+      ' data-amount="'+amountRaw+'">'+
+      '<label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>'+
+      '<div class="delivery-card-main">'+
+      '<div class="delivery-card-head"><span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>'+
+      '<div class="delivery-card-title-wrap"><div class="delivery-card-title">'+store+
+      ' <span class="badge badge-wait">Chưa giao</span></div><div class="delivery-card-meta">'+dloCode+'</div></div>'+
+      '<div class="delivery-card-side"><div class="delivery-distance">—</div></div></div>'+
+      '<div class="delivery-card-body"><div class="delivery-phone"><i class="ti ti-phone"></i> '+phone+'</div>'+
+      '<div class="delivery-address">'+address+'</div></div>'+
+      '<div class="delivery-card-foot"><div class="delivery-amount">'+amountDisplay+' <span>VNĐ</span></div>'+
+      '<span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></div>'+
+      '<div class="delivery-card-actions delivery-card-actions-split">'+
+      '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+store+'" data-address="'+address+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
+      '<button class="btn-delivery" type="button" data-go="info">Giao hàng</button></div></div></div>';
+    document.getElementById('orderCards').insertAdjacentHTML('afterbegin', html);
+    updateListSummary();
+    applyListFilters();
+  }
+
+  function addOcrHistoryCard(store, phone, address, docCode, productSummary, dloCode){
+    var scanId = 'scan-' + Date.now();
+    var html = '<article class="ocr-order-card" data-scan-id="'+scanId+'">'+
+      '<div class="ocr-order-top"><div class="ocr-store-name"><i class="ti ti-map-pin"></i> '+store+'</div></div>'+
+      '<div class="ocr-status-tag ocr-tag-success">Đã tạo '+dloCode+'</div>'+
+      '<div class="ocr-card-line">'+phone+'</div>'+
+      '<div class="ocr-card-line muted">'+address+'</div>'+
+      '<div class="ocr-amount-row"><div class="ocr-amount-box"><div class="ocr-amount-label">Mã chứng từ</div><div class="ocr-amount-value">'+escapeHtml(docCode)+'</div></div>'+
+      '<div class="ocr-amount-box"><div class="ocr-amount-label">Tổng tiền đơn</div><div class="ocr-amount-value">'+productSummary.formattedTotal+'</div></div></div>'+
+      '<div class="ocr-product-summary"><div><strong>Sản phẩm OCR</strong><span style="display:block;color:var(--neutral-500);">'+
+      productSummary.count+' dòng hàng · '+productSummary.qty+' đơn vị</span></div><div class="sum-val">'+productSummary.formattedTotal+'</div></div>'+
+      '<div class="ocr-card-actions single"><button class="btn-delivery secondary" type="button" data-open-result data-readonly="1">Xem lại OCR</button></div></article>';
+    ocrOrderList.insertAdjacentHTML('afterbegin', html);
+    updateOcrTitle();
+  }
+
+  function updateOcrTitle(){
+    var count = ocrOrderList.querySelectorAll('.ocr-order-card').length;
+    ocrListTitle.textContent = 'Đơn đã quét (' + count + ')';
+    if(ocrEmpty){
+      ocrEmpty.style.display = count ? 'none' : 'block';
+      ocrOrderList.style.display = count ? 'block' : 'none';
+    }
+  }
+
+  function createOrderFromOcr(){
+    var productSummary = getProductSummary();
+    var store = escapeHtml(fieldValue('ocrStoreInput','Hào Sữa Store'));
+    var phone = escapeHtml(fieldValue('ocrPhoneInput','0328839644'));
+    var address = escapeHtml(fieldValue('ocrAddressInput','34 Hoàng Việt, Phường Tân Sơn Hòa, TP. Hồ Chí Minh'));
+    var docEl = document.getElementById('ocrDocCode');
+    var docCode = escapeHtml(docEl && docEl.textContent.trim() ? docEl.textContent.trim() : 'PXK-240616-09126');
+    var dloCode = nextDeliveryCode();
+    addDeliveryCardFromOcr(store, phone, address, productSummary.formattedTotal, dloCode, docCode);
+    addOcrHistoryCard(store, phone, address, docCode, productSummary, dloCode);
+    closeOcrSheet();
+    goTo('list');
+    showToast('Đã tạo '+dloCode+' · chuyển sang tab Giao hàng');
+  }
+
+  document.getElementById('scanButton').addEventListener('click', function(){
+    openOcrSheet('camera');
+  });
+  document.getElementById('closeSheet').addEventListener('click', function(){
+    if(ocrSheetMode === 'preview-edit'){
+      setOcrSheetMode('edit');
+      return;
+    }
+    closeOcrSheet();
+  });
+  document.getElementById('cancelOcr').addEventListener('click', closeOcrSheet);
+  ocrSheet.addEventListener('click', function(e){ if(e.target === ocrSheet) closeOcrSheet(); });
+
+  captureButton.addEventListener('click', function(){
+    captureButton.disabled = true;
+    captureButton.textContent = 'Đang đọc OCR...';
+    setTimeout(function(){
+      captureButton.disabled = false;
+      captureButton.textContent = 'Xác nhận';
+      getProductSummary();
+      setOcrSheetMode('edit');
+    }, 650);
+  });
+
+  document.getElementById('retakeButton').addEventListener('click', function(){
+    setOcrSheetMode('camera');
+  });
+  document.getElementById('previewOrderButton').addEventListener('click', function(){
+    showOcrPreview(true);
+  });
+  document.getElementById('backToEditButton').addEventListener('click', function(){
+    setOcrSheetMode('edit');
+  });
+  document.getElementById('createOrderButton').addEventListener('click', createOrderFromOcr);
+  document.getElementById('createFromPreviewButton').addEventListener('click', createOrderFromOcr);
+  document.getElementById('closePreviewButton').addEventListener('click', closeOcrSheet);
+
+  document.getElementById('ocrProductCard').addEventListener('input', function(e){
+    if(e.target.matches('[data-product-qty], [data-product-price]')) getProductSummary();
+  });
+  document.getElementById('ocrProductCard').addEventListener('blur', function(e){
+    if(e.target.matches('[data-product-price]')){
+      e.target.value = formatMoney(parseMoney(e.target.value));
+      getProductSummary();
+    }
+  }, true);
+  document.getElementById('ocrProductCard').addEventListener('click', function(e){
+    if(e.target.closest('#addProductButton')){ addProductRow(); showToast('Đã thêm dòng sản phẩm'); }
+    if(e.target.closest('[data-remove-product]')){
+      if(productRows().length <= 1){ showToast('Cần giữ ít nhất 1 sản phẩm'); return; }
+      e.target.closest('[data-product-row]').remove();
+      getProductSummary();
+      showToast('Đã xóa dòng sản phẩm');
+    }
+  });
+
+  document.addEventListener('click', function(e){
+    var openBtn = e.target.closest('[data-open-result]');
+    if(openBtn){
+      openOcrSheet('result', { readonly: openBtn.dataset.readonly === '1' });
+    }
+  });
+
+  updateOcrTitle();
+
+  getProductSummary();
+
+  document.getElementById('listSearch').addEventListener('input', applyListFilters);
+
+  document.getElementById('btnStartDelivery').addEventListener('click', function(){
+    if(activeDeliveryCard){
+      setCardStatus(activeDeliveryCard, 'delivering');
+      updateListSummary();
+    }
+    document.getElementById('infoStatusBadge').textContent = 'Đang giao';
+    document.getElementById('infoStatusBadge').className = 'badge badge-delivering';
+    showToast('Đã cập nhật trạng thái: Đang giao');
+  });
+
+  document.getElementById('photoGrid').addEventListener('click', function(e){
+    var slot = e.target.closest('.photo-slot');
+    if(!slot || slot.classList.contains('filled')) return;
+    addPhoto();
+  });
+  document.getElementById('btnAddPhoto').addEventListener('click', addPhoto);
+
+  document.getElementById('btnToPayment').addEventListener('click', function(){
+    if(this.disabled) return;
+    if(isPrepaidOrder()){
+      completeDelivery();
+      return;
+    }
+    syncPaymentFromCard();
+    goTo('payment');
+  });
+
+  document.getElementById('payMethods').addEventListener('click', function(e){
+    var btn = e.target.closest('.pay-method');
+    if(!btn) return;
+    payMode = btn.dataset.pay;
+    document.querySelectorAll('.pay-method').forEach(function(el){ el.classList.remove('active'); });
+    btn.classList.add('active');
+    paid = false;
+    var qrStatus = document.getElementById('qrStatus');
+    qrStatus.className = 'qr-status';
+    qrStatus.innerHTML = '<i class="ti ti-clock"></i> Chờ khách quét thanh toán...';
+    applyPayModeUI();
+    if(payMode === 'cash'){
+      showToast('Chế độ thu tiền mặt — xác nhận khi đã thu đủ');
+    }
+  });
+
+  document.getElementById('qrBox').addEventListener('click', function(){
+    if(payMode !== 'qr' || paid) return;
+    paid = true;
+    var qrStatus = document.getElementById('qrStatus');
+    qrStatus.className = 'qr-status success';
+    qrStatus.innerHTML = '<i class="ti ti-circle-check-filled"></i> Thanh toán EcoPay thành công';
+    document.getElementById('btnComplete').disabled = false;
+    showToast('Khách đã quét QR thanh toán');
+  });
+
+  document.getElementById('btnRegenQr').addEventListener('click', function(){
+    if(payMode !== 'qr') return;
+    resetPaymentUI();
+    showToast('Đã tạo QR mới');
+  });
+
+  document.getElementById('btnComplete').addEventListener('click', function(){
+    if(this.disabled) return;
+    completeDelivery();
+  });
+
+  /* ===== Từ chối nhận đơn ===== */
+  function setRejectMode(on){
+    rejectMode = on;
+    document.getElementById('viewList').classList.toggle('reject-mode', on);
+    document.getElementById('rejectBar').classList.toggle('show', on);
+    document.getElementById('btnRejectMode').classList.toggle('active', on);
+    document.getElementById('btnRejectMode').textContent = on ? 'Hủy chọn' : 'Từ chối nhận đơn';
+    if(!on){
+      document.querySelectorAll('.reject-check').forEach(function(cb){ cb.checked = false; });
+    }
+    updateRejectCount();
+  }
+
+  function updateRejectCount(){
+    var n = document.querySelectorAll('.reject-check:checked').length;
+    document.getElementById('rejectCount').textContent = n + ' đơn đã chọn';
+    document.getElementById('btnConfirmReject').disabled = n === 0;
+  }
+
+  function getSelectedRejectCards(){
+    var cards = [];
+    document.querySelectorAll('.reject-check:checked').forEach(function(cb){
+      var card = cb.closest('.delivery-card');
+      if(card && (card.dataset.status === 'wait' || card.dataset.status === 'delivering')) cards.push(card);
+    });
+    return cards;
+  }
+
+  document.getElementById('btnRejectMode').addEventListener('click', function(){
+    setRejectMode(!rejectMode);
+  });
+  document.getElementById('btnCancelReject').addEventListener('click', function(){
+    setRejectMode(false);
+  });
+  document.getElementById('orderCards').addEventListener('change', function(e){
+    if(e.target.classList.contains('reject-check')) updateRejectCount();
+  });
+  document.getElementById('btnConfirmReject').addEventListener('click', function(){
+    if(!getSelectedRejectCards().length){
+      showToast('Vui lòng chọn ít nhất một đơn');
+      return;
+    }
+    document.getElementById('rejectConfirmLayer').classList.add('open');
+  });
+  document.getElementById('rejectConfirmNo').addEventListener('click', function(){
+    document.getElementById('rejectConfirmLayer').classList.remove('open');
+  });
+  document.getElementById('rejectConfirmYes').addEventListener('click', function(){
+    var cards = getSelectedRejectCards();
+    document.getElementById('rejectConfirmLayer').classList.remove('open');
+    cards.forEach(function(card){ removeCardFromDriverList(card); });
+    setRejectMode(false);
+    showToast('Đã từ chối ' + cards.length + ' đơn · chuyển Chờ phân bổ');
+  });
+
+  /* ===== Không nhận / Hẹn giao lại ===== */
+  function openReasonSheet(mode){
+    reasonSheetMode = mode;
+    selectedReason = '';
+    var reasons = mode === 'not_receive' ? REASONS_NOT_RECEIVE : REASONS_RESCHEDULE;
+    document.getElementById('reasonSheetTitle').textContent =
+      mode === 'not_receive' ? 'Lý do không nhận hàng' : 'Lý do hẹn giao lại';
+    document.getElementById('reasonList').innerHTML = reasons.map(function(r, i){
+      return '<label class="reason-option" data-reason="'+escapeHtml(r)+'">'+
+        '<input type="radio" name="deliveryReason" value="'+escapeHtml(r)+'">'+
+        '<span>'+escapeHtml(r)+'</span></label>';
+    }).join('');
+    document.getElementById('reasonConfirmBtn').disabled = true;
+    document.getElementById('reasonSheet').classList.add('open');
+  }
+
+  function closeReasonSheet(){
+    document.getElementById('reasonSheet').classList.remove('open');
+    reasonSheetMode = '';
+    selectedReason = '';
+  }
+
+  document.getElementById('closeReasonSheet').addEventListener('click', closeReasonSheet);
+  document.getElementById('reasonSheet').addEventListener('click', function(e){
+    if(e.target === this) closeReasonSheet();
+  });
+  document.getElementById('reasonList').addEventListener('change', function(e){
+    if(e.target.name !== 'deliveryReason') return;
+    selectedReason = e.target.value;
+    document.querySelectorAll('#reasonList .reason-option').forEach(function(opt){
+      opt.classList.toggle('selected', opt.dataset.reason === selectedReason);
+    });
+    document.getElementById('reasonConfirmBtn').disabled = !selectedReason;
+  });
+  document.getElementById('reasonConfirmBtn').addEventListener('click', function(){
+    if(!selectedReason || !activeDeliveryCard) return;
+    var storeName = activeDeliveryCard.dataset.storeName || 'đơn hàng';
+    if(reasonSheetMode === 'not_receive'){
+      setCardStatus(activeDeliveryCard, 'failed');
+      updateListSummary();
+      closeReasonSheet();
+      resetFlow();
+      goTo('list');
+      showToast('Đã cập nhật '+storeName+' → Thất bại');
+    } else if(reasonSheetMode === 'reschedule'){
+      setCardStatus(activeDeliveryCard, 'delivering');
+      updateListSummary();
+      closeReasonSheet();
+      resetFlow();
+      goTo('list');
+      showToast('Đã hẹn giao lại · '+storeName+' → Đang giao');
+    }
+  });
+
+  document.getElementById('btnNotReceive').addEventListener('click', function(){
+    openReasonSheet('not_receive');
+  });
+  document.getElementById('btnReschedule').addEventListener('click', function(){
+    openReasonSheet('reschedule');
+  });
+
+  /* Filter chips on list */
+  document.getElementById('statusChipsWrap').addEventListener('click', function(e){
+    var chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#statusChipsWrap .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    applyListFilters();
+  });
+
+  updateListSummary();
+  updatePhotoUI();
+})();
+</script>
+</body>
+</html>

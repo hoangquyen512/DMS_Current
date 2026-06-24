@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[APP] Dashboard Quản lý tài sản</title>
+<style>
+  /* ======= Design Tokens ======= */
+  :root {
+    --primary-50: #EFF6FF;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+    --info-50: #EFF6FF;
+    --info-500: #3B82F6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ======= Phone Frame ======= */
+  .phone {
+    width: 375px;
+    background: var(--neutral-0);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    background: var(--neutral-0);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--primary-500);
+    color: white;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+
+  /* ======= App Header — gradient ======= */
+  .app-header {
+    background: var(--primary-500);
+    color: white;
+    padding: 12px 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-header .back-arrow { font-size: 22px; line-height: 1; }
+  .app-header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    margin-right: 22px;
+  }
+
+  /* ======= Content ======= */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--neutral-50);
+    margin-top: -12px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  /* ======= Summary stats grid ======= */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 16px 16px 8px;
+  }
+  .stat-card {
+    background: var(--neutral-0);
+    border-radius: 12px;
+    padding: 14px 12px;
+    border: 1px solid var(--neutral-100);
+  }
+  .stat-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .stat-icon { font-size: 22px; margin-bottom: 6px; }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--neutral-900);
+    line-height: 1.1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--neutral-500);
+    margin-top: 3px;
+    font-weight: 500;
+  }
+  .stat-sub {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .stat-sub-item {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+  .sub-pending { background: var(--warning-50); color: var(--warning-700); }
+  .sub-approved { background: var(--success-50); color: var(--success-700); }
+  .sub-rejected { background: var(--error-50); color: var(--error-700); }
+
+  /* ======= Section title ======= */
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    padding: 12px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title .action {
+    font-size: 13px;
+    color: var(--primary-500);
+    font-weight: 500;
+  }
+
+  /* ======= Quick action buttons ======= */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 0 16px 4px;
+  }
+  .quick-btn {
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-100);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .quick-btn .q-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .q-icon-blue { background: var(--primary-50); }
+  .q-icon-green { background: var(--success-50); }
+  .q-icon-orange { background: var(--warning-50); }
+  .quick-btn .q-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  /* ======= Card item (recent orders) ======= */
+  .card {
+    background: var(--neutral-0);
+    margin: 0 16px 8px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--neutral-100);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--neutral-900);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .card-meta {
+    font-size: 11px;
+    color: var(--neutral-500);
+    margin-top: 2px;
+  }
+  .order-info {
+    display: flex;
+    gap: 12px;
+    padding-top: 8px;
+    margin-top: 6px;
+    border-top: 1px solid var(--neutral-100);
+    font-size: 11px;
+  }
+  .order-info-item { color: var(--neutral-500); }
+  .order-info-item strong { color: var(--neutral-900); margin-left: 2px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .badge-pending { background: var(--warning-500); color: white; }
+  .badge-success { background: var(--success-500); color: white; }
+  .badge-error { background: var(--error-500); color: white; }
+  .badge-offline { background: var(--neutral-100); color: var(--neutral-500); }
+
+  /* ======= Code copy ======= */
+  .code-copy {
+    font-family: 'SF Mono', 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--primary-500);
+    background: var(--primary-50);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* ======= Bottom msg ======= */
+  .bottom-msg {
+    text-align: center;
+    padding: 16px 16px 32px;
+    color: var(--neutral-500);
+    font-size: 12px;
+  }
+
+  /* ======= Empty state ======= */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 32px;
+    gap: 10px;
+  }
+  .empty-icon { font-size: 52px; opacity: 0.35; }
+  .empty-title { font-size: 15px; font-weight: 600; color: var(--neutral-700); text-align: center; }
+  .empty-desc { font-size: 12px; color: var(--neutral-500); text-align: center; line-height: 1.5; }
+
+  /* ======= Hint label ======= */
+  .hint {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'SF Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== PHONE 1: DEFAULT STATE — có dữ liệu ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Quản lý tài sản</h1>
+      </div>
+
+      <!-- Content (overlaps header bottom) -->
+      <div class="content">
+
+        <!-- Summary stats -->
+        <div class="stats-grid">
+
+          <!-- Đơn đăng ký -->
+          <div class="stat-card full-width">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div>
+                <div class="stat-icon">📋</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Đơn đăng ký tài sản</div>
+              </div>
+              <div style="flex:1; border-left:1px solid var(--neutral-100); padding-left:12px;">
+                <div class="stat-sub" style="flex-direction:column; gap:6px;">
+                  <div class="stat-sub-item sub-pending">⏳ Chờ duyệt: 3</div>
+                  <div class="stat-sub-item sub-approved">✅ Đã duyệt: 8</div>
+                  <div class="stat-sub-item sub-rejected">❌ Từ chối: 1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tài sản tại cửa hàng -->
+          <div class="stat-card">
+            <div class="stat-icon">🏪</div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Tài sản tại cửa hàng</div>
+          </div>
+
+          <!-- Tài sản đang giữ -->
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Tài sản đang giữ</div>
+          </div>
+
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section-title">
+          <span>Thao tác nhanh</span>
+        </div>
+        <div class="quick-actions">
+          <div class="quick-btn">
+            <div class="q-icon q-icon-blue">📋</div>
+            <div class="q-label">Đăng ký tài sản</div>
+          </div>
+          <div class="quick-btn">
+            <div class="q-icon q-icon-green">🔍</div>
+            <div class="q-label">Kiểm kê tài sản</div>
+          </div>
+          <div class="quick-btn">
+            <div class="q-icon q-icon-orange">🚚</div>
+            <div class="q-label">Giao tài sản</div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="section-title">
+          <span>Đơn đăng ký gần đây</span>
+          <span class="action">Xem tất cả →</span>
+        </div>
+
+        <!-- Order card 1: Chờ duyệt -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260515-0002</span>
+            <span class="badge badge-pending">Chờ duyệt</span>
+          </div>
+          <div class="card-meta">Tạp hoá Finviet · CH001</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại TS <strong>2</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>15/05 08:32</strong></div>
+          </div>
+        </div>
+
+        <!-- Order card 2: Đã duyệt -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260508-0003</span>
+            <span class="badge badge-success">Đã duyệt</span>
+          </div>
+          <div class="card-meta">Tạp hoá Cô Hoa · CH023</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại TS <strong>3</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>08/05 14:20</strong></div>
+          </div>
+        </div>
+
+        <!-- Order card 3: Từ chối -->
+        <div class="card">
+          <div class="card-title">
+            <span class="code-copy">ĐKTS-20260506-0001</span>
+            <span class="badge badge-error">Từ chối</span>
+          </div>
+          <div class="card-meta">Tạp hoá Ông Mười · CH045</div>
+          <div class="order-info">
+            <div class="order-info-item">Loại TS <strong>1</strong></div>
+            <div class="order-info-item">Ngày tạo <strong>06/05 09:45</strong></div>
+          </div>
+        </div>
+
+        <div class="bottom-msg">Hiển thị 3 đơn gần nhất</div>
+
+      </div><!-- /content -->
+    </div><!-- /phone-screen -->
+  </div>
+  <div class="hint">MS-03 — Dashboard Quản lý tài sản (Default)</div>
+</div>
+
+<!-- ====== PHONE 2: EMPTY STATE — chưa có dữ liệu ====== -->
+<div>
+  <div class="phone">
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">📶 📡 🔋</span>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <span class="back-arrow">←</span>
+        <h1>Quản lý tài sản</h1>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+
+        <!-- Summary stats — all zero -->
+        <div class="stats-grid">
+          <div class="stat-card full-width">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div>
+                <div class="stat-icon">📋</div>
+                <div class="stat-value" style="color:var(--neutral-300);">0</div>
+                <div class="stat-label">Đơn đăng ký tài sản</div>
+              </div>
+              <div style="flex:1; border-left:1px solid var(--neutral-100); padding-left:12px;">
+                <div class="stat-sub" style="flex-direction:column; gap:6px;">
+                  <div class="stat-sub-item sub-pending">⏳ Chờ duyệt: 0</div>
+                  <div class="stat-sub-item sub-approved">✅ Đã duyệt: 0</div>
+                  <div class="stat-sub-item sub-rejected">❌ Từ chối: 0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">🏪</div>
+            <div class="stat-value" style="color:var(--neutral-300);">0</div>
+            <div class="stat-label">Tài sản tại cửa hàng</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-value" style="color:var(--neutral-300);">0</div>
+            <div class="stat-label">Tài sản đang giữ</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions (luôn hiển thị dù empty) -->
+        <div class="section-title">
+          <span>Thao tác nhanh</span>
+        </div>
+        <div class="quick-actions">
+          <div class="quick-btn">
+            <div class="q-icon q-icon-blue">📋</div>
+            <div class="q-label">Đăng ký tài sản</div>
+          </div>
+          <div class="quick-btn">
+            <div class="q-icon q-icon-green">🔍</div>
+            <div class="q-label">Kiểm kê tài sản</div>
+          </div>
+          <div class="quick-btn">
+            <div class="q-icon q-icon-orange">🚚</div>
+            <div class="q-label">Giao tài sản</div>
+          </div>
+        </div>
+
+        <!-- Recent Orders: empty state -->
+        <div class="section-title">
+          <span>Đơn đăng ký gần đây</span>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">Chưa có đơn đăng ký nào</div>
+          <div class="empty-desc">Nhấn "Đăng ký tài sản" ở trên để tạo đơn đăng ký tài sản đầu tiên cho cửa hàng.</div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /phone-screen -->
+  </div>
+  <div class="hint">MS-03 — Dashboard Quản lý tài sản (Empty)</div>
+</div>
+
+</body>
+</html>

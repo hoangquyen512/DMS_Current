@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[APP] MS-A-TS01 — Dashboard Quản lý tài sản</title>
+    <style>
+        :root {
+            --primary-50: #EFF6FF;
+            --primary-100: #DBEAFE;
+            --primary-500: #3B82F6;
+            --primary-600: #2563EB;
+            --neutral-0: #FFFFFF;
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-500: #6B7280;
+            --neutral-700: #374151;
+            --neutral-900: #111827;
+            --success-50: #ECFDF5;
+            --success-500: #10B981;
+            --warning-50: #FFFBEB;
+            --warning-500: #F59E0B;
+            --error-50: #FEF2F2;
+            --error-500: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            padding: 32px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .phone {
+            width: 375px;
+            background: var(--neutral-0);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #4b5563, 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .phone-screen {
+            background: var(--neutral-0);
+            border-radius: 28px;
+            overflow: hidden;
+            height: 812px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 44px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 600;
+            background: var(--neutral-0);
+            color: var(--neutral-900);
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .app-header {
+            background: var(--primary-500);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+        }
+
+        .app-header .back-arrow {
+            font-size: 22px;
+        }
+
+        .app-header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            margin-right: 22px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--neutral-50);
+        }
+
+        /* Stats cards row */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--neutral-0);
+            border-radius: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .stat-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--neutral-500);
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .stat-badge-warn {
+            color: var(--warning-500);
+        }
+
+        .stat-badge-success {
+            color: var(--success-500);
+        }
+
+        /* Section */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            padding: 8px 16px 4px;
+        }
+
+        /* Action buttons list */
+        .action-list {
+            padding: 0 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .action-btn .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .action-btn .btn-icon.blue {
+            background: var(--primary-50);
+        }
+
+        .action-btn .btn-icon.green {
+            background: var(--success-50);
+        }
+
+        .action-btn .btn-body {
+            flex: 1;
+        }
+
+        .action-btn .btn-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .action-btn .btn-desc {
+            font-size: 12px;
+            color: var(--neutral-500);
+            margin-top: 2px;
+        }
+
+        .action-btn .arrow {
+            color: var(--neutral-300);
+            font-size: 16px;
+        }
+
+        /* Recent list */
+        .recent-item {
+            background: var(--neutral-0);
+            margin: 0 16px 8px;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .recent-item .ri-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recent-item .ri-code {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-500);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-success {
+            background: var(--success-50);
+            color: #065F46;
+        }
+
+        .badge-error {
+            background: var(--error-50);
+            color: #7F1D1D;
+        }
+
+        .ri-ch {
+            font-size: 12px;
+            color: var(--neutral-700);
+            margin-top: 4px;
+        }
+
+        .ri-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--neutral-500);
+        }
+
+        .hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 16px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====== PHONE 1: DEFAULT STATE ====== -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Quản lý tài sản</h1>
+                </div>
+                <div class="content">
+
+                    <!-- Stats row -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Tài sản đang quản lý</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-value stat-badge-warn">3</div>
+                            <div class="stat-label">Chờ duyệt</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value stat-badge-success">12</div>
+                            <div class="stat-label">Đã duyệt tháng này</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="section-title">Thao tác</div>
+                    <div class="action-list">
+                        <div class="action-btn">
+                            <div class="btn-icon blue">📝</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Đăng ký tài sản</div>
+                                <div class="btn-desc">Tạo đơn đăng ký cấp phát tài sản cho cửa hàng</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="action-btn">
+                            <div class="btn-icon green">📋</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Xem danh sách đơn</div>
+                                <div class="btn-desc">Tra cứu lịch sử đơn đăng ký tài sản</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent -->
+                    <div class="section-title">Đơn gần đây</div>
+
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000045</span>
+                            <span class="badge badge-pending">Chờ duyệt</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Nguyễn Trãi Q5</div>
+                        <div class="ri-footer">
+                            <span>14/05/2026</span>
+                            <span>2 tài sản</span>
+                        </div>
+                    </div>
+
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000041</span>
+                            <span class="badge badge-success">Đã duyệt</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Lê Văn Sỹ Q3</div>
+                        <div class="ri-footer">
+                            <span>10/05/2026</span>
+                            <span>1 tài sản</span>
+                        </div>
+                    </div>
+
+                    <div class="recent-item">
+                        <div class="ri-header">
+                            <span class="ri-code">ĐKTS0000039</span>
+                            <span class="badge badge-error">Đã từ chối</span>
+                        </div>
+                        <div class="ri-ch">🏪 CH Hoàng Diệu Q4</div>
+                        <div class="ri-footer">
+                            <span>08/05/2026</span>
+                            <span>3 tài sản</span>
+                        </div>
+                    </div>
+
+                    <div style="padding:16px; text-align:center; font-size:12px; color:var(--neutral-500);">
+                        Xem tất cả đơn ›
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="hint">MS-A-TS01 / Default State<br>Luồng B: Khác → Quản lý tài sản</div>
+    </div>
+
+    <!-- ====== PHONE 2: EMPTY STATE ====== -->
+    <div>
+        <div class="phone">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span class="icons">📶 📡 🔋</span>
+                </div>
+                <div class="app-header">
+                    <span class="back-arrow">←</span>
+                    <h1>Quản lý tài sản</h1>
+                </div>
+                <div class="content">
+
+                    <!-- Stats row (zeroes) -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Tài sản đang quản lý</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-value" style="color:var(--neutral-300)">0</div>
+                            <div class="stat-label">Chờ duyệt</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value" style="color:var(--neutral-300)">0</div>
+                            <div class="stat-label">Đã duyệt tháng này</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="section-title">Thao tác</div>
+                    <div class="action-list">
+                        <div class="action-btn">
+                            <div class="btn-icon blue">📝</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Đăng ký tài sản</div>
+                                <div class="btn-desc">Tạo đơn đăng ký cấp phát tài sản cho cửa hàng</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="action-btn">
+                            <div class="btn-icon green">📋</div>
+                            <div class="btn-body">
+                                <div class="btn-title">Xem danh sách đơn</div>
+                                <div class="btn-desc">Tra cứu lịch sử đơn đăng ký tài sản</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div style="text-align:center; padding: 48px 32px;">
+                        <div style="font-size:56px; margin-bottom:16px;">📦</div>
+                        <div style="font-size:15px; font-weight:600; color:var(--neutral-700); margin-bottom:8px;">Chưa
+                            có hoạt động nào</div>
+                        <div style="font-size:13px; color:var(--neutral-500); margin-bottom:24px; line-height:1.6;">Bắt
+                            đầu bằng cách tạo đơn<br>đăng ký tài sản cho cửa hàng</div>
+                        <div
+                            style="background:var(--primary-500); color:white; padding:12px 24px; border-radius:999px; font-size:14px; font-weight:600; display:inline-block;">
+                            ➕ Đăng ký tài sản ngay
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="hint">MS-A-TS01 / Empty State<br>Chưa có đơn nào</div>
+    </div>
+
+</body>
+
+</html>

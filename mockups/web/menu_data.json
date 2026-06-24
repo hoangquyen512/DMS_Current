@@ -1,0 +1,566 @@
+﻿[
+    {
+        "C":  "Level 3",
+        "D":  "Level ....",
+        "B":  "Level 2",
+        "A":  "Level 1"
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Công ty",
+        "A":  "Quản trị"
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhóm quyền",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhân viên",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Phân vùng",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhóm Sales",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhà phân phối",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Cửa hàng",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhãn hàng",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhiệm vụ",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Chỉ tiêu KPI",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Dữ liệu chung",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Cấu hình chấm công",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Cấu hình chung",
+        "A":  ""
+    },
+    {
+        "C":  "Cấu hình module",
+        "D":  "",
+        "B":  "Cấu hình ẩn hiện dữ liệu",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Thiết bị đăng nhập",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Ngành hàng",
+        "A":  "Mua hàng"
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhóm Sản Phẩm",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Sản Phẩm",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Sản phẩm AI",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Tồn Kho",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Đơn hàng",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Lịch sử dịch vụ",
+        "A":  ""
+    },
+    {
+        "C":  "Khai báo tra cứu thông tin sản phẩm",
+        "D":  "",
+        "B":  "Tra cứu sản phẩm",
+        "A":  ""
+    },
+    {
+        "C":  "Tra cứu thông tin sản phẩm",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Giám sát nhân viên",
+        "A":  "Giám sát"
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Nhóm nhiệm vụ",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Tần suất",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Định tuyến",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Gán tuyến",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Tuyến thực tế",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Yêu cầu đi trễ/nghỉ phép",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Hình ảnh trưng bày",
+        "A":  ""
+    },
+    {
+        "C":  "Bộ KPI",
+        "D":  "",
+        "B":  "KPI",
+        "A":  "Danh mục"
+    },
+    {
+        "C":  "Giao KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Loại KPI",
+        "D":  "",
+        "B":  "KPIv2",
+        "A":  ""
+    },
+    {
+        "C":  "Chỉ Tiêu KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Gán KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Kết quả thực hiện KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Nhóm NPP",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Nhóm Sản Phẩm KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Nhóm NPP và SKU",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Bộ khảo sát",
+        "D":  "",
+        "B":  "Khảo sát",
+        "A":  ""
+    },
+    {
+        "C":  "Thống kê khảo sát",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tổng quan",
+        "D":  "",
+        "B":  "Chương trình trưng bày",
+        "A":  ""
+    },
+    {
+        "C":  "Chương trình trưng bày",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách đăng ký",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tiến trình trưng bày",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách trả thường",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Thông tin trả thưởng theo giai đoạn",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tổng quan",
+        "D":  "",
+        "B":  "Chương trình tích lũy",
+        "A":  ""
+    },
+    {
+        "C":  "Chương trình tích lũy",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách tham gia CTTL",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách tiến trình tích lũy",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách trả thường",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "",
+        "B":  "Tin tức",
+        "A":  ""
+    },
+    {
+        "C":  "Gửi thông báo",
+        "D":  "",
+        "B":  "Thông báo",
+        "A":  ""
+    },
+    {
+        "C":  "Lịch sử thông báo",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Danh sách tài sản",
+        "D":  "",
+        "B":  "Tài sản",
+        "A":  ""
+    },
+    {
+        "C":  "Nhập kho tài sản",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Xuất kho tài sản",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Chuyển kho tài sản",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Duyệt đăng ký cấp phát/thu hồi tài sản",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Báo cáo tài sản",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "Báo cáo tồn kho hiện tại tài sản",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "Báo cáo kiểm kê tài sản",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "Báo cáo Nhập Xuất Tồn tài sản",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Yêu cầu xác minh",
+        "D":  "",
+        "B":  "Xác minh",
+        "A":  ""
+    },
+    {
+        "C":  "Cửa hàng thực hiện xác minh",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Kế hoạch viếng thăm",
+        "D":  "",
+        "B":  "Viếng thăm",
+        "A":  "Báo cáo"
+    },
+    {
+        "C":  "Chi tiết viếng thăm",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Daily Sales Tracking",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tổng hợp viếng thăm",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tuân thủ ngày",
+        "D":  "",
+        "B":  "Báo cáo tuân thủ",
+        "A":  ""
+    },
+    {
+        "C":  "Tuân thủ lũy kế",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Tình hình đơn hàng",
+        "D":  "",
+        "B":  "Bán hàng",
+        "A":  ""
+    },
+    {
+        "C":  "Đơn hàng the OT",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "KQKD theo Đại Lý",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "KQKD theo bao phủ",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Kết quả thực hiện theo ngày",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Kết quả thực hiện theo tháng",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "ASM",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "RSM",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Chấm công",
+        "D":  "",
+        "B":  "Báo cáo giám sát",
+        "A":  ""
+    },
+    {
+        "C":  "KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Cấu trúc phân cấp nhân viên",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Ghi chú",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Lương cơ bản",
+        "D":  "Thống kê tính lương cơ bản",
+        "B":  "Báo cáo tính lương",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "Tổng quan lương cơ bản",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Lương tuân thủ",
+        "D":  "Thống kê tính lương tuân thủ",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "",
+        "D":  "Tổng quan lương tuân thủ",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Lương KPI",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Xử lý yêu cầu",
+        "D":  "",
+        "B":  "Yêu cầu hỗ trợ",
+        "A":  "Hỗ trợ phần mềm"
+    }
+]

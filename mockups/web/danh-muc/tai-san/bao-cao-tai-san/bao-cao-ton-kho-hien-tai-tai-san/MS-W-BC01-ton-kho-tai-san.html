@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[WEB] MS-W-BC01 — Báo cáo tồn kho hiện tại tài sản</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --line:#e5e7eb;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --blue:#2563eb;
+      --blue-dark:#1e40af;
+      --green:#16a34a;
+      --orange:#f97316;
+      --gray:#64748b;
+      --chip:#eff6ff;
+      --shadow:0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      font-size:14px;
+    }
+    .topbar{
+      height:58px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      position:sticky;
+      top:0;
+      z-index:4;
+    }
+    .breadcrumb{
+      color:var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .breadcrumb strong{color:var(--text)}
+    .top-actions{display:flex;gap:16px;align-items:center;color:var(--muted)}
+    .avatar{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--blue);
+      color:#fff;
+      display:inline-grid;
+      place-items:center;
+      font-size:12px;
+      margin-right:6px;
+    }
+    .content{padding:24px;width:100%;max-width:none;margin:0 auto}
+    .page-title{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    h1{font-size:24px;margin:0 0 6px}
+    .subtext{color:var(--muted);line-height:1.45}
+    .section{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+      overflow:visible;
+    }
+    .section-header{
+      min-height:52px;
+      padding:14px 18px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:16px;
+      font-weight:700;
+      background:#fff;
+      border-radius:var(--radius) var(--radius) 0 0;
+    }
+    .section-body{padding:18px}
+    .filter-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(180px,1fr));
+      gap:14px;
+      align-items:start;
+    }
+    .form-item label{
+      display:block;
+      font-weight:600;
+      margin-bottom:7px;
+      color:#374151;
+    }
+    .required{color:#dc2626;font-weight:700}
+    input,select{
+      width:100%;
+      height:38px;
+      border:1px solid #d1d5db;
+      border-radius:9px;
+      padding:8px 10px;
+      background:#fff;
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    select{cursor:pointer}
+    input:focus,select:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(37,99,235,.12);
+    }
+    input[readonly]{
+      background:#f9fafb;
+      color:#4b5563;
+      cursor:not-allowed;
+    }
+
+    .multi-select{
+      position:relative;
+      width:100%;
+    }
+    .multi-select-control{
+      min-height:38px;
+      border:1px solid #d1d5db;
+      border-radius:9px;
+      background:#fff;
+      padding:5px 34px 5px 8px;
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:5px;
+      cursor:pointer;
+      position:relative;
+    }
+    .multi-select-control:after{
+      content:'▾';
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#64748b;
+      font-size:12px;
+    }
+    .multi-select.open .multi-select-control{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(37,99,235,.12);
+    }
+    .multi-select.disabled .multi-select-control{
+      background:#f3f4f6;
+      color:#9ca3af;
+      cursor:not-allowed;
+    }
+    .multi-placeholder{
+      color:#9ca3af;
+      padding:4px 2px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      max-width:100%;
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+      border-radius:999px;
+      padding:4px 8px;
+      font-size:12px;
+      font-weight:700;
+    }
+    .tag-remove{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      color:#1d4ed8;
+      cursor:pointer;
+      font-size:14px;
+      line-height:14px;
+      user-select:none;
+    }
+    .tag-remove:hover{
+      background:#dbeafe;
+    }
+    .multi-dropdown{
+      display:none;
+      position:absolute;
+      left:0;
+      right:0;
+      top:calc(100% + 4px);
+      background:#fff;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      box-shadow:0 12px 30px rgba(15,23,42,.12);
+      z-index:50;
+      max-height:280px;
+      overflow:auto;
+      padding:8px;
+    }
+    .multi-select.open .multi-dropdown{display:block}
+    .multi-search{
+      height:34px;
+      margin-bottom:8px;
+    }
+    .multi-option{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 6px;
+      border-radius:8px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .multi-option:hover{background:#f8fafc}
+    .multi-option input{
+      width:16px;
+      height:16px;
+      margin:0;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .field-help{
+      margin-top:6px;
+      font-size:12px;
+      color:#ef4444;
+      display:none;
+    }
+    .field-help.show{display:block}
+
+    .filter-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:18px;
+    }
+    button{
+      height:38px;
+      border-radius:9px;
+      border:1px solid transparent;
+      padding:0 15px;
+      font-weight:600;
+      cursor:pointer;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-primary:hover{background:var(--blue-dark)}
+    .btn-secondary{background:#fff;color:#374151;border-color:#d1d5db}
+    .btn-secondary:hover{background:#f9fafb}
+    .table-wrap{
+      width:100%;
+      overflow:visible;
+      border:1px solid var(--line);
+      border-radius:12px;
+    }
+    table{
+      width:100%;
+      min-width:0;
+      border-collapse:separate;
+      border-spacing:0;
+      background:#fff;
+      table-layout:auto;
+    }
+    th,td{
+      padding:11px 12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:middle;
+      white-space:normal;
+      word-break:break-word;
+    }
+    th{
+      position:sticky;
+      top:0;
+      background:#f8fafc;
+      font-weight:700;
+      color:#334155;
+      z-index:1;
+    }
+    tbody tr:hover{background:#f9fafb}
+    tbody tr:last-child td{border-bottom:none}
+    .right{text-align:right;white-space:nowrap}
+    .qty{font-weight:700;text-align:right;white-space:nowrap}
+    .copy{color:#2563eb;text-decoration:none;font-weight:600}
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:12px;
+      font-weight:700;
+      background:var(--chip);
+      color:#1d4ed8;
+    }
+    .chip.green{background:#dcfce7;color:#15803d}
+    .chip.orange{background:#ffedd5;color:#c2410c}
+    .chip.gray{background:#f1f5f9;color:#475569}
+    .empty-state{
+      display:none;
+      padding:22px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed #cbd5e1;
+      border-radius:12px;
+      background:#f8fafc;
+      margin-top:14px;
+    }
+    @media(max-width:1100px){
+      .filter-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:680px){
+      .content{padding:14px}
+      .filter-grid{grid-template-columns:1fr}
+      .page-title{display:block}
+      .section-header{align-items:flex-start;flex-direction:column}
+      .section-header button{width:100%}
+      .filter-actions{flex-direction:column}
+      .filter-actions button{width:100%}
+    }
+  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
+</head>
+<body class="portal-page" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+  <header class="topbar">
+    <div class="breadcrumb">
+      <span>Báo cáo</span><span>›</span><span>Tài sản</span><span>›</span><strong>Tồn kho hiện tại</strong>
+    </div>
+    <div class="top-actions">
+      <span>🔔</span>
+      <span>?</span>
+      <span><span class="avatar">AD</span>Admin ▾</span>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="page-title">
+      <div>
+        <h1>Báo cáo tồn kho hiện tại tài sản</h1>
+        <div class="subtext">Tra cứu tài sản đang tồn tại Công ty, NPP, Nhân viên hoặc Cửa hàng tại thời điểm tìm kiếm.</div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-header">
+        <span>Vùng tìm kiếm Filter</span>
+      </div>
+      <div class="section-body">
+        <div class="filter-grid">
+          <div class="form-item">
+            <label><span class="required">*</span> Công ty</label>
+            <select id="company">
+              <option value="">Chọn công ty</option>
+              <option value="FINVIET - KPP" selected>CN0002866 - FINVIET - Kênh Phân Phối</option>
+              <option value="FINVIET - DVVT">CN0549163 - FINVIET - Dịch Vụ Viễn Thông</option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label>Tài sản</label>
+            <input id="assetSearch" type="text" maxlength="100" placeholder="Mã tài sản, Tên tài sản, QR Code" />
+          </div>
+
+          <div class="form-item">
+            <label>Nhóm tài sản</label>
+            <select id="assetGroup">
+              <option value="">Tất cả</option>
+              <option value="Tài sản định danh">Tài sản định danh</option>
+              <option value="Tài sản không định danh">Tài sản không định danh</option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label>Loại tài sản</label>
+            <div class="multi-select" id="assetTypeMulti">
+              <div class="multi-select-control" tabindex="0" data-placeholder="Tất cả loại tài sản">
+                <span class="multi-placeholder">Tất cả loại tài sản</span>
+              </div>
+              <div class="multi-dropdown">
+                <input class="multi-search" type="text" placeholder="Tìm loại tài sản" />
+                <label class="multi-option"><input type="checkbox" value="Tủ lạnh" /> <span>Tủ lạnh</span></label>
+                <label class="multi-option"><input type="checkbox" value="Máy POS" /> <span>Máy POS</span></label>
+                <label class="multi-option"><input type="checkbox" value="Bảng hiệu cửa hàng" /> <span>Bảng hiệu cửa hàng</span></label>
+                <label class="multi-option"><input type="checkbox" value="Vật phẩm trưng bày" /> <span>Vật phẩm trưng bày</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <label>Loại đối tượng tồn kho</label>
+            <select id="objectType">
+              <option value="">Tất cả</option>
+              <option value="Công ty">Công ty</option>
+              <option value="NPP">NPP</option>
+              <option value="Nhân viên">Nhân viên</option>
+              <option value="Cửa hàng">Cửa hàng</option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label>Đối tượng tồn kho</label>
+            <div class="multi-select disabled" id="objectCodeMulti">
+              <div class="multi-select-control" tabindex="0" data-placeholder="Chọn Loại đối tượng tồn kho trước">
+                <span class="multi-placeholder">Chọn Loại đối tượng tồn kho trước</span>
+              </div>
+              <div class="multi-dropdown">
+                <input class="multi-search" type="text" placeholder="Tìm đối tượng tồn kho" />
+                <label class="multi-option" data-type="Công ty"><input type="checkbox" value="CN0002866" /> <span>CN0002866 - FINVIET - Kênh Phân Phối</span></label>
+                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP001" /> <span>NPP001 - NPP Miền Nam</span></label>
+                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP002" /> <span>NPP002 - NPP Miền Đông</span></label>
+                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP003" /> <span>NPP003 - NPP Tây Nam</span></label>
+                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV001" /> <span>NV001 - Nguyễn Văn A</span></label>
+                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV002" /> <span>NV002 - Trần Thị B</span></label>
+                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV003" /> <span>NV003 - Lê Văn C</span></label>
+                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV004" /> <span>NV004 - Phạm Thị D</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH001" /> <span>CH001 - Tạp hóa Minh Anh</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH002" /> <span>CH002 - Cửa hàng An Phát</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH003" /> <span>CH003 - Siêu thị Mini Hòa Bình</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH004" /> <span>CH004 - Tạp hóa Thanh Tâm</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH005" /> <span>CH005 - Cửa hàng Phúc Lộc</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH006" /> <span>CH006 - Tạp hóa Cô Ba</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH007" /> <span>CH007 - Đại lý Nam Phương</span></label>
+                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH008" /> <span>CH008 - Cửa hàng Việt Hưng</span></label>
+              </div>
+            </div>
+            <div class="field-help" id="objectCodeHelp">Vui lòng chọn Loại đối tượng tồn kho trước.</div>
+          </div>
+
+          <div class="form-item">
+            <label>Thời điểm ghi nhận</label>
+            <input id="snapshotTime" type="text" readonly value="22/06/2026 10:30:00" />
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-secondary" id="resetBtn" type="button">Làm mới</button>
+          <button class="btn-primary" id="searchBtn" type="button">Tìm kiếm</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <span>Tồn kho hiện tại tài sản</span>
+        <button class="btn-primary" id="exportBtn" type="button">Export Excel</button>
+      </div>
+      <div class="section-body">
+        <div class="table-wrap">
+          <table id="inventoryTable">
+            <thead>
+              <tr>
+                <th>Công ty</th>
+                <th>Loại đối tượng tồn kho</th>
+                <th>Mã đối tượng</th>
+                <th>Tên đối tượng</th>
+                <th>Mã tài sản</th>
+                <th>Tên tài sản</th>
+                <th>Nhóm tài sản</th>
+                <th>Loại tài sản</th>
+                <th>QR Code</th>
+                <th class="right">Số lượng tồn</th>
+                <th>Ngày cập nhật tồn gần nhất</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP001" data-asset-group="Tài sản định danh" data-asset-type="Tủ lạnh">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP001</a></td>
+                <td>NPP Miền Nam</td>
+                <td><a class="copy">TS000125</a></td>
+                <td>Tủ lạnh Sanaky 300L</td>
+                <td>Tài sản định danh</td>
+                <td>Tủ lạnh</td>
+                <td><a class="copy">QR-TS-000125</a></td>
+                <td class="qty">1</td>
+                <td>22/06/2026 09:12:35</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP002" data-asset-group="Tài sản định danh" data-asset-type="Tủ lạnh">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP002</a></td>
+                <td>NPP Miền Đông</td>
+                <td><a class="copy">TS000126</a></td>
+                <td>Tủ lạnh Alaska 250L</td>
+                <td>Tài sản định danh</td>
+                <td>Tủ lạnh</td>
+                <td><a class="copy">QR-TS-000126</a></td>
+                <td class="qty">1</td>
+                <td>22/06/2026 09:30:18</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP003" data-asset-group="Tài sản định danh" data-asset-type="Tủ lạnh">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP003</a></td>
+                <td>NPP Tây Nam</td>
+                <td><a class="copy">TS000127</a></td>
+                <td>Tủ lạnh Sanaky 400L</td>
+                <td>Tài sản định danh</td>
+                <td>Tủ lạnh</td>
+                <td><a class="copy">QR-TS-000127</a></td>
+                <td class="qty">1</td>
+                <td>22/06/2026 10:05:44</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Nhân viên" data-object-code="NV001" data-asset-group="Tài sản định danh" data-asset-type="Máy POS">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip orange">Nhân viên</span></td>
+                <td><a class="copy">NV001</a></td>
+                <td>Nguyễn Văn A</td>
+                <td><a class="copy">TS000778</a></td>
+                <td>Máy POS Android</td>
+                <td>Tài sản định danh</td>
+                <td>Máy POS</td>
+                <td><a class="copy">QR-TS-000778</a></td>
+                <td class="qty">1</td>
+                <td>21/06/2026 16:28:44</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Nhân viên" data-object-code="NV002" data-asset-group="Tài sản định danh" data-asset-type="Máy POS">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip orange">Nhân viên</span></td>
+                <td><a class="copy">NV002</a></td>
+                <td>Trần Thị B</td>
+                <td><a class="copy">TS000779</a></td>
+                <td>Máy POS Sunmi V2</td>
+                <td>Tài sản định danh</td>
+                <td>Máy POS</td>
+                <td><a class="copy">QR-TS-000779</a></td>
+                <td class="qty">1</td>
+                <td>21/06/2026 15:12:20</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Nhân viên" data-object-code="NV003" data-asset-group="Tài sản định danh" data-asset-type="Máy POS">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip orange">Nhân viên</span></td>
+                <td><a class="copy">NV003</a></td>
+                <td>Lê Văn C</td>
+                <td><a class="copy">TS000780</a></td>
+                <td>Máy POS cầm tay</td>
+                <td>Tài sản định danh</td>
+                <td>Máy POS</td>
+                <td><a class="copy">QR-TS-000780</a></td>
+                <td class="qty">1</td>
+                <td>20/06/2026 17:45:05</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Nhân viên" data-object-code="NV004" data-asset-group="Tài sản định danh" data-asset-type="Máy POS">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip orange">Nhân viên</span></td>
+                <td><a class="copy">NV004</a></td>
+                <td>Phạm Thị D</td>
+                <td><a class="copy">TS000781</a></td>
+                <td>Máy POS Android Pro</td>
+                <td>Tài sản định danh</td>
+                <td>Máy POS</td>
+                <td><a class="copy">QR-TS-000781</a></td>
+                <td class="qty">1</td>
+                <td>20/06/2026 08:35:55</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH001" data-asset-group="Tài sản không định danh" data-asset-type="Bảng hiệu cửa hàng">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH001</a></td>
+                <td>Tạp hóa Minh Anh</td>
+                <td><a class="copy">TS001021</a></td>
+                <td>Bảng hiệu cửa hàng 60x90</td>
+                <td>Tài sản không định danh</td>
+                <td>Bảng hiệu cửa hàng</td>
+                <td>—</td>
+                <td class="qty">12</td>
+                <td>20/06/2026 11:05:10</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH002" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH002</a></td>
+                <td>Cửa hàng An Phát</td>
+                <td><a class="copy">TS001104</a></td>
+                <td>Standee khuyến mãi</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">25</td>
+                <td>18/06/2026 14:20:18</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH003" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH003</a></td>
+                <td>Siêu thị Mini Hòa Bình</td>
+                <td><a class="copy">TS001105</a></td>
+                <td>Kệ trưng bày mini</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">8</td>
+                <td>18/06/2026 16:10:02</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH004" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH004</a></td>
+                <td>Tạp hóa Thanh Tâm</td>
+                <td><a class="copy">TS001106</a></td>
+                <td>Poster treo quầy</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">40</td>
+                <td>17/06/2026 09:00:00</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH005" data-asset-group="Tài sản không định danh" data-asset-type="Bảng hiệu cửa hàng">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH005</a></td>
+                <td>Cửa hàng Phúc Lộc</td>
+                <td><a class="copy">TS001022</a></td>
+                <td>Bảng hiệu mica 40x60</td>
+                <td>Tài sản không định danh</td>
+                <td>Bảng hiệu cửa hàng</td>
+                <td>—</td>
+                <td class="qty">6</td>
+                <td>17/06/2026 10:25:13</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH006" data-asset-group="Tài sản không định danh" data-asset-type="Bảng hiệu cửa hàng">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH006</a></td>
+                <td>Tạp hóa Cô Ba</td>
+                <td><a class="copy">TS001023</a></td>
+                <td>Bảng hiệu hộp đèn</td>
+                <td>Tài sản không định danh</td>
+                <td>Bảng hiệu cửa hàng</td>
+                <td>—</td>
+                <td class="qty">3</td>
+                <td>16/06/2026 14:50:36</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH007" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH007</a></td>
+                <td>Đại lý Nam Phương</td>
+                <td><a class="copy">TS001107</a></td>
+                <td>Kệ trưng bày 3 tầng</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">15</td>
+                <td>16/06/2026 15:48:21</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Cửa hàng" data-object-code="CH008" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip green">Cửa hàng</span></td>
+                <td><a class="copy">CH008</a></td>
+                <td>Cửa hàng Việt Hưng</td>
+                <td><a class="copy">TS001108</a></td>
+                <td>Wobbler quầy kệ</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">120</td>
+                <td>15/06/2026 13:22:09</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Công ty" data-object-code="CN0002866" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip gray">Công ty</span></td>
+                <td><a class="copy">CN0002866</a></td>
+                <td>FINVIET - Kênh Phân Phối</td>
+                <td><a class="copy">TS000450</a></td>
+                <td>Kệ trưng bày mini</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">148</td>
+                <td>19/06/2026 08:44:00</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="Công ty" data-object-code="CN0002866" data-asset-group="Tài sản không định danh" data-asset-type="Bảng hiệu cửa hàng">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip gray">Công ty</span></td>
+                <td><a class="copy">CN0002866</a></td>
+                <td>FINVIET - Kênh Phân Phối</td>
+                <td><a class="copy">TS001024</a></td>
+                <td>Bảng hiệu alu ngoài trời</td>
+                <td>Tài sản không định danh</td>
+                <td>Bảng hiệu cửa hàng</td>
+                <td>—</td>
+                <td class="qty">35</td>
+                <td>19/06/2026 09:15:12</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP001" data-asset-group="Tài sản không định danh" data-asset-type="Vật phẩm trưng bày">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP001</a></td>
+                <td>NPP Miền Nam</td>
+                <td><a class="copy">TS001109</a></td>
+                <td>Khay trưng bày sản phẩm</td>
+                <td>Tài sản không định danh</td>
+                <td>Vật phẩm trưng bày</td>
+                <td>—</td>
+                <td class="qty">60</td>
+                <td>14/06/2026 11:40:33</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP002" data-asset-group="Tài sản không định danh" data-asset-type="Bảng hiệu cửa hàng">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP002</a></td>
+                <td>NPP Miền Đông</td>
+                <td><a class="copy">TS001025</a></td>
+                <td>Bảng hiệu treo trong nhà</td>
+                <td>Tài sản không định danh</td>
+                <td>Bảng hiệu cửa hàng</td>
+                <td>—</td>
+                <td class="qty">22</td>
+                <td>14/06/2026 12:05:46</td>
+              </tr>
+              <tr data-company="FINVIET - KPP" data-object-type="NPP" data-object-code="NPP003" data-asset-group="Tài sản định danh" data-asset-type="Tủ lạnh">
+                <td>FINVIET - KPP</td>
+                <td><span class="chip">NPP</span></td>
+                <td><a class="copy">NPP003</a></td>
+                <td>NPP Tây Nam</td>
+                <td><a class="copy">TS000128</a></td>
+                <td>Tủ lạnh Aqua 280L</td>
+                <td>Tài sản định danh</td>
+                <td>Tủ lạnh</td>
+                <td><a class="copy">QR-TS-000128</a></td>
+                <td class="qty">1</td>
+                <td>13/06/2026 17:18:29</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState">Không có dữ liệu phù hợp với điều kiện tìm kiếm.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const rows = Array.from(document.querySelectorAll('#inventoryTable tbody tr'));
+    const objectType = document.getElementById('objectType');
+
+    function formatDateTime(date){
+      const pad = number => String(number).padStart(2, '0');
+      return `${pad(date.getDate())}/${pad(date.getMonth()+1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+
+    function getMultiValues(multiId){
+      return Array.from(document.querySelectorAll(`#${multiId} input[type="checkbox"]:checked`)).map(input => input.value);
+    }
+
+    function renderMultiTags(multiId){
+      const multi = document.getElementById(multiId);
+      const control = multi.querySelector('.multi-select-control');
+      const checked = Array.from(multi.querySelectorAll('input[type="checkbox"]:checked'));
+      const placeholder = control.dataset.placeholder;
+
+      control.innerHTML = '';
+
+      if (checked.length === 0) {
+        const placeholderNode = document.createElement('span');
+        placeholderNode.className = 'multi-placeholder';
+        placeholderNode.textContent = placeholder;
+        control.appendChild(placeholderNode);
+        return;
+      }
+
+      checked.forEach(input => {
+        const text = input.closest('.multi-option').querySelector('span').textContent.trim();
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.dataset.value = input.value;
+        tag.innerHTML = `<span>${text}</span><span class="tag-remove" title="Xóa">×</span>`;
+        control.appendChild(tag);
+      });
+    }
+
+    function clearMulti(multiId){
+      document.querySelectorAll(`#${multiId} input[type="checkbox"]`).forEach(input => {
+        input.checked = false;
+      });
+      renderMultiTags(multiId);
+    }
+
+    function closeAllMulti(exceptId){
+      document.querySelectorAll('.multi-select.open').forEach(multi => {
+        if (!exceptId || multi.id !== exceptId) {
+          multi.classList.remove('open');
+        }
+      });
+    }
+
+    function setupMultiSelect(multiId, afterChange){
+      const multi = document.getElementById(multiId);
+      const control = multi.querySelector('.multi-select-control');
+      const search = multi.querySelector('.multi-search');
+
+      control.addEventListener('click', event => {
+        const remove = event.target.closest('.tag-remove');
+
+        if (remove) {
+          event.stopPropagation();
+          const tag = remove.closest('.tag');
+          const checkbox = Array.from(multi.querySelectorAll('input[type="checkbox"]')).find(item => item.value === tag.dataset.value);
+          if (checkbox) checkbox.checked = false;
+          renderMultiTags(multiId);
+          if (typeof afterChange === 'function') afterChange();
+          return;
+        }
+
+        if (multi.classList.contains('disabled')) {
+          const help = document.getElementById('objectCodeHelp');
+          if (help) help.classList.add('show');
+          return;
+        }
+
+        closeAllMulti(multiId);
+        multi.classList.toggle('open');
+        if (multi.classList.contains('open')) {
+          search.value = '';
+          filterMultiOptions(multiId, '');
+          search.focus();
+        }
+      });
+
+      multi.querySelectorAll('.multi-option').forEach(option => {
+        option.addEventListener('click', event => {
+          event.stopPropagation();
+          const checkbox = option.querySelector('input[type="checkbox"]');
+          if (event.target !== checkbox) {
+            checkbox.checked = !checkbox.checked;
+          }
+          renderMultiTags(multiId);
+          if (typeof afterChange === 'function') afterChange();
+        });
+      });
+
+      search.addEventListener('click', event => event.stopPropagation());
+
+      search.addEventListener('input', () => {
+        filterMultiOptions(multiId, search.value.trim().toLowerCase());
+      });
+    }
+
+    function filterMultiOptions(multiId, keyword){
+      const multi = document.getElementById(multiId);
+      multi.querySelectorAll('.multi-option').forEach(option => {
+        const baseVisible = option.dataset.baseVisible !== 'false';
+        const textMatch = option.innerText.toLowerCase().includes(keyword);
+        option.style.display = baseVisible && textMatch ? 'flex' : 'none';
+      });
+    }
+
+    function refreshObjectOptions(){
+      const selectedType = objectType.value;
+      const objectMulti = document.getElementById('objectCodeMulti');
+      const control = objectMulti.querySelector('.multi-select-control');
+      const help = document.getElementById('objectCodeHelp');
+
+      objectMulti.classList.remove('open');
+      objectMulti.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.checked = false;
+      });
+
+      if (!selectedType) {
+        objectMulti.classList.add('disabled');
+        control.dataset.placeholder = 'Chọn Loại đối tượng tồn kho trước';
+        if (help) help.classList.remove('show');
+
+        objectMulti.querySelectorAll('.multi-option').forEach(option => {
+          option.dataset.baseVisible = 'false';
+          option.style.display = 'none';
+          option.querySelector('input').disabled = true;
+        });
+      } else {
+        objectMulti.classList.remove('disabled');
+        control.dataset.placeholder = 'Tất cả đối tượng tồn kho';
+        if (help) help.classList.remove('show');
+
+        objectMulti.querySelectorAll('.multi-option').forEach(option => {
+          const visible = option.dataset.type === selectedType;
+          option.dataset.baseVisible = visible ? 'true' : 'false';
+          option.style.display = visible ? 'flex' : 'none';
+          option.querySelector('input').disabled = !visible;
+        });
+      }
+
+      renderMultiTags('objectCodeMulti');
+    }
+
+    function getCellText(row){
+      return row.innerText.toLowerCase();
+    }
+
+    function applyFilter(){
+      const company = document.getElementById('company').value;
+      const assetSearch = document.getElementById('assetSearch').value.trim().toLowerCase();
+      const assetGroup = document.getElementById('assetGroup').value;
+      const assetTypes = getMultiValues('assetTypeMulti');
+      const selectedObjectType = objectType.value;
+      const selectedObjectCodes = getMultiValues('objectCodeMulti');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const matched =
+          (!company || row.dataset.company === company) &&
+          (!assetSearch || getCellText(row).includes(assetSearch)) &&
+          (!assetGroup || row.dataset.assetGroup === assetGroup) &&
+          (assetTypes.length === 0 || assetTypes.includes(row.dataset.assetType)) &&
+          (!selectedObjectType || row.dataset.objectType === selectedObjectType) &&
+          (selectedObjectCodes.length === 0 || selectedObjectCodes.includes(row.dataset.objectCode));
+
+        row.style.display = matched ? '' : 'none';
+        if (matched) visibleCount += 1;
+      });
+
+      document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+      document.getElementById('snapshotTime').value = formatDateTime(new Date());
+    }
+
+    function resetFilter(){
+      document.getElementById('company').value = 'FINVIET - KPP';
+      document.getElementById('assetSearch').value = '';
+      document.getElementById('assetGroup').value = '';
+      clearMulti('assetTypeMulti');
+      objectType.value = '';
+      refreshObjectOptions();
+      applyFilter();
+    }
+
+    function exportVisibleRows(){
+      const visibleRows = rows.filter(row => row.style.display !== 'none');
+
+      if (!document.getElementById('company').value) {
+        alert('Vui lòng chọn Công ty trước khi xuất dữ liệu.');
+        return;
+      }
+
+      if (visibleRows.length === 0) {
+        alert('Không có dữ liệu để xuất.');
+        return;
+      }
+
+      const headers = Array.from(document.querySelectorAll('#inventoryTable thead th')).map(th => th.innerText.trim());
+      const body = visibleRows.map(row => Array.from(row.cells).map(cell => `"${cell.innerText.replaceAll('"','""').trim()}"`).join(','));
+      const csv = '\ufeff' + headers.map(h => `"${h}"`).join(',') + '\n' + body.join('\n');
+      const blob = new Blob([csv], {type:'application/vnd.ms-excel;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const now = new Date();
+      const stamp = `${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+
+      link.href = url;
+      link.download = `BaoCaoTonKhoHienTaiTaiSan_${stamp}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.multi-select')) {
+        closeAllMulti();
+      }
+    });
+
+    setupMultiSelect('assetTypeMulti', applyFilter);
+    setupMultiSelect('objectCodeMulti', applyFilter);
+
+    objectType.addEventListener('change', () => {
+      refreshObjectOptions();
+      applyFilter();
+    });
+
+    document.getElementById('company').addEventListener('change', applyFilter);
+    document.getElementById('assetGroup').addEventListener('change', applyFilter);
+    document.getElementById('searchBtn').addEventListener('click', applyFilter);
+    document.getElementById('resetBtn').addEventListener('click', resetFilter);
+    document.getElementById('exportBtn').addEventListener('click', exportVisibleRows);
+
+    renderMultiTags('assetTypeMulti');
+    refreshObjectOptions();
+    applyFilter();
+  </script>
+<script src="../../../../menu-tree.js"></script>
+<script src="../../../../_shared/portal-menu.js"></script>
+<script src="../../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+</html>
