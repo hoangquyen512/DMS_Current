@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-CH03 — Tác vụ cửa hàng</title>
+<link rel="stylesheet" href="../../_shared/app-chrome.css"/>
+<style>
+  .task-screen { background: var(--neutral-50); }
+  .task-header {
+    background: #fff;
+    border-bottom: 1px solid var(--neutral-100);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .task-back {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: var(--neutral-700);
+    text-decoration: none;
+  }
+  .task-title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: var(--neutral-900); }
+  .task-note-btn { width: 36px; text-align: center; font-size: 18px; border: none; background: transparent; color: var(--neutral-600); }
+  .store-hero {
+    background: linear-gradient(180deg, #b8e4f7 0%, #d9effa 50%, var(--neutral-50) 100%);
+    padding: 16px;
+    text-align: center;
+  }
+  .store-hero .logo {
+    width: 72px; height: 72px;
+    margin: 0 auto 10px;
+    border-radius: 12px;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 12px rgba(15,23,42,.1);
+  }
+  .store-hero .name { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+  .store-hero .store-phone { font-size: 14px; color: var(--neutral-700); margin-top: 4px; }
+  .store-hero .addr { font-size: 13px; color: var(--neutral-500); margin-top: 6px; line-height: 1.45; }
+  .store-badges {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px;
+  }
+  .store-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.9);
+    border: 1px solid var(--neutral-200);
+    font-size: 11px; font-weight: 600; color: var(--neutral-700);
+  }
+  .task-note {
+    margin: 12px 16px 0;
+    font-size: 12px; font-style: italic;
+    color: var(--neutral-500);
+    text-align: center; line-height: 1.45;
+  }
+  .task-actions {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .action-tile {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--neutral-200);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--neutral-900);
+    font-size: 15px; font-weight: 500;
+    cursor: pointer;
+  }
+  .action-tile:hover { border-color: var(--app-primary); box-shadow: 0 2px 8px rgba(26,154,214,.12); }
+  .action-tile .at-icon { width: 28px; text-align: center; font-size: 20px; color: var(--neutral-500); flex-shrink: 0; }
+  .hint-bar { margin-top: 12px; }
+</style>
+</head>
+<body class="mockup-page app-hub">
+
+<div class="phone">
+  <div class="phone-screen task-screen">
+    <div class="status-bar" style="background:#fff;color:var(--neutral-900)">
+      <span>15:15</span>
+      <span class="status-icons">📶 🔋 80%</span>
+    </div>
+
+    <div class="task-header">
+      <a class="task-back" href="MS-A-CH02-danh-sach-cua-hang.html" title="Danh sách CH">←</a>
+      <div class="task-title">Tác vụ cửa hàng</div>
+      <button class="task-note-btn" type="button" aria-label="Ghi chú">📝</button>
+    </div>
+
+    <div class="scroll-area task-screen">
+      <div class="store-hero">
+        <div class="logo">🏪</div>
+        <div class="name">Bidy</div>
+        <div class="store-phone">0979494629</div>
+        <div class="addr">1, Xã Trung Thạnh, Huyện Cờ Đỏ, Cần Thơ</div>
+        <div class="store-badges">
+          <span class="store-badge">🌿 ECO</span>
+          <span class="store-badge">🛡️ CH đã eKYC</span>
+          <span class="store-badge">🎁 ECOPay</span>
+        </div>
+      </div>
+
+      <p class="task-note">*Bạn cần thực hiện hết các bước bắt buộc trước khi rời khỏi cửa hàng.</p>
+
+      <div class="task-actions">
+        <div class="action-tile"><span class="at-icon">🛒</span>Đặt hàng</div>
+        <a class="action-tile" href="../../vieng-tham/ton-kho/MS-A-TK00-kiem-tra-ton-kho-full-flow.html?from=ch">
+          <span class="at-icon">📦</span>Kiểm tra tồn kho
+        </a>
+        <div class="action-tile"><span class="at-icon">🛒</span>Đơn hàng trả thưởng</div>
+        <div class="action-tile"><span class="at-icon">🔄</span>Chương trình tích lũy</div>
+        <a class="action-tile" href="../../vieng-tham/tai-san/MS-A-TS00-kiem-tra-tai-san-full-flow.html?from=ch">
+          <span class="at-icon">🎁</span>Kiểm tra tài sản
+        </a>
+        <div class="action-tile"><span class="at-icon">▦</span>Gán mã QR</div>
+        <div class="action-tile"><span class="at-icon">📝</span>Hợp đồng</div>
+        <div class="action-tile"><span class="at-icon">📋</span>Khảo sát</div>
+        <div class="action-tile"><span class="at-icon">🎁</span>Chương trình trưng bày</div>
+        <a class="action-tile" href="../../vieng-tham/tai-san/MS-A-TS00-kiem-tra-tai-san-full-flow.html?from=ch&amp;screen=giao">
+          <span class="at-icon">📤</span>Giao tài sản
+        </a>
+        <a class="action-tile" href="../../bao-cao/vieng-tham/MS-A-BCVT00-bao-cao-vieng-tham-full-flow.html?from=ch">
+          <span class="at-icon">📊</span>Báo cáo viếng thăm
+        </a>
+        <div class="action-tile"><span class="at-icon">💬</span>Bình luận</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hint-bar">MS-A-CH03 · <a href="MS-A-CH02-danh-sach-cua-hang.html">CH02</a> → CH03 → <a href="../../vieng-tham/tai-san/MS-A-TS00-kiem-tra-tai-san-full-flow.html?from=ch">TS00</a> · <a href="../../vieng-tham/ton-kho/MS-A-TK00-kiem-tra-ton-kho-full-flow.html?from=ch">TK00</a> · <a href="../../bao-cao/vieng-tham/MS-A-BCVT00-bao-cao-vieng-tham-full-flow.html?from=ch">BCVT00</a></div>
+
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>
