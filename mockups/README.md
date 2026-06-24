@@ -24,9 +24,13 @@ mockups/
 ├── templates/
 │   ├── mobile-template.html   ← Base template cho Salesman/Manager App
 │   └── web-template.html      ← Base template cho Portal HO/NPP
-├── mobile/                    ← Mockup Salesman App / Manager App
-│   └── MS-XX-ten-man-hinh.html
-└── web/                       ← Mockup Portal HO / Portal NPP
+├── mobile/                    ← Mockup Salesman App (main.html = entry 4 tab)
+│   ├── main.html
+│   ├── vieng-tham/
+│   ├── bao-cao/
+│   ├── don-hang/
+│   └── khac/
+└── web/                       ← Mockup Portal (main.html = entry menu)
     └── MS-WXX-ten-man-hinh.html
 ```
 
@@ -38,7 +42,9 @@ mockups/
 Claude tự động tạo file trong `mockups/mobile/` hoặc `mockups/web/` sau khi viết spec.
 
 ### Bước 2 — Mở trong Chrome
-Double-click file `.html` → mở trong Chrome (hoặc kéo thả vào Chrome).
+- **Portal:** `mockups/web/main.html`
+- **Salesman App:** `mockups/mobile/main.html`
+- Hoặc double-click file `.html` con
 
 ### Bước 3 — Import vào Visily
 1. **Cài Extension**: Chrome Web Store → search **"Visily – Screenshot Capture & Design"** → Install

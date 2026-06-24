@@ -40,7 +40,8 @@ cd DMS_Salesman_mockup
 ### Xem mockup
 
 1. Mở `mockups/web/main.html` trong Chrome — portal dashboard + menu toàn bộ mockup web
-2. Hoặc mở trực tiếp file `.html` trong `mockups/mobile/` / `mockups/web/`
+2. Mở `mockups/mobile/main.html` trong Chrome — Salesman App 4 tab + catalog mockup mobile
+3. Hoặc mở trực tiếp file `.html` trong `mockups/mobile/` / `mockups/web/`
 
 ### Import vào Visily
 
@@ -54,6 +55,7 @@ Xem chi tiết trong `mockups/README.md`.
 |--------|----------|
 | `scripts/patch-portal-chrome.ps1` | Gắn portal header ecodms + nút Back vào file HTML web |
 | `scripts/reorganize-mockup-web.ps1` | Tổ chức lại file mockup web theo cây menu DMS |
+| `scripts/reorganize-mockup-mobile.ps1` | Tổ chức lại file mockup mobile theo 4 tab app |
 
 ```powershell
 # Gắn portal chrome cho toàn bộ mockup web
