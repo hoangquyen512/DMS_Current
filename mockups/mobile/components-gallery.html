@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[APP] Component Gallery — Salesman Design System</title>
+<link rel="stylesheet" href="_shared/mockup-shell.css"/>
+<script src="_shared/mockup-fit.js" defer></script>
+</head>
+<body class="mockup-gallery">
+
+<div class="mockup-stage">
+  <div class="phone">
+    <div class="phone-screen" style="display:flex;flex-direction:column;">
+      <div class="status-bar on-primary">
+        <span>DS Gallery</span>
+        <span class="status-icons">📶 🔋</span>
+      </div>
+      <div class="app-scroll" style="background:var(--neutral-0);">
+
+        <div class="ds-section">
+          <p class="ds-section__title">Buttons</p>
+          <div class="ds-row" style="flex-direction:column;">
+            <button type="button" class="app-btn app-btn--primary app-btn--block">Primary</button>
+            <button type="button" class="app-btn app-btn--outline app-btn--block">Outline</button>
+            <button type="button" class="app-btn app-btn--light app-btn--block">Light</button>
+            <button type="button" class="app-btn app-btn--danger app-btn--block">Danger</button>
+            <button type="button" class="app-btn app-btn--primary" disabled>Disabled</button>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Badges</p>
+          <div class="ds-row">
+            <span class="app-badge app-badge--primary">Đang xử lý</span>
+            <span class="app-badge app-badge--success">Hoàn thành</span>
+            <span class="app-badge app-badge--warning">Chờ duyệt</span>
+            <span class="app-badge app-badge--error">Từ chối</span>
+            <span class="app-badge app-badge--neutral">Nháp</span>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Chips</p>
+          <div class="app-chip-row">
+            <button type="button" class="app-chip app-chip--active">Tất cả</button>
+            <button type="button" class="app-chip">Hôm nay</button>
+            <button type="button" class="app-chip">Tuần này</button>
+            <button type="button" class="app-chip">Tháng này</button>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Tabs</p>
+          <div class="app-tabs">
+            <button type="button" class="app-tab">Bản đồ</button>
+            <button type="button" class="app-tab app-tab--active">Danh sách</button>
+          </div>
+        </div>
+
+        <div class="ds-section" style="background:var(--app-primary);padding:12px;">
+          <p class="ds-section__title" style="color:rgba(255,255,255,.7);">Segment (on brand)</p>
+          <div class="app-seg">
+            <button type="button" class="app-seg-btn app-seg-btn--active">Ngày</button>
+            <button type="button" class="app-seg-btn">Tuần</button>
+            <button type="button" class="app-seg-btn">Tháng</button>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Inputs</p>
+          <div style="padding:0 12px;">
+            <div class="app-field">
+              <label class="app-field__label"><span class="req">*</span> Công ty</label>
+              <select class="app-select"><option>Finviet Demo</option></select>
+            </div>
+            <div class="app-field">
+              <label class="app-field__label">Tìm kiếm</label>
+              <div class="app-search"><span>🔍</span><input type="search" placeholder="Tìm cửa hàng..."/></div>
+            </div>
+            <div class="app-field">
+              <label class="app-field__label">Ghi chú</label>
+              <textarea class="app-textarea" placeholder="Nhập ghi chú" maxlength="500"></textarea>
+              <span class="app-field__counter">0/500</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Card</p>
+          <article class="app-card">
+            <div class="app-card__hd">
+              <span class="app-card__icon">📍</span>
+              <span class="app-card__title">Hoàng Việt Restaurant</span>
+              <span class="app-card__meta">33m</span>
+            </div>
+            <p class="app-card__text">0908706789</p>
+            <p class="app-card__text">34 Hoàng Việt, Q. Tân Bình</p>
+            <div class="app-card__actions">
+              <button type="button" class="app-btn app-btn--primary app-btn--block">Viếng thăm</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Hero cửa hàng</p>
+          <div class="app-hero app-hero--compact">
+            <div class="app-hero__logo app-hero__logo--square">🏪</div>
+            <p class="app-hero__name">Cửa hàng Minh Anh</p>
+            <p class="app-hero__phone">📞 0908 706 789</p>
+            <p class="app-hero__addr">34 Hoàng Việt, P.2, Q. Tân Bình, TP.HCM</p>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Action tile</p>
+          <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;">
+            <a href="#" class="app-action-tile"><span class="app-action-tile__icon">📦</span> Kiểm tra tồn kho</a>
+            <a href="#" class="app-action-tile"><span class="app-action-tile__icon">🛒</span> Đặt hàng</a>
+          </div>
+        </div>
+
+        <div class="ds-section">
+          <p class="ds-section__title">Empty</p>
+          <div class="app-empty">
+            <span class="app-empty__icon">📭</span>
+            <p class="app-empty__title">Chưa có dữ liệu</p>
+            <p class="app-empty__desc">Thử đổi bộ lọc hoặc tạo mới bản ghi.</p>
+            <button type="button" class="app-btn app-btn--primary" style="margin-top:16px;">Tạo mới</button>
+          </div>
+        </div>
+
+        <div style="height:24px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone">
+    <div class="phone-screen" style="display:flex;flex-direction:column;">
+      <header class="app-header app-header--primary">
+        <button type="button" class="app-header__back">←</button>
+        <div class="app-header__title">
+          <h1>Kiểm tra tài sản</h1>
+          <p class="app-header__sub">FV_Ops_Kiều My_Test111</p>
+        </div>
+      </header>
+      <div class="app-scroll">
+        <div class="app-section-hd">Tài sản tại cửa hàng (12)</div>
+        <div class="app-skeleton"></div>
+        <div class="app-skeleton"></div>
+        <article class="app-card">
+          <div class="app-card__hd">
+            <span class="app-card__title">Tủ mát TCL 400L</span>
+            <span class="app-badge app-badge--success">OK</span>
+          </div>
+          <p class="app-card__text">Mã: TS-2024-001 · Lần KT: 20/06/2026</p>
+        </article>
+      </div>
+      <div class="app-footer-actions">
+        <button type="button" class="app-btn app-btn--outline">Kiểm tra</button>
+        <button type="button" class="app-btn app-btn--primary">Giao tài sản</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="flow-bar">Design System: <code>design-system/mobile/</code> · CSS: <code>_shared/app-components.css</code></p>
+
+</body>
+</html>
