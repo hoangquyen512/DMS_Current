@@ -1,0 +1,75 @@
+/**
+ * [WEB] DMS Portal — Design tokens
+ * Nguồn: dms-portal-dev.finviet.com.vn (Ant Design Pro / ecodms)
+ * Quét: 24/06/2026 — header, list Tin tức, dashboard
+ */
+:root {
+  /* Brand Finviet / ecodms */
+  --portal-brand: #2b579a;
+  --portal-brand-dark: #244a83;
+  --portal-brand-light: #3a6cb5;
+  --portal-brand-yellow: #ffcc33;
+  --portal-menu-bg: #2c4475;
+  --portal-menu-hover: #3a6cb5;
+
+  /* Semantic */
+  --portal-primary: var(--portal-brand);
+  --portal-primary-hover: var(--portal-brand-light);
+  --portal-role-green: #10b981;
+  --portal-company-tag-bg: rgba(255, 255, 255, 0.12);
+  --portal-user-orange: #f59e0b;
+
+  /* Neutral (Ant Design default scale) */
+  --portal-bg: #f0f2f5;
+  --portal-surface: #ffffff;
+  --portal-text: rgba(0, 0, 0, 0.88);
+  --portal-text-secondary: rgba(0, 0, 0, 0.65);
+  --portal-text-tertiary: rgba(0, 0, 0, 0.45);
+  --portal-border: #f0f0f0;
+  --portal-border-strong: #d9d9d9;
+
+  /* Status */
+  --portal-success-bg: #f6ffed;
+  --portal-success-text: #52c41a;
+  --portal-warning-bg: #fffbe6;
+  --portal-warning-text: #faad14;
+  --portal-error-bg: #fff2f0;
+  --portal-error-text: #ff4d4f;
+  --portal-info-bg: #e6f4ff;
+  --portal-info-text: #1677ff;
+
+  /* Layout */
+  --portal-header-h: 56px;
+  /* Typography — Ant Design 5 / ecodms (dms-portal-dev.finviet.com.vn) */
+  --portal-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --portal-font-size: 14px;
+  --portal-line-height: 1.5715;
+  --portal-letter-spacing: 0;
+
+  /* Radius & shadow */
+  --portal-radius: 8px;
+  --portal-radius-sm: 6px;
+  --portal-radius-xs: 4px;
+  --portal-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --portal-shadow-menu: 0 6px 20px rgba(0, 0, 0, 0.28);
+
+  /* Spacing */
+  --portal-space-xs: 4px;
+  --portal-space-sm: 8px;
+  --portal-space-md: 12px;
+  --portal-space-lg: 16px;
+  --portal-space-xl: 24px;
+
+  /* Alias tương thích portal-chrome.css cũ */
+  --font-sans: var(--portal-font);
+  --header-bg: var(--portal-brand);
+  --header-active: var(--portal-brand-light);
+  --menu-bg: var(--portal-menu-bg);
+  --menu-hover: var(--portal-menu-hover);
+  --brand-yellow: var(--portal-brand-yellow);
+  --role-green: var(--portal-role-green);
+  --user-orange: var(--portal-user-orange);
+  --neutral-0: var(--portal-surface);
+  --neutral-100: #f5f5f5;
+  --neutral-700: #434343;
+}

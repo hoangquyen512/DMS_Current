@@ -1,0 +1,188 @@
+﻿/* Rich Dashboard — scoped for main.html */
+.rich-dash {
+  --rd-bg: #eef3fb;
+  --rd-panel: #ffffff;
+  --rd-text: #142033;
+  --rd-muted: #64748b;
+  --rd-border: #e2e8f0;
+  --rd-blue: #2563eb;
+  --rd-green: #16a34a;
+  --rd-amber: #f59e0b;
+  --rd-orange: #f97316;
+  --rd-red: #ef4444;
+  --rd-pink: #ec4899;
+  --rd-purple: #7c3aed;
+  --rd-indigo: #4f46e5;
+  --rd-teal: #14b8a6;
+  --rd-shadow: 0 14px 35px rgba(15, 23, 42, .09);
+  --rd-radius: 20px;
+  color: var(--rd-text);
+}
+.rich-dash .brand-title strong {  display: block; font-size: 16px; color: #fff;  }
+.rich-dash .brand-title span {  display: block; margin-top: 3px; color: #94a3b8; font-size: 12px;  }
+.rich-dash .topbar {        display: flex;       justify-content: space-between;       align-items: flex-start;       gap: 16px;       margin-bottom: 18px;      }
+.rich-dash h1 {        margin: 0;       font-size: 24px;       font-weight: 600;       line-height: 1.35;       letter-spacing: -0.01em;      }
+.rich-dash .subtext {        margin: 7px 0 0;       color: var(--rd-muted);       font-size: 14px;       line-height: 1.45;      }
+.rich-dash .top-actions {        display: flex;       gap: 10px;       align-items: center;       flex-wrap: wrap;       justify-content: flex-end;      }
+.rich-dash .chip {        display: inline-flex;       gap: 8px;       align-items: center;       border-radius: 999px;       padding: 9px 12px;       background: rgba(255,255,255,.78);       border: 1px solid rgba(226,232,240,.9);       font-size: 13px;       font-weight: 700;       color: #334155;       box-shadow: 0 8px 22px rgba(15,23,42,.04);       backdrop-filter: blur(10px);      }
+.rich-dash .dot {        width: 9px;       height: 9px;       border-radius: 999px;       background: var(--rd-green);       box-shadow: 0 0 0 4px rgba(22,163,74,.12);      }
+.rich-dash .btn {        border: 0;       border-radius: 13px;       padding: 10px 14px;       font-weight: 600;       font-size: 13px;       color: #fff;       background: linear-gradient(135deg, var(--rd-blue), var(--rd-indigo));       box-shadow: 0 12px 24px rgba(37,99,235,.23);      }
+.rich-dash .btn.secondary {        color: #1e293b;       background: #fff;       border: 1px solid var(--rd-border);       box-shadow: none;      }
+.rich-dash .filters {        background: rgba(255,255,255,.85);       border: 1px solid rgba(226,232,240,.9);       border-radius: var(--rd-radius);       box-shadow: var(--rd-shadow);       padding: 16px;       margin-bottom: 28px;       backdrop-filter: blur(12px);      }
+.rich-dash .filter-head {        display: flex;       justify-content: space-between;       align-items: center;       gap: 12px;       margin-bottom: 14px;      }
+.rich-dash .filter-head strong {  font-size: 15px;  }
+.rich-dash .filter-grid {        display: grid;       grid-template-columns: repeat(8, minmax(120px, 1fr));       gap: 12px;       align-items: end;      }
+.rich-dash .field label {        display: block;       margin-bottom: 6px;       color: var(--rd-muted);       font-weight: 600;       font-size: 12px;      }
+.rich-dash .control {        width: 100%;       height: 42px;       border: 1px solid var(--rd-border);       border-radius: 13px;       padding: 0 12px;       font-weight: 400;       font-size: 14px;       color: #1e293b;       background: #fff;       outline: none;      }
+.rich-dash .filter-actions {        grid-column: span 2;       display: flex;       gap: 8px;      }
+.rich-dash .grid {        display: grid;       grid-template-columns: repeat(12, 1fr);       gap: 28px;      }
+.rich-dash .card {        background: rgba(255,255,255,.92);       border: 1px solid rgba(226,232,240,.96);       border-radius: var(--rd-radius);       box-shadow: var(--rd-shadow);       min-width: 0;       overflow: hidden;       backdrop-filter: blur(12px);      }
+.rich-dash .card:not(.kpi) { margin: 2px; }
+.rich-dash .span-12 {  grid-column: span 12;  }
+.rich-dash .span-8 {  grid-column: span 8;  }
+.rich-dash .span-7 {  grid-column: span 7;  }
+.rich-dash .span-6 {  grid-column: span 6;  }
+.rich-dash .span-5 {  grid-column: span 5;  }
+.rich-dash .span-4 {  grid-column: span 4;  }
+.rich-dash .span-3 {  grid-column: span 3;  }
+.rich-dash .span-2 {  grid-column: span 2;  }
+.rich-dash .kpi {        position: relative;       padding: 16px;       min-height: 132px;       color: #fff;       overflow: hidden;      }
+.rich-dash .kpi::before {        content: "";       position: absolute;       right: -36px;       top: -34px;       width: 118px;       height: 118px;       border-radius: 50%;       background: rgba(255,255,255,.17);      }
+.rich-dash .kpi::after {        content: "";       position: absolute;       right: 12px;       bottom: 12px;       width: 62px;       height: 30px;       opacity: .32;       background:         linear-gradient(135deg, transparent 12px, rgba(255,255,255,.8) 13px, transparent 15px),         linear-gradient(45deg, transparent 12px, rgba(255,255,255,.8) 13px, transparent 15px);       background-size: 16px 16px;      }
+.rich-dash .kpi.blue {  background: linear-gradient(135deg, #2563eb, #06b6d4);  }
+.rich-dash .kpi.green {  background: linear-gradient(135deg, #16a34a, #84cc16);  }
+.rich-dash .kpi.orange {  background: linear-gradient(135deg, #f97316, #f59e0b);  }
+.rich-dash .kpi.purple {  background: linear-gradient(135deg, #7c3aed, #ec4899);  }
+.rich-dash .kpi.red {  background: linear-gradient(135deg, #ef4444, #f97316);  }
+.rich-dash .kpi.teal {  background: linear-gradient(135deg, #0f766e, #14b8a6);  }
+.rich-dash .kpi .label {        font-size: 12px;       font-weight: 600;       opacity: .88;       position: relative;       z-index: 1;      }
+.rich-dash .kpi .value {        margin-top: 11px;       font-size: 27px;       line-height: 1;       letter-spacing: -0.02em;       font-weight: 700;       position: relative;       z-index: 1;      }
+.rich-dash .kpi .desc {        display: flex;       align-items: center;       gap: 8px;       margin-top: 10px;       font-size: 12px;       font-weight: 500;       opacity: .94;       position: relative;       z-index: 1;      }
+.rich-dash .pill {        padding: 4px 7px;       border-radius: 999px;       background: rgba(255,255,255,.22);       color: #fff;      }
+.rich-dash .panel-header {        padding: 18px 22px 0;       display: flex;       justify-content: space-between;       align-items: flex-start;       gap: 12px;      }
+.rich-dash .panel-body { padding: 20px 22px 24px; }
+.rich-dash .panel-header + .panel-body { padding-top: 16px; }
+.rich-dash .panel-header:not(:has(.tabs, .chip, .btn)) + .panel-body { padding-top: 22px; }
+.rich-dash .panel-title strong {        display: block;       font-size: 16px;       letter-spacing: -.015em;      }
+.rich-dash .tabs {        display: inline-flex;       padding: 3px;       background: #f1f5f9;       border: 1px solid var(--rd-border);       border-radius: 999px;       gap: 3px;       white-space: nowrap;      }
+.rich-dash .tab {        padding: 7px 10px;       border-radius: 999px;       color: var(--rd-muted);       font-size: 12px;       font-weight: 600;      }
+.rich-dash .tab.active {        background: #fff;       color: var(--rd-blue);       box-shadow: 0 4px 12px rgba(15,23,42,.08);      }
+.rich-dash .chart-shell {        position: relative;       height: 270px;       border-radius: 16px;       background:         linear-gradient(to top, rgba(226,232,240,.95) 1px, transparent 1px) 0 0 / 100% 54px,         linear-gradient(to right, rgba(226,232,240,.72) 1px, transparent 1px) 0 0 / 86px 100%;       border-left: 1px solid var(--rd-border);       border-bottom: 1px solid var(--rd-border);       overflow: hidden;      }
+.rich-dash svg {  display: block;  }
+.rich-dash .chart-svg {        width: 100%;       height: 100%;       position: absolute;       inset: 0;      }
+.rich-dash .legend-inline {        display: flex;       flex-wrap: wrap;       gap: 9px 14px;       margin-top: 14px;       margin-bottom: 4px;       color: #475569;       font-size: 12px;       font-weight: 600;      }
+.rich-dash .legend-dot {        display: inline-flex;       align-items: center;       gap: 7px;      }
+.rich-dash .legend-dot i {        width: 10px;       height: 10px;       border-radius: 999px;       display: inline-block;      }
+.rich-dash .donut-grid {        display: grid;       grid-template-columns: 180px 1fr;       gap: 14px;       align-items: center;      }
+.rich-dash .donut {        width: 170px;       height: 170px;       border-radius: 50%;       position: relative;       margin: auto;       background: conic-gradient(         #2563eb 0 36%,         #16a34a 36% 58%,         #f59e0b 58% 74%,         #ec4899 74% 86%,         #7c3aed 86% 94%,         #94a3b8 94% 100%       );       box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), 0 15px 28px rgba(15,23,42,.10);      }
+.rich-dash .donut::after {        content: "12,486\AĐơn";       white-space: pre;       position: absolute;       inset: 31px;       border-radius: 999px;       background: #fff;       display: grid;       place-items: center;       text-align: center;       font-weight: 700;       line-height: 1.25;       color: #0f172a;      }
+.rich-dash .legend-list {        display: grid;       gap: 8px;      }
+.rich-dash .legend-row {        display: flex;       align-items: center;       justify-content: space-between;       gap: 10px;       padding: 8px 10px;       border-radius: 13px;       background: #f8fafc;       font-size: 12px;       font-weight: 600;       color: #334155;       border: 1px solid var(--rd-border);      }
+.rich-dash .legend-left {        display: flex;       align-items: center;       gap: 8px;      }
+.rich-dash .sq {        width: 10px;       height: 10px;       border-radius: 4px;       flex: 0 0 10px;      }
+.rich-dash .stacked {        display: grid;       gap: 12px;      }
+.rich-dash .stack-row {        display: grid;       grid-template-columns: 92px 1fr 46px;       align-items: center;       gap: 10px;       font-size: 12px;       font-weight: 600;       color: #334155;      }
+.rich-dash .stack-track {        height: 28px;       border-radius: 999px;       overflow: hidden;       background: #e2e8f0;       display: flex;       box-shadow: inset 0 0 0 1px rgba(15,23,42,.04);      }
+.rich-dash .seg {  height: 100%;  }
+.rich-dash .seg.blue {  background: #2563eb;  }
+.rich-dash .seg.green {  background: #16a34a;  }
+.rich-dash .seg.amber {  background: #f59e0b;  }
+.rich-dash .seg.red {  background: #ef4444;  }
+.rich-dash .seg.purple {  background: #7c3aed;  }
+.rich-dash .bar-chart {        height: 265px;       border-radius: 16px;       padding: 18px 10px 3px;       display: flex;       align-items: flex-end;       gap: 12px;       background:         linear-gradient(to top, rgba(226,232,240,.95) 1px, transparent 1px) 0 0 / 100% 52px;       border-bottom: 1px solid var(--rd-border);      }
+.rich-dash .bar-group {        flex: 1;       height: 100%;       display: flex;       align-items: flex-end;       justify-content: center;       gap: 4px;      }
+.rich-dash .bar {        width: 28%;       min-height: 12px;       border-radius: 9px 9px 0 0;      }
+.rich-dash .bar.b1 {  background: linear-gradient(180deg, #60a5fa, #2563eb);  }
+.rich-dash .bar.b2 {  background: linear-gradient(180deg, #86efac, #16a34a);  }
+.rich-dash .bar.b3 {  background: linear-gradient(180deg, #fbbf24, #f97316);  }
+.rich-dash .x-axis {        display: grid;       grid-template-columns: repeat(6, 1fr);       gap: 4px;       margin-top: 8px;       color: var(--rd-muted);       font-size: 11px;       font-weight: 500;       text-align: center;      }
+.rich-dash .ranking {        display: grid;       gap: 10px;      }
+.rich-dash .rank-row {        display: grid;       grid-template-columns: 112px 1fr 56px;       align-items: center;       gap: 10px;       font-size: 12px;       font-weight: 600;       color: #334155;      }
+.rich-dash .rank-track {        height: 26px;       background: #edf2f7;       border-radius: 999px;       overflow: hidden;       border: 1px solid var(--rd-border);      }
+.rich-dash .rank-fill {        height: 100%;       border-radius: 999px;      }
+.rich-dash .funnel {        display: grid;       gap: 9px;       justify-items: center;       padding: 4px 0;      }
+.rich-dash .funnel-step {        height: 43px;       border-radius: 12px;       display: grid;       place-items: center;       color: #fff;       font-weight: 600;       font-size: 13px;       box-shadow: 0 10px 22px rgba(15,23,42,.08);      }
+.rich-dash .gauge-grid {        display: grid;       grid-template-columns: repeat(2, 1fr);       gap: 14px;      }
+.rich-dash .gauge {        min-height: 144px;       border: 1px solid var(--rd-border);       border-radius: 18px;       background: #f8fafc;       padding: 14px;       text-align: center;      }
+.rich-dash .gauge-arc {        width: 130px;       height: 68px;       border-radius: 130px 130px 0 0;       margin: 2px auto 0;       position: relative;       overflow: hidden;       background: conic-gradient(from 270deg at 50% 100%, #16a34a 0 56deg, #f59e0b 56deg 120deg, #ef4444 120deg 180deg, transparent 180deg 360deg);      }
+.rich-dash .gauge-arc::after {        content: "";       position: absolute;       left: 20px;       right: 20px;       bottom: 0;       height: 48px;       border-radius: 80px 80px 0 0;       background: #f8fafc;      }
+.rich-dash .needle {        width: 58px;       height: 4px;       background: #0f172a;       border-radius: 99px;       position: absolute;       left: 50%;       bottom: 0;       transform-origin: left center;       z-index: 2;      }
+.rich-dash .gauge strong {        display: block;       font-size: 23px;       margin-top: 10px;       letter-spacing: -.03em;      }
+.rich-dash .gauge span {        display: block;       margin-top: 3px;       color: var(--rd-muted);       font-size: 12px;       font-weight: 600;      }
+.rich-dash .scatter {        position: relative;       height: 265px;       border-left: 1px solid var(--rd-border);       border-bottom: 1px solid var(--rd-border);       border-radius: 16px;       background:         linear-gradient(to top, rgba(226,232,240,.95) 1px, transparent 1px) 0 0 / 100% 52px,         linear-gradient(to right, rgba(226,232,240,.75) 1px, transparent 1px) 0 0 / 72px 100%;      }
+.rich-dash .bubble {        position: absolute;       border-radius: 999px;       display: grid;       place-items: center;       color: #fff;       font-size: 11px;       font-weight: 700;       box-shadow: 0 11px 22px rgba(15,23,42,.13);       border: 2px solid rgba(255,255,255,.72);      }
+.rich-dash .waterfall {        height: 260px;       display: flex;       align-items: flex-end;       gap: 12px;       padding: 18px 10px 4px;       border-bottom: 1px solid var(--rd-border);       background:         linear-gradient(to top, rgba(226,232,240,.95) 1px, transparent 1px) 0 0 / 100% 52px;       border-radius: 16px;      }
+.rich-dash .wf-col {        flex: 1;       display: flex;       height: 100%;       align-items: flex-end;       justify-content: center;       position: relative;      }
+.rich-dash .wf-bar {        width: 68%;       border-radius: 10px 10px 0 0;       min-height: 18px;       position: relative;      }
+.rich-dash .wf-bar::before {        content: attr(data-value);       position: absolute;       left: 50%;       top: -22px;       transform: translateX(-50%);       font-size: 11px;       font-weight: 600;       color: #334155;       white-space: nowrap;      }
+.rich-dash .wf-positive {  background: linear-gradient(180deg, #86efac, #16a34a);  }
+.rich-dash .wf-negative {  background: linear-gradient(180deg, #fca5a5, #ef4444);  }
+.rich-dash .wf-total {  background: linear-gradient(180deg, #93c5fd, #2563eb);  }
+.rich-dash .heatmap {        display: grid;       grid-template-columns: 78px repeat(9, 1fr);       gap: 7px;       align-items: center;       font-size: 11px;       min-width: 720px;      }
+.rich-dash .heat-head, .rich-dash .heat-row {        color: var(--rd-muted);       font-weight: 600;      }
+.rich-dash .heat-cell {        height: 31px;       border-radius: 9px;       border: 1px solid rgba(148,163,184,.22);      }
+.rich-dash .h0 {  background: #f1f5f9;  }
+.rich-dash .h1 {  background: #dbeafe;  }
+.rich-dash .h2 {  background: #93c5fd;  }
+.rich-dash .h3 {  background: #3b82f6;  }
+.rich-dash .h4 {  background: #1d4ed8;  }
+.rich-dash .h5 {  background: #7c3aed;  }
+.rich-dash .map-wrap {        display: grid;       grid-template-columns: 1.45fr .88fr;       gap: 14px;      }
+.rich-dash .map {        height: 336px;       position: relative;       border: 1px solid var(--rd-border);       border-radius: 18px;       overflow: hidden;       background:         radial-gradient(circle at 20% 22%, rgba(37,99,235,.22), transparent 20%),         radial-gradient(circle at 68% 28%, rgba(22,163,74,.20), transparent 19%),         radial-gradient(circle at 48% 74%, rgba(249,115,22,.20), transparent 22%),         linear-gradient(135deg, #e0f2fe, #f8fafc);      }
+.rich-dash .road {        position: absolute;       height: 6px;       border-radius: 999px;       background: rgba(148,163,184,.35);       transform-origin: left center;      }
+.rich-dash .r1 {  left: 6%; top: 31%; width: 82%; transform: rotate(12deg);  }
+.rich-dash .r2 {  left: 12%; top: 72%; width: 70%; transform: rotate(-21deg);  }
+.rich-dash .r3 {  left: 46%; top: 13%; width: 52%; transform: rotate(86deg);  }
+.rich-dash .r4 {  left: 4%; top: 55%; width: 56%; transform: rotate(-6deg);  }
+.rich-dash .r5 {  left: 20%; top: 18%; width: 48%; transform: rotate(36deg);  }
+.rich-dash .district {        position: absolute;       padding: 6px 10px;       border-radius: 999px;       background: rgba(255,255,255,.74);       border: 1px solid rgba(148,163,184,.25);       color: #475569;       font-size: 11px;       font-weight: 600;       backdrop-filter: blur(8px);      }
+.rich-dash .pin {        position: absolute;       width: 34px;       height: 34px;       border-radius: 50% 50% 50% 0;       transform: rotate(-45deg);       border: 3px solid #fff;       box-shadow: 0 10px 19px rgba(15,23,42,.18);      }
+.rich-dash .pin::after {        content: "";       position: absolute;       inset: 8px;       border-radius: 999px;       background: #fff;      }
+.rich-dash .pin.online {  background: var(--rd-green);  }
+.rich-dash .pin.warning {  background: var(--rd-amber);  }
+.rich-dash .pin.hot {  background: var(--rd-pink);  }
+.rich-dash .pin.offline {  background: var(--rd-red);  }
+.rich-dash .pin.delivery {  background: var(--rd-blue);  }
+.rich-dash .operator-list {        display: grid;       gap: 10px;       align-content: start;      }
+.rich-dash .operator {        display: grid;       grid-template-columns: 38px 1fr auto;       gap: 10px;       align-items: center;       padding: 10px;       border-radius: 16px;       border: 1px solid var(--rd-border);       background: #f8fafc;      }
+.rich-dash .avatar {        width: 38px;       height: 38px;       border-radius: 13px;       display: grid;       place-items: center;       font-size: 12px;       font-weight: 700;       color: #fff;       background: linear-gradient(135deg, var(--rd-blue), var(--rd-purple));      }
+.rich-dash .operator strong {        display: block;       font-size: 13px;      }
+.rich-dash .operator span {        display: block;       color: var(--rd-muted);       font-size: 11px;       margin-top: 3px;       font-weight: 650;      }
+.rich-dash .badge {        display: inline-flex;       align-items: center;       justify-content: center;       border-radius: 999px;       padding: 5px 8px;       font-size: 11px;       font-weight: 600;       white-space: nowrap;      }
+.rich-dash .badge.blue {  color: #1d4ed8; background: #dbeafe;  }
+.rich-dash .badge.green {  color: #15803d; background: #dcfce7;  }
+.rich-dash .badge.amber {  color: #b45309; background: #fef3c7;  }
+.rich-dash .badge.red {  color: #b91c1c; background: #fee2e2;  }
+.rich-dash .badge.purple {  color: #6d28d9; background: #f3e8ff;  }
+.rich-dash .badge.pink {  color: #be185d; background: #fce7f3;  }
+.rich-dash .table-wrap {  overflow-x: auto;  }
+.rich-dash table {        width: 100%;       border-collapse: collapse;       font-size: 13px;       min-width: 900px;      }
+.rich-dash th {        text-align: left;       padding: 11px 12px;       color: #64748b;       font-size: 12px;       background: #f8fafc;       border-bottom: 1px solid var(--rd-border);       white-space: nowrap;      }
+.rich-dash th:first-child {  border-radius: 13px 0 0 13px;  }
+.rich-dash th:last-child {  border-radius: 0 13px 13px 0;  }
+.rich-dash td {        padding: 13px 12px;       border-bottom: 1px solid var(--rd-border);       vertical-align: middle;      }
+.rich-dash tr:last-child td {  border-bottom: 0;  }
+.rich-dash .note {        margin-top: 12px;       padding: 12px;       border-radius: 15px;       background: #f8fafc;       border: 1px dashed #cbd5e1;       color: #475569;       font-size: 12px;       font-weight: 650;       line-height: 1.5;      }
+
+/* Ẩn tên loại chart — giữ tabs/chip/nút phụ trên header */
+.rich-dash .panel-header .panel-title { display: none; }
+.rich-dash .span-12 .panel-header .panel-title { display: block; }
+.rich-dash .panel-header:not(:has(.tabs, .chip, .btn)) { display: none; }
+    @media (max-width: 1320px) {
+.rich-dash .filter-grid {  grid-template-columns: repeat(4, 1fr);  }
+.rich-dash .filter-actions {  grid-column: span 2;  }
+.rich-dash .span-2 {  grid-column: span 4;  }
+.rich-dash .span-3 {  grid-column: span 6;  }
+.rich-dash .span-4, .rich-dash .span-5, .rich-dash .span-6, .rich-dash .span-7, .rich-dash .span-8 {  grid-column: span 12; }      }
+    @media (max-width: 760px) {
+.rich-dash .topbar {  flex-direction: column;  }
+.rich-dash h1 {  font-size: 22px;  }
+.rich-dash .filter-grid {  grid-template-columns: 1fr;  }
+.rich-dash .filter-actions {  grid-column: auto; flex-direction: column;  }
+.rich-dash .filter-actions .btn {  width: 100%;  }
+.rich-dash .grid {  grid-template-columns: 1fr;  gap: 22px;  }
+.rich-dash .span-2, .rich-dash .span-3, .rich-dash .span-4, .rich-dash .span-5, .rich-dash .span-6, .rich-dash .span-7, .rich-dash .span-8, .rich-dash .span-12 {  grid-column: auto;  }
+.rich-dash .donut-grid, .rich-dash .map-wrap, .rich-dash .gauge-grid {  grid-template-columns: 1fr;  }
+.rich-dash .chart-shell, .rich-dash .scatter, .rich-dash .bar-chart, .rich-dash .waterfall {  height: 240px;  }
+
+

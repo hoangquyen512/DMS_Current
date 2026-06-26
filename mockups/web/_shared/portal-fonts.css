@@ -1,0 +1,26 @@
+/**
+ * Font chuẩn ecodms — đồng bộ Ant Design Pro Portal
+ * Không dùng Inter; ưu tiên system UI (Segoe UI / Roboto) + Noto Sans fallback
+ */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  letter-spacing: var(--portal-letter-spacing, 0);
+}
+
+.rich-dash {
+  font-family: var(--font-sans);
+  font-size: var(--portal-font-size);
+  line-height: var(--portal-line-height);
+  letter-spacing: var(--portal-letter-spacing, 0);
+}
