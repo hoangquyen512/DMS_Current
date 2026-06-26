@@ -8,11 +8,12 @@
 ## 🔤 Font Family
 
 ```
-Primary: Inter, -apple-system, "Segoe UI", Roboto, sans-serif
-Mono:    "Fira Code", Consolas, monospace  (cho code/ID hiển thị)
+Primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif
+Mono:    "SF Mono", "Fira Code", Consolas, monospace  (cho code/ID hiển thị)
 ```
 
-> **Lưu ý**: Font fallback đảm bảo render OK kể cả khi Inter không load được.
+> **Nguồn**: Quét từ `dms-portal-dev.finviet.com.vn` (Ant Design Pro / ecodms).  
+> **Không dùng Inter** — mockup web đồng bộ font system UI như Portal thật.
 
 ---
 

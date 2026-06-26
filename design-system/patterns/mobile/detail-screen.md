@@ -23,10 +23,10 @@
 
 ## Components dùng
 
-- Header: xem `components/mobile/navigation.md`
-- Status badge: xem `components/mobile/badges.md`
-- Tabs: xem `components/mobile/tabs.md`
-- Action button: xem `components/mobile/buttons.md`
+- Header: `design-system/mobile/components/headers.md`
+- Status badge: `design-system/mobile/components/badges.md`
+- Tabs: `design-system/mobile/components/tabs.md`
+- Action button: `design-system/mobile/components/buttons.md`
 
 ---
 

@@ -31,10 +31,10 @@
 
 ## Components dùng
 
-- Header: xem `components/mobile/navigation.md`
-- Search: xem `components/mobile/inputs.md`
-- List item card: xem `components/mobile/lists.md`
-- FAB: xem `components/mobile/buttons.md`
+- Header: `design-system/mobile/components/headers.md`
+- Search: `design-system/mobile/components/inputs.md`
+- List item card: `design-system/mobile/components/cards.md`
+- FAB: `design-system/mobile/components/buttons.md`
 
 ---
 

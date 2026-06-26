@@ -25,9 +25,9 @@
 
 ## Components dùng
 
-- Header: xem `components/mobile/navigation.md`
-- Input field: xem `components/mobile/inputs.md`
-- Button: xem `components/mobile/buttons.md`
+- Header: `design-system/mobile/components/headers.md`
+- Input field: `design-system/mobile/components/inputs.md`
+- Button: `design-system/mobile/components/buttons.md`
 
 ---
 

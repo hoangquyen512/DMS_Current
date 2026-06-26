@@ -1,22 +1,44 @@
 # Component Inventory — MOBILE
 
-> ⚠️ **File này sẽ được auto-generated** sau khi chạy `scripts/extract_figma.py` với `PLATFORM = "mobile"`.
-> Hiện tại đang là placeholder.
+> **Đã có Design System đầy đủ** — xem `design-system/mobile/`
 
 ---
 
-## Cách tạo nội dung
+## Vị trí tài liệu
 
-1. Mở `scripts/extract_figma.py`
-2. Cập nhật `FIGMA_TOKEN`, `FIGMA_FILE_KEY`
-3. Đảm bảo `PLATFORM = "mobile"`
-4. Click đúp `scripts/run_figma_extract.bat`
-5. File này sẽ được ghi đè bằng inventory tất cả component có trong Figma file
-
-Xem chi tiết tại `scripts/HUONG-DAN-FIGMA.md`.
+| Nội dung | Đường dẫn |
+|----------|-----------|
+| Hub DS mobile | `design-system/mobile/README.md` |
+| Tokens (màu, type, spacing) | `design-system/mobile/tokens/` |
+| Component specs | `design-system/mobile/components/` |
+| CSS class `.app-*` | `mockups/mobile/_shared/app-components.css` |
+| Gallery trực quan | `mockups/mobile/components-gallery.html` |
 
 ---
 
-## Sau khi có inventory
+## Component có sẵn
 
-Tạo file riêng cho mỗi component quan trọng (vd `buttons.md`, `inputs.md`, `lists.md`...) theo template trong `README.md` của design-system folder.
+- `buttons.md` — Primary, Outline, Light, Danger
+- `inputs.md` — Field, Search, Textarea, Select
+- `headers.md` — Primary / Light header
+- `navigation.md` — Bottom tab, status bar
+- `tabs.md` — Underline tab, segment pill
+- `cards.md` — List card, KPI, stat
+- `badges.md` — Status badge, filter chip
+- `lists.md` — Scroll, section, empty, skeleton
+
+---
+
+## Nguồn gốc
+
+Trích từ **app_1_9_21.apk** (eco-salesman). Chi tiết: `mockups/mobile/_specs/APK-DESIGN-TOKENS.md`
+
+Figma extract (`scripts/run_figma_extract.bat`) có thể bổ sung sau — ưu tiên token APK cho mockup HTML.
+
+---
+
+## Change History
+
+| Phiên bản | Ngày | Mô tả |
+|-----------|------|-------|
+| 1.0 | 24/06/2026 | Trỏ sang design-system/mobile |

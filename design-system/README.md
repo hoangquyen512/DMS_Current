@@ -1,8 +1,8 @@
 # Design System — DMS
 
 > Tài liệu Design System dùng cho Claude khi gen UI spec và HTML mockup.
-> **Tokens + Web components**: đã có đầy đủ.
-> **Mobile components**: tự động cập nhật từ Figma (chạy `scripts/run_figma_extract.bat`).
+> **Tokens + Web components**: đã có từ portal dev live — xem `web/`.
+> **Mobile components**: đã có từ APK v1.9.21 — xem `mobile/`.
 
 ---
 
@@ -24,8 +24,11 @@ design-system/
 │   │   ├── modals.md          ← Modal/Dialog/Drawer/Confirm
 │   │   ├── filters.md         ← Filter bar + Advanced filter
 │   │   └── dropdowns.md       ← Select/Multi-select/Action menu
+│   ├── web/                   ← Hub DS Portal (portal dev live)
+│   │   ├── README.md
+│   │   ├── tokens/
+│   │   └── components/
 │   └── mobile/
-│       └── _index.md          ← Auto-generated từ Figma (chạy script)
 └── patterns/                  ← Screen patterns (layout hoàn chỉnh)
     ├── web/
     │   ├── list-screen.md     ← Danh sách + filter + table + pagination
