@@ -10,13 +10,19 @@ mockups/mobile/
 ├── _shared/               ← CSS/JS dùng chung
 │   ├── app-chrome.css     ← Tab bar + status (main)
 │   ├── mockup-shell.css   ← Khung phone 375×812 (mọi sub-page)
-│   └── mockup-tokens.css  ← Màu brand #1a9ad6 (mọi mockup)
+│   ├── mockup-tokens.css  ← Màu brand từ APK (#009add)
+│   └── app-components.css ← Class .app-* chuẩn
+├── components-gallery.html ← Gallery Design System
 ├── vieng-tham/            ← Tab Viếng thăm (Flow A)
 │   ├── chi-tiet-cua-hang/
 │   ├── tai-san/           ← MS-A-TS00 full flow (dùng chung Flow A + B)
 │   └── ton-kho/           ← MS-A-TK00 full flow (dùng chung Flow A + B)
 ├── khac/                  ← Tab Khác (Flow B)
 │   └── cua-hang/          ← Danh sách CH + Tác vụ cửa hàng
+├── tai-xe/                ← Chế độ Tài xế — thay toàn bộ app shell
+│   ├── main.html          ← App Tài xế (GH01): 4 tab bottom nav
+│   ├── MS-A-DL03-ocr-don-giao-hang.html
+│   └── MS-A-GH01-*.html   ← redirect → main.html
 ├── bao-cao/
 └── don-hang/
 ```
@@ -95,6 +101,31 @@ Hoặc: `main` → VT01 → **Báo cáo viếng thăm** → `MS-A-BCVT00?from=vt
 
 Mockup cũ tham khảo: `bao-cao/vieng-tham/_archive/MS-01-*`
 
+## Luồng mockup Chế độ Tài xế
+
+Khi bấm **Tài xế** (tab Khác SR) → **toàn bộ app** chuyển sang shell Tài xế (`tai-xe/main.html`), thay bottom nav:
+
+**Giao hàng · Báo cáo · OCR · Khác** (không còn Viếng thăm / Báo cáo SR / Đơn hàng).
+
+### Entry
+`main#khac` → icon **Tài xế** (hàng profile) → `tai-xe/main.html`
+
+### Màn hình
+
+| Màn hình | File | Ghi chú |
+|----------|------|---------|
+| **App Tài xế (main)** | `tai-xe/main.html` | Shell GH01 — danh sách đơn, giao, OCR, báo cáo, Khác |
+| OCR chi tiết (mockup riêng) | `tai-xe/MS-A-DL03-ocr-don-giao-hang.html` | Full flow OCR tách spec |
+| Alias GH01 | `tai-xe/MS-A-GH01-*.html` | Redirect → `main.html` |
+
+| Hash `main.html` | Tab |
+|------------------|-----|
+| (mặc định) | Giao hàng — danh sách đơn |
+| `#report` | Báo cáo |
+| `#ocr` | OCR |
+
+Tab **Khác** (Tài xế): profile + menu + nút **SR** quay `main.html#khac`.
+
 ## Kích thước UI chuẩn
 
 Mọi mockup mobile dùng **một khung duy nhất** qua `_shared/mockup-shell.css`:
@@ -104,9 +135,13 @@ Mọi mockup mobile dùng **một khung duy nhất** qua `_shared/mockup-shell.c
 | Viewport | **375 × 812** px |
 | Status bar | 44 px |
 | Bezel padding | 12 px |
-| **Brand primary** | `#1a9ad6` (`--app-primary`) |
-| Primary dark | `#1580b5` (`--app-primary-dark`) |
-| Primary light | `#e8f6fc` (`--app-primary-light`) |
+| **Brand primary** | `#009add` (`--app-primary`) — từ APK v1.9.21 |
+| Primary dark | `#058ad0` (`--app-primary-dark`) |
+| Primary light | `#e4eff8` (`--app-primary-light`) |
+| Text / Tab inactive | `#292d32` / `#98a2b3` |
+| Success / Error | `#02b46e` / `#cc3b29` |
+
+Chi tiết trích xuất: `_specs/APK-DESIGN-TOKENS.md`
 
 Sub-page: `<body class="mockup-page">` + `mockup-shell.css` + `mockup-fit.js`  
 Main hub: `app-chrome.css` (đã import shell) + `mockup-fit.js`.
