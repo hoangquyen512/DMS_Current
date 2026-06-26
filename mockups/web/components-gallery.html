@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[WEB] Component Gallery — DMS Portal</title>
+<link rel="stylesheet" href="_shared/portal-chrome.css"/>
+<style>
+body { margin: 0; background: var(--portal-bg); }
+.gallery-wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
+</style>
+</head>
+<body class="portal-page">
+
+<div class="gallery-wrap">
+  <h1 class="portal-page-title">DMS Portal — Component Gallery</h1>
+  <p style="color:var(--portal-text-secondary);margin-bottom:24px;">Nguồn: dms-portal-dev · Ant Design Pro · <code>portal-components.css</code></p>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Breadcrumb + Title</p>
+    <nav class="portal-breadcrumb">
+      <a href="#">Danh mục</a><span class="portal-breadcrumb__sep">/</span>
+      <span class="portal-breadcrumb__current">Tin tức</span>
+    </nav>
+    <h2 class="portal-page-title" style="margin-bottom:0">Tin tức</h2>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Filter card</p>
+    <div class="portal-card">
+      <div class="portal-card__hd">Tìm kiếm theo</div>
+      <div class="portal-card__bd">
+        <div class="portal-filter-grid">
+          <div class="portal-field">
+            <label class="portal-field__label">Tin tức</label>
+            <input class="portal-input" placeholder="Nhập tiêu đề"/>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Trạng thái</label>
+            <select class="portal-select"><option>Tất cả</option><option>Hoạt động</option></select>
+          </div>
+        </div>
+        <div class="portal-toolbar" style="margin-top:16px;margin-bottom:0">
+          <span></span>
+          <div class="portal-toolbar__actions">
+            <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
+            <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Table + tags</p>
+    <div class="portal-toolbar">
+      <strong>Danh sách tin tức</strong>
+      <button type="button" class="portal-btn portal-btn--primary">Tạo mới</button>
+    </div>
+    <div class="portal-table-wrap">
+      <table class="portal-table">
+        <thead>
+          <tr>
+            <th>Tên tiêu đề <span class="sort-icon">↕</span></th>
+            <th>Mã công ty</th>
+            <th>Loại tin tức <span class="sort-icon">↕</span></th>
+            <th>Người tạo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">Tin khuyến mãi tháng 6</a></td>
+            <td><span class="copy-cell">FINVIET <button class="copy-btn" title="Sao chép">⧉</button></span></td>
+            <td><span class="portal-tag portal-tag--success">Bình thường</span></td>
+            <td><a href="#">0797070999</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="portal-pagination">
+        <span>1-1 trên 1 tin tức</span>
+        <div class="portal-pagination__pages">
+          <button class="portal-page-btn" disabled>‹</button>
+          <button class="portal-page-btn portal-page-btn--active">1</button>
+          <button class="portal-page-btn" disabled>›</button>
+        </div>
+        <select class="portal-select" style="width:auto"><option>10 / trang</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Dashboard KPI</p>
+    <div class="portal-kpi-row">
+      <div class="portal-kpi-card portal-kpi-card--orders">
+        <div class="portal-kpi-card__title">Đơn hàng</div>
+        <div class="portal-kpi-card__value">128</div>
+        <div class="portal-kpi-card__sub">Tháng: 45</div>
+      </div>
+      <div class="portal-kpi-card portal-kpi-card--sales">
+        <div class="portal-kpi-card__title">Doanh số</div>
+        <div class="portal-kpi-card__value">2.4B</div>
+        <div class="portal-kpi-card__sub">Tháng: 890M</div>
+      </div>
+      <div class="portal-kpi-card portal-kpi-card--revenue">
+        <div class="portal-kpi-card__title">Doanh thu</div>
+        <div class="portal-kpi-card__value">1.8B</div>
+        <div class="portal-kpi-card__sub">Tháng: 620M</div>
+      </div>
+      <div class="portal-kpi-card portal-kpi-card--visit">
+        <div class="portal-kpi-card__title">Viếng thăm</div>
+        <div class="portal-kpi-card__value">56</div>
+        <div class="portal-kpi-card__sub">Tháng: 18</div>
+      </div>
+      <div class="portal-kpi-card portal-kpi-card--store">
+        <div class="portal-kpi-card__title">Cửa hàng mới</div>
+        <div class="portal-kpi-card__value">12</div>
+        <div class="portal-kpi-card__sub">Tháng: 3</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Buttons & tags</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="portal-btn portal-btn--primary">Tạo mới</button>
+      <button class="portal-btn portal-btn--default">Làm mới</button>
+      <button class="portal-btn portal-btn--default">Tìm kiếm</button>
+      <button class="portal-btn portal-btn--danger">Xóa</button>
+    </div>
+    <span class="portal-tag portal-tag--success">Bình thường</span>
+    <span class="portal-tag portal-tag--warning">Chờ duyệt</span>
+    <span class="portal-tag portal-tag--error">Từ chối</span>
+  </div>
+</div>
+
+</body>
+</html>
