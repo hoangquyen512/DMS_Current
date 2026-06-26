@@ -2,7 +2,9 @@
  * Mockup shell — kích thước phone thống nhất toàn bộ Salesman App mockups
  * Chuẩn: iPhone X logical 375 × 812 (viewport trong khung bezel)
  */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import url("mockup-tokens.css");
+@import url("app-components.css");
 
 :root {
   --mockup-phone-w: 375px;
@@ -22,7 +24,8 @@ body.mockup-page,
 body.visit-page,
 body.sub-page,
 body.app-hub {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--ff);
+  color: var(--text-default);
   background: #0f172a;
   margin: 0;
   height: 100%;
@@ -117,7 +120,7 @@ body.mockup-gallery .mockup-stage {
 
 .flow-bar {
   margin-top: 12px;
-  color: #94a3b8;
+  color: var(--neutral-500);
 }
 
 .dev-bar,
