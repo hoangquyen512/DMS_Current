@@ -3,6 +3,7 @@
   function initPortalChrome() {
     var base = document.body.getAttribute('data-portal-base') || '';
     var mainHref = base + 'main.html';
+    var appHref = base ? (base + '../mobile/main.html') : '../mobile/main.html';
     var mount = document.getElementById('portal-chrome-root');
     if (!mount) return;
 
@@ -18,6 +19,8 @@
           '</svg></div><span class="brand-name">ecodms</span></a>' +
         '<nav class="nav-l1" id="navL1"></nav>' +
         '<div class="header-right">' +
+          '<a class="header-app-link" href="' + appHref + '" title="Mở Salesman App (mockup mobile)">' +
+            '<span class="header-app-link__glyph" aria-hidden="true">📱</span><span>Salesman App</span></a>' +
           '<span class="header-tag company">Công ty: FINVIET</span>' +
           '<span class="header-tag role">Vai trò: Admin</span>' +
           '<button class="header-icon-btn" title="Thông báo">🔔</button>' +

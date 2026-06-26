@@ -1,16 +1,7 @@
 /* Portal chrome — header ecodms dùng chung main.html + mọi trang con */
-:root {
-    --font-sans: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --header-bg: #1e3a8a;
-    --header-active: #3b82f6;
-    --menu-bg: #2c4475;
-    --menu-hover: #3b82f6;
-    --brand-yellow: #f5c518;
-    --role-green: #10b981;
-    --user-orange: #f59e0b;
-    --neutral-100: #F3F4F6;
-    --neutral-700: #374151;
-}
+@import url("portal-tokens.css");
+@import url("portal-fonts.css");
+@import url("portal-components.css");
 
 body.portal-page {
     font-family: var(--font-sans);
@@ -24,7 +15,30 @@ body.portal-page {
 }
 
 body.portal-page.has-portal-switcher { padding-top: 96px; }
-body.portal-page:not(.has-portal-switcher) { padding-top: 48px; }
+body.portal-page:not(.has-portal-switcher) { padding-top: var(--portal-header-h, 56px); }
+
+/* Thu gọn topbar nội bộ — giữ breadcrumb, bỏ user bar trùng portal header */
+body.portal-page header.topbar,
+body.portal-page .topbar {
+  display: flex !important;
+  position: static;
+  top: auto;
+  z-index: 1;
+  min-height: auto;
+  padding: 12px 28px 0;
+  border-bottom: none;
+  background: transparent;
+  justify-content: flex-start;
+}
+body.portal-page header.topbar .user-info,
+body.portal-page .topbar .user-info {
+  display: none !important;
+}
+
+.portal-page-body > main.page,
+.portal-page-body > .page {
+  min-height: calc(100vh - var(--portal-header-h, 56px));
+}
 
 .portal-header {
     background: var(--header-bg);
@@ -43,7 +57,7 @@ body.portal-page.has-portal-switcher .portal-header { top: 48px; }
     display: flex;
     align-items: center;
     padding: 0 12px 0 8px;
-    height: 48px;
+    height: var(--portal-header-h, 56px);
     gap: 4px;
 }
 
@@ -75,7 +89,7 @@ body.portal-page.has-portal-switcher .portal-header { top: 48px; }
 .brand-icon svg { width: 28px; height: 28px; display: block; }
 .brand-name { font-size: 15px; font-weight: 500; line-height: 1.25; }
 
-.nav-l1 { display: flex; align-items: stretch; flex: 1; height: 48px; }
+.nav-l1 { display: flex; align-items: stretch; flex: 1; height: var(--portal-header-h, 56px); }
 
 .nav-l1-item {
     position: relative;
@@ -113,6 +127,28 @@ body.portal-page.has-portal-switcher .portal-header { top: 48px; }
     background: transparent; color: rgba(255,255,255,0.8); font-size: 14px; cursor: pointer;
 }
 .header-icon-btn:hover { background: rgba(255,255,255,0.1); }
+.header-app-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--portal-radius-sm, 6px);
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+.header-app-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.55);
+}
+.header-app-link__glyph { font-size: 14px; line-height: 1; }
 .header-user-btn {
     font-size: 13px; font-weight: 400; color: white; padding: 5px 12px;
     border-radius: 4px; background: var(--user-orange); border: none; cursor: pointer;
@@ -149,7 +185,7 @@ body.portal-page.has-portal-switcher .portal-header { top: 48px; }
 }
 
 /* Nội dung trang con — bỏ khung browser giả */
-.portal-page-body { min-height: calc(100vh - 48px); }
+.portal-page-body { min-height: calc(100vh - var(--portal-header-h, 56px)); }
 body.portal-page.has-portal-switcher .portal-page-body { min-height: calc(100vh - 96px); }
 
 .portal-page .browser {
