@@ -1,27 +1,110 @@
 /**
- * Brand tokens — đồng bộ với main.html / app-chrome.css
- * Màu xanh chủ đạo Salesman App: #1a9ad6
+ * Design tokens — thống nhất Salesman + Tài xế (driver shell)
+ * Brand Finviet · palette đậm, chữ rõ (Inter)
  */
 :root {
-  --app-primary: #1a9ad6;
-  --app-primary-dark: #1580b5;
-  --app-primary-light: #e8f6fc;
-  --app-gradient-start: #1a9ad6;
-  --app-gradient-end: #5ec4ef;
+  /* Brand */
+  --app-primary: #0078b5;
+  --app-primary-dark: #005e8f;
+  --app-primary-darker: #004a73;
+  --app-primary-light: #c8dff0;
+  --app-primary-ring: #5aa8d0;
+  --app-gradient-start: var(--app-primary);
+  --app-gradient-end: var(--app-primary);
 
-  /* Alias cho mockup dùng --primary-* (TS00, TK00, BCVT00, CH01…) */
+  /* Driver aliases (--c-*) */
+  --c-primary: var(--app-primary);
+  --c-primary-dk: var(--app-primary-dark);
+  --c-primary-darker: var(--app-primary-darker);
+  --c-primary-lt: var(--app-primary-light);
+  --c-primary-ring: var(--app-primary-ring);
+  --c-bg: #f4f5f6;
+  --c-surface: #ffffff;
+  --c-text: #1a1d21;
+  --c-sub: #344054;
+  --c-muted: #667085;
+  --c-border: #e4e7ec;
+  --c-border2: #d0d5dd;
+  --c-overlay: rgba(16, 24, 40, 0.45);
+  --c-green: #02b46e;
+  --c-green-lt: #ccf0e2;
+  --c-green-dk: #059669;
+  --c-amber: #f79009;
+  --c-amber-lt: #fffaeb;
+  --c-red: #cc3b29;
+  --c-red-lt: #fef3f2;
+
+  /* Primary scale */
   --primary-50: var(--app-primary-light);
-  --primary-100: #d4edf9;
+  --primary-100: var(--app-primary-ring);
   --primary-500: var(--app-primary);
   --primary-600: var(--app-primary-dark);
-  --primary-700: #12709a;
+  --primary-700: var(--app-primary-darker);
 
-  --success-50: #ecfdf5;
-  --success-500: #10b981;
-  --success-700: #047857;
-  --warning-50: #fffbeb;
+  /* Neutral */
+  --neutral-0: var(--c-surface);
+  --neutral-50: var(--c-bg);
+  --neutral-100: #f2f4f7;
+  --neutral-200: var(--c-border);
+  --neutral-300: var(--c-border2);
+  --neutral-500: var(--c-muted);
+  --neutral-600: var(--c-sub);
+  --neutral-700: var(--c-sub);
+  --neutral-900: var(--c-text);
+
+  /* Semantic */
+  --success-50: var(--c-green-lt);
+  --success-500: var(--c-green);
+  --success-700: var(--c-green-dk);
+  --warning-50: var(--c-amber-lt);
   --warning-500: #f59e0b;
   --warning-700: #b45309;
-  --error-50: #fef2f2;
-  --error-500: #ef4444;
+  --error-50: var(--c-red-lt);
+  --error-500: var(--c-red);
+  --error-700: #a50005;
+  --info-50: var(--app-primary-light);
+  --info-700: var(--app-primary);
+
+  /* Typography & text */
+  --text-default: var(--c-text);
+  --text-sub: var(--c-sub);
+  --text-muted: var(--c-muted);
+  --tab-inactive: var(--c-sub);
+  --badge-red: var(--c-red);
+
+  /* Radius — driver shell */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 8px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --r: 14px;
+  --r-sm: 8px;
+
+  /* Typography scale */
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --ff: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.1);
+  --shadow-lg: 0 12px 40px rgba(16, 24, 40, 0.16);
+  --shadow-nav: 0 -2px 8px rgba(15, 23, 42, 0.06);
+  --shadow: var(--shadow-sm);
+  --app-shadow-primary: rgba(0, 120, 181, 0.35);
+  --app-shadow-primary-sm: rgba(0, 120, 181, 0.12);
+  --app-hero-gradient: linear-gradient(180deg, var(--app-primary-light) 0%, var(--neutral-50) 72%);
 }
