@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
@@ -32,7 +32,7 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif);
     background: var(--neutral-100);
     min-height: 100vh;
 }
@@ -322,8 +322,12 @@ td.actions { text-align: right; white-space: nowrap; }
 .modal-note.info { background: var(--primary-50); border: 1px solid var(--primary-100); color: var(--primary-700); }
 .hint { display: none; }
 </style>
+<link rel="stylesheet" href="../../_shared/portal-chrome.css"/>
 </head>
-<body>
+<body class="portal-page has-portal-switcher" data-portal-base="../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
 <div class="switcher">
   <span class="switcher-label">MS-W-DTCH01</span>
   <button class="sw-btn" onclick="switchScreen(1)">1 · Mặc định</button>
@@ -599,5 +603,10 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 </div>
 <div class="hint">MS-W-DTCH01 · State 2: Empty</div>
 </div>
+<script src="../../menu-tree.js"></script>
+<script src="../../_shared/portal-menu.js"></script>
+<script src="../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
 </body>
 </html>
+
