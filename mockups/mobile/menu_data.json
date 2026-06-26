@@ -43,19 +43,6 @@
               "href": "vieng-tham/tuyen-ban-hang/MS-A-CH01-tao-sua-cua-hang-tuyen-khong-bat-buoc.html"
             }
           ]
-        },
-        {
-          "label": "Giao hàng",
-          "id": "giao-hang",
-          "path": "vieng-tham/giao-hang",
-          "children": [
-            {
-              "label": "Giao hàng đơn hàng",
-              "id": "giao-hang-don-hang",
-              "path": "vieng-tham/giao-hang/giao-hang-don-hang",
-              "href": "vieng-tham/giao-hang/MS-A-GH01-giao-hang-don-hang.html"
-            }
-          ]
         }
       ]
     },
@@ -109,8 +96,43 @@
               "href": "khac/cua-hang/MS-A-CH03-tac-vu-cua-hang.html"
             }
           ]
+        },
+        {
+          "label": "Chế độ Tài xế",
+          "id": "tai-xe",
+          "path": "tai-xe",
+          "children": [
+            {
+              "label": "Entry — Chế độ Tài xế",
+              "id": "tai-xe-main",
+              "path": "tai-xe",
+              "href": "tai-xe/main.html"
+            },
+            {
+              "label": "OCR đơn giao hàng (DL03)",
+              "id": "ocr-don-giao-hang",
+              "path": "tai-xe/ocr",
+              "href": "tai-xe/MS-A-DL03-ocr-don-giao-hang.html"
+            },
+            {
+              "label": "GH01 (alias → main)",
+              "id": "giao-hang-don-hang",
+              "path": "tai-xe",
+              "href": "tai-xe/MS-A-GH01-giao-hang-don-hang.html"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "driver_mode": {
+    "entry": "tai-xe/main.html",
+    "description": "Toàn bộ app đổi bottom nav: Giao hàng · Báo cáo · OCR · Khác",
+    "tabs": [
+      { "id": "giao-hang", "label": "Giao hàng", "href": "tai-xe/main.html" },
+      { "id": "bao-cao", "label": "Báo cáo", "href": "tai-xe/main.html#report" },
+      { "id": "ocr", "label": "OCR", "href": "tai-xe/main.html#ocr" },
+      { "id": "khac", "label": "Khác", "href": "tai-xe/main.html", "view": "other" }
+    ]
+  }
 }
