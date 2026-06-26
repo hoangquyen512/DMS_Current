@@ -1,31 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>[WEB] DMS Portal — Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_shared/portal-tokens.css"/>
+<link rel="stylesheet" href="_shared/portal-fonts.css"/>
+<link rel="stylesheet" href="_shared/portal-components.css"/>
+<link rel="stylesheet" href="_shared/rich-dashboard.css"/>
 <style>
 :root {
-    --font-sans: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-mono: "Fira Code", Consolas, monospace;
-    --header-bg: #1e3a8a;
-    --header-active: #3b82f6;
-    --menu-bg: #2c4475;
-    --menu-hover: #3b82f6;
-    --menu-border: rgba(255,255,255,0.12);
-    --brand-yellow: #f5c518;
-    --filter-green: #10b981;
-    --role-green: #10b981;
-    --user-orange: #f59e0b;
-    --neutral-0: #FFFFFF;
-    --neutral-50: #F9FAFB;
-    --neutral-100: #F3F4F6;
-    --neutral-200: #E5E7EB;
-    --neutral-500: #6B7280;
-    --neutral-700: #374151;
     --neutral-900: #111827;
 }
 
@@ -33,15 +17,14 @@
 
 body {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--portal-font-size);
     font-weight: 400;
-    line-height: 1.4286;
+    line-height: var(--portal-line-height);
+    letter-spacing: var(--portal-letter-spacing, 0);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    background: var(--neutral-100);
+    background: var(--portal-bg);
     min-height: 100vh;
-    color: var(--neutral-700);
+    color: var(--portal-text-secondary);
     padding-bottom: 32px;
 }
 
@@ -61,7 +44,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     padding: 0 16px;
-    height: 48px;
+    height: var(--portal-header-h, 56px);
     gap: 4px;
 }
 
@@ -144,7 +127,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: stretch;
     flex: 1;
-    height: 48px;
+    height: var(--portal-header-h, 56px);
 }
 
 /* ======= Dropdown L2 + Flyout L3/L4 (compact overlay) ======= */
@@ -286,77 +269,33 @@ a { text-decoration: none; color: inherit; }
 
 .header-icon-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
-.app-entry-btn {
+.header-app-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #1a9ad6 0%, #0d7eb8 100%);
+    border-radius: var(--portal-radius-sm, 6px);
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.1);
     color: #fff;
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
     white-space: nowrap;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 2px 8px rgba(26,154,214,0.35);
-    transition: transform 0.12s, box-shadow 0.12s;
+    transition: background 0.15s, border-color 0.15s;
 }
-.app-entry-btn:hover {
+.header-app-link:hover {
     color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(26,154,214,0.45);
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.55);
 }
-.app-entry-btn .app-entry-icon { font-size: 14px; line-height: 1; }
-
-.app-entry-banner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #e8f6fc 0%, #fff 55%);
-    border: 1px solid #b8e4f7;
-    color: var(--neutral-900);
-    transition: border-color 0.12s, box-shadow 0.12s;
-}
-.app-entry-banner:hover {
-    border-color: #1a9ad6;
-    box-shadow: 0 4px 16px rgba(26,154,214,0.12);
-}
-.app-entry-banner .launcher-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #1a9ad6, #4db8e8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(26,154,214,0.25);
-}
-.app-entry-banner .launcher-text { flex: 1; min-width: 0; }
-.app-entry-banner .launcher-text strong {
-    display: block;
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 20px;
-    color: var(--neutral-900);
-}
-.app-entry-banner .launcher-text span {
-    display: block;
-    margin-top: 2px;
-    font-size: 12px;
-    line-height: 18px;
-    color: var(--neutral-500);
-}
-.app-entry-banner .launcher-arrow {
-    font-size: 20px;
-    color: #1a9ad6;
+.header-app-link__icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
     flex-shrink: 0;
 }
+.header-app-link__glyph { font-size: 14px; line-height: 1; flex-shrink: 0; }
 
 .header-user-btn {
     display: flex;
@@ -374,252 +313,19 @@ a { text-decoration: none; color: inherit; }
     white-space: nowrap;
 }
 
-/* ======= Dashboard ======= */
+/* ======= Dashboard (portal + rich charts) ======= */
 .dashboard {
-    padding: 18px 22px 36px;
-    max-width: 1440px;
+    padding: var(--portal-space-lg) var(--portal-space-xl) 48px;
+    max-width: none;
     margin: 0 auto;
 }
 
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-}
-
-.dashboard-title {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 28px;
-    letter-spacing: 0;
-    color: var(--neutral-900);
-}
-
-.dashboard-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.lang-toggle {
-    display: flex;
-    border: 1px solid var(--neutral-200);
-    border-radius: 4px;
-    overflow: hidden;
-    background: white;
-}
-
-.lang-btn {
-    padding: 5px 12px;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 16px;
-    border: none;
-    background: white;
-    color: var(--neutral-500);
-    cursor: pointer;
-}
-
-.lang-btn.active {
-    background: var(--header-active);
-    color: white;
-}
-
-.date-range {
-    padding: 6px 12px;
-    background: white;
-    border: 1px solid var(--neutral-200);
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
-    color: var(--neutral-700);
-}
-
-.btn-filter {
-    padding: 7px 16px;
-    font-family: var(--font-sans);
-    background: var(--filter-green);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
-    cursor: pointer;
-}
-
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 14px;
-}
-
-.summary-card {
-    border-radius: 8px;
-    padding: 16px 18px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    min-height: 100px;
-}
-
-.summary-card.purple { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
-.summary-card.cyan   { background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%); }
-.summary-card.green  { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-.summary-card.pink   { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
-
-.summary-card-icon {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 34px;
-    opacity: 0.3;
-}
-
-.summary-card-label {
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
-    opacity: 0.95;
-    margin-bottom: 6px;
-}
-.summary-card-value {
-    font-size: 26px;
-    font-weight: 500;
-    line-height: 1.1;
-    letter-spacing: 0;
-    margin-bottom: 4px;
-}
-.summary-card-sub {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 18px;
-    opacity: 0.9;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 12px;
-}
-
-.panel {
-    background: white;
-    border: 1px solid var(--neutral-200);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.panel-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--neutral-200);
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 22px;
-    color: var(--neutral-900);
-}
-
-.map-placeholder {
-    height: 340px;
-    background: linear-gradient(160deg, #e8f4f8 0%, #d4e8f0 50%, #c5dde8 100%);
-    position: relative;
-}
-
-.map-overlay-info {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: white;
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    z-index: 2;
-}
-
-.map-pin {
-    position: absolute;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--header-active);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-.map-pin.red {
-    width: 12px;
-    height: 12px;
-    background: #e74c3c;
-}
-
-.tab-bar { display: flex; border-bottom: 1px solid var(--neutral-200); }
-
-.tab-btn {
-    padding: 11px 16px;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--neutral-500);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-}
-
-.tab-btn.active {
-    color: var(--header-active);
-    border-bottom-color: var(--header-active);
-    font-weight: 500;
-}
-
-.employee-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--neutral-100);
-}
-
-.employee-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--brand-yellow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-}
-
-.employee-name {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    color: var(--neutral-900);
-}
-.employee-phone {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 18px;
-    color: var(--neutral-500);
-    margin-top: 2px;
+.rich-dash {
+    background:
+        radial-gradient(circle at top left, rgba(37,99,235,.06), transparent 36%),
+        radial-gradient(circle at 82% 12%, rgba(236,72,153,.05), transparent 30%);
+    border-radius: var(--portal-radius);
+    padding: 8px 4px 16px;
 }
 
 .chat-fab {
@@ -629,8 +335,8 @@ a { text-decoration: none; color: inherit; }
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: var(--brand-yellow);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    background: var(--portal-brand-yellow);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -645,15 +351,14 @@ a { text-decoration: none; color: inherit; }
     bottom: 0;
     left: 0;
     right: 0;
-    background: #1a1a2e;
-    color: rgba(255,255,255,0.45);
+    background: var(--portal-brand-dark);
+    color: rgba(255,255,255,0.55);
     font-size: 11px;
-    font-family: var(--font-mono);
-    font-weight: 400;
-    line-height: 16px;
+    font-family: ui-monospace, monospace;
     padding: 6px 18px;
     z-index: 9999;
 }
+.dev-bar a { color: #93c5fd; }
 </style>
 </head>
 <body>
@@ -671,8 +376,8 @@ a { text-decoration: none; color: inherit; }
     </div>
     <nav class="nav-l1" id="navL1"></nav>
     <div class="header-right">
-      <a class="app-entry-btn" href="../mobile/main.html" title="Mở mockup Salesman App">
-        <span class="app-entry-icon">📱</span>
+      <a class="header-app-link" href="../mobile/main.html" title="Mở Salesman App (mockup mobile)">
+        <span class="header-app-link__glyph" aria-hidden="true">📱</span>
         <span>Salesman App</span>
       </a>
       <span class="header-tag company">Công ty: FINVIET</span>
@@ -686,118 +391,445 @@ a { text-decoration: none; color: inherit; }
 </header>
 
 <main class="dashboard">
-  <div class="dashboard-header">
-    <h1 class="dashboard-title">Tình hình bán hàng</h1>
-    <div class="dashboard-controls">
-      <div class="lang-toggle">
-        <button class="lang-btn active">VI</button>
-        <button class="lang-btn">EN</button>
+  <div class="rich-dash">
+    <div class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="subtext">Tổng quan vận hành bán hàng, viếng thăm, giao hàng và cảnh báo realtime.</p>
+        </div>
+        <div class="top-actions">
+          <div class="chip"><span class="dot"></span> Realtime 09:12 · 26/06/2026</div>
+          <button class="btn secondary">Xuất Excel</button>
+          <button class="btn">Làm mới dữ liệu</button>
+        </div>
       </div>
-      <div class="date-range">📅 22-06-2024 → 22-06-2024</div>
-      <button class="btn-filter">Bộ lọc</button>
-    </div>
-  </div>
 
-  <a class="app-entry-banner" href="../mobile/main.html">
-    <div class="launcher-icon">📱</div>
-    <div class="launcher-text">
-      <strong>[APP] Salesman App — Mockup Mobile</strong>
-      <span>Viếng thăm · Chăm sóc cửa hàng · Kiểm tra tài sản · 4 tab bottom nav</span>
-    </div>
-    <span class="launcher-arrow">→</span>
-  </a>
+      <section class="filters">
+        <div class="filter-head">
+          <strong>Bộ lọc dữ liệu</strong>
+          <div class="chip">Dashboard tổng hợp · HO/NPP/Sales Sup</div>
+        </div>
+        <div class="filter-grid">
+          <div class="field">
+            <label>Từ ngày</label>
+            <input class="control" type="date" value="2026-06-26"/>
+          </div>
+          <div class="field">
+            <label>Đến ngày</label>
+            <input class="control" type="date" value="2026-06-26"/>
+          </div>
+          <div class="field">
+            <label>Vùng/Khu vực</label>
+            <select class="control"><option>Toàn quốc</option><option>Miền Nam</option><option>Miền Trung</option><option>Miền Bắc</option></select>
+          </div>
+          <div class="field">
+            <label>Nhà phân phối</label>
+            <select class="control"><option>Tất cả NPP</option><option>NPP Bình Tân</option><option>NPP Thủ Đức</option><option>NPP Đà Nẵng</option></select>
+          </div>
+          <div class="field">
+            <label>Kênh bán hàng</label>
+            <select class="control"><option>Tất cả kênh</option><option>GT</option><option>MT</option><option>Online</option></select>
+          </div>
+          <div class="field">
+            <label>Nhóm dashboard</label>
+            <select class="control"><option>Tổng hợp</option><option>Bán hàng</option><option>Viếng thăm</option><option>Giao hàng</option><option>Tồn kho</option></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn">Áp dụng</button>
+            <button class="btn secondary">Đặt lại</button>
+          </div>
+        </div>
+      </section>
 
-  <div class="summary-cards">
-    <div class="summary-card purple">
-      <div class="summary-card-icon">🛒</div>
-      <div class="summary-card-label">Đơn hàng</div>
-      <div class="summary-card-value">0</div>
-      <div class="summary-card-sub">Tháng: 0</div>
-    </div>
-    <div class="summary-card cyan">
-      <div class="summary-card-icon">📈</div>
-      <div class="summary-card-label">Doanh số</div>
-      <div class="summary-card-value">0</div>
-      <div class="summary-card-sub">Tháng: 0</div>
-    </div>
-    <div class="summary-card green">
-      <div class="summary-card-icon">💰</div>
-      <div class="summary-card-label">Viếng thăm</div>
-      <div class="summary-card-value">6</div>
-      <div class="summary-card-sub">Tháng: 474</div>
-    </div>
-    <div class="summary-card pink">
-      <div class="summary-card-icon">🏪</div>
-      <div class="summary-card-label">Cửa hàng mới</div>
-      <div class="summary-card-value">0</div>
-      <div class="summary-card-sub">Tháng: 0</div>
-    </div>
-  </div>
+      <section class="grid">
+        <div class="card kpi blue span-2">
+          <div class="label">Tổng đơn hàng</div>
+          <div class="value">12,486</div>
+          <div class="desc"><span class="pill">+8.4%</span> so với hôm qua</div>
+        </div>
+        <div class="card kpi green span-2">
+          <div class="label">Doanh số</div>
+          <div class="value">18.7 tỷ</div>
+          <div class="desc"><span class="pill">112%</span> đạt target ngày</div>
+        </div>
+        <div class="card kpi orange span-2">
+          <div class="label">Viếng thăm hoàn thành</div>
+          <div class="value">73.6%</div>
+          <div class="desc"><span class="pill">4,982</span> lượt check-in</div>
+        </div>
+        <div class="card kpi purple span-2">
+          <div class="label">Điểm bán hoạt động</div>
+          <div class="value">8,931</div>
+          <div class="desc"><span class="pill">+312</span> có giao dịch</div>
+        </div>
+        <div class="card kpi red span-2">
+          <div class="label">Đơn quá SLA</div>
+          <div class="value">148</div>
+          <div class="desc"><span class="pill">Cao</span> cần xử lý</div>
+        </div>
+        <div class="card kpi teal span-2">
+          <div class="label">Sales online</div>
+          <div class="value">426</div>
+          <div class="desc"><span class="pill">89%</span> đang hoạt động</div>
+        </div>
 
-  <div class="dashboard-grid">
-    <div class="panel">
-      <div class="panel-header">Bản đồ hoạt động</div>
-      <div class="map-placeholder">
-        <div class="map-overlay-info">
-          <div>Cửa hàng: <strong>20/351</strong></div>
-          <div>Nhân viên: <strong>5</strong></div>
-        </div>
-        <div class="map-pin" style="top:30%;left:35%;">3</div>
-        <div class="map-pin" style="top:45%;left:55%;">2</div>
-        <div class="map-pin" style="top:60%;left:42%;">1</div>
-        <div class="map-pin red" style="top:38%;left:62%;"></div>
-        <div class="map-pin red" style="top:52%;left:28%;"></div>
-        <div class="map-pin" style="top:25%;left:48%;">4</div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="tab-bar">
-        <button class="tab-btn active">Nhân viên online</button>
-        <button class="tab-btn">Hoạt động gần đây</button>
-      </div>
-      <div>
-        <div class="employee-item">
-          <div class="employee-avatar">👤</div>
-          <div>
-            <div class="employee-name">Phan Hoài Nam</div>
-            <div class="employee-phone">0398790110</div>
+        <div class="card span-8">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Line/Area chart - Doanh số, đơn hàng, viếng thăm</strong>
+              <span>So sánh xu hướng 3 chỉ số chính theo ngày; phù hợp cho dashboard HO.</span>
+            </div>
+            <div class="tabs"><div class="tab active">7 ngày</div><div class="tab">30 ngày</div><div class="tab">Quý</div></div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-shell">
+              <svg class="chart-svg" viewBox="0 0 900 270" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="saleArea" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#2563eb" stop-opacity=".27"/>
+                    <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="visitArea" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#16a34a" stop-opacity=".18"/>
+                    <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,214 C70,182 102,190 150,170 C210,145 238,118 300,134 C362,151 408,80 462,92 C534,108 560,148 628,125 C698,100 730,48 790,66 C842,82 865,56 900,42 L900,270 L0,270 Z" fill="url(#saleArea)"/>
+                <path d="M0,214 C70,182 102,190 150,170 C210,145 238,118 300,134 C362,151 408,80 462,92 C534,108 560,148 628,125 C698,100 730,48 790,66 C842,82 865,56 900,42" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+                <path d="M0,230 C68,210 110,198 158,205 C220,212 250,170 310,181 C368,191 412,144 468,152 C530,162 578,155 635,142 C702,126 736,112 798,118 C850,123 870,92 900,88 L900,270 L0,270 Z" fill="url(#visitArea)"/>
+                <path d="M0,230 C68,210 110,198 158,205 C220,212 250,170 310,181 C368,191 412,144 468,152 C530,162 578,155 635,142 C702,126 736,112 798,118 C850,123 870,92 900,88" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+                <path d="M0,242 C70,228 112,222 160,220 C222,212 254,198 314,202 C374,206 420,176 470,180 C535,186 582,171 640,165 C708,158 742,148 800,150 C852,152 870,132 900,128" fill="none" stroke="#f97316" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9"/>
+              </svg>
+            </div>
+            <div class="legend-inline">
+              <span class="legend-dot"><i style="background:#2563eb"></i>Doanh số</span>
+              <span class="legend-dot"><i style="background:#16a34a"></i>Viếng thăm</span>
+              <span class="legend-dot"><i style="background:#f97316"></i>Đơn hàng</span>
+            </div>
           </div>
         </div>
-        <div class="employee-item">
-          <div class="employee-avatar">👤</div>
-          <div>
-            <div class="employee-name">Nguyễn Thị Mỹ Trang</div>
-            <div class="employee-phone">0901234567</div>
+
+        <div class="card span-4">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Donut chart - Cơ cấu trạng thái đơn</strong>
+              <span>Dùng màu phân biệt rõ trạng thái vận hành.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="donut-grid">
+              <div class="donut"></div>
+              <div class="legend-list">
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#2563eb"></i>Hoàn tất</span><span>36%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#16a34a"></i>Đã duyệt</span><span>22%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#f59e0b"></i>Đang giao</span><span>16%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#ec4899"></i>Chờ xử lý</span><span>12%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#7c3aed"></i>Trả/Hủy</span><span>8%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#94a3b8"></i>Khác</span><span>6%</span></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="employee-item">
-          <div class="employee-avatar">👤</div>
-          <div>
-            <div class="employee-name">Trần Thị Bích</div>
-            <div class="employee-phone">0912345678</div>
+
+        <div class="card span-6">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Grouped bar chart - Đơn hàng, viếng thăm, doanh số theo vùng</strong>
+              <span>So sánh song song 3 chỉ số để phát hiện vùng lệch hiệu suất.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="bar-chart">
+              <div class="bar-group"><div class="bar b1" style="height:76%"></div><div class="bar b2" style="height:64%"></div><div class="bar b3" style="height:70%"></div></div>
+              <div class="bar-group"><div class="bar b1" style="height:58%"></div><div class="bar b2" style="height:71%"></div><div class="bar b3" style="height:54%"></div></div>
+              <div class="bar-group"><div class="bar b1" style="height:86%"></div><div class="bar b2" style="height:78%"></div><div class="bar b3" style="height:92%"></div></div>
+              <div class="bar-group"><div class="bar b1" style="height:46%"></div><div class="bar b2" style="height:53%"></div><div class="bar b3" style="height:41%"></div></div>
+              <div class="bar-group"><div class="bar b1" style="height:67%"></div><div class="bar b2" style="height:61%"></div><div class="bar b3" style="height:74%"></div></div>
+              <div class="bar-group"><div class="bar b1" style="height:39%"></div><div class="bar b2" style="height:48%"></div><div class="bar b3" style="height:34%"></div></div>
+            </div>
+            <div class="x-axis"><span>HCM</span><span>ĐNB</span><span>MT</span><span>TNB</span><span>HN</span><span>ĐB</span></div>
+            <div class="legend-inline">
+              <span class="legend-dot"><i style="background:#2563eb"></i>Đơn hàng</span>
+              <span class="legend-dot"><i style="background:#16a34a"></i>Viếng thăm</span>
+              <span class="legend-dot"><i style="background:#f97316"></i>Doanh số</span>
+            </div>
           </div>
         </div>
-        <div class="employee-item">
-          <div class="employee-avatar">👤</div>
-          <div>
-            <div class="employee-name">Lê Quốc Hùng</div>
-            <div class="employee-phone">0923456789</div>
+
+        <div class="card span-6">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Stacked bar chart - Cơ cấu đơn theo kênh</strong>
+              <span>Thấy nhanh tỷ trọng GT/MT/Online và trạng thái đơn theo vùng.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="stacked">
+              <div class="stack-row"><span>HCM</span><div class="stack-track"><div class="seg blue" style="width:45%"></div><div class="seg green" style="width:25%"></div><div class="seg amber" style="width:19%"></div><div class="seg red" style="width:11%"></div></div><span>3,420</span></div>
+              <div class="stack-row"><span>Đông NB</span><div class="stack-track"><div class="seg blue" style="width:38%"></div><div class="seg green" style="width:31%"></div><div class="seg amber" style="width:22%"></div><div class="seg red" style="width:9%"></div></div><span>2,135</span></div>
+              <div class="stack-row"><span>Miền Trung</span><div class="stack-track"><div class="seg blue" style="width:52%"></div><div class="seg green" style="width:20%"></div><div class="seg amber" style="width:18%"></div><div class="seg red" style="width:10%"></div></div><span>2,982</span></div>
+              <div class="stack-row"><span>Tây NB</span><div class="stack-track"><div class="seg blue" style="width:34%"></div><div class="seg green" style="width:28%"></div><div class="seg amber" style="width:24%"></div><div class="seg red" style="width:14%"></div></div><span>1,574</span></div>
+              <div class="stack-row"><span>Hà Nội</span><div class="stack-track"><div class="seg blue" style="width:41%"></div><div class="seg green" style="width:27%"></div><div class="seg amber" style="width:20%"></div><div class="seg red" style="width:12%"></div></div><span>1,766</span></div>
+              <div class="stack-row"><span>Đông Bắc</span><div class="stack-track"><div class="seg blue" style="width:30%"></div><div class="seg green" style="width:34%"></div><div class="seg amber" style="width:21%"></div><div class="seg red" style="width:15%"></div></div><span>609</span></div>
+            </div>
+            <div class="legend-inline">
+              <span class="legend-dot"><i style="background:#2563eb"></i>GT</span>
+              <span class="legend-dot"><i style="background:#16a34a"></i>MT</span>
+              <span class="legend-dot"><i style="background:#f59e0b"></i>Online</span>
+              <span class="legend-dot"><i style="background:#ef4444"></i>Trả/Hủy</span>
+            </div>
           </div>
         </div>
-        <div class="employee-item">
-          <div class="employee-avatar">👤</div>
-          <div>
-            <div class="employee-name">Hoàng Minh Tuấn</div>
-            <div class="employee-phone">0934567890</div>
+
+        <div class="card span-4">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Funnel chart - Chuyển đổi tuyến bán hàng</strong>
+              <span>Từ kế hoạch viếng thăm đến đơn hàng thành công.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="funnel">
+              <div class="funnel-step" style="width:96%;background:linear-gradient(135deg,#2563eb,#06b6d4)">Kế hoạch tuyến · 6,780</div>
+              <div class="funnel-step" style="width:84%;background:linear-gradient(135deg,#06b6d4,#14b8a6)">Đã check-in · 5,892</div>
+              <div class="funnel-step" style="width:68%;background:linear-gradient(135deg,#16a34a,#84cc16)">Có tương tác · 4,761</div>
+              <div class="funnel-step" style="width:51%;background:linear-gradient(135deg,#f59e0b,#f97316)">Có đơn hàng · 3,418</div>
+              <div class="funnel-step" style="width:36%;background:linear-gradient(135deg,#ec4899,#7c3aed)">Đơn hoàn tất · 2,496</div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+
+        <div class="card span-4">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Gauge chart - Chỉ số sức khỏe vận hành</strong>
+              <span>Phù hợp hiển thị SLA, Sync, GPS, KPI realtime.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="gauge-grid">
+              <div class="gauge">
+                <div class="gauge-arc"><div class="needle" style="transform:rotate(-37deg)"></div></div>
+                <strong>91.2%</strong><span>Đúng SLA giao hàng</span>
+              </div>
+              <div class="gauge">
+                <div class="gauge-arc"><div class="needle" style="transform:rotate(-18deg)"></div></div>
+                <strong>86.5%</strong><span>Đồng bộ dữ liệu</span>
+              </div>
+              <div class="gauge">
+                <div class="gauge-arc"><div class="needle" style="transform:rotate(-55deg)"></div></div>
+                <strong>73.6%</strong><span>Hoàn thành tuyến</span>
+              </div>
+              <div class="gauge">
+                <div class="gauge-arc"><div class="needle" style="transform:rotate(-28deg)"></div></div>
+                <strong>89.1%</strong><span>GPS hợp lệ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-4">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Horizontal bar chart - Top NPP theo doanh số</strong>
+              <span>Ranking rõ hơn pie khi cần so sánh chính xác.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="ranking">
+              <div class="rank-row"><span>NPP Bình Tân</span><div class="rank-track"><div class="rank-fill" style="width:96%;background:linear-gradient(90deg,#2563eb,#06b6d4)"></div></div><span>3.8 tỷ</span></div>
+              <div class="rank-row"><span>NPP Đà Nẵng</span><div class="rank-track"><div class="rank-fill" style="width:84%;background:linear-gradient(90deg,#16a34a,#84cc16)"></div></div><span>3.2 tỷ</span></div>
+              <div class="rank-row"><span>NPP Thủ Đức</span><div class="rank-track"><div class="rank-fill" style="width:76%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div><span>2.9 tỷ</span></div>
+              <div class="rank-row"><span>NPP Biên Hòa</span><div class="rank-track"><div class="rank-fill" style="width:68%;background:linear-gradient(90deg,#ec4899,#7c3aed)"></div></div><span>2.4 tỷ</span></div>
+              <div class="rank-row"><span>NPP Cần Thơ</span><div class="rank-track"><div class="rank-fill" style="width:59%;background:linear-gradient(90deg,#14b8a6,#06b6d4)"></div></div><span>2.0 tỷ</span></div>
+              <div class="rank-row"><span>NPP Hà Nội</span><div class="rank-track"><div class="rank-fill" style="width:47%;background:linear-gradient(90deg,#64748b,#94a3b8)"></div></div><span>1.7 tỷ</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-7">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Live map - Nhân viên, đơn giao, điểm nóng</strong>
+              <span>Màu pin thể hiện online, cảnh báo, giao hàng, offline và khu vực nóng.</span>
+            </div>
+            <div class="chip"><span class="dot"></span> 426 online</div>
+          </div>
+          <div class="panel-body">
+            <div class="map-wrap">
+              <div class="map">
+                <div class="road r1"></div><div class="road r2"></div><div class="road r3"></div><div class="road r4"></div><div class="road r5"></div>
+                <div class="district" style="left:8%;top:10%;">Bình Tân</div>
+                <div class="district" style="left:63%;top:17%;">Thủ Đức</div>
+                <div class="district" style="left:43%;top:80%;">Q.7</div>
+                <div class="district" style="left:70%;top:58%;">Biên Hòa</div>
+                <div class="pin online" style="left:18%;top:32%"></div>
+                <div class="pin warning" style="left:35%;top:55%"></div>
+                <div class="pin hot" style="left:55%;top:39%"></div>
+                <div class="pin delivery" style="left:74%;top:25%"></div>
+                <div class="pin offline" style="left:68%;top:70%"></div>
+                <div class="pin online" style="left:24%;top:73%"></div>
+                <div class="pin delivery" style="left:82%;top:52%"></div>
+                <div class="pin hot" style="left:44%;top:22%"></div>
+              </div>
+
+              <div class="operator-list">
+                <div class="operator"><div class="avatar">AN</div><div><strong>Nguyễn Văn An</strong><span>12 điểm bán · 8 đơn</span></div><span class="badge green">Online</span></div>
+                <div class="operator"><div class="avatar">HL</div><div><strong>Hoàng Lâm</strong><span>Lệch tuyến 320m</span></div><span class="badge amber">Cảnh báo</span></div>
+                <div class="operator"><div class="avatar">MP</div><div><strong>Mai Phương</strong><span>Mất tín hiệu 28 phút</span></div><span class="badge red">Offline</span></div>
+                <div class="operator"><div class="avatar">TT</div><div><strong>Trần Tú</strong><span>Đang giao 6 đơn</span></div><span class="badge blue">Delivery</span></div>
+                <div class="operator"><div class="avatar">KV</div><div><strong>Khu vực nóng</strong><span>148 đơn quá SLA</span></div><span class="badge pink">Hotspot</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-5">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Scatter/Bubble chart - Hiệu suất sales</strong>
+              <span>Trục X: số lượt viếng thăm; Trục Y: doanh số; kích thước bubble: số đơn.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="scatter">
+              <div class="bubble" style="left:12%;bottom:24%;width:38px;height:38px;background:linear-gradient(135deg,#2563eb,#06b6d4)">A</div>
+              <div class="bubble" style="left:28%;bottom:38%;width:48px;height:48px;background:linear-gradient(135deg,#16a34a,#84cc16)">B</div>
+              <div class="bubble" style="left:43%;bottom:26%;width:34px;height:34px;background:linear-gradient(135deg,#f59e0b,#f97316)">C</div>
+              <div class="bubble" style="left:58%;bottom:62%;width:58px;height:58px;background:linear-gradient(135deg,#ec4899,#7c3aed)">D</div>
+              <div class="bubble" style="left:74%;bottom:48%;width:44px;height:44px;background:linear-gradient(135deg,#14b8a6,#06b6d4)">E</div>
+              <div class="bubble" style="left:82%;bottom:78%;width:66px;height:66px;background:linear-gradient(135deg,#4f46e5,#2563eb)">F</div>
+            </div>
+            <div class="note">Dạng này dùng tốt để phát hiện sales viếng thăm nhiều nhưng doanh số thấp, hoặc sales ít visit nhưng tạo doanh số cao bất thường.</div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Waterfall chart - Biến động doanh số trong ngày</strong>
+              <span>Theo dõi doanh số tăng/giảm do đơn mới, hủy đơn, trả hàng, điều chỉnh giá/khuyến mãi.</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="waterfall">
+              <div class="wf-col"><div class="wf-bar wf-total" data-value="12.4 tỷ" style="height:58%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-positive" data-value="+4.8" style="height:34%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-negative" data-value="-0.9" style="height:18%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-positive" data-value="+2.1" style="height:25%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-negative" data-value="-0.6" style="height:14%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-positive" data-value="+1.0" style="height:21%"></div></div>
+              <div class="wf-col"><div class="wf-bar wf-total" data-value="18.7 tỷ" style="height:86%"></div></div>
+            </div>
+            <div class="x-axis" style="grid-template-columns:repeat(7,1fr)"><span>Đầu ngày</span><span>Đơn mới</span><span>Hủy</span><span>GT tăng</span><span>Trả</span><span>Khác</span><span>Hiện tại</span></div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Heatmap - Mật độ hoạt động theo khung giờ</strong>
+              <span>Theo dõi giờ cao điểm check-in, tạo đơn, đồng bộ dữ liệu.</span>
+            </div>
+            <div class="tabs"><div class="tab active">Check-in</div><div class="tab">Tạo đơn</div><div class="tab">Sync</div></div>
+          </div>
+          <div class="panel-body heat-scroll">
+            <div class="heatmap">
+              <div></div><div class="heat-head">08h</div><div class="heat-head">09h</div><div class="heat-head">10h</div><div class="heat-head">11h</div><div class="heat-head">13h</div><div class="heat-head">14h</div><div class="heat-head">15h</div><div class="heat-head">16h</div><div class="heat-head">17h</div>
+              <div class="heat-row">HCM</div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h4"></div><div class="heat-cell h5"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h4"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div>
+              <div class="heat-row">Đông NB</div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h4"></div><div class="heat-cell h4"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h3"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div>
+              <div class="heat-row">Miền Trung</div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h2"></div><div class="heat-cell h0"></div>
+              <div class="heat-row">Tây NB</div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h3"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div>
+              <div class="heat-row">Hà Nội</div><div class="heat-cell h2"></div><div class="heat-cell h4"></div><div class="heat-cell h3"></div><div class="heat-cell h3"></div><div class="heat-cell h2"></div><div class="heat-cell h2"></div><div class="heat-cell h4"></div><div class="heat-cell h3"></div><div class="heat-cell h1"></div>
+              <div class="heat-row">Đông Bắc</div><div class="heat-cell h0"></div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div><div class="heat-cell h2"></div><div class="heat-cell h2"></div><div class="heat-cell h1"></div><div class="heat-cell h0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong>Bảng insight vận hành cần drill-down</strong>
+              <span>Kết hợp màu trạng thái để user ưu tiên xử lý theo mức độ ảnh hưởng.</span>
+            </div>
+            <button class="btn secondary">Xem tất cả</button>
+          </div>
+          <div class="panel-body table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nhóm cảnh báo</th>
+                  <th>Mã đối tượng</th>
+                  <th>Insight</th>
+                  <th>Khu vực / NPP</th>
+                  <th>Chỉ số ảnh hưởng</th>
+                  <th>Trạng thái</th>
+                  <th>Người phụ trách</th>
+                  <th>Cập nhật cuối</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Giao hàng</td>
+                  <td>DEL-HCM-260626</td>
+                  <td>148 đơn quá SLA, tập trung tại Bình Tân và Thủ Đức</td>
+                  <td>HCM / NPP Bình Tân</td>
+                  <td>Ảnh hưởng 1.2 tỷ doanh số</td>
+                  <td><span class="badge red">Khẩn cấp</span></td>
+                  <td>Operation Manager</td>
+                  <td>09:12</td>
+                </tr>
+                <tr>
+                  <td>Viếng thăm</td>
+                  <td>VIS-MT-260626</td>
+                  <td>37 sales chưa check-in dù đã vào khung giờ làm việc</td>
+                  <td>Miền Trung</td>
+                  <td>Thiếu 426 lượt visit</td>
+                  <td><span class="badge amber">Cảnh báo</span></td>
+                  <td>Sales Supervisor</td>
+                  <td>09:03</td>
+                </tr>
+                <tr>
+                  <td>Bán hàng</td>
+                  <td>SALE-HCM-GT</td>
+                  <td>GT HCM vượt 112% target nhưng tỷ lệ hủy tăng 2.1%</td>
+                  <td>HCM / GT</td>
+                  <td>+2.8 tỷ doanh số</td>
+                  <td><span class="badge green">Tốt</span></td>
+                  <td>Regional Manager</td>
+                  <td>08:56</td>
+                </tr>
+                <tr>
+                  <td>Tồn kho</td>
+                  <td>INV-SKU-245</td>
+                  <td>SKU bán chạy có tồn khả dụng thấp tại 5 NPP</td>
+                  <td>Đà Nẵng / Biên Hòa / Cần Thơ</td>
+                  <td>Rủi ro thiếu hàng 18%</td>
+                  <td><span class="badge purple">Cần bổ sung</span></td>
+                  <td>Supply Planner</td>
+                  <td>08:40</td>
+                </tr>
+                <tr>
+                  <td>Điểm bán</td>
+                  <td>STORE-NEW-260626</td>
+                  <td>218 điểm bán mới chờ duyệt, có 64 điểm bán trùng tọa độ</td>
+                  <td>Toàn quốc</td>
+                  <td>Ảnh hưởng mở rộng coverage</td>
+                  <td><span class="badge blue">Chờ duyệt</span></td>
+                  <td>Master Data Team</td>
+                  <td>08:31</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
   </div>
 </main>
 
 <button class="chat-fab" title="Hỗ trợ">💬</button>
-<div class="dev-bar">MAIN · Dashboard — Menu từ Menu_DMS.xlsx · <a href="../mobile/main.html" style="color:#7dd3fc">Salesman App →</a></div>
+<div class="dev-bar">MAIN · Dashboard ecodms — <a href="../mobile/main.html">Salesman App →</a></div>
 
 <script src="menu-tree.js"></script>
 <script>
@@ -922,3 +954,4 @@ document.addEventListener('DOMContentLoaded', renderMenu);
 </script>
 </body>
 </html>
+
