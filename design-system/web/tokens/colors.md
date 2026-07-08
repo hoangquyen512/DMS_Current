@@ -14,7 +14,8 @@
 | `--portal-brand-dark` | `#244A83` | Pressed state |
 | `--portal-brand-yellow` | `#FFCC33` | Logo ecodms icon |
 | `--portal-menu-bg` | `#2C4475` | Mega menu dropdown |
-| `--portal-role-green` | `#10B981` | Badge 「Vai trò: …」 |
+| `--portal-role-green` | `#5BD8A6` | Badge 「Vai trò: …」 (live) |
+| `--portal-role-green-solid` | `#1CBC77` | Tag 「Bộ Lọc」 active (live) |
 | `--portal-user-orange` | `#F59E0B` | User button header |
 
 **Lưu ý:** Mockup cũ dùng `#1E3A8A` / `#3B82F6` — **không khớp** portal thật. Đã đổi sang `#2B579A`.
@@ -40,7 +41,10 @@
 | Success | `#F6FFED` | `#52C41A` | Bình thường |
 | Warning | `#FFFBE6` | `#FAAD14` | Chờ duyệt |
 | Error | `#FFF2F0` | `#FF4D4F` | Từ chối |
-| Default | `#FAFAFA` | secondary | Nháp |
+| Default | `#FAFAFA` | secondary | FVC, nháp |
+| Orange (company) | `#FFF7E6` | `#D46B08` | Công ty: FINVIET |
+| Blue (entity) | `#E6F4FF` | `#0958D9` | FINVIET |
+| Green solid | `#5BD8A6` / `#1CBC77` | `#FFFFFF` | Vai trò, Bộ Lọc |
 
 ---
 
@@ -61,3 +65,4 @@
 | Phiên bản | Ngày | Mô tả |
 |-----------|------|-------|
 | 1.0 | 24/06/2026 | Quét portal dev |
+| 1.1 | 24/06/2026 | Browser MCP — tag orange/blue/green live |

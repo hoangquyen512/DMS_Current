@@ -33,7 +33,11 @@ mockups/web/_shared/
 └── portal-chrome.js
 
 mockups/web/components-gallery.html
+
+design-system/web/extract/          ← Snapshot JSON + screenshots (sau khi chạy script)
 ```
+
+**Cập nhật từ portal live:** `scripts/run-portal-extract.bat` (cần Node.js + tài khoản SSO).
 
 ---
 
@@ -64,3 +68,4 @@ mockups/web/components-gallery.html
 | Phiên bản | Ngày | Mô tả |
 |-----------|------|-------|
 | 1.0 | 24/06/2026 | Trích từ portal dev live |
+| 1.1 | 24/06/2026 | Browser MCP — snapshot `extract/portal-live-snapshot.json` |
