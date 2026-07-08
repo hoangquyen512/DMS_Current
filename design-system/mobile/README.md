@@ -28,9 +28,15 @@ design-system/mobile/
 mockups/mobile/_shared/
 ├── mockup-tokens.css         ← CSS variables (nguồn màu/spacing)
 ├── app-components.css        ← Class component chuẩn (.app-*)
+├── mockup-shell.css          ← Khung phone + status bar + .status-portal-link
 ├── app-chrome.css            ← Hub: tab bar + layout main.html
-└── mockup-shell.css          ← Khung phone 375×812
+├── mockup-fit.js             ← Scale viewport + auto inject icon 🌐
+└── STATUS-BAR-SNIPPET.md     ← ⭐ Icon web → DMS Portal (bắt buộc mọi màn)
 ```
+
+### Status bar — Icon DMS Portal
+
+Mọi mockup **[APP]** phải có link `status-portal-link` (🌐) trên status bar → `web/main.html`. Xem `mockups/mobile/_shared/STATUS-BAR-SNIPPET.md`.
 
 ---
 
@@ -77,3 +83,4 @@ Chi tiết trích xuất: `mockups/mobile/_specs/APK-DESIGN-TOKENS.md`
 | Phiên bản | Ngày | Mô tả |
 |-----------|------|-------|
 | 1.0 | 24/06/2026 | Khởi tạo DS mobile từ APK v1.9.21 + `app-components.css` |
+| 1.1 | 08/07/2026 | Chuẩn icon 🌐 status bar → DMS Portal (`STATUS-BAR-SNIPPET.md`) |
