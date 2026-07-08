@@ -1,0 +1,50 @@
+{
+  "extractedAt": "2026-06-24T00:00:00.000Z",
+  "source": "dms-portal-dev.finviet.com.vn — mega menu live",
+  "note": "Chạy đầy đủ + profile từng màn: scripts/run-portal-menu-scan.bat",
+  "total": 33,
+  "items": [
+    { "branch": "Dashboard", "text": "Bảng điều khiển", "href": "/dashboard/" },
+
+    { "branch": "Quản trị", "text": "Công ty", "href": "/admin/companies" },
+    { "branch": "Quản trị", "text": "Phân quyền", "href": "/admin/permission" },
+    { "branch": "Quản trị", "text": "Nhân viên", "href": "/admin/users" },
+    { "branch": "Quản trị", "text": "Phân vùng", "href": "/admin/areas" },
+    { "branch": "Quản trị", "text": "Phân vùng mới", "href": "/admin/new-areas" },
+    { "branch": "Quản trị", "text": "Nhóm Sale", "href": "/admin/groups" },
+    { "branch": "Quản trị", "text": "Nhà phân phối", "href": "/admin/distributors" },
+    { "branch": "Quản trị", "text": "Cửa hàng", "href": "/admin/stores" },
+    { "branch": "Quản trị", "text": "Nhiệm vụ", "href": "/admin/tasks" },
+    { "branch": "Quản trị", "text": "Chỉ tiêu KPI", "href": "/admin/kpi-indicator" },
+    { "branch": "Quản trị", "text": "Dữ liệu chung", "href": "/admin/master-datas" },
+    { "branch": "Quản trị", "text": "Cấu hình chấm công", "href": "/admin/worktimesettings" },
+    { "branch": "Quản trị", "text": "Cấu hình chung", "href": "/admin/settings" },
+    { "branch": "Quản trị", "group": "Cấu hình ẩn hiện dữ liệu", "text": "Cấu hình Module", "href": "/admin/setting_config/module" },
+    { "branch": "Quản trị", "group": "Cấu hình ẩn hiện dữ liệu", "text": "Cấu hình màn hình", "href": "/admin/setting_config/screen" },
+    { "branch": "Quản trị", "text": "Thiết bị đăng nhập", "href": "/admin/user-agents" },
+
+    { "branch": "Mua hàng", "text": "Ngành hàng", "href": "/sale/categories" },
+    { "branch": "Mua hàng", "text": "Nhóm sản phẩm", "href": "/sale/group-products" },
+    { "branch": "Mua hàng", "text": "Sản phẩm", "href": "/sale/products" },
+    { "branch": "Mua hàng", "text": "Sản phẩm A.I", "href": "/sale/ai-products" },
+    { "branch": "Mua hàng", "text": "Tồn kho", "href": "/sale/inventory" },
+    { "branch": "Mua hàng", "text": "Đơn hàng", "href": "/sale/orders" },
+    { "branch": "Mua hàng", "text": "Lịch sử dịch vụ", "href": "/sale/payment-transaction" },
+
+    { "branch": "Giám sát", "text": "Giám sát nhân viên", "href": "/supervision/employees" },
+    { "branch": "Giám sát", "text": "Nhóm nhiệm vụ", "href": "/supervision/business" },
+    { "branch": "Giám sát", "text": "Tần suất", "href": "/supervision/frequency" },
+    { "branch": "Giám sát", "text": "Định tuyến", "href": "/supervision/routes" },
+    { "branch": "Giám sát", "text": "Gán tuyến", "href": "/supervision/assign-routes" },
+    { "branch": "Giám sát", "text": "Tuyến thực tế", "href": "/supervision/realroute" },
+    { "branch": "Giám sát", "text": "Yêu cầu đi trễ/nghỉ phép", "href": "/supervision/working_times_leave" },
+    { "branch": "Giám sát", "text": "Hình ảnh bày hàng", "href": "/supervision/album" },
+
+    { "branch": "Danh mục", "text": "Tin tức", "href": "/category/news" }
+  ],
+  "pendingNested": {
+    "Danh mục": ["KPI", "KPIv2", "Khảo sát", "CTTB", "CTTL", "Thông báo", "Tài sản", "Xác minh"],
+    "Báo cáo": "Cần expand mega menu — script Playwright tự xử lý",
+    "Hỗ trợ phần mềm": "Cần expand mega menu — script Playwright tự xử lý"
+  }
+}

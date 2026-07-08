@@ -1,0 +1,80 @@
+{
+  "extractedAt": "2026-06-24T00:00:00.000Z",
+  "source": "dms-portal-dev.finviet.com.vn (Browser MCP — đã SSO)",
+  "viewport": { "width": 1440, "height": 900 },
+  "samples": [
+    {
+      "path": "/dashboard/",
+      "title": "bảng điều khiển",
+      "url": "https://dms-portal-dev.finviet.com.vn/dashboard/",
+      "antClassCount": 124,
+      "keyComponents": ["ant-card", "ant-tabs", "ant-list", "ant-tag", "ant-pro-global-header"],
+      "styles": {
+        "header": { "backgroundColor": "rgb(43, 87, 154)", "height": "56px" },
+        "btnDefault": { "backgroundColor": "rgb(255, 255, 255)", "borderColor": "rgb(217, 217, 217)", "borderRadius": "6px", "height": "32px", "fontSize": "14px" },
+        "card": { "backgroundColor": "rgb(255, 255, 255)", "borderColor": "rgb(240, 240, 240)", "borderRadius": "8px" }
+      },
+      "navL1": ["Quản trị", "Mua hàng", "Giám sát", "Danh mục", "Báo cáo", "Hỗ trợ phần mềm"]
+    },
+    {
+      "path": "/category/news/",
+      "title": "Tin tức",
+      "url": "https://dms-portal-dev.finviet.com.vn/category/news/",
+      "antClassCount": 234,
+      "breadcrumb": ["Danh mục", "/", "Tin tức"],
+      "tableHeaders": [
+        "Tên tiêu đề", "Mã công ty", "Quản lý vùng", "Loại tin tức", "Đối tượng", "Mô tả",
+        "Người tạo", "Người cập nhật", "Ngày tạo", "Ngày cập nhật", "Trạng thái", "Tùy chỉnh"
+      ],
+      "toolbarTitle": "Danh sách tin tức",
+      "paginationText": "1-2 trên 2 tin tức",
+      "styles": {
+        "header": { "backgroundColor": "rgb(43, 87, 154)", "height": "56px" },
+        "btnPrimary": {
+          "backgroundColor": "rgb(43, 87, 154)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "6px",
+          "height": "32px",
+          "boxShadow": "rgba(0, 35, 65, 0.2) 0px 2px 0px 0px"
+        },
+        "btnDefault": {
+          "backgroundColor": "rgb(255, 255, 255)",
+          "borderColor": "rgb(217, 217, 217)",
+          "borderRadius": "6px",
+          "height": "32px"
+        },
+        "pageTitle": { "fontSize": "20px", "fontWeight": "600", "height": "32px" },
+        "tableHead": { "backgroundColor": "rgb(250, 250, 250)", "fontWeight": "600", "padding": "8px", "fontSize": "14px" },
+        "select": { "borderColor": "rgb(217, 217, 217)", "borderRadius": "6px", "height": "41px" },
+        "paginationActive": { "borderColor": "rgb(43, 87, 154)", "borderRadius": "6px" },
+        "breadcrumb": { "color": "rgba(0, 0, 0, 0.45)", "fontSize": "14px" }
+      },
+      "tags": [
+        { "text": "Công ty: FINVIET", "variant": "orange", "bg": "#FFF7E6", "color": "#D46B08" },
+        { "text": "Vai trò: Admin Finviet", "variant": "has-color", "bg": "#5BD8A6", "color": "#FFFFFF" },
+        { "text": "FINVIET", "variant": "blue", "bg": "#E6F4FF", "color": "#0958D9" },
+        { "text": "Bộ Lọc", "variant": "has-color-green", "bg": "#1CBC77", "color": "#FFFFFF" },
+        { "text": "FVC", "variant": "default", "bg": "#FAFAFA", "color": "rgba(0,0,0,0.88)" }
+      ],
+      "antProClasses": [
+        "ant-pro-page-container",
+        "ant-pro-query-filter",
+        "ant-pro-table",
+        "ant-pro-table-search",
+        "ant-pro-table-list-toolbar",
+        "ant-pro-top-nav-header",
+        "ant-pro-layout-header-header"
+      ]
+    }
+  ],
+  "designTokensConfirmed": {
+    "brand": "#2B579A",
+    "headerHeight": "56px",
+    "fontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif",
+    "fontSizeBase": "14px",
+    "pageTitleSize": "20px",
+    "radiusButton": "6px",
+    "radiusCard": "6px-8px",
+    "tableHeadBg": "#FAFAFA"
+  }
+}
