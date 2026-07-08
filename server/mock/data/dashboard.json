@@ -1,0 +1,42 @@
+{
+  "updatedAt": "2026-06-26T08:30:00+07:00",
+  "company": "Công ty TNHH Finviet DMS",
+  "kpis": {
+    "totalOrders": 1248,
+    "totalRevenue": 2850000000,
+    "totalVisits": 4521,
+    "newCustomers": 218,
+    "deliverySuccessRate": 94.2,
+    "pendingApprovals": 64
+  },
+  "orderStatusBreakdown": {
+    "new": 186,
+    "processing": 312,
+    "delivering": 245,
+    "completed": 418,
+    "cancelled": 52,
+    "returned": 35
+  },
+  "revenueByRegion": [
+    { "region": "Miền Bắc", "revenue": 980000000, "orders": 412 },
+    { "region": "Miền Trung", "revenue": 520000000, "orders": 198 },
+    { "region": "Miền Nam", "revenue": 1350000000, "orders": 638 }
+  ],
+  "topDistributors": [
+    { "code": "NPP-HN01", "name": "NPP Hà Nội 01", "revenue": 420000000 },
+    { "code": "NPP-HCM02", "name": "NPP TP.HCM 02", "revenue": 385000000 },
+    { "code": "NPP-DN01", "name": "NPP Đà Nẵng 01", "revenue": 210000000 }
+  ],
+  "alerts": [
+    {
+      "type": "delivery",
+      "message": "12 đơn giao hàng quá SLA tại khu vực Biên Hòa",
+      "severity": "high"
+    },
+    {
+      "type": "inventory",
+      "message": "SKU bán chạy tồn kho thấp tại 5 NPP",
+      "severity": "medium"
+    }
+  ]
+}

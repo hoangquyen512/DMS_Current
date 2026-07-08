@@ -1,0 +1,15 @@
+# Render Blueprint — DMS Portal Mockup
+# https://dashboard.render.com → New → Blueprint
+services:
+  - type: web
+    name: dms-mockup
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: MOCK_API_ENABLED
+        value: "true"

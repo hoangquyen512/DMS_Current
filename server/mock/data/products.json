@@ -1,0 +1,73 @@
+{
+  "items": [
+    {
+      "id": "PRD-10021",
+      "sku": "SKU-CF-500G",
+      "name": "Cà phê hòa tan 3in1 gói 500g",
+      "category": "Đồ uống",
+      "brand": "FinCoffee",
+      "unit": "Thùng",
+      "packSize": "24 gói",
+      "price": 185000,
+      "vat": 8,
+      "status": "active",
+      "statusLabel": "Đang kinh doanh",
+      "stockAvailable": 1240,
+      "minStock": 200,
+      "warehouse": "Kho NPP HCM 02"
+    },
+    {
+      "id": "PRD-10045",
+      "sku": "SKU-NT-1L",
+      "name": "Nước tương đậu nành 1L",
+      "category": "Gia vị",
+      "brand": "FinSauce",
+      "unit": "Chai",
+      "packSize": "12 chai/thùng",
+      "price": 42000,
+      "vat": 8,
+      "status": "active",
+      "statusLabel": "Đang kinh doanh",
+      "stockAvailable": 86,
+      "minStock": 100,
+      "warehouse": "Kho NPP HCM 02"
+    },
+    {
+      "id": "PRD-10088",
+      "sku": "SKU-BQ-330",
+      "name": "Nước ngọt có gas 330ml",
+      "category": "Đồ uống",
+      "brand": "FinFizz",
+      "unit": "Thùng",
+      "packSize": "24 lon",
+      "price": 210000,
+      "vat": 10,
+      "status": "active",
+      "statusLabel": "Đang kinh doanh",
+      "stockAvailable": 520,
+      "minStock": 150,
+      "warehouse": "Kho NPP HN 01"
+    },
+    {
+      "id": "PRD-10102",
+      "sku": "SKU-SN-80G",
+      "name": "Snack khoai tây vị BBQ 80g",
+      "category": "Snack",
+      "brand": "FinCrisp",
+      "unit": "Gói",
+      "packSize": "48 gói/thùng",
+      "price": 12500,
+      "vat": 8,
+      "status": "discontinued",
+      "statusLabel": "Ngừng kinh doanh",
+      "stockAvailable": 12,
+      "minStock": 0,
+      "warehouse": "Kho NPP ĐN 01"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "total": 4
+  }
+}

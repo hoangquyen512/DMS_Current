@@ -1,0 +1,27 @@
+{
+  "id": "USR-00001",
+  "username": "admin.ho",
+  "fullName": "Trần Quốc Huy",
+  "email": "huy.tq@finviet.local",
+  "phone": "0909000111",
+  "role": "HO_ADMIN",
+  "roleLabel": "Quản trị HO",
+  "company": {
+    "code": "FV-DMS",
+    "name": "Công ty TNHH Finviet DMS"
+  },
+  "distributor": null,
+  "permissions": [
+    "dashboard.view",
+    "orders.view",
+    "orders.approve",
+    "customers.view",
+    "customers.approve",
+    "products.view",
+    "delivery.manage",
+    "reports.export"
+  ],
+  "lastLogin": "2026-06-26T08:15:00+07:00",
+  "locale": "vi-VN",
+  "timezone": "Asia/Ho_Chi_Minh"
+}

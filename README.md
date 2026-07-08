@@ -5,6 +5,8 @@
 
 **Remote:** https://github.com/vudq170/DMS_Salesman_mockup.git
 
+**Deploy production (Render):** xem [DEPLOY-RENDER.md](./DEPLOY-RENDER.md)
+
 ---
 
 ## Cấu trúc

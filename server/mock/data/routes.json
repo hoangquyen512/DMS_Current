@@ -1,0 +1,69 @@
+{
+  "items": [
+    {
+      "id": "RT-HCM-Q1-03",
+      "code": "RT-HCM-Q1-03",
+      "name": "Tuyến Q1 - Buổi sáng",
+      "region": "TP.HCM",
+      "district": "Quận 1",
+      "driverCode": "TX-HCM-007",
+      "driverName": "Hoàng Văn Đức",
+      "vehiclePlate": "51C-12345",
+      "salesmanCode": "SR-HCM-045",
+      "salesmanName": "Nguyễn Văn An",
+      "status": "in_progress",
+      "statusLabel": "Đang chạy tuyến",
+      "plannedStops": 18,
+      "completedStops": 11,
+      "totalOrders": 24,
+      "deliveredOrders": 16,
+      "startTime": "07:30",
+      "estimatedEndTime": "12:00"
+    },
+    {
+      "id": "RT-HCM-Q7-01",
+      "code": "RT-HCM-Q7-01",
+      "name": "Tuyến Q7 - Buổi chiều",
+      "region": "TP.HCM",
+      "district": "Quận 7",
+      "driverCode": "TX-HCM-012",
+      "driverName": "Nguyễn Thành Long",
+      "vehiclePlate": "51D-67890",
+      "salesmanCode": "SR-HCM-012",
+      "salesmanName": "Trần Thị Bích",
+      "status": "planned",
+      "statusLabel": "Chờ xuất tuyến",
+      "plannedStops": 22,
+      "completedStops": 0,
+      "totalOrders": 31,
+      "deliveredOrders": 0,
+      "startTime": "13:00",
+      "estimatedEndTime": "18:30"
+    },
+    {
+      "id": "RT-HN-CG-04",
+      "code": "RT-HN-CG-04",
+      "name": "Tuyến Cầu Giấy - Full ngày",
+      "region": "Hà Nội",
+      "district": "Cầu Giấy",
+      "driverCode": "TX-HN-003",
+      "driverName": "Đỗ Minh Quân",
+      "vehiclePlate": "30A-55678",
+      "salesmanCode": "SR-HN-008",
+      "salesmanName": "Phạm Minh Tuấn",
+      "status": "completed",
+      "statusLabel": "Hoàn thành tuyến",
+      "plannedStops": 15,
+      "completedStops": 15,
+      "totalOrders": 19,
+      "deliveredOrders": 18,
+      "startTime": "08:00",
+      "estimatedEndTime": "17:00"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "total": 3
+  }
+}
