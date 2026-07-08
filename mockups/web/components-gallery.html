@@ -14,35 +14,97 @@ body { margin: 0; background: var(--portal-bg); }
 
 <div class="gallery-wrap">
   <h1 class="portal-page-title">DMS Portal — Component Gallery</h1>
-  <p style="color:var(--portal-text-secondary);margin-bottom:24px;">Nguồn: dms-portal-dev · Ant Design Pro · <code>portal-components.css</code></p>
+  <p style="color:var(--portal-text-secondary);margin-bottom:24px">
+    Nguồn: dms-portal-dev · Spec: <code>design-system/web/patterns/list-screen.md</code>
+  </p>
 
   <div class="ds-section">
     <p class="ds-section__title">Breadcrumb + Title</p>
     <nav class="portal-breadcrumb">
-      <a href="#">Danh mục</a><span class="portal-breadcrumb__sep">/</span>
-      <span class="portal-breadcrumb__current">Tin tức</span>
+      <a href="#">Giám sát</a><span class="portal-breadcrumb__sep">/</span>
+      <span class="portal-breadcrumb__current">Định tuyến</span>
     </nav>
-    <h2 class="portal-page-title" style="margin-bottom:0">Tin tức</h2>
+    <h2 class="portal-page-title" style="margin-bottom:0">Định tuyến</h2>
   </div>
 
   <div class="ds-section">
-    <p class="ds-section__title">Filter card</p>
-    <div class="portal-card">
+    <p class="ds-section__title">QueryFilter — 4 cột (ant-pro-query-filter)</p>
+    <div class="portal-card portal-query-filter">
       <div class="portal-card__hd">Tìm kiếm theo</div>
       <div class="portal-card__bd">
-        <div class="portal-filter-grid">
+        <div class="portal-filter-grid portal-filter-grid--4">
           <div class="portal-field">
-            <label class="portal-field__label">Tin tức</label>
-            <input class="portal-input" placeholder="Nhập tiêu đề"/>
+            <label class="portal-field__label">Định tuyến</label>
+            <div class="portal-field__control portal-input-search-wrap">
+              <input class="portal-input" type="text" placeholder="Nhập mã, tên tuyến"/>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Nhà phân phối</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select"><option>Tất cả NPP</option></select>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Cửa hàng</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select"><option>Tất cả cửa hàng</option></select>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Nhân viên</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select"><option>Tất cả nhân viên</option></select>
+            </div>
           </div>
           <div class="portal-field">
             <label class="portal-field__label">Trạng thái</label>
-            <select class="portal-select"><option>Tất cả</option><option>Hoạt động</option></select>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select"><option>Hoạt động</option></select>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Ngày giao hàng</label>
+            <div class="portal-field__control portal-date-range">
+              <div class="portal-date-range__inner">
+                <input class="portal-date-range__input" type="text" value="01/06/2026" placeholder="Từ ngày"/>
+                <span class="portal-date-range__sep">—</span>
+                <input class="portal-date-range__input" type="text" value="15/06/2026" placeholder="Đến ngày"/>
+              </div>
+              <span class="portal-date-range__icon"></span>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Chương trình trưng bày</label>
+            <div class="portal-field__control portal-multi-select" id="demoMulti">
+              <div class="portal-multi-select__inner portal-multi-select__tags">
+                <span class="portal-multi-select__tag" data-value="CTTB-01">
+                  <span class="portal-multi-select__tag-text">CTTB Trưng bày T6</span>
+                  <button type="button" class="portal-multi-select__tag-remove" aria-label="Xóa">×</button>
+                </span>
+                <span class="portal-multi-select__tag" data-value="CTTB-02">
+                  <span class="portal-multi-select__tag-text">CTTB POSM Q2</span>
+                  <button type="button" class="portal-multi-select__tag-remove" aria-label="Xóa">×</button>
+                </span>
+                <span class="portal-multi-select__placeholder" style="display:none">Chọn chương trình</span>
+              </div>
+              <span class="portal-multi-select__arrow"></span>
+              <ul class="portal-multi-select__dropdown">
+                <li class="portal-multi-select__option" data-value="CTTB-01">CTTB Trưng bày T6</li>
+                <li class="portal-multi-select__option" data-value="CTTB-02">CTTB POSM Q2</li>
+                <li class="portal-multi-select__option" data-value="CTTB-03">CTTB Cooler 2026</li>
+              </ul>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label">Nhóm</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select"><option>Tất cả nhóm</option></select>
+            </div>
           </div>
         </div>
-        <div class="portal-toolbar" style="margin-top:16px;margin-bottom:0">
-          <span></span>
-          <div class="portal-toolbar__actions">
+        <div class="portal-query-actions">
+          <div class="portal-query-actions__inner">
             <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
             <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
           </div>
@@ -52,39 +114,159 @@ body { margin: 0; background: var(--portal-bg); }
   </div>
 
   <div class="ds-section">
-    <p class="ds-section__title">Table + tags</p>
-    <div class="portal-toolbar">
-      <strong>Danh sách tin tức</strong>
-      <button type="button" class="portal-btn portal-btn--primary">Tạo mới</button>
+    <p class="ds-section__title">ProTable — tabs + toolbar + alert + bảng</p>
+    <div class="portal-card portal-protable">
+      <div class="portal-protable__toolbar">
+        <div class="portal-tabs portal-tabs--line">
+          <button type="button" class="portal-tabs__item portal-tabs__item--active">Tuyến hiện tại</button>
+          <button type="button" class="portal-tabs__item">Tuyến tương lai</button>
+        </div>
+      </div>
+      <div class="portal-protable__list-hd">
+        <h2 class="portal-protable__list-title">Danh sách tuyến</h2>
+      </div>
+      <div class="portal-protable__list-actions">
+        <button type="button" class="portal-btn portal-btn--default">Import Excel</button>
+        <button type="button" class="portal-btn portal-btn--default">Export File</button>
+        <button type="button" class="portal-btn portal-btn--primary">+ Tạo mới</button>
+      </div>
+      <div class="portal-card__bd">
+        <div class="portal-table-alert">
+          <span>Đã chọn <strong>1</strong> mục</span>
+          <div class="portal-table-alert__actions">
+            <a href="#" class="portal-link-danger" onclick="return false">Xóa</a>
+          </div>
+        </div>
+        <div class="portal-table-wrap portal-table-wrap--flush">
+          <table class="portal-table portal-table--zebra">
+            <thead>
+              <tr>
+                <th class="col-check"><input type="checkbox" checked/></th>
+                <th>Mã tuyến <span class="sort-icon">⇅</span></th>
+                <th>Tên tuyến</th>
+                <th>Trạng thái</th>
+                <th>Tùy chỉnh</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="portal-table__row--selected">
+                <td class="col-check"><input type="checkbox" checked/></td>
+                <td><span class="copy-cell">RT-Q1-001 <button type="button" class="copy-btn" title="Sao chép">⎘</button></span></td>
+                <td><a href="#" class="portal-table__link" onclick="return false">Tuyến Quận 1</a></td>
+                <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+                <td class="portal-table-actions">
+                  <button type="button" class="portal-icon-btn" title="Sửa">✎</button>
+                  <button type="button" class="portal-icon-btn" title="Copy">⎘</button>
+                  <button type="button" class="portal-icon-btn" title="Xóa">🗑</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="col-check"><input type="checkbox"/></td>
+                <td><span class="copy-cell">RT-Q3-002 <button type="button" class="copy-btn">⎘</button></span></td>
+                <td><a href="#" class="portal-table__link" onclick="return false">Tuyến Quận 3</a></td>
+                <td><span class="portal-tag portal-tag--orange">Chưa có nhóm</span></td>
+                <td class="portal-table-actions">
+                  <button type="button" class="portal-icon-btn">✎</button>
+                  <button type="button" class="portal-icon-btn">⎘</button>
+                  <button type="button" class="portal-icon-btn">🗑</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="portal-pagination">
+          <span>1-2 / tổng 24 tuyến</span>
+          <div class="portal-pagination__pages">
+            <button class="portal-page-btn" disabled>‹</button>
+            <button class="portal-page-btn portal-page-btn--active">1</button>
+            <button class="portal-page-btn">›</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="portal-table-wrap">
-      <table class="portal-table">
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Bộ lọc nâng cao — bar ngoài filter (auto-init)</p>
+    <nav class="portal-breadcrumb">
+      <a href="#">Danh mục</a><span class="portal-breadcrumb__sep">/</span>
+      <span class="portal-breadcrumb__current">Chương trình trưng bày</span>
+    </nav>
+    <h2 class="portal-page-title" style="margin-bottom:12px">Chương trình trưng bày</h2>
+    <p style="font-size:12px;color:var(--portal-text-secondary);margin:0 0 8px">↑ Title + nút <strong>Bộ lọc</strong> tự gộp vào <code>.portal-page-hd</code> (cùng 1 dòng)</p>
+    <div class="filter-card" id="demoAdvancedFilter">
+      <div class="filter-grid--4">
+        <div class="filter-field">
+          <div class="filter-label">Chương trình</div>
+          <input class="filter-input" placeholder="Mã, tên"/>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Trạng thái</div>
+          <select class="filter-select"><option>Tất cả</option></select>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">* Công ty</div>
+          <select class="filter-select"><option>FVC — Finviet</option></select>
+        </div>
+        <div class="filter-field">
+          <div class="filter-label">Vùng</div>
+          <select class="filter-select"><option>Miền Nam</option></select>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary">Làm mới</button>
+        <button type="button" class="btn btn-primary">Tìm kiếm</button>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--portal-text-secondary);margin-top:8px">Nút <strong>Bộ lọc</strong> + tags context căn <strong>phải</strong> cùng dòng title · Click → chọn → <strong>Xác nhận</strong>.</p>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-section__title">Legacy bridge (filter-card + table-container)</p>
+    <div class="filter-card">
+      <div class="filter-row">
+        <div class="filter-group">
+          <div class="filter-label">Mã phiếu</div>
+          <input class="filter-input" placeholder="Nhập mã"/>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Trạng thái</div>
+          <select class="filter-select"><option>Tất cả</option></select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Thời gian</div>
+          <div class="portal-date-range filter-date-range">
+            <div class="portal-date-range__inner">
+              <input class="portal-date-range__input filter-input filter-input-date" value="01-06-2026" placeholder="Từ ngày"/>
+              <span class="portal-date-range__sep">—</span>
+              <input class="portal-date-range__input filter-input filter-input-date" value="24-06-2026" placeholder="Đến ngày"/>
+            </div>
+            <span class="portal-date-range__icon"></span>
+          </div>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary">Làm mới</button>
+        <button type="button" class="btn btn-primary">Tìm kiếm</button>
+      </div>
+    </div>
+    <div class="table-container" style="margin-top:16px">
+      <table>
         <thead>
           <tr>
-            <th>Tên tiêu đề <span class="sort-icon">↕</span></th>
-            <th>Mã công ty</th>
-            <th>Loại tin tức <span class="sort-icon">↕</span></th>
-            <th>Người tạo</th>
+            <th class="col-check"><input type="checkbox"/></th>
+            <th>Mã</th>
+            <th>Trạng thái</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><a href="#">Tin khuyến mãi tháng 6</a></td>
-            <td><span class="copy-cell">FINVIET <button class="copy-btn" title="Sao chép">⧉</button></span></td>
-            <td><span class="portal-tag portal-tag--success">Bình thường</span></td>
-            <td><a href="#">0797070999</a></td>
+            <td class="col-check"><input type="checkbox"/></td>
+            <td>CK-001</td>
+            <td><span class="badge badge-init">Khởi tạo</span></td>
           </tr>
         </tbody>
       </table>
-      <div class="portal-pagination">
-        <span>1-1 trên 1 tin tức</span>
-        <div class="portal-pagination__pages">
-          <button class="portal-page-btn" disabled>‹</button>
-          <button class="portal-page-btn portal-page-btn--active">1</button>
-          <button class="portal-page-btn" disabled>›</button>
-        </div>
-        <select class="portal-select" style="width:auto"><option>10 / trang</option></select>
-      </div>
     </div>
   </div>
 
@@ -94,44 +276,42 @@ body { margin: 0; background: var(--portal-bg); }
       <div class="portal-kpi-card portal-kpi-card--orders">
         <div class="portal-kpi-card__title">Đơn hàng</div>
         <div class="portal-kpi-card__value">128</div>
-        <div class="portal-kpi-card__sub">Tháng: 45</div>
       </div>
       <div class="portal-kpi-card portal-kpi-card--sales">
         <div class="portal-kpi-card__title">Doanh số</div>
         <div class="portal-kpi-card__value">2.4B</div>
-        <div class="portal-kpi-card__sub">Tháng: 890M</div>
       </div>
       <div class="portal-kpi-card portal-kpi-card--revenue">
         <div class="portal-kpi-card__title">Doanh thu</div>
         <div class="portal-kpi-card__value">1.8B</div>
-        <div class="portal-kpi-card__sub">Tháng: 620M</div>
       </div>
       <div class="portal-kpi-card portal-kpi-card--visit">
         <div class="portal-kpi-card__title">Viếng thăm</div>
         <div class="portal-kpi-card__value">56</div>
-        <div class="portal-kpi-card__sub">Tháng: 18</div>
       </div>
       <div class="portal-kpi-card portal-kpi-card--store">
         <div class="portal-kpi-card__title">Cửa hàng mới</div>
         <div class="portal-kpi-card__value">12</div>
-        <div class="portal-kpi-card__sub">Tháng: 3</div>
       </div>
     </div>
   </div>
 
   <div class="ds-section">
-    <p class="ds-section__title">Buttons & tags</p>
+    <p class="ds-section__title">Buttons &amp; tags</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
       <button class="portal-btn portal-btn--primary">Tạo mới</button>
       <button class="portal-btn portal-btn--default">Làm mới</button>
-      <button class="portal-btn portal-btn--default">Tìm kiếm</button>
+      <button class="portal-btn portal-btn--primary">Tìm kiếm</button>
       <button class="portal-btn portal-btn--danger">Xóa</button>
     </div>
-    <span class="portal-tag portal-tag--success">Bình thường</span>
+    <span class="portal-tag portal-tag--success">Hoạt động</span>
     <span class="portal-tag portal-tag--warning">Chờ duyệt</span>
     <span class="portal-tag portal-tag--error">Từ chối</span>
+    <span class="portal-tag portal-tag--blue">Ecom</span>
+    <span class="portal-tag portal-tag--orange">Chưa chọn vùng</span>
   </div>
 </div>
 
+<script src="_shared/portal-mockup-widgets.js"></script>
 </body>
 </html>
