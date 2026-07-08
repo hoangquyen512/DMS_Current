@@ -109,16 +109,16 @@
               "href": "tai-xe/main.html"
             },
             {
-              "label": "OCR đơn giao hàng (DL03)",
-              "id": "ocr-don-giao-hang",
-              "path": "tai-xe/ocr",
-              "href": "tai-xe/MS-A-DL03-ocr-don-giao-hang.html"
-            },
-            {
-              "label": "GH01 (alias → main)",
+              "label": "Giao hàng đơn hàng (GH01)",
               "id": "giao-hang-don-hang",
               "path": "tai-xe",
               "href": "tai-xe/MS-A-GH01-giao-hang-don-hang.html"
+            },
+            {
+              "label": "Dashboard báo cáo giao hàng — Tab Báo cáo",
+              "id": "bao-cao-giao-hang-dashboard",
+              "path": "tai-xe",
+              "href": "tai-xe/main.html#report"
             }
           ]
         }
