@@ -64,11 +64,75 @@ body {
 }
 .driver-npp { color: var(--c-sub); font-weight: 500; }
 .driver-date {
-  flex-shrink: 0; text-align: right; padding: 6px 10px; border-radius: var(--r-sm);
+  text-align: right; padding: 6px 10px; border-radius: var(--r-sm);
   background: var(--c-bg); border: 1px solid var(--c-border);
   font-size: 11px; font-weight: 600; color: var(--c-sub); line-height: 1.3;
 }
-.driver-date .day-label { display: block; font-size: 10px; font-weight: 500; color: var(--c-sub); margin-bottom: 1px; }
+.driver-date-col {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+}
+.driver-mode-toggle {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;
+}
+.driver-mode-toggle__lbl {
+  font-size: 10px; font-weight: 700; color: var(--c-sub); letter-spacing: .2px;
+}
+.driver-mode-toggle__input {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+.driver-mode-toggle__track {
+  width: 36px; height: 20px; border-radius: 20px; flex-shrink: 0;
+  background: var(--c-border2); position: relative; transition: background .2s;
+}
+.driver-mode-toggle__thumb {
+  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.18); transition: transform .2s;
+}
+.driver-mode-toggle__input:checked + .driver-mode-toggle__track { background: var(--c-primary); }
+.driver-mode-toggle__input:checked + .driver-mode-toggle__track .driver-mode-toggle__thumb { transform: translateX(16px); }
+.driver-mode-toggle__input:checked ~ .driver-mode-toggle__lbl { color: var(--c-primary-dk); }
+.driver-mode-tag {
+  display: inline-flex; padding: 2px 8px; border-radius: 20px;
+  background: var(--c-amber-lt); color: #B45309; font-weight: 700; font-size: 10px;
+}
+.driver-mode-tag.is-advanced { background: var(--c-primary-lt); color: var(--c-primary-dk); }
+
+.driver-mode-panel {
+  margin: 12px 16px 0; padding: 14px; border-radius: var(--r);
+  background: var(--c-surface); border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.driver-mode-panel-title { font-size: 13px; font-weight: 700; color: var(--c-text); margin-bottom: 4px; }
+.driver-mode-panel-desc { font-size: 12px; color: var(--c-sub); line-height: 1.45; margin-bottom: 12px; }
+.driver-mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.driver-mode-btn {
+  min-height: 40px; border-radius: var(--r-sm); border: 1px solid var(--c-border2);
+  background: var(--c-bg); color: var(--c-sub); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.driver-mode-btn.active {
+  border-color: var(--c-primary); background: var(--c-primary-lt); color: var(--c-primary-dk);
+}
+
+.basic-delivery-top { padding: 12px 16px 0; }
+.basic-amount-strip {
+  text-align: center; padding: 14px 12px; margin-bottom: 10px;
+  background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r);
+  box-shadow: var(--shadow);
+}
+.basic-amount-strip .label { font-size: 12px; color: var(--c-sub); margin-bottom: 4px; }
+.basic-amount-strip .amount { font-size: 28px; font-weight: 800; color: var(--c-text); line-height: 1.15; }
+.basic-amount-strip .sub { font-size: 11px; color: var(--c-muted); margin-top: 6px; }
+#viewBasicDelivery .pay-methods { margin: 0 16px 10px; }
+#viewBasicDelivery .pay-error { margin: 0 16px 10px; }
+#viewBasicDelivery .pay-amount-fields { margin: 0 16px 10px; }
+#viewBasicDelivery .pay-split-summary { margin: 0 16px 10px; }
+#viewBasicDelivery .qr-box { margin: 0 16px 10px; }
+#viewBasicDelivery .pay-cash-panel { margin: 0 16px 10px; }
+#viewBasicDelivery .basic-order-card { margin: 4px 16px 0; }
+#viewBasicDelivery .basic-prepaid-notice {
+  margin: 12px 16px 0; padding: 12px 14px; border-radius: var(--r-sm);
+  background: var(--c-green-lt); border: 1px solid #BBF7D0; color: var(--c-green-dk); font-size: 12px; line-height: 1.45;
+}
+#viewBasicDelivery .basic-prepaid-notice strong { display: block; font-size: 13px; margin-bottom: 4px; }
 
 .summary-strip {
   background: var(--c-primary);
@@ -77,6 +141,21 @@ body {
 .sum-item { text-align: center; }
 .sum-num { font-size: 22px; font-weight: 700; color: #fff; }
 .sum-lbl { font-size: 10px; color: rgba(255,255,255,.9); margin-top: 2px; letter-spacing: .3px; text-transform: uppercase; }
+
+.dashboard-money {
+  padding: 12px 16px; background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center;
+}
+.dm-item { text-align: center; min-width: 0; }
+.dm-val {
+  font-size: 15px; font-weight: 700; color: var(--c-text); line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dm-val--collect { color: #B45309; }
+.dm-val--ok { color: var(--c-green-dk); }
+.dm-lbl { font-size: 10px; color: var(--c-sub); margin-top: 4px; letter-spacing: .3px; text-transform: uppercase; }
+.dm-divider { width: 1px; height: 38px; background: var(--c-border); justify-self: center; }
 
 .list-search-wrap { padding: 12px 16px 0; background: var(--c-surface); }
 .list-search {
@@ -93,8 +172,16 @@ body {
 .content.pad-nav { padding-bottom: 72px; }
 .content.pad-footer { padding-bottom: 80px; }
 
-.status-chips-wrap { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: 12px 16px; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; }
+.status-chips-wrap {
+  background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+  padding: 8px 0 10px; overflow: hidden;
+}
+.filter-chips {
+  display: flex; flex-wrap: nowrap; gap: 8px; padding: 0 16px;
+  overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+  scrollbar-width: none;
+}
 .filter-chips::-webkit-scrollbar { display: none; }
 .chip {
   flex: 0 0 auto; text-align: center; padding: 6px 12px; border-radius: 20px;
@@ -167,9 +254,15 @@ body {
 .exception-actions {
   display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px 10px; margin-top: -4px;
 }
-.exception-actions .btn-delivery { font-size: 12px; padding: 10px 8px; }
+.exception-actions--triple { grid-template-columns: 1fr 1fr 1fr; }
+.exception-actions .btn-delivery { font-size: 12px; padding: 10px 6px; }
 .exception-actions .btn-delivery.danger { color: var(--c-red); border-color: #FECACA; background: var(--c-red-lt); }
 .exception-actions .btn-delivery.warn { color: #B45309; border-color: #FDE68A; background: var(--c-amber-lt); }
+.exception-actions .btn-delivery.partial { color: #C2410C; border-color: #FDBA74; background: #FFF7ED; }
+.basic-delivery-hint {
+  margin: 0 16px 8px; padding: 10px 12px; border-radius: var(--r-sm);
+  background: var(--c-bg); border: 1px solid var(--c-border); font-size: 12px; color: var(--c-sub); line-height: 1.45;
+}
 
 .delivery-card-head { display: flex; align-items: flex-start; gap: 8px; padding: 14px 14px 0; }
 .delivery-card {
@@ -188,6 +281,52 @@ body {
 .delivery-card-body { padding: 6px 14px 0 14px; }
 .delivery-phone { font-size: 13px; color: var(--c-sub); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
 .delivery-address { font-size: 12px; color: var(--c-sub); line-height: 1.45; display: flex; align-items: flex-start; gap: 4px; }
+.delivery-debt {
+  font-size: 11px; color: var(--c-sub); margin-top: 6px;
+  display: flex; align-items: flex-start; gap: 4px; line-height: 1.35;
+}
+.delivery-debt i { font-size: 12px; margin-top: 1px; flex-shrink: 0; color: var(--c-primary); }
+.delivery-debt strong { color: var(--c-text); font-weight: 600; }
+.delivery-debt.is-warn strong { color: #B45309; }
+.delivery-debt.is-over strong { color: var(--c-red); }
+.delivery-debt.is-na strong { color: var(--c-muted); font-weight: 500; }
+.debt-warn-inline { color: inherit; font-weight: 600; }
+.debt-warn-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0; line-height: 1.2;
+}
+.debt-warn-tag i { font-size: 11px; }
+.debt-warn-tag--over {
+  background: var(--c-red-lt); color: #991B1B; border: 1px solid #FECACA;
+}
+.debt-warn-tag--warn {
+  background: #FFF7ED; color: #B45309; border: 1px solid #FDBA74;
+}
+.debt-warn-tag--warn i { color: #D97706; }
+.delivery-debt-tagbar {
+  display: none; padding: 0 14px 12px; margin-top: -2px;
+}
+.delivery-debt-tagbar.show { display: block; }
+.delivery-debt-tagbar .debt-warn-tag {
+  display: flex; width: 100%; justify-content: center;
+  padding: 6px 10px; font-size: 11px; border-radius: var(--r-sm);
+}
+.delivery-debt.is-over i { color: var(--c-red); }
+.delivery-debt.is-warn i { color: #C2410C; }
+.debt-limit-warn {
+  display: flex; align-items: flex-start; gap: 8px; margin: 10px 16px 0;
+  padding: 10px 12px; border-radius: var(--r-sm); font-size: 12px; line-height: 1.45;
+}
+.debt-limit-warn.hidden { display: none; }
+.debt-limit-warn i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.debt-limit-warn.is-warn { background: #FFF7ED; border: 1px solid #FDBA74; color: #9A3412; }
+.debt-limit-warn.is-warn i { color: #D97706; }
+.debt-limit-warn.is-over { background: var(--c-red-lt); border: 1px solid #FECACA; color: #991B1B; }
+.debt-limit-warn.is-over i { color: var(--c-red); }
+.info-debt-value.is-warn { color: #B45309; font-weight: 600; }
+.info-debt-value.is-over { color: var(--c-red); font-weight: 600; }
+.info-debt-value.is-na { color: var(--c-muted); font-weight: 500; }
 .delivery-card-foot {
   padding: 10px 14px; border-top: 1px solid var(--c-border);
   display: flex; align-items: center; justify-content: space-between; margin-top: 8px;
@@ -569,14 +708,33 @@ body {
 .qr-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-amber); animation: pulse 1.2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-.pay-methods { display: flex; gap: 6px; padding: 0 16px 10px; }
+.pay-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 16px 10px; }
 .pay-method {
-  flex: 1; padding: 10px 4px; border-radius: var(--r-sm); border: 1.5px solid var(--c-border2);
+  min-width: 0; min-height: 58px; padding: 8px 4px;
+  border-radius: var(--r-sm); border: 1.5px solid var(--c-border2);
   background: var(--c-surface); text-align: center; font-size: 10px; color: var(--c-sub); cursor: pointer;
-  transition: all .15s; min-width: 0;
+  transition: all .15s;
 }
 .pay-method.active { border-color: var(--c-primary); background: var(--c-primary-lt); color: var(--c-primary); font-weight: 600; }
-.pay-method .pm-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+.pay-method.active[data-pay="credit"] { border-color: #C2410C; background: #FFF7ED; color: #C2410C; }
+.pay-method.active[data-pay="transfer"] { border-color: #0369A1; background: #F0F9FF; color: #0369A1; }
+.pay-method .pm-icon { font-size: 17px; display: block; margin-bottom: 3px; }
+.pay-transfer-panel {
+  display: none; margin: 0 16px 10px; padding: 14px; border-radius: var(--r-sm);
+  background: #F0F9FF; border: 1px solid #BAE6FD; text-align: center; font-size: 12px; color: #0369A1; line-height: 1.45;
+}
+.pay-transfer-panel.show { display: block; }
+.pay-transfer-panel > i.ti-building-bank { font-size: 28px; color: #0284C7; display: block; margin-bottom: 6px; }
+.pay-transfer-panel strong { display: block; font-size: 13px; margin-bottom: 4px; color: #0C4A6E; }
+.pay-transfer-panel .transfer-amount { font-size: 18px; font-weight: 700; color: #0C4A6E; margin: 4px 0 10px; }
+.pay-transfer-panel .qr-status { margin-top: 4px; background: rgba(255,255,255,.85); }
+.pay-credit-panel {
+  display: none; margin: 0 16px 10px; padding: 14px; border-radius: var(--r-sm);
+  background: #FFF7ED; border: 1px solid #FDBA74; text-align: center; font-size: 12px; color: #9A3412; line-height: 1.45;
+}
+.pay-credit-panel.show { display: block; }
+.pay-credit-panel i { font-size: 28px; color: #C2410C; display: block; margin-bottom: 6px; }
+.pay-credit-panel strong { display: block; font-size: 13px; margin-bottom: 4px; color: #9A3412; }
 
 .pay-error {
   margin: 0 16px 10px; padding: 10px 12px; border-radius: var(--r-sm);
@@ -613,6 +771,70 @@ body {
 .pay-split-row.diff strong { color: #B45309; }
 .pay-split-row.diff.ok strong { color: var(--c-green-dk); }
 .hidden { display: none !important; }
+
+/* ===== Kết hợp thanh toán ===== */
+.mixed-pay-panel { margin: 0 16px 10px; }
+.mixed-pay-panel.hidden { display: none !important; }
+.mixed-pay-summary {
+  padding: 14px; border-radius: var(--r); background: linear-gradient(135deg, #F0F9FF 0%, #ECFDF5 100%);
+  border: 1px solid #BAE6FD; margin-bottom: 10px;
+}
+.mixed-sum-row { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; font-size: 12px; color: var(--c-sub); }
+.mixed-sum-row strong { font-size: 14px; color: var(--c-text); font-weight: 700; }
+.mixed-sum-row.highlight strong { color: #B45309; }
+.mixed-status-pill {
+  margin-top: 8px; padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-align: center;
+}
+.mixed-status-pill.is-ok { background: var(--c-green-lt); color: var(--c-green-dk); }
+.mixed-status-pill.is-short { background: #FFF7ED; color: #B45309; border: 1px solid #FDBA74; }
+.mixed-status-pill.is-over { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+.mixed-status-pill.is-empty { background: var(--c-bg); color: var(--c-muted); border: 1px dashed var(--c-border2); }
+.mixed-chip-label { font-size: 11px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 8px; padding: 0 2px; }
+.mixed-method-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.mixed-chip {
+  flex: 1 1 calc(50% - 4px); min-height: 44px; padding: 8px 10px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--c-border2); background: var(--c-surface); font-size: 12px; font-weight: 600;
+  color: var(--c-sub); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.mixed-chip i { font-size: 16px; }
+.mixed-chip.active { border-color: var(--c-primary); background: var(--c-primary-lt); color: var(--c-primary); }
+.mixed-chip.active[data-mixed="debt"] { border-color: #C2410C; background: #FFF7ED; color: #C2410C; }
+.mixed-chip.active[data-mixed="transfer"] { border-color: #0369A1; background: #F0F9FF; color: #0369A1; }
+.mixed-cards { display: flex; flex-direction: column; gap: 10px; }
+.mixed-method-card {
+  padding: 12px; border-radius: var(--r-sm); background: var(--c-surface);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.mixed-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.mixed-card-label { font-size: 13px; font-weight: 700; color: var(--c-text); display: flex; align-items: center; gap: 6px; }
+.mixed-card-label i { font-size: 16px; color: var(--c-primary); }
+.mixed-card-remove {
+  width: 28px; height: 28px; border: none; border-radius: 50%; background: var(--c-bg);
+  color: var(--c-muted); font-size: 16px; cursor: pointer; line-height: 1;
+}
+.mixed-card-input { margin-bottom: 8px; }
+.btn-mixed-remain {
+  width: 100%; padding: 8px 10px; border-radius: var(--r-sm); border: 1px dashed var(--c-primary);
+  background: var(--c-primary-lt); color: var(--c-primary); font-size: 11px; font-weight: 600; cursor: pointer;
+}
+.mixed-card-confirm { margin-top: 8px; }
+.mixed-card-extra { margin-top: 8px; }
+.mixed-card-extra label { display: block; font-size: 10px; font-weight: 600; color: var(--c-muted); margin-bottom: 4px; text-transform: uppercase; }
+.mixed-card-extra input, .mixed-card-extra textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--c-border2); border-radius: var(--r-sm);
+  font-size: 13px; background: var(--c-bg); outline: none;
+}
+.mixed-card-extra textarea { resize: vertical; min-height: 56px; max-height: 100px; }
+.mixed-card-qr { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--c-border); }
+.mixed-card-qr .qr-status { margin-top: 8px; }
+.mixed-confirm-summary {
+  margin-top: 10px; padding: 12px 14px; border-radius: var(--r-sm); background: #F8FAFC;
+  border: 1px solid var(--c-border); font-size: 12px;
+}
+.mixed-confirm-summary.hidden { display: none !important; }
+.mixed-confirm-row { display: flex; justify-content: space-between; padding: 3px 0; color: var(--c-sub); }
+.mixed-confirm-row strong { color: var(--c-text); font-weight: 600; }
+.mixed-confirm-row.total { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--c-border); font-weight: 600; }
 
 .sticky-footer {
   flex-shrink: 0; padding: 12px 16px 16px; background: var(--c-surface);
@@ -677,7 +899,7 @@ body {
 .rp-date-lbl { display: block; font-size: 10px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .3px; }
 .rp-date-val { display: block; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--c-text); }
 .rp-date-sep { display: flex; align-items: center; color: var(--c-muted); font-weight: 600; padding-top: 14px; flex-shrink: 0; }
-.rp-chips-wrap { padding-bottom: 0; }
+.rp-chips-wrap { padding-bottom: 8px; }
 .rp-list-head { padding: 14px 16px 8px; font-size: 11px; font-weight: 600; color: var(--c-muted); letter-spacing: .5px; text-transform: uppercase; }
 .rp-card {
   margin: 0 16px 10px; padding: 14px; border-radius: var(--r); background: var(--c-surface);
@@ -691,6 +913,99 @@ body {
 .rp-card-foot { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-border); font-size: 12px; color: var(--c-muted); display: flex; justify-content: space-between; align-items: center; }
 .rp-card-foot strong { color: var(--c-sub); font-weight: 600; }
 .rp-card-amt { font-size: 14px; font-weight: 700; color: var(--c-text); }
+
+/* ===== Dashboard báo cáo giao hàng (APP) ===== */
+.rp-dash-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 16px 0; }
+.rp-kpi-card {
+  padding: 14px 12px; border-radius: var(--r); background: var(--c-surface);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.rp-kpi-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.rp-kpi-card--done {
+  background: linear-gradient(145deg, #ECFDF5 0%, #FFFFFF 72%);
+  border-color: rgba(16, 185, 129, .28);
+}
+.rp-kpi-card--done::before { background: var(--c-green); }
+.rp-kpi-card--pending {
+  background: linear-gradient(145deg, #FFFAEB 0%, #FFFFFF 72%);
+  border-color: rgba(247, 144, 9, .28);
+}
+.rp-kpi-card--pending::before { background: var(--c-amber); }
+.rp-kpi-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.rp-kpi-icon {
+  width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.rp-kpi-card--done .rp-kpi-icon { background: rgba(16, 185, 129, .15); color: var(--c-green-dk); }
+.rp-kpi-card--pending .rp-kpi-icon { background: rgba(247, 144, 9, .16); color: #B45309; }
+.rp-kpi-lbl { font-size: 10px; font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: .3px; }
+.rp-kpi-card--done .rp-kpi-lbl { color: var(--c-green-dk); }
+.rp-kpi-card--pending .rp-kpi-lbl { color: #B45309; }
+.rp-kpi-count { margin-top: 8px; font-size: 28px; font-weight: 800; line-height: 1.1; }
+.rp-kpi-card--done .rp-kpi-count { color: var(--c-green-dk); }
+.rp-kpi-card--pending .rp-kpi-count { color: #C2410C; }
+.rp-kpi-amt { margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--c-text); }
+.rp-kpi-meta { margin-top: 8px; font-size: 10px; color: var(--c-muted); line-height: 1.35; }
+.rp-section-hd {
+  padding: 16px 16px 8px; font-size: 11px; font-weight: 700; color: var(--c-muted);
+  letter-spacing: .4px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.rp-section-hd i { font-size: 14px; color: var(--c-primary); }
+.rp-pay-panel { margin: 0 16px 4px; border-radius: var(--r); background: var(--c-surface); border: 1px solid var(--c-border); box-shadow: var(--shadow); overflow: hidden; }
+.rp-pay-hd {
+  padding: 12px 14px; border-bottom: 1px solid var(--c-border); font-size: 13px; font-weight: 600; color: var(--c-text); line-height: 1.4;
+  background: linear-gradient(180deg, var(--c-primary-lt) 0%, var(--c-surface) 100%);
+}
+.rp-pay-hd span { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--c-muted); }
+.rp-pay-row {
+  padding: 12px 14px; border-bottom: 1px solid var(--c-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.rp-pay-row:last-child { border-bottom: none; }
+.rp-pay-icon {
+  width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.rp-pay-icon.ecopay { background: #DBEAFE; color: #1D4ED8; }
+.rp-pay-icon.cash { background: #FEF3C7; color: #B45309; }
+.rp-pay-icon.bank { background: #E0E7FF; color: #4338CA; }
+.rp-pay-icon.debt { background: #EDE9FE; color: #6D28D9; }
+.rp-pay-main { flex: 1; min-width: 0; }
+.rp-pay-method { font-size: 14px; font-weight: 600; color: var(--c-text); }
+.rp-pay-sub { font-size: 11px; color: var(--c-muted); margin-top: 2px; }
+.rp-pay-amt { text-align: right; flex-shrink: 0; }
+.rp-pay-amt-val { font-size: 14px; font-weight: 800; color: var(--c-green-dk); }
+.rp-pay-amt-cnt { margin-top: 2px; font-size: 11px; font-weight: 600; color: var(--c-muted); }
+.rp-pay-total {
+  padding: 12px 14px; background: var(--c-green-lt); border-top: 1px solid rgba(16, 185, 129, .2);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.rp-pay-total-lbl { font-size: 12px; font-weight: 700; color: var(--c-green-dk); display: flex; align-items: center; gap: 6px; }
+.rp-pay-total-val { font-size: 15px; font-weight: 800; color: var(--c-green-dk); }
+.rp-menu-list { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.rp-menu-item {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
+  border-radius: var(--r); border: 1px solid var(--c-border); background: var(--c-surface);
+  box-shadow: var(--shadow); cursor: pointer; text-align: left;
+}
+.rp-menu-item:active { transform: scale(.99); }
+.rp-menu-icon {
+  width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.rp-menu-icon.blue { background: var(--c-primary-lt); color: var(--c-primary); }
+.rp-menu-icon.green { background: var(--c-green-lt); color: var(--c-green-dk); }
+.rp-menu-icon.amber { background: var(--c-amber-lt); color: #B45309; }
+.rp-menu-icon.purple { background: #EDE9FE; color: #6D28D9; }
+.rp-menu-body { flex: 1; min-width: 0; }
+.rp-menu-title { font-size: 14px; font-weight: 600; color: var(--c-text); }
+.rp-menu-desc { font-size: 11px; color: var(--c-muted); margin-top: 3px; line-height: 1.4; }
+.rp-menu-arrow { color: var(--c-primary); font-size: 18px; flex-shrink: 0; }
+.rp-perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px; }
+.rp-perf-box { padding: 12px; border-radius: var(--r-sm); background: var(--c-surface); border: 1px solid var(--c-border); text-align: center; }
+.rp-perf-box .n { font-size: 20px; font-weight: 700; color: var(--c-text); }
+.rp-perf-box .l { margin-top: 4px; font-size: 11px; color: var(--c-muted); }
 
 /* ===== OCR ===== */
 .ocr-quick-card {
@@ -966,7 +1281,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Danh sách đơn ===== -->
     <div class="view active" id="viewList">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -979,17 +1294,35 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
               <span class="driver-role">Tài xế</span>
             </div>
           </div>
-          <div class="driver-date">
-            <span class="day-label">Hôm nay</span>
-            16/06/2026
+          <div class="driver-date-col">
+            <div class="driver-date">
+              <span class="day-label">Hôm nay</span>
+              16/06/2026
+            </div>
+            <label class="driver-mode-toggle" id="mainDriverModeToggle" title="Bật = Basic · Tắt = Advance">
+              <input class="driver-mode-toggle__input" type="checkbox" id="driverModeToggleInput" checked/>
+              <span class="driver-mode-toggle__track" aria-hidden="true"><span class="driver-mode-toggle__thumb"></span></span>
+              <span class="driver-mode-toggle__lbl">Basic</span>
+            </label>
           </div>
         </div>
       </div>
       <div class="content pad-nav" id="listContent">
         <div class="summary-strip">
-          <div class="sum-item"><div class="sum-num">5</div><div class="sum-lbl">Hôm nay</div></div>
-          <div class="sum-item"><div class="sum-num">1</div><div class="sum-lbl">Đang giao</div></div>
-          <div class="sum-item"><div class="sum-num">1</div><div class="sum-lbl">Hoàn thành</div></div>
+          <div class="sum-item"><div class="sum-num" id="dashCountTotal">5</div><div class="sum-lbl">Hôm nay</div></div>
+          <div class="sum-item"><div class="sum-num" id="dashCountDelivering">1</div><div class="sum-lbl">Đang giao</div></div>
+          <div class="sum-item"><div class="sum-num" id="dashCountDone">1</div><div class="sum-lbl">Hoàn thành</div></div>
+        </div>
+        <div class="dashboard-money" id="dashboardMoney">
+          <div class="dm-item">
+            <div class="dm-val dm-val--collect" id="dashToCollect" title="Số tiền phải thu hôm nay">21.556.000 đ</div>
+            <div class="dm-lbl">Phải thu hôm nay</div>
+          </div>
+          <div class="dm-divider" aria-hidden="true"></div>
+          <div class="dm-item">
+            <div class="dm-val dm-val--ok" id="dashCollected" title="Số tiền đã thu">1.654.000 đ</div>
+            <div class="dm-lbl">Đã thu</div>
+          </div>
         </div>
         <div class="list-search-wrap">
           <input class="list-search" id="listSearch" type="text" placeholder="Tìm mã CH, tên CH, SĐT, mã đơn giao hàng"/>
@@ -1016,7 +1349,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="delivery-card" data-status="wait" data-search="hao sua store 0328839644 dlo-20260616-001"
             data-order="DLO-20260616-001" data-so="" data-source="OCR" data-pxk="PXK-09126"
             data-store-code="CH-HCM-8821" data-store-name="Hào Sữa Store" data-phone="0328839644"
-            data-address="34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM" data-amount="2450000">
+            data-address="34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM" data-amount="2450000"
+            data-debt-used="8750000" data-debt-limit="15000000">
             <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
             <div class="delivery-card-main">
             <div class="delivery-card-head">
@@ -1045,7 +1379,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="delivery-card" data-status="delivering" data-search="ch minh phat 0901234567 dlo-20260616-004"
             data-order="DLO-20260616-004" data-so="SO-20260614-7710" data-source="Ecom" data-pxk=""
             data-store-code="CH-HCM-4412" data-store-name="CH Minh Phát" data-phone="0901234567"
-            data-address="120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM" data-amount="18750000">
+            data-address="120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM" data-amount="18750000"
+            data-debt-used="3200000" data-debt-limit="10000000">
             <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
             <div class="delivery-card-main">
             <div class="delivery-card-head">
@@ -1074,7 +1409,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="delivery-card" data-status="partial" data-search="tap hoa co lan 0912345678 dlo-20260616-007"
             data-order="DLO-20260616-007" data-so="SO-20260615-9033" data-source="Merchant" data-pxk=""
             data-store-code="CH-HCM-3301" data-store-name="Tạp hoá Cô Lan" data-phone="0912345678"
-            data-address="56 Nguyễn Huệ, P. Bến Nghé, Q. 1, TP.HCM" data-amount="890000">
+            data-address="56 Nguyễn Huệ, P. Bến Nghé, Q. 1, TP.HCM" data-amount="890000"
+            data-debt-used="8200000" data-debt-limit="10000000">
             <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
             <div class="delivery-card-main">
             <div class="delivery-card-head">
@@ -1103,7 +1439,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="delivery-card" data-status="delivered" data-search="tap hoa ong nam 0987654321 dlo-20260616-003"
             data-order="DLO-20260616-003" data-so="SO-20260613-6602" data-source="DMS" data-pxk=""
             data-store-code="CH-HCM-1190" data-store-name="Tạp hoá Ông Năm" data-phone="0987654321"
-            data-address="88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM" data-amount="1120000">
+            data-address="88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM" data-amount="1120000"
+            data-debt-used="2100000" data-debt-limit="8000000">
             <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
             <div class="delivery-card-main">
             <div class="delivery-card-head">
@@ -1158,6 +1495,126 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             </div>
           </div>
 
+          <div class="delivery-card" data-status="wait" data-search="sieu thi mai anh 0933445566 dlo-20260616-011"
+            data-order="DLO-20260616-011" data-so="SO-20260615-8812" data-source="DMS" data-pxk=""
+            data-store-code="CH-HCM-5520" data-store-name="Siêu thị Mai Anh" data-phone="0933445566"
+            data-address="12 Nguyễn Văn Cừ, P. 3, Q. 5, TP.HCM" data-amount="2980000"
+            data-debt-used="1200000" data-debt-limit="15000000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Siêu thị Mai Anh <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-011</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">6.3 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0933445566</div>
+              <div class="delivery-address">12 Nguyễn Văn Cừ, Phường 3, Quận 5, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">2.980.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="Siêu thị Mai Anh" data-address="12 Nguyễn Văn Cừ, Phường 3, Quận 5, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info" data-order="DLO-20260616-011">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="wait" data-search="tap hoa anh tuan 0977112233 dlo-20260616-012"
+            data-order="DLO-20260616-012" data-so="SO-20260614-7720" data-source="Merchant" data-pxk=""
+            data-store-code="CH-HCM-2201" data-store-name="Tạp hóa Anh Tuấn" data-phone="0977112233"
+            data-address="78 Lê Văn Sỹ, P. 11, Q. 3, TP.HCM" data-amount="2720000"
+            data-debt-used="6500000" data-debt-limit="10000000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Tạp hóa Anh Tuấn <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-012</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">2.9 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0977112233</div>
+              <div class="delivery-address">78 Lê Văn Sỹ, Phường 11, Quận 3, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">2.720.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="Tạp hóa Anh Tuấn" data-address="78 Lê Văn Sỹ, Phường 11, Quận 3, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info" data-order="DLO-20260616-012">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="wait" data-search="mart gia dinh 0905667788 dlo-20260616-013"
+            data-order="DLO-20260616-013" data-so="SO-20260615-9044" data-source="Ecom" data-pxk=""
+            data-store-code="CH-HCM-7701" data-store-name="Mart Gia Định" data-phone="0905667788"
+            data-address="200 Quang Trung, P. 10, Q. Gò Vấp, TP.HCM" data-amount="2400000"
+            data-debt-used="8500000" data-debt-limit="10000000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">Mart Gia Định <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-013</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">7.5 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0905667788</div>
+              <div class="delivery-address">200 Quang Trung, Phường 10, Quận Gò Vấp, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">2.400.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="Mart Gia Định" data-address="200 Quang Trung, Phường 10, Quận Gò Vấp, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info" data-order="DLO-20260616-013">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="delivery-card" data-status="wait" data-search="ch binh duong 0918776655 dlo-20260616-014"
+            data-order="DLO-20260616-014" data-so="SO-20260616-1102" data-source="DMS" data-pxk=""
+            data-store-code="CH-HCM-6600" data-store-name="CH Bình Dương" data-phone="0918776655"
+            data-address="55 Điện Biên Phủ, P. 15, Q. Bình Thạnh, TP.HCM" data-amount="5080000"
+            data-debt-used="4000000" data-debt-limit="12000000">
+            <label class="card-select-wrap"><input type="checkbox" class="reject-check" aria-label="Chọn đơn"/></label>
+            <div class="delivery-card-main">
+            <div class="delivery-card-head">
+              <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
+              <div class="delivery-card-title-wrap">
+                <div class="delivery-card-title">CH Bình Dương <span class="badge badge-wait">Chưa giao</span></div>
+                <div class="delivery-card-meta">DLO-20260616-014</div>
+              </div>
+              <div class="delivery-card-side"><div class="delivery-distance">4.6 km</div></div>
+            </div>
+            <div class="delivery-card-body">
+              <div class="delivery-phone"><i class="ti ti-phone"></i> 0918776655</div>
+              <div class="delivery-address">55 Điện Biên Phủ, Phường 15, Quận Bình Thạnh, TP. Hồ Chí Minh</div>
+            </div>
+            <div class="delivery-card-foot">
+              <div class="delivery-amount">5.080.000 <span>VNĐ</span></div>
+              <span class="delivery-pay-status is-unpaid">Chưa thanh toán</span>
+            </div>
+            <div class="delivery-card-actions delivery-card-actions-split">
+              <button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="CH Bình Dương" data-address="55 Điện Biên Phủ, Phường 15, Quận Bình Thạnh, TP. Hồ Chí Minh"><i class="ti ti-map-2"></i> Bản đồ</button>
+              <button class="btn-delivery" type="button" data-go="info" data-order="DLO-20260616-014">Giao hàng</button>
+            </div>
+            </div>
+          </div>
+
         </div>
         <div class="bottom-msg" id="listBottomMsg">Đã hết thông tin</div>
         <div class="empty-state" id="listEmpty" style="display:none;">
@@ -1181,7 +1638,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: OCR đơn giao hàng ===== -->
     <div class="view" id="viewOcr">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -1190,7 +1647,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="driver-info">
             <div class="driver-greeting">Xin chào 👋</div>
             <div class="driver-name">Nguyễn Văn Tài</div>
-            <div class="driver-meta"><span class="driver-role">Tài xế</span></div>
+            <div class="driver-meta"><span class="driver-role">Tài xế</span><span class="driver-mode-tag">Basic</span></div>
           </div>
           <div class="driver-date"><span class="day-label">Hôm nay</span>16/06/2026</div>
         </div>
@@ -1261,9 +1718,9 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       </div>
     </div>
 
-    <!-- ===== VIEW: Báo cáo đơn giao hàng ===== -->
+    <!-- ===== VIEW: Dashboard báo cáo giao hàng ===== -->
     <div class="view" id="viewReport">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -1272,13 +1729,13 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="driver-info">
             <div class="driver-greeting">Xin chào 👋</div>
             <div class="driver-name">Nguyễn Văn Tài</div>
-            <div class="driver-meta"><span class="driver-role">Tài xế</span></div>
+            <div class="driver-meta"><span class="driver-role">Tài xế</span><span class="driver-mode-tag">Basic</span></div>
           </div>
           <div class="driver-date"><span class="day-label">Hôm nay</span>16/06/2026</div>
         </div>
         <div class="rp-page-title">
-          <h2>Báo cáo</h2>
-          <p>Danh sách đơn giao hàng theo khoảng thời gian</p>
+          <h2>Báo cáo giao hàng</h2>
+          <p>Tổng hợp đơn và tiền thu theo khoảng thời gian</p>
         </div>
       </div>
       <div class="content pad-nav">
@@ -1293,6 +1750,116 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <span class="rp-date-val" id="rpToDateVal">16/06/2026</span>
           </button>
         </div>
+        <div class="rp-dash-split">
+          <div class="rp-kpi-card rp-kpi-card--done">
+            <div class="rp-kpi-top">
+              <div class="rp-kpi-lbl">Đã giao</div>
+              <div class="rp-kpi-icon" aria-hidden="true"><i class="ti ti-circle-check"></i></div>
+            </div>
+            <div class="rp-kpi-count" id="rpKpiDeliveredCount">3</div>
+            <div class="rp-kpi-amt" id="rpKpiDeliveredAmt">13.150.000 đ</div>
+          </div>
+          <div class="rp-kpi-card rp-kpi-card--pending">
+            <div class="rp-kpi-top">
+              <div class="rp-kpi-lbl">Chưa giao</div>
+              <div class="rp-kpi-icon" aria-hidden="true"><i class="ti ti-truck-delivery"></i></div>
+            </div>
+            <div class="rp-kpi-count" id="rpKpiUndeliveredCount">3</div>
+            <div class="rp-kpi-amt" id="rpKpiUndeliveredAmt">22.090.000 đ</div>
+          </div>
+        </div>
+        <div class="rp-section-hd"><i class="ti ti-wallet"></i> Tổng thu theo PTTT</div>
+        <div class="rp-pay-panel">
+          <div class="rp-pay-hd">Tiền đã thu theo phương thức</div>
+          <div class="rp-pay-row">
+            <div class="rp-pay-icon ecopay" aria-hidden="true"><i class="ti ti-qrcode"></i></div>
+            <div class="rp-pay-main">
+              <div class="rp-pay-method">QR Ecopay</div>
+            </div>
+            <div class="rp-pay-amt">
+              <div class="rp-pay-amt-val">1.120.000 đ</div>
+            </div>
+          </div>
+          <div class="rp-pay-row">
+            <div class="rp-pay-icon cash" aria-hidden="true"><i class="ti ti-cash"></i></div>
+            <div class="rp-pay-main">
+              <div class="rp-pay-method">Tiền mặt</div>
+            </div>
+            <div class="rp-pay-amt">
+              <div class="rp-pay-amt-val">3.280.000 đ</div>
+            </div>
+          </div>
+          <div class="rp-pay-row">
+            <div class="rp-pay-icon bank" aria-hidden="true"><i class="ti ti-building-bank"></i></div>
+            <div class="rp-pay-main">
+              <div class="rp-pay-method">Chuyển khoản</div>
+            </div>
+            <div class="rp-pay-amt">
+              <div class="rp-pay-amt-val">8.750.000 đ</div>
+            </div>
+          </div>
+          <div class="rp-pay-row">
+            <div class="rp-pay-icon debt" aria-hidden="true"><i class="ti ti-report-money"></i></div>
+            <div class="rp-pay-main">
+              <div class="rp-pay-method">Công nợ khả dụng</div>
+            </div>
+            <div class="rp-pay-amt">
+              <div class="rp-pay-amt-val">0 đ</div>
+            </div>
+          </div>
+          <div class="rp-pay-total">
+            <div class="rp-pay-total-lbl"><i class="ti ti-sum"></i> Tổng đã thu</div>
+            <div class="rp-pay-total-val">13.150.000 đ</div>
+          </div>
+        </div>
+        <div class="rp-section-hd"><i class="ti ti-list-details"></i> Báo cáo chi tiết</div>
+        <div class="rp-menu-list">
+          <button class="rp-menu-item" type="button" data-go="reportorders">
+            <div class="rp-menu-icon blue"><i class="ti ti-package"></i></div>
+            <div class="rp-menu-body">
+              <div class="rp-menu-title">Đơn giao hàng chi tiết</div>
+              <div class="rp-menu-desc">Danh sách đơn theo trạng thái · lọc theo ngày giao</div>
+            </div>
+            <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
+          </button>
+          <button class="rp-menu-item" type="button" data-go="reportpay">
+            <div class="rp-menu-icon green"><i class="ti ti-qrcode"></i></div>
+            <div class="rp-menu-body">
+              <div class="rp-menu-title">Thanh toán Ecopay</div>
+              <div class="rp-menu-desc">Giao dịch QR · đối soát thu tiền không tiền mặt</div>
+            </div>
+            <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
+          </button>
+          <button class="rp-menu-item" type="button" data-go="reportperf">
+            <div class="rp-menu-icon amber"><i class="ti ti-chart-line"></i></div>
+            <div class="rp-menu-body">
+              <div class="rp-menu-title">Hiệu suất giao hàng</div>
+              <div class="rp-menu-desc">Tỷ lệ hoàn thành · thời gian giao trung bình</div>
+            </div>
+            <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
+          </button>
+        </div>
+        <div class="bottom-msg">Cập nhật: 16/06/2026 09:30</div>
+      </div>
+      <div class="bottom-nav" id="bottomNavReport">
+        <div class="nav-item" data-nav="list" data-go="list"><i class="ti ti-truck-delivery"></i>Giao hàng</div>
+        <div class="nav-item active" data-nav="report" data-go="report"><i class="ti ti-chart-bar"></i>Báo cáo</div>
+        <div class="nav-item" data-nav="ocr" data-go="ocr"><i class="ti ti-scan"></i>OCR</div>
+        <div class="nav-item" data-nav="other" data-go="other"><i class="ti ti-layout-grid"></i>Khác</div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: BC chi tiết — Danh sách đơn ===== -->
+    <div class="view" id="viewReportOrders">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Đơn giao hàng chi tiết</h1>
+          <div class="step">01/06/2026 – 16/06/2026</div>
+        </div>
+      </div>
+      <div class="content pad-footer">
         <div class="status-chips-wrap rp-chips-wrap" id="rpStatusChipsWrap">
           <div class="filter-chips" id="rpChipsRow1">
             <button class="chip active" type="button" data-rp-filter="all">Tất cả <span class="cnt">6</span></button>
@@ -1360,17 +1927,75 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="empty-desc">Không tìm thấy đơn giao hàng nào<br>trong khoảng thời gian và trạng thái đã chọn.</div>
         </div>
       </div>
-      <div class="bottom-nav" id="bottomNavReport">
-        <div class="nav-item" data-nav="list" data-go="list"><i class="ti ti-truck-delivery"></i>Giao hàng</div>
-        <div class="nav-item active" data-nav="report" data-go="report"><i class="ti ti-chart-bar"></i>Báo cáo</div>
-        <div class="nav-item" data-nav="ocr" data-go="ocr"><i class="ti ti-scan"></i>OCR</div>
-        <div class="nav-item" data-nav="other" data-go="other"><i class="ti ti-layout-grid"></i>Khác</div>
+    </div>
+
+    <!-- ===== VIEW: BC chi tiết — Thanh toán Ecopay ===== -->
+    <div class="view" id="viewReportPay">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Thanh toán Ecopay</h1>
+          <div class="step">01/06/2026 – 16/06/2026</div>
+        </div>
+      </div>
+      <div class="content pad-footer">
+        <div class="rp-perf-grid" style="padding-top:12px;">
+          <div class="rp-perf-box"><div class="n">1</div><div class="l">Giao dịch thành công</div></div>
+          <div class="rp-perf-box"><div class="n" style="color:var(--c-green-dk);">1.120.000 đ</div><div class="l">Tổng đã thu</div></div>
+        </div>
+        <div class="rp-list-head">Giao dịch QR Ecopay</div>
+        <article class="rp-card" style="cursor:default;">
+          <div class="rp-card-head">
+            <div><div class="rp-card-code">ECO-20260616-8841</div><div class="rp-card-store">Tạp hoá Ông Năm</div></div>
+            <span class="badge badge-delivered">Thành công</span>
+          </div>
+          <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026 09:44</span><span><i class="ti ti-link"></i> DLO-20260616-003</span></div>
+          <div class="rp-card-foot"><span>Mã ref: <strong>FPV882910</strong></span><span class="rp-card-amt">1.120.000 đ</span></div>
+        </article>
+        <div class="bottom-msg">Đã hết thông tin</div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: BC chi tiết — Hiệu suất giao hàng ===== -->
+    <div class="view" id="viewReportPerf">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Hiệu suất giao hàng</h1>
+          <div class="step">01/06/2026 – 16/06/2026</div>
+        </div>
+      </div>
+      <div class="content pad-footer">
+        <div class="rp-perf-grid" style="padding-top:12px;">
+          <div class="rp-perf-box"><div class="n" style="color:var(--c-green-dk);">50%</div><div class="l">Tỷ lệ hoàn thành</div></div>
+          <div class="rp-perf-box"><div class="n">3/6</div><div class="l">Đơn hoàn thành</div></div>
+          <div class="rp-perf-box"><div class="n">28 phút</div><div class="l">TG giao TB</div></div>
+          <div class="rp-perf-box"><div class="n" style="color:#B45309;">1</div><div class="l">Đơn thất bại</div></div>
+        </div>
+        <div class="rp-list-head">Theo ngày</div>
+        <article class="rp-card" style="cursor:default;">
+          <div class="rp-card-head">
+            <div><div class="rp-card-store">16/06/2026</div><div class="rp-card-meta" style="margin-top:4px;">2 đơn · 1 hoàn thành</div></div>
+            <span class="badge badge-delivering">50%</span>
+          </div>
+          <div class="rp-card-foot"><span>Đang giao: <strong>1</strong></span><span>Chưa giao: <strong>1</strong></span></div>
+        </article>
+        <article class="rp-card" style="cursor:default;">
+          <div class="rp-card-head">
+            <div><div class="rp-card-store">15/06/2026</div><div class="rp-card-meta" style="margin-top:4px;">1 đơn · 1 hoàn thành</div></div>
+            <span class="badge badge-delivered">100%</span>
+          </div>
+          <div class="rp-card-foot"><span>Thất bại: <strong>0</strong></span><span>TG TB: <strong>32 phút</strong></span></div>
+        </article>
+        <div class="bottom-msg">Đã hết thông tin</div>
       </div>
     </div>
 
     <!-- ===== VIEW: Khác (tab Khác — chế độ Tài xế) ===== -->
     <div class="view" id="viewOther">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="other-header-driver">
         <div class="other-date-driver">Thứ 4, ngày 24 tháng 6</div>
         <div class="other-timer-driver">00:00:00</div>
@@ -1403,9 +2028,9 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Chi tiết đơn giao hàng (Báo cáo) ===== -->
     <div class="view" id="viewReportDetail">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
-        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
+        <button class="back" type="button" data-go="reportorders"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
           <h1>Chi tiết đơn giao hàng</h1>
           <div class="step" id="rpDetailCode">DLO-20260616-003</div>
@@ -1435,13 +2060,13 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         </div>
       </div>
       <div class="sticky-footer">
-        <button class="btn-delivery" type="button" data-go="report">Quay lại báo cáo</button>
+        <button class="btn-delivery" type="button" data-go="reportorders">Quay lại danh sách</button>
       </div>
     </div>
 
     <!-- ===== VIEW: Bản đồ tất cả cửa hàng ===== -->
     <div class="view" id="viewListMap">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1468,7 +2093,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Bản đồ dẫn đường ===== -->
     <div class="view" id="viewMap">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1495,7 +2120,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Thông tin đơn (Bước 1) ===== -->
     <div class="view" id="viewInfo">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1532,6 +2157,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="info-row"><span class="info-label">Tên CH</span><span class="info-value" id="infoStoreName">Hào Sữa Store</span></div>
           <div class="info-row"><span class="info-label">SĐT</span><span class="info-value" id="infoPhone">0328839644</span></div>
           <div class="info-row"><span class="info-label">Địa chỉ</span><span class="info-value" id="infoAddress">34 Hoàng Việt, P.04, Q. Tân Bình, TP.HCM</span></div>
+          <div class="info-row" id="infoDebtRow"><span class="info-label">Công nợ khả dụng</span><span class="info-value info-debt-value" id="infoDebtAmount">—</span></div>
+          <div class="debt-limit-warn hidden" id="infoDebtWarn"></div>
           <div class="info-row"><span class="info-label">Khoảng cách</span><span class="info-value highlight">1.2 km</span></div>
         </div>
         <div class="info-card">
@@ -1567,7 +2194,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Điều chỉnh số lượng giao (mode chỉnh SP) ===== -->
     <div class="view" id="viewHandleDelivery">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="handle-shell">
         <div class="handle-hdr" id="handleHdr">
           <div class="handle-hdr-top">
@@ -1633,7 +2260,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- Sheet: Sửa thông tin nhận hàng -->
     <div class="view" id="viewEditOrder">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="info"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1665,7 +2292,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Chụp ảnh (Bước 2) ===== -->
     <div class="view" id="viewPhoto">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="info"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1721,7 +2348,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Thanh toán (Bước 3) ===== -->
     <div class="view" id="viewPayment">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="photo"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1741,25 +2368,53 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="sub">DLO-20260616-001 · Hào Sữa Store</div>
         </div>
         <div class="pay-methods" id="payMethods">
-          <button class="pay-method" type="button" data-pay="cash"><span class="pm-icon"><i class="ti ti-cash"></i></span>Tiền mặt</button>
           <button class="pay-method active" type="button" data-pay="qr"><span class="pm-icon"><i class="ti ti-qrcode"></i></span>QR Code</button>
-          <button class="pay-method" type="button" data-pay="mixed"><span class="pm-icon"><i class="ti ti-cash-banknote"></i></span>Kết hợp</button>
+          <button class="pay-method" type="button" data-pay="cash"><span class="pm-icon"><i class="ti ti-cash"></i></span>Tiền mặt</button>
+          <button class="pay-method" type="button" data-pay="transfer"><span class="pm-icon"><i class="ti ti-building-bank"></i></span>Chuyển khoản</button>
+          <button class="pay-method" type="button" data-pay="credit"><span class="pm-icon"><i class="ti ti-receipt"></i></span>Nợ tiền</button>
+          <button class="pay-method" type="button" data-pay="mixed"><span class="pm-icon"><i class="ti ti-cash-banknote"></i></span>Kết hợp thanh toán</button>
         </div>
+        <div class="debt-limit-warn hidden" id="paymentDebtWarn"></div>
         <div class="pay-error" id="payError" role="alert"></div>
+        <div class="mixed-pay-panel hidden" id="mixedPayPanel">
+          <div class="mixed-pay-summary">
+            <div class="mixed-sum-row"><span>Tổng tiền cần thu</span><strong id="mixedTotalPayable">0 đ</strong></div>
+            <div class="mixed-sum-row"><span>Đã thanh toán</span><strong id="mixedTotalPaid">0 đ</strong></div>
+          </div>
+          <div class="mixed-chip-label">Chọn phương thức thanh toán</div>
+          <div class="mixed-method-chips" id="mixedMethodChips">
+            <button type="button" class="mixed-chip" data-mixed="qr"><i class="ti ti-qrcode"></i> QR</button>
+            <button type="button" class="mixed-chip" data-mixed="cash"><i class="ti ti-cash"></i> Tiền mặt</button>
+            <button type="button" class="mixed-chip" data-mixed="transfer"><i class="ti ti-building-bank"></i> Chuyển khoản</button>
+            <button type="button" class="mixed-chip" data-mixed="debt"><i class="ti ti-receipt"></i> Nợ tiền</button>
+          </div>
+          <div class="mixed-cards" id="mixedMethodCards"></div>
+          <div class="mixed-confirm-summary hidden" id="mixedConfirmSummary"></div>
+        </div>
         <div class="pay-amount-fields hidden" id="payAmountFields">
+          <div class="pay-amount-field hidden" id="payCreditFieldWrap">
+            <label class="pay-amount-label" for="payCreditInput">Số tiền ghi nợ</label>
+            <input class="pay-amount-input" id="payCreditInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+          </div>
           <div class="pay-amount-field" id="payCashFieldWrap">
             <label class="pay-amount-label" for="payCashInput">Số tiền tiền mặt</label>
             <input class="pay-amount-input" id="payCashInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
           </div>
           <div class="pay-amount-field hidden" id="payQrFieldWrap">
-            <label class="pay-amount-label" for="payQrInput">Số tiền chuyển khoản QR</label>
+            <label class="pay-amount-label" for="payQrInput">Số tiền QR Code</label>
             <input class="pay-amount-input" id="payQrInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+          </div>
+          <div class="pay-amount-field hidden" id="payTransferFieldWrap">
+            <label class="pay-amount-label" for="payTransferInput">Số tiền chuyển khoản</label>
+            <input class="pay-amount-input" id="payTransferInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
           </div>
         </div>
         <div class="pay-split-summary hidden" id="paySplitSummary">
           <div class="pay-split-row"><span>Tổng cần thu</span><strong id="paySplitTotal">0 đ</strong></div>
+          <div class="pay-split-row"><span>Ghi nợ</span><strong id="paySplitCredit">0 đ</strong></div>
           <div class="pay-split-row"><span>Tiền mặt</span><strong id="paySplitCash">0 đ</strong></div>
-          <div class="pay-split-row"><span>Chuyển khoản QR</span><strong id="paySplitQr">0 đ</strong></div>
+          <div class="pay-split-row"><span>Chuyển khoản</span><strong id="paySplitTransfer">0 đ</strong></div>
+          <div class="pay-split-row"><span>QR Code</span><strong id="paySplitQr">0 đ</strong></div>
           <div class="pay-split-row diff" id="paySplitDiffRow"><span>Chênh lệch</span><strong id="paySplitDiff">0 đ</strong></div>
         </div>
         <div class="qr-box" id="qrBox">
@@ -1791,14 +2446,29 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <strong>Thu tiền mặt</strong>
           <p id="cashPanelHint">Xác nhận đã thu đủ tiền mặt từ khách hàng trước khi hoàn tất giao hàng.</p>
         </div>
+        <div class="pay-transfer-panel" id="transferPanel">
+          <i class="ti ti-building-bank"></i>
+          <strong>Chuyển khoản ngân hàng</strong>
+          <div class="transfer-amount" id="transferPanelAmount">0 VNĐ</div>
+          <div class="qr-status" id="transferStatus" role="button" tabindex="0" title="Chạm khi khách đã chuyển khoản"><i class="ti ti-clock"></i> Chờ xác nhận chuyển khoản...</div>
+          <div class="qr-tap-hint" id="transferTapHint">Chạm nút phía trên khi khách đã chuyển khoản thành công</div>
+        </div>
+        <div class="pay-credit-panel" id="creditPanel">
+          <i class="ti ti-receipt"></i>
+          <strong>Ghi nợ công nợ</strong>
+          <p>Số tiền <strong id="creditPanelAmount">0 đ</strong> sẽ cộng dồn vào công nợ khách hàng sau khi xác nhận giao hàng.</p>
+        </div>
         <div class="info-card" id="payCheckCard">
           <div class="info-card-title">Kiểm tra trước khi thu</div>
+          <div class="info-row" id="payCheckDebtRow"><span class="info-label">Công nợ khả dụng</span><span class="info-value info-debt-value" id="payCheckDebt">—</span></div>
           <div class="info-row"><span class="info-label">Tổng tiền đơn gốc</span><span class="info-value" id="payCheckOrderTotal">2.450.000 đ</span></div>
           <div class="info-row hidden partial-pay-extra" id="payCheckDeliveredRow"><span class="info-label">Đã giao trước đó</span><span class="info-value" id="payCheckDelivered">0 đ</span></div>
           <div class="info-row hidden partial-pay-extra" id="payCheckRemainOrderRow"><span class="info-label">Còn lại trên đơn</span><span class="info-value" id="payCheckRemainOrder">0 đ</span></div>
           <div class="info-row"><span class="info-label">Cần thu lần này</span><span class="info-value highlight" style="color:var(--warning-700);" id="payCheckRemain">2.450.000 đ</span></div>
+          <div class="info-row hidden" id="payCheckCreditRow"><span class="info-label">Ghi nợ</span><span class="info-value info-debt-value" id="payCheckCredit">0 đ</span></div>
           <div class="info-row hidden" id="payCheckCashRow"><span class="info-label">Tiền mặt</span><span class="info-value" id="payCheckCash">0 đ</span></div>
-          <div class="info-row hidden" id="payCheckQrRow"><span class="info-label">Chuyển khoản QR</span><span class="info-value" id="payCheckQr">0 đ</span></div>
+          <div class="info-row hidden" id="payCheckTransferRow"><span class="info-label">Chuyển khoản</span><span class="info-value" id="payCheckTransfer">0 đ</span></div>
+          <div class="info-row hidden" id="payCheckQrRow"><span class="info-label">QR Code</span><span class="info-value" id="payCheckQr">0 đ</span></div>
         </div>
       </div>
       <div class="sticky-footer">
@@ -1807,9 +2477,144 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       </div>
     </div>
 
+    <!-- ===== VIEW: Giao hàng Basic (QR + thanh toán + thông tin đơn) ===== -->
+    <div class="view" id="viewBasicDelivery">
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="detail-header">
+        <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
+        <div class="hdr-center">
+          <h1>Giao hàng</h1>
+          <div class="step" id="basicStepLabel">Basic · Thu tiền &amp; xác nhận</div>
+        </div>
+      </div>
+      <div class="content pad-footer">
+        <div class="basic-prepaid-notice hidden" id="basicPrepaidNotice">
+          <strong>Đơn đã thanh toán khi đặt hàng</strong>
+          Không cần thu tiền — xác nhận giao hàng để hoàn tất đơn.
+        </div>
+        <div id="basicPaySection">
+          <div class="debt-limit-warn hidden" id="basicDebtWarn"></div>
+          <div class="basic-delivery-top">
+            <div class="basic-amount-strip" id="basicPaySummary">
+              <div class="label">Số tiền cần thu</div>
+              <div class="amount" id="basicPayAmount">0 đ</div>
+              <div class="sub" id="basicPaySub">—</div>
+            </div>
+          </div>
+          <div class="qr-box" id="basicQrBox">
+            <div class="qr-image" aria-hidden="true">
+              <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="8" width="50" height="50" rx="4" fill="none" stroke="#0078B5" stroke-width="4"/>
+                <rect x="18" y="18" width="30" height="30" rx="2" fill="#0078B5"/>
+                <rect x="82" y="8" width="50" height="50" rx="4" fill="none" stroke="#0078B5" stroke-width="4"/>
+                <rect x="92" y="18" width="30" height="30" rx="2" fill="#0078B5"/>
+                <rect x="8" y="82" width="50" height="50" rx="4" fill="none" stroke="#0078B5" stroke-width="4"/>
+                <rect x="18" y="92" width="30" height="30" rx="2" fill="#0078B5"/>
+                <rect x="82" y="82" width="8" height="8" fill="#0078B5"/><rect x="94" y="82" width="8" height="8" fill="#0078B5"/>
+                <rect x="106" y="82" width="8" height="8" fill="#0078B5"/><rect x="118" y="82" width="14" height="8" fill="#0078B5"/>
+                <rect x="82" y="94" width="8" height="8" fill="#0078B5"/><rect x="106" y="94" width="8" height="8" fill="#0078B5"/>
+                <rect x="82" y="106" width="8" height="8" fill="#0078B5"/><rect x="94" y="106" width="20" height="8" fill="#0078B5"/>
+                <rect x="118" y="106" width="14" height="8" fill="#0078B5"/><rect x="82" y="118" width="20" height="14" fill="#0078B5"/>
+                <rect x="106" y="118" width="8" height="14" fill="#0078B5"/><rect x="66" y="8" width="8" height="8" fill="#0078B5"/>
+                <rect x="66" y="20" width="8" height="8" fill="#0078B5"/><rect x="66" y="44" width="8" height="8" fill="#0078B5"/>
+                <rect x="66" y="56" width="8" height="20" fill="#0078B5"/><rect x="66" y="82" width="8" height="8" fill="#0078B5"/>
+              </svg>
+            </div>
+            <div class="qr-amount" id="basicQrAmount">0 VNĐ</div>
+            <div class="qr-id" id="basicQrTransferNote">—</div>
+            <div class="qr-status" id="basicQrStatus" role="button" tabindex="0" title="Chạm khi khách đã quét QR"><i class="ti ti-clock"></i> Chờ khách quét thanh toán...</div>
+            <div class="qr-tap-hint" id="basicQrTapHint">Chạm nút phía trên sau khi khách quét QR thành công</div>
+          </div>
+          <div class="pay-methods" id="basicPayMethods">
+            <button class="pay-method active" type="button" data-pay="qr"><span class="pm-icon"><i class="ti ti-qrcode"></i></span>QR Code</button>
+            <button class="pay-method" type="button" data-pay="cash"><span class="pm-icon"><i class="ti ti-cash"></i></span>Tiền mặt</button>
+            <button class="pay-method" type="button" data-pay="transfer"><span class="pm-icon"><i class="ti ti-building-bank"></i></span>Chuyển khoản</button>
+            <button class="pay-method" type="button" data-pay="credit"><span class="pm-icon"><i class="ti ti-receipt"></i></span>Nợ tiền</button>
+            <button class="pay-method" type="button" data-pay="mixed"><span class="pm-icon"><i class="ti ti-cash-banknote"></i></span>Kết hợp thanh toán</button>
+          </div>
+          <div class="mixed-pay-panel hidden" id="basicMixedPayPanel">
+            <div class="mixed-pay-summary">
+              <div class="mixed-sum-row"><span>Tổng tiền cần thu</span><strong id="basicMixedTotalPayable">0 đ</strong></div>
+              <div class="mixed-sum-row"><span>Đã thanh toán</span><strong id="basicMixedTotalPaid">0 đ</strong></div>
+            </div>
+            <div class="mixed-chip-label">Chọn phương thức thanh toán</div>
+            <div class="mixed-method-chips" id="basicMixedMethodChips">
+              <button type="button" class="mixed-chip" data-mixed="qr"><i class="ti ti-qrcode"></i> QR</button>
+              <button type="button" class="mixed-chip" data-mixed="cash"><i class="ti ti-cash"></i> Tiền mặt</button>
+              <button type="button" class="mixed-chip" data-mixed="transfer"><i class="ti ti-building-bank"></i> Chuyển khoản</button>
+              <button type="button" class="mixed-chip" data-mixed="debt"><i class="ti ti-receipt"></i> Nợ tiền</button>
+            </div>
+            <div class="mixed-cards" id="basicMixedMethodCards"></div>
+            <div class="mixed-confirm-summary hidden" id="basicMixedConfirmSummary"></div>
+          </div>
+          <div class="pay-cash-panel" id="basicCashPanel">
+            <i class="ti ti-cash"></i>
+            <strong>Thu tiền mặt</strong>
+            <p id="basicCashPanelHint">Xác nhận đã thu đủ tiền mặt từ khách hàng.</p>
+          </div>
+          <div class="pay-transfer-panel" id="basicTransferPanel">
+            <i class="ti ti-building-bank"></i>
+            <strong>Chuyển khoản ngân hàng</strong>
+            <div class="transfer-amount" id="basicTransferPanelAmount">0 VNĐ</div>
+            <div class="qr-status" id="basicTransferStatus" role="button" tabindex="0" title="Chạm khi khách đã chuyển khoản"><i class="ti ti-clock"></i> Chờ xác nhận chuyển khoản...</div>
+            <div class="qr-tap-hint" id="basicTransferTapHint">Chạm nút phía trên khi khách đã chuyển khoản thành công</div>
+          </div>
+          <div class="pay-credit-panel" id="basicCreditPanel">
+            <i class="ti ti-receipt"></i>
+            <strong>Ghi nợ công nợ</strong>
+            <p>Số tiền <strong id="basicCreditPanelAmount">0 đ</strong> sẽ cộng dồn vào công nợ khách hàng sau khi xác nhận giao hàng.</p>
+          </div>
+          <div class="pay-error" id="basicPayError" role="alert"></div>
+          <div class="pay-amount-fields hidden" id="basicPayAmountFields">
+            <div class="pay-amount-field hidden" id="basicPayCreditFieldWrap">
+              <label class="pay-amount-label" for="basicPayCreditInput">Số tiền ghi nợ</label>
+              <input class="pay-amount-input" id="basicPayCreditInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+            </div>
+            <div class="pay-amount-field" id="basicPayCashFieldWrap">
+              <label class="pay-amount-label" for="basicPayCashInput">Số tiền tiền mặt</label>
+              <input class="pay-amount-input" id="basicPayCashInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+            </div>
+            <div class="pay-amount-field hidden" id="basicPayQrFieldWrap">
+              <label class="pay-amount-label" for="basicPayQrInput">Số tiền QR Code</label>
+              <input class="pay-amount-input" id="basicPayQrInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+            </div>
+            <div class="pay-amount-field hidden" id="basicPayTransferFieldWrap">
+              <label class="pay-amount-label" for="basicPayTransferInput">Số tiền chuyển khoản</label>
+              <input class="pay-amount-input" id="basicPayTransferInput" inputmode="numeric" type="text" autocomplete="off" placeholder="0"/>
+            </div>
+          </div>
+          <div class="pay-split-summary hidden" id="basicPaySplitSummary">
+            <div class="pay-split-row"><span>Tổng cần thu</span><strong id="basicPaySplitTotal">0 đ</strong></div>
+            <div class="pay-split-row"><span>Ghi nợ</span><strong id="basicPaySplitCredit">0 đ</strong></div>
+            <div class="pay-split-row"><span>Tiền mặt</span><strong id="basicPaySplitCash">0 đ</strong></div>
+            <div class="pay-split-row"><span>Chuyển khoản</span><strong id="basicPaySplitTransfer">0 đ</strong></div>
+            <div class="pay-split-row"><span>QR Code</span><strong id="basicPaySplitQr">0 đ</strong></div>
+            <div class="pay-split-row diff" id="basicPaySplitDiffRow"><span>Chênh lệch</span><strong id="basicPaySplitDiff">0 đ</strong></div>
+          </div>
+        </div>
+        <div class="info-card basic-order-card" id="basicOrderCard">
+          <div class="info-card-title">Thông tin đơn hàng</div>
+          <div id="basicOrderBody"></div>
+        </div>
+      </div>
+      <div class="partial-banner hidden" id="basicPartialBanner">
+        Đơn đang giao một phần — phần chưa giao sẽ được xử lý tiếp theo quy trình NPP.
+      </div>
+      <div class="basic-delivery-hint hidden" id="basicDeliveryHint"></div>
+      <div class="exception-actions exception-actions--triple" id="basicExceptionActions">
+        <button class="btn-delivery secondary danger" type="button" id="btnBasicNotReceive">Không nhận</button>
+        <button class="btn-delivery secondary warn" type="button" id="btnBasicReschedule">Hẹn giao lại</button>
+        <button class="btn-delivery secondary partial" type="button" id="btnBasicPartial">Giao 1 phần</button>
+      </div>
+      <div class="sticky-footer info-footer-stack" id="basicFooter">
+        <button class="btn-delivery btn-handle-main" type="button" id="btnBasicConfirm" disabled>Xác nhận giao hàng</button>
+        <button class="btn-delivery secondary" type="button" id="btnBasicRegenQr">Tạo lại QR</button>
+      </div>
+    </div>
+
     <!-- ===== VIEW: Hoàn tất ===== -->
     <div class="view" id="viewDone">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -2065,17 +2870,27 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 <div class="dev-bar">TÀI XẾ main · <a href="../main.html#khac">Salesman</a> · <a href="MS-A-DL03-ocr-don-giao-hang.html">DL03</a></div>
 
 <script src="../_shared/payment-mixed-validation.js"></script>
+<script src="../_shared/mixed-payment.js"></script>
 <script src="../_shared/delivery-order-logic.js"></script>
 <script>
 (function(){
   var photoCount = 0;
   var paid = false;
+  var transferPaid = false;
+  var cashConfirmed = false;
+  var debtConfirmed = false;
+  var transferTxnCode = '';
+  var PayV = window.PaymentMixedValidation;
+  var MP = window.MixedPayment;
+  var mixedPaymentState = MP ? MP.createEmptyState() : null;
+  var mixedUiScope = 'advance';
   var payMode = 'qr';
   var payCashAmount = 0;
   var payQrAmount = 0;
+  var payCreditAmount = 0;
+  var payTransferAmount = 0;
   var payLastEdited = 'cash';
   var qrTxnCode = '';
-  var PayV = window.PaymentMixedValidation;
   var DLO = window.DeliveryOrderLogic;
   var resumeMode = false;
   var activeDeliveryCard = null;
@@ -2083,6 +2898,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   var reasonSheetMode = '';
   var selectedReason = '';
   var deliveryOrderStore = {};
+  var DRIVER_UI_MODE_KEY = 'dms_driver_ui_mode';
+  var driverUIMode = localStorage.getItem(DRIVER_UI_MODE_KEY) || 'basic';
   var currentDeliverySession = null;
   var handleQtyState = {};
   var handleSearchQuery = '';
@@ -2112,6 +2929,22 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     'DLO-20260616-010': [
       { productId: 'P-TH-1LB', sku: 'SKU-TH-SUA1L', name: 'Sữa tươi TH 1L', unit: 'Hộp', orderedQty: 200, deliveredQty: 0, unitPrice: 28000, integerOnly: true },
       { productId: 'P-NS-1L', sku: 'SKU-NS-1L', name: 'Nước suối 1.5L', unit: 'Chai', orderedQty: 150, deliveredQty: 0, unitPrice: 18000, integerOnly: true }
+    ],
+    'DLO-20260616-011': [
+      { productId: 'P-NS-500C', sku: 'SKU-NS-500', name: 'Nước suối 500ml', unit: 'Thùng', orderedQty: 20, deliveredQty: 0, unitPrice: 95000, integerOnly: true },
+      { productId: 'P-YT-100B', sku: 'SKU-YT-100', name: 'Sữa chua uống 100ml', unit: 'Lốc', orderedQty: 15, deliveredQty: 0, unitPrice: 72000, integerOnly: true }
+    ],
+    'DLO-20260616-012': [
+      { productId: 'P-HH-75B', sku: 'SKU-HH-75', name: 'Mì gói Hảo Hảo 75g', unit: 'Gói', orderedQty: 200, deliveredQty: 0, unitPrice: 5900, integerOnly: true },
+      { productId: 'P-OR-133C', sku: 'SKU-OR-133G', name: 'Bánh quy Oreo 133g', unit: 'Gói', orderedQty: 40, deliveredQty: 0, unitPrice: 38500, integerOnly: true }
+    ],
+    'DLO-20260616-013': [
+      { productId: 'P-TH-180C', sku: 'SKU-TH-SUA180', name: 'Sữa tươi TH 180ml', unit: 'Thùng', orderedQty: 30, deliveredQty: 0, unitPrice: 40000, integerOnly: true },
+      { productId: 'P-TP-CAMB', sku: 'SKU-TP-CAM1L', name: 'Nước cam Tropicana 1L', unit: 'Chai', orderedQty: 20, deliveredQty: 0, unitPrice: 60000, integerOnly: true }
+    ],
+    'DLO-20260616-014': [
+      { productId: 'P-TH-1LC', sku: 'SKU-TH-SUA1L', name: 'Sữa tươi TH 1L', unit: 'Hộp', orderedQty: 100, deliveredQty: 0, unitPrice: 28000, integerOnly: true },
+      { productId: 'P-NS-500D', sku: 'SKU-NS-500', name: 'Nước suối 500ml', unit: 'Thùng', orderedQty: 24, deliveredQty: 0, unitPrice: 95000, integerOnly: true }
     ]
   };
 
@@ -2132,7 +2965,23 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     'DLO-20260616-001': { deliveryNote: 'Giao buổi sáng, gọi trước 15 phút. Cửa hàng đóng cửa sau 11h30.', receiverName: 'Chị Hào', receiverPhone: '0328839644' },
     'DLO-20260616-004': { deliveryNote: 'Giao hàng buổi chiều, liên hệ trước khi đến.', receiverName: 'Anh Minh', receiverPhone: '0901234567' },
     'DLO-20260616-007': { deliveryNote: 'Lần 1 giao 60% — khách hẹn giao phần còn lại ngày mai.', receiverName: 'Cô Lan', receiverPhone: '0912345678' },
-    'DLO-20260616-010': { deliveryNote: 'Đơn đã thanh toán khi đặt — chỉ cần giao hàng.', receiverName: 'Chị Lan Anh', receiverPhone: '0909887766' }
+    'DLO-20260616-010': { deliveryNote: 'Đơn đã thanh toán khi đặt — chỉ cần giao hàng.', receiverName: 'Chị Lan Anh', receiverPhone: '0909887766' },
+    'DLO-20260616-011': { deliveryNote: 'Giao trước 17h, gọi trước khi đến.', receiverName: 'Chị Mai', receiverPhone: '0933445566' },
+    'DLO-20260616-012': { deliveryNote: 'Cửa hàng nhỏ, xe tải nhỏ gửi hàng sau.', receiverName: 'Anh Tuấn', receiverPhone: '0977112233' },
+    'DLO-20260616-013': { deliveryNote: 'Giao tại kho sau, liên hệ bảo vệ.', receiverName: 'Anh Gia', receiverPhone: '0905667788' },
+    'DLO-20260616-014': { deliveryNote: 'Giao buổi sáng, ưu tiên hàng tươi.', receiverName: 'Chị Bình', receiverPhone: '0918776655' }
+  };
+
+  var DEFAULT_STORE_DEBT = {
+    'CH-HCM-8821': { used: 8750000, limit: 15000000 },
+    'CH-HCM-4412': { used: 3200000, limit: 10000000 },
+    'CH-HCM-3301': { used: 8200000, limit: 10000000 },
+    'CH-HCM-1190': { used: 2100000, limit: 8000000 },
+    'CH-HCM-7788': { used: 0, limit: 20000000 },
+    'CH-HCM-5520': { used: 1200000, limit: 15000000 },
+    'CH-HCM-2201': { used: 6500000, limit: 10000000 },
+    'CH-HCM-7701': { used: 8500000, limit: 10000000 },
+    'CH-HCM-6600': { used: 4000000, limit: 12000000 }
   };
 
   function initDeliveryStore(){
@@ -2295,6 +3144,800 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         : (result.summary.expectedStatus === 'failed' ? 'Không giao được' : 'Giao một phần');
       showToast(statusMsg + ' · Thu: ' + formatDisplayAmount(result.summary.totalAmountThisTime) + ' đ');
     }
+  }
+
+  function proceedToBasicWithSession(result, opts){
+    opts = opts || {};
+    var store = activeDeliveryCard ? getOrderStore(activeDeliveryCard.dataset.order) : null;
+    currentDeliverySession = {
+      linesInput: result.normalizedLines || collectDeliveryLinesInput(),
+      summary: result.summary,
+      version: storeVersion(),
+      commonUndeliveredReasonCode: opts.commonUndeliveredReasonCode || '',
+      commonUndeliveredReasonNote: opts.commonUndeliveredReasonNote || '',
+      deliveryNote: opts.deliveryNote != null ? opts.deliveryNote : (store ? store.deliveryNote || '' : '')
+    };
+    activeDeliveryCard.dataset.payThisTime = String(result.summary.totalAmountThisTime);
+    activeDeliveryCard.dataset.deliveryConfirmed = '1';
+    goTo('basicDelivery');
+    if(opts.toast !== false){
+      var statusMsg = result.summary.expectedStatus === 'delivered' ? 'Giao đủ đơn'
+        : (result.summary.expectedStatus === 'failed' ? 'Không giao được' : 'Giao một phần');
+      showToast(statusMsg + ' · Thu: ' + formatDisplayAmount(result.summary.totalAmountThisTime) + ' đ');
+    }
+  }
+
+  function startBasicDeliveryFlow(){
+    if(!activeDeliveryCard) return;
+    if(!DLO.isEditableStatus(activeDeliveryCard.dataset.status)){
+      showToast('Đơn không ở trạng thái cho phép giao hàng');
+      return;
+    }
+    if(activeDeliveryCard.dataset.status === 'partial'){
+      openAdjustDelivery();
+      return;
+    }
+    ensureDeliveringStatus();
+    initHandleQtyState();
+    var store = getOrderStore(activeDeliveryCard.dataset.order);
+    var result = DLO.validatePartialDelivery(
+      { status: activeDeliveryCard.dataset.status, version: store.version },
+      store.items,
+      collectDeliveryLinesInput(),
+      { useCommonReason: true }
+    );
+    if(!result.valid){
+      showToast(result.errors[0]);
+      return;
+    }
+    proceedToBasicWithSession(result, { deliveryNote: store ? store.deliveryNote || '' : '', toast: false });
+  }
+
+  function syncBasicPartialUI(){
+    var editable = !!(activeDeliveryCard && DLO.isEditableStatus(activeDeliveryCard.dataset.status || ''));
+    var isPartial = !!(activeDeliveryCard && activeDeliveryCard.dataset.status === 'partial');
+    var partialBtn = document.getElementById('btnBasicPartial');
+    var partialBanner = document.getElementById('basicPartialBanner');
+    var hint = document.getElementById('basicDeliveryHint');
+    var excWrap = document.getElementById('basicExceptionActions');
+    if(partialBtn){
+      partialBtn.style.display = editable ? '' : 'none';
+      partialBtn.textContent = isPartial ? 'Sửa SL giao' : 'Giao 1 phần';
+    }
+    if(partialBanner) partialBanner.classList.toggle('hidden', !isPartial);
+    if(hint) hint.classList.add('hidden');
+    if(excWrap) excWrap.style.display = editable ? '' : 'none';
+    var confirmBtn = document.getElementById('btnBasicConfirm');
+    if(confirmBtn && currentDeliverySession && currentDeliverySession.summary){
+      if(currentDeliverySession.summary.expectedStatus === 'partial'){
+        confirmBtn.textContent = 'Xác nhận giao một phần';
+      } else {
+        confirmBtn.textContent = 'Xác nhận giao hàng';
+      }
+    } else if(confirmBtn){
+      confirmBtn.textContent = 'Xác nhận giao hàng';
+    }
+  }
+
+  function renderBasicOrderInfo(){
+    if(!activeDeliveryCard) return;
+    var orderCode = activeDeliveryCard.dataset.order || '—';
+    var store = getOrderStore(orderCode);
+    var storeName = activeDeliveryCard.dataset.storeName || '—';
+    var phone = activeDeliveryCard.dataset.phone || '—';
+    var address = activeDeliveryCard.dataset.address || '—';
+    var amount = store ? store.totalOrderAmount : parseMoney(activeDeliveryCard.dataset.amount || 0);
+    var cod = currentDeliverySession && currentDeliverySession.summary
+      ? currentDeliverySession.summary.totalAmountThisTime
+      : amount;
+    var prepaid = isPrepaidOrder();
+    var productHtml = '';
+    if(store && store.items){
+      productHtml = store.items.map(function(it){
+        var qty = it.orderedQty - it.deliveredQty;
+        if(qty <= 0) qty = it.orderedQty;
+        return '<div class="info-row"><span class="info-label">'+escapeHtml(it.name)+'</span><span class="info-value">'+qty+' '+escapeHtml(it.unit)+'</span></div>';
+      }).join('');
+    }
+    document.getElementById('basicOrderBody').innerHTML =
+      '<div class="info-row"><span class="info-label">Mã đơn giao</span><span class="info-value mono">'+escapeHtml(orderCode)+'</span></div>'+
+      '<div class="info-row"><span class="info-label">Cửa hàng</span><span class="info-value">'+escapeHtml(storeName)+'</span></div>'+
+      '<div class="info-row"><span class="info-label">SĐT</span><span class="info-value">'+escapeHtml(phone)+'</span></div>'+
+      '<div class="info-row"><span class="info-label">Địa chỉ</span><span class="info-value">'+escapeHtml(address)+'</span></div>'+
+      buildDebtInfoRow(activeDeliveryCard)+
+      productHtml+
+      '<div class="info-row" style="background:var(--neutral-50);"><span class="info-label">Tổng tiền đơn</span><span class="info-value highlight">'+formatDisplayAmount(amount)+' đ</span></div>'+
+      (prepaid ? '' : '<div class="info-row"><span class="info-label">Cần thu lần này</span><span class="info-value highlight" style="color:var(--warning-700);">'+formatDisplayAmount(cod)+' đ</span></div>');
+  }
+
+  function showBasicPayError(messages){
+    var el = document.getElementById('basicPayError');
+    if(!messages || !messages.length){
+      el.classList.remove('show');
+      el.textContent = '';
+      return;
+    }
+    el.textContent = messages[0];
+    el.classList.add('show');
+  }
+
+  function setTransferStatusPending(){
+    ['transferStatus', 'basicTransferStatus'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.className = 'qr-status';
+      el.innerHTML = '<i class="ti ti-clock"></i> Chờ xác nhận chuyển khoản...';
+      el.removeAttribute('aria-disabled');
+    });
+    ['transferTapHint', 'basicTransferTapHint'].forEach(function(id){
+      var hint = document.getElementById(id);
+      if(hint) hint.classList.remove('hidden');
+    });
+  }
+
+  function setTransferStatusSuccess(){
+    ['transferStatus', 'basicTransferStatus'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.className = 'qr-status success';
+      el.innerHTML = '<i class="ti ti-circle-check-filled"></i> Đã chuyển khoản thành công';
+      el.setAttribute('aria-disabled', 'true');
+    });
+    ['transferTapHint', 'basicTransferTapHint'].forEach(function(id){
+      var hint = document.getElementById(id);
+      if(hint) hint.classList.add('hidden');
+    });
+  }
+
+  function updateTransferDisplay(){
+    var amt = payMode === 'transfer' ? getTotalPayable() : payTransferAmount;
+    var fmt = formatDisplayAmount(amt) + ' VNĐ';
+    var el1 = document.getElementById('transferPanelAmount');
+    var el2 = document.getElementById('basicTransferPanelAmount');
+    if(el1) el1.textContent = fmt;
+    if(el2) el2.textContent = fmt;
+  }
+
+  function resetPaymentConfirmFlags(){
+    paid = false;
+    transferPaid = false;
+    cashConfirmed = false;
+    debtConfirmed = false;
+    qrTxnCode = '';
+    transferTxnCode = '';
+    setQrStatusPending();
+    setBasicQrStatusPending();
+    setTransferStatusPending();
+  }
+
+  function confirmTransferPayment(){
+    var hasTransfer = payMode === 'transfer' ||
+      (payMode === 'mixed' && mixedPaymentState && mixedPaymentState.selected.transfer && payTransferAmount > 0);
+    if(!hasTransfer) return false;
+    var transferDue = payMode === 'transfer' ? getTotalPayable() : payTransferAmount;
+    if(transferDue <= 0 || transferPaid) return false;
+    var v = validatePaymentAmounts();
+    if(!v.valid){
+      if(document.getElementById('viewBasicDelivery').classList.contains('active')){
+        showBasicPayError(v.errors);
+      } else {
+        showPayError(v.errors);
+      }
+      showToast(v.errors[0] || 'Số tiền chưa hợp lệ');
+      return false;
+    }
+    transferPaid = true;
+    transferTxnCode = 'CK-' + Date.now();
+    setTransferStatusSuccess();
+    if(payMode === 'mixed') renderMixedPaymentUI(mixedUiScope, { rebuildCards: false });
+    if(document.getElementById('viewBasicDelivery').classList.contains('active')){
+      validateAndUpdateBasicCompleteBtn();
+    } else {
+      validateAndUpdateCompleteBtn();
+    }
+    showToast('Đã xác nhận chuyển khoản ' + formatDisplayAmount(transferDue) + ' đ');
+    return true;
+  }
+
+  var MIXED_LABELS = { qr: 'QR', cash: 'Tiền mặt', transfer: 'Chuyển khoản', debt: 'Nợ tiền' };
+  var MIXED_ICONS = { qr: 'ti-qrcode', cash: 'ti-cash', transfer: 'ti-building-bank', debt: 'ti-receipt' };
+
+  function getMixedUiIds(scope){
+    var p = scope === 'basic' ? 'basicMixed' : 'mixed';
+    return {
+      panel: document.getElementById(scope === 'basic' ? 'basicMixedPayPanel' : 'mixedPayPanel'),
+      totalPayable: document.getElementById(p + 'TotalPayable'),
+      totalPaid: document.getElementById(p + 'TotalPaid'),
+      chips: document.getElementById(scope === 'basic' ? 'basicMixedMethodChips' : 'mixedMethodChips'),
+      cards: document.getElementById(scope === 'basic' ? 'basicMixedMethodCards' : 'mixedMethodCards'),
+      confirm: document.getElementById(scope === 'basic' ? 'basicMixedConfirmSummary' : 'mixedConfirmSummary'),
+      qrBox: document.getElementById(scope === 'basic' ? 'basicQrBox' : 'qrBox')
+    };
+  }
+
+  function syncLegacyAmountsFromMixedState(){
+    if(!MP || !mixedPaymentState) return;
+    var legacy = MP.stateToLegacyAmounts(mixedPaymentState);
+    payQrAmount = legacy.payQrAmount;
+    payCashAmount = legacy.payCashAmount;
+    payTransferAmount = legacy.payTransferAmount;
+    payCreditAmount = legacy.payCreditAmount;
+  }
+
+  function resetMixedPaymentState(){
+    if(!MP) return;
+    mixedPaymentState = MP.createEmptyState();
+    syncLegacyAmountsFromMixedState();
+  }
+
+  function getMixedValidationOpts(forAmountCheck){
+    syncMixedAutoConfirmFlags();
+    return {
+      totalPayableAmount: getTotalPayable(),
+      state: mixedPaymentState,
+      skipPaymentConfirmation: true,
+      qrPaymentConfirmed: true,
+      cashPaymentConfirmed: true,
+      transferConfirmed: true,
+      debtConfirmed: true,
+      requireTransferRef: false,
+      requireDebtNote: false,
+      forAmountCheck: !!forAmountCheck,
+      debtLimitValidator: function(debtAmt){
+        return getDebtLimitError(activeDeliveryCard, debtAmt, true);
+      }
+    };
+  }
+
+  function syncMixedAutoConfirmFlags(){
+    if(payMode !== 'mixed' || !mixedPaymentState) return;
+    paid = !!(mixedPaymentState.selected.qr && payQrAmount > 0);
+    transferPaid = !!(mixedPaymentState.selected.transfer && payTransferAmount > 0);
+    cashConfirmed = !!(mixedPaymentState.selected.cash && payCashAmount > 0);
+    debtConfirmed = !!(mixedPaymentState.selected.debt && payCreditAmount > 0);
+    if(paid && !qrTxnCode) qrTxnCode = 'EP-' + Date.now();
+    if(transferPaid && !transferTxnCode) transferTxnCode = 'CK-' + Date.now();
+    if(paid && payQrAmount > 0){
+      setQrStatusSuccess();
+      setBasicQrStatusSuccess();
+    } else if(mixedPaymentState.selected.qr){
+      setQrStatusPending();
+      setBasicQrStatusPending();
+    }
+    if(transferPaid && payTransferAmount > 0) setTransferStatusSuccess();
+    else if(mixedPaymentState.selected.transfer) setTransferStatusPending();
+  }
+
+  function updateMixedPaymentSideEffects(scope){
+    var total = getTotalPayable();
+    var ui = getMixedUiIds(scope);
+    if(ui.qrBox && mixedPaymentState && MP){
+      var totals = MP.computeTotals(mixedPaymentState, total);
+      var showQr = mixedPaymentState.selected.qr && totals.qrAmount > 0;
+      ui.qrBox.classList.toggle('hidden', !showQr);
+      if(showQr){
+        var amtEl = ui.qrBox.querySelector('.qr-amount');
+        if(amtEl) amtEl.textContent = formatDisplayAmount(totals.qrAmount) + ' VNĐ';
+      }
+    }
+    var btnRegen = document.getElementById(scope === 'basic' ? 'btnBasicRegenQr' : 'btnRegenQr');
+    if(btnRegen){
+      btnRegen.style.display =
+        mixedPaymentState && mixedPaymentState.selected.qr && payQrAmount > 0 ? '' : 'none';
+    }
+    if(scope === 'basic') updateBasicQrDisplay();
+    else updateQrDisplay();
+  }
+
+  function restoreMoneyInputCaret(input, digitsBefore){
+    var formatted = input.value || '';
+    if(digitsBefore <= 0){
+      try { input.setSelectionRange(0, 0); } catch(e){}
+      return;
+    }
+    var seen = 0;
+    for(var i = 0; i < formatted.length; i++){
+      if(/\d/.test(formatted.charAt(i))){
+        seen++;
+        if(seen >= digitsBefore){
+          try { input.setSelectionRange(i + 1, i + 1); } catch(e){}
+          return;
+        }
+      }
+    }
+    try { input.setSelectionRange(formatted.length, formatted.length); } catch(e){}
+  }
+
+  function refreshOtherMixedInputs(editedKey, scope){
+    if(!mixedPaymentState) return;
+    var ui = getMixedUiIds(scope);
+    if(!ui.cards) return;
+    MP.METHOD_KEYS.forEach(function(key){
+      if(editedKey && key === editedKey) return;
+      if(!mixedPaymentState.selected[key]) return;
+      var otherInput = ui.cards.querySelector('[data-mixed-input="'+key+'"]');
+      if(!otherInput) return;
+      otherInput.value = formatMoneyInput(mixedPaymentState.amounts[key] || 0);
+    });
+  }
+
+  function onMixedAmountInput(input){
+    if(!MP || payMode !== 'mixed' || !input || !mixedPaymentState) return;
+    var methodKey = input.dataset.mixedInput;
+    if(!methodKey) return;
+    var caret = input.selectionStart == null ? String(input.value).length : input.selectionStart;
+    var digitsBefore = String(input.value).slice(0, caret).replace(/[^\d]/g, '').length;
+    var amount = parseMoney(input.value);
+    var total = getTotalPayable();
+    if(amount < 0) amount = 0;
+    if(amount > total) amount = total;
+    mixedPaymentState = MP.setAmountWithUserEdit(mixedPaymentState, methodKey, amount, total);
+    syncLegacyAmountsFromMixedState();
+    syncMixedAutoConfirmFlags();
+    input.value = amount > 0 ? formatDisplayAmount(amount) : '';
+    restoreMoneyInputCaret(input, digitsBefore);
+    refreshOtherMixedInputs(methodKey, mixedUiScope);
+    updateMixedSummary(mixedUiScope);
+    updateMixedPaymentSideEffects(mixedUiScope);
+    if(mixedUiScope === 'basic') validateAndUpdateBasicCompleteBtn();
+    else validateAndUpdateCompleteBtn();
+  }
+
+  function validateMixedPaymentLocal(forAmountCheck){
+    if(!MP) return { valid: false, errors: ['MixedPayment module missing'] };
+    return MP.validateMixedPayment(getMixedValidationOpts(forAmountCheck));
+  }
+
+  function updateMixedSummary(scope){
+    if(!MP || !mixedPaymentState) return;
+    var ui = getMixedUiIds(scope);
+    var total = getTotalPayable();
+    var totals = MP.computeTotals(mixedPaymentState, total);
+    if(ui.totalPayable) ui.totalPayable.textContent = formatDisplayAmount(totals.totalPayableAmount) + ' đ';
+    if(ui.totalPaid) ui.totalPaid.textContent = formatDisplayAmount(totals.totalPaidAmount) + ' đ';
+    if(ui.chips){
+      ui.chips.querySelectorAll('.mixed-chip').forEach(function(chip){
+        var key = chip.dataset.mixed;
+        chip.classList.toggle('active', !!(mixedPaymentState.selected && mixedPaymentState.selected[key]));
+      });
+    }
+    if(ui.confirm){
+      var lines = [];
+      MP.METHOD_KEYS.forEach(function(key){
+        if(!mixedPaymentState.selected[key]) return;
+        lines.push('<div class="mixed-confirm-row"><span>'+MIXED_LABELS[key]+'</span><strong>'+
+          formatDisplayAmount(mixedPaymentState.amounts[key])+' đ</strong></div>');
+      });
+      if(lines.length){
+        lines.push('<div class="mixed-confirm-row total"><span>Tổng đã xử lý</span><strong>'+
+          formatDisplayAmount(totals.totalHandledAmount)+' đ</strong></div>');
+        ui.confirm.innerHTML = lines.join('');
+        ui.confirm.classList.remove('hidden');
+      } else {
+        ui.confirm.classList.add('hidden');
+      }
+    }
+    if(ui.qrBox){
+      var showQr = mixedPaymentState.selected.qr && totals.qrAmount > 0;
+      ui.qrBox.classList.toggle('hidden', !showQr);
+      if(showQr){
+        var orderCode = activeDeliveryCard ? activeDeliveryCard.dataset.order || '' : '';
+        var storeCode = activeDeliveryCard ? activeDeliveryCard.dataset.storeCode || 'CH' : 'CH';
+        var amtEl = ui.qrBox.querySelector('.qr-amount');
+        if(amtEl) amtEl.textContent = formatDisplayAmount(totals.qrAmount) + ' VNĐ';
+        var noteEl = document.getElementById(scope === 'basic' ? 'basicQrTransferNote' : 'qrTransferNote');
+        if(noteEl){
+          noteEl.textContent = (PayV ? PayV.buildTransferNote(orderCode, storeCode) : orderCode) + ' · EcoPay';
+        }
+      }
+    }
+  }
+
+  function buildMixedMethodCardHtml(key, scope){
+    var amt = mixedPaymentState.amounts[key] || 0;
+    return '<div class="mixed-method-card" data-mixed-card="'+key+'">'+
+      '<div class="mixed-card-head"><span class="mixed-card-label"><i class="ti '+MIXED_ICONS[key]+'"></i> '+
+      MIXED_LABELS[key]+'</span><button type="button" class="mixed-card-remove" data-mixed-remove="'+key+'" aria-label="Bỏ '+MIXED_LABELS[key]+'">×</button></div>'+
+      '<div class="mixed-card-body"><input class="pay-amount-input mixed-card-input" data-mixed-input="'+key+'" inputmode="numeric" type="text" value="'+
+      (amt > 0 ? formatDisplayAmount(amt) : '')+'" placeholder="0" autocomplete="off"/>'+
+      '<button type="button" class="btn-mixed-remain" data-mixed-remain="'+key+'">Dùng số tiền còn lại</button></div></div>';
+  }
+
+  function renderMixedMethodCards(scope){
+    if(!MP || !mixedPaymentState) return;
+    var ui = getMixedUiIds(scope);
+    if(!ui.cards) return;
+    var html = MP.METHOD_KEYS.filter(function(k){ return mixedPaymentState.selected[k]; })
+      .map(function(k){ return buildMixedMethodCardHtml(k, scope); }).join('');
+    ui.cards.innerHTML = html;
+  }
+
+  function refreshMixedMethodCardValues(scope){
+    if(!MP || !mixedPaymentState) return;
+    var ui = getMixedUiIds(scope);
+    if(!ui.cards) return;
+    MP.METHOD_KEYS.forEach(function(key){
+      if(!mixedPaymentState.selected[key]) return;
+      var input = ui.cards.querySelector('[data-mixed-input="'+key+'"]');
+      if(!input || isActiveMoneyInput(input)) return;
+      input.value = formatMoneyInput(mixedPaymentState.amounts[key] || 0);
+    });
+  }
+
+  function renderMixedPaymentUI(scope, opts){
+    opts = opts || {};
+    if(payMode !== 'mixed' || !MP) return;
+    mixedUiScope = scope;
+    var ui = getMixedUiIds(scope);
+    if(ui.panel) ui.panel.classList.remove('hidden');
+    updateMixedSummary(scope);
+    if(opts.rebuildCards !== false){
+      renderMixedMethodCards(scope);
+    } else {
+      refreshMixedMethodCardValues(scope);
+    }
+    syncMixedAutoConfirmFlags();
+    updateMixedPaymentSideEffects(scope);
+  }
+
+  function onMixedChipToggle(methodKey){
+    if(!MP || payMode !== 'mixed') return;
+    var total = getTotalPayable();
+    var wasSelected = mixedPaymentState.selected[methodKey];
+    mixedPaymentState = MP.toggleMethod(mixedPaymentState, methodKey, total, !wasSelected);
+    syncLegacyAmountsFromMixedState();
+    renderMixedPaymentUI(mixedUiScope);
+    if(mixedUiScope === 'basic') validateAndUpdateBasicCompleteBtn();
+    else validateAndUpdateCompleteBtn();
+  }
+
+  function onMixedUseRemaining(methodKey){
+    if(!MP || payMode !== 'mixed') return;
+    mixedPaymentState = MP.useRemaining(mixedPaymentState, methodKey, getTotalPayable());
+    syncLegacyAmountsFromMixedState();
+    syncMixedAutoConfirmFlags();
+    var ui = getMixedUiIds(mixedUiScope);
+    var input = ui.cards && ui.cards.querySelector('[data-mixed-input="'+methodKey+'"]');
+    if(input){
+      input.value = formatMoneyInput(mixedPaymentState.amounts[methodKey] || 0);
+    } else {
+      renderMixedPaymentUI(mixedUiScope, { rebuildCards: true });
+    }
+    refreshOtherMixedInputs(methodKey, mixedUiScope);
+    updateMixedSummary(mixedUiScope);
+    updateMixedPaymentSideEffects(mixedUiScope);
+    if(mixedUiScope === 'basic') validateAndUpdateBasicCompleteBtn();
+    else validateAndUpdateCompleteBtn();
+  }
+
+  function bindMixedPaymentEvents(containerId, scope){
+    var wrap = document.getElementById(containerId);
+    if(!wrap || wrap.dataset.mixedBound === '1') return;
+    wrap.dataset.mixedBound = '1';
+    wrap.addEventListener('click', function(e){
+      if(payMode !== 'mixed') return;
+      var chip = e.target.closest('.mixed-chip');
+      if(chip){ onMixedChipToggle(chip.dataset.mixed); return; }
+      var remain = e.target.closest('[data-mixed-remain]');
+      if(remain){ onMixedUseRemaining(remain.dataset.mixedRemain); return; }
+      var remove = e.target.closest('[data-mixed-remove]');
+      if(remove){
+        if(mixedPaymentState.selected[remove.dataset.mixedRemove]){
+          onMixedChipToggle(remove.dataset.mixedRemove);
+        }
+      }
+    });
+    wrap.addEventListener('input', function(e){
+      if(payMode !== 'mixed') return;
+      var input = e.target.closest('[data-mixed-input]');
+      if(input) onMixedAmountInput(input);
+    });
+  }
+
+  function setBasicQrStatusPending(){
+    var qrStatus = document.getElementById('basicQrStatus');
+    qrStatus.className = 'qr-status';
+    qrStatus.innerHTML = '<i class="ti ti-clock"></i> Chờ khách quét thanh toán...';
+    qrStatus.removeAttribute('aria-disabled');
+    var hint = document.getElementById('basicQrTapHint');
+    if(hint) hint.classList.remove('hidden');
+  }
+
+  function setBasicQrStatusSuccess(){
+    var qrStatus = document.getElementById('basicQrStatus');
+    qrStatus.className = 'qr-status success';
+    qrStatus.innerHTML = '<i class="ti ti-circle-check-filled"></i> Thanh toán QR thành công';
+    qrStatus.setAttribute('aria-disabled', 'true');
+    var hint = document.getElementById('basicQrTapHint');
+    if(hint) hint.classList.add('hidden');
+  }
+
+  function updateBasicQrDisplay(){
+    if(!activeDeliveryCard) return;
+    var orderCode = activeDeliveryCard.dataset.order || '';
+    var storeCode = activeDeliveryCard.dataset.storeCode || 'CH';
+    var qrPart = (payMode === 'cash' || payMode === 'transfer') ? 0 : (payMode === 'qr' ? getTotalPayable() : payQrAmount);
+    document.getElementById('basicQrAmount').textContent = formatDisplayAmount(qrPart) + ' VNĐ';
+    var note = PayV ? PayV.buildTransferNote(orderCode, storeCode) : orderCode;
+    document.getElementById('basicQrTransferNote').textContent = note + ' · EcoPay';
+  }
+
+  function syncBasicPaymentInputs(){
+    var cashIn = document.getElementById('basicPayCashInput');
+    var qrIn = document.getElementById('basicPayQrInput');
+    var creditIn = document.getElementById('basicPayCreditInput');
+    var transferIn = document.getElementById('basicPayTransferInput');
+    setMoneyInputValue(cashIn, payCashAmount);
+    setMoneyInputValue(qrIn, payQrAmount);
+    setMoneyInputValue(creditIn, payCreditAmount);
+    setMoneyInputValue(transferIn, payTransferAmount);
+  }
+
+  function updateBasicPaymentPanels(){
+    var total = getTotalPayable();
+    var amountFmt = formatDisplayAmount(total);
+    document.getElementById('basicPayAmount').textContent = amountFmt + ' đ';
+    if(activeDeliveryCard){
+      document.getElementById('basicPaySub').textContent =
+        (activeDeliveryCard.dataset.order || '') + ' · ' + (activeDeliveryCard.dataset.storeName || '');
+    }
+    var split = document.getElementById('basicPaySplitSummary');
+    if(split) split.classList.add('hidden');
+
+    var cashHint = document.getElementById('basicCashPanelHint');
+    if(cashHint){
+      cashHint.innerHTML = 'Xác nhận đã thu đủ <strong>' + formatDisplayAmount(payCashAmount) +
+        ' VNĐ</strong> tiền mặt từ khách hàng.';
+    }
+    updateTransferDisplay();
+  }
+
+  function validateAndUpdateBasicCompleteBtn(){
+    var prepaid = isPrepaidOrder();
+    if(prepaid){
+      showBasicPayError([]);
+      document.getElementById('btnBasicConfirm').disabled = false;
+      return;
+    }
+    if(payMode === 'credit'){
+      var total = getTotalPayable();
+      var debtErr = getDebtLimitError(activeDeliveryCard, total, true);
+      showBasicPayError(debtErr ? [debtErr] : (total <= 0 ? ['Số tiền ghi nợ phải lớn hơn 0'] : []));
+      document.getElementById('btnBasicConfirm').disabled = !!debtErr || total <= 0;
+      renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
+      return;
+    }
+    if(payMode === 'cash'){
+      var cashTotal = getTotalPayable();
+      payCashAmount = cashTotal;
+      showBasicPayError(cashTotal <= 0 ? ['Số tiền cần thu phải lớn hơn 0'] : []);
+      document.getElementById('btnBasicConfirm').disabled = cashTotal <= 0;
+      renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
+      return;
+    }
+    if(payMode === 'mixed'){
+      var mixedBasic = validateMixedPaymentLocal(false);
+      showBasicPayError(mixedBasic.errors);
+      document.getElementById('btnBasicConfirm').disabled = !mixedBasic.valid;
+      var btnRegenBasic = document.getElementById('btnBasicRegenQr');
+      if(btnRegenBasic){
+        btnRegenBasic.style.display =
+          mixedPaymentState && mixedPaymentState.selected.qr && payQrAmount > 0 ? '' : 'none';
+      }
+      renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
+      return;
+    }
+    var needsQr = payMode === 'qr' || (payMode === 'mixed' && payQrAmount > 0);
+    var needsTransfer = payMode === 'transfer' || (payMode === 'mixed' && payTransferAmount > 0);
+    var amountResult = validatePaymentAmounts();
+    var displayErrors = amountResult.valid ? [] : amountResult.errors;
+    if(!paid && needsQr && payQrAmount > 0 && amountResult.valid) displayErrors = [];
+    showBasicPayError(displayErrors);
+    var canComplete = amountResult.valid
+      && (!needsQr || payQrAmount <= 0 || paid)
+      && (!needsTransfer || payTransferAmount <= 0 || transferPaid);
+    document.getElementById('btnBasicConfirm').disabled = !canComplete;
+    renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
+  }
+
+  function applyBasicPayModeUI(){
+    var qrBox = document.getElementById('basicQrBox');
+    var cashPanel = document.getElementById('basicCashPanel');
+    var transferPanel = document.getElementById('basicTransferPanel');
+    var creditPanel = document.getElementById('basicCreditPanel');
+    var amountFields = document.getElementById('basicPayAmountFields');
+    var cashWrap = document.getElementById('basicPayCashFieldWrap');
+    var qrWrap = document.getElementById('basicPayQrFieldWrap');
+    var creditWrap = document.getElementById('basicPayCreditFieldWrap');
+    var transferWrap = document.getElementById('basicPayTransferFieldWrap');
+    var btnRegen = document.getElementById('btnBasicRegenQr');
+    var mixedPanel = document.getElementById('basicMixedPayPanel');
+
+    amountFields.classList.remove('hidden');
+    cashWrap.classList.remove('hidden');
+    qrWrap.classList.add('hidden');
+    if(transferWrap) transferWrap.classList.add('hidden');
+    if(creditWrap) creditWrap.classList.add('hidden');
+    cashPanel.classList.remove('show');
+    if(transferPanel) transferPanel.classList.remove('show');
+    if(creditPanel) creditPanel.classList.remove('show');
+    qrBox.classList.add('hidden');
+    if(mixedPanel) mixedPanel.classList.add('hidden');
+
+    if(payMode === 'credit'){
+      amountFields.classList.add('hidden');
+      if(creditPanel){
+        creditPanel.classList.add('show');
+        var creditAmt = document.getElementById('basicCreditPanelAmount');
+        if(creditAmt) creditAmt.textContent = formatDisplayAmount(getTotalPayable()) + ' đ';
+      }
+      if(btnRegen) btnRegen.style.display = 'none';
+      paid = true;
+    } else if(payMode === 'cash'){
+      amountFields.classList.add('hidden');
+      payCashAmount = getTotalPayable();
+      cashPanel.classList.add('show');
+      if(btnRegen) btnRegen.style.display = 'none';
+    } else if(payMode === 'transfer'){
+      amountFields.classList.add('hidden');
+      if(transferPanel) transferPanel.classList.add('show');
+      updateTransferDisplay();
+      if(btnRegen) btnRegen.style.display = 'none';
+    } else if(payMode === 'qr'){
+      amountFields.classList.add('hidden');
+      qrBox.classList.remove('hidden');
+      if(btnRegen) btnRegen.style.display = '';
+    } else if(payMode === 'mixed'){
+      amountFields.classList.add('hidden');
+      document.getElementById('basicPaySplitSummary').classList.add('hidden');
+      renderMixedPaymentUI('basic');
+      if(btnRegen) btnRegen.style.display =
+        mixedPaymentState && mixedPaymentState.selected.qr && payQrAmount > 0 ? '' : 'none';
+    }
+    updateBasicPaymentPanels();
+    updateBasicQrDisplay();
+    validateAndUpdateBasicCompleteBtn();
+  }
+
+  function resetBasicPaymentUI(){
+    resetPaymentConfirmFlags();
+    payMode = 'qr';
+    payCashAmount = 0;
+    payQrAmount = 0;
+    payCreditAmount = 0;
+    payTransferAmount = 0;
+    showBasicPayError([]);
+    document.querySelectorAll('#basicPayMethods .pay-method').forEach(function(el){
+      el.classList.toggle('active', el.dataset.pay === 'qr');
+    });
+    initPaymentAmounts();
+    syncBasicPaymentInputs();
+    updateBasicQrDisplay();
+    updateBasicPaymentPanels();
+    applyBasicPayModeUI();
+  }
+
+  function setupBasicDeliveryView(){
+    if(!activeDeliveryCard) return;
+    var prepaid = isPrepaidOrder();
+    document.getElementById('basicPrepaidNotice').classList.toggle('hidden', !prepaid);
+    document.getElementById('basicPaySection').classList.toggle('hidden', prepaid);
+    document.getElementById('btnBasicRegenQr').style.display = prepaid ? 'none' : '';
+    renderBasicOrderInfo();
+    syncBasicPartialUI();
+    renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
+    if(prepaid){
+      document.getElementById('btnBasicConfirm').disabled = false;
+      return;
+    }
+    resetBasicPaymentUI();
+  }
+
+  function calcMixedPayAmounts(field, raw, total){
+    raw = Math.max(0, Math.min(raw, total));
+    var setters = {
+      credit: function(v){ payCreditAmount = v; },
+      cash: function(v){ payCashAmount = v; },
+      qr: function(v){ payQrAmount = v; },
+      transfer: function(v){ payTransferAmount = v; }
+    };
+    var getters = {
+      credit: function(){ return payCreditAmount; },
+      cash: function(){ return payCashAmount; },
+      qr: function(){ return payQrAmount; },
+      transfer: function(){ return payTransferAmount; }
+    };
+    setters[field](raw);
+    var others = ['credit', 'cash', 'transfer', 'qr'].filter(function(f){ return f !== field; });
+    var remainder = total - raw;
+    var otherSum = others.reduce(function(s, f){ return s + getters[f](); }, 0);
+    if(remainder <= 0){
+      others.forEach(function(f){ setters[f](0); });
+      return;
+    }
+    if(otherSum <= 0){
+      var each = Math.floor(remainder / others.length);
+      var assigned = 0;
+      others.forEach(function(f, i){
+        var v = (i === others.length - 1) ? remainder - assigned : each;
+        setters[f](Math.max(0, v));
+        assigned += Math.max(0, v);
+      });
+      return;
+    }
+    var assigned = 0;
+    others.forEach(function(f, i){
+      var v;
+      if(i === others.length - 1){
+        v = Math.max(0, remainder - assigned);
+      } else {
+        v = Math.round(getters[f]() * remainder / otherSum);
+        assigned += v;
+      }
+      setters[f](v);
+    });
+  }
+
+  function getPayAmountInputValue(field, scope){
+    if(field === 'cash'){
+      return document.getElementById(scope === 'basic' ? 'basicPayCashInput' : 'payCashInput').value;
+    }
+    if(field === 'qr'){
+      return document.getElementById(scope === 'basic' ? 'basicPayQrInput' : 'payQrInput').value;
+    }
+    if(field === 'transfer'){
+      return document.getElementById(scope === 'basic' ? 'basicPayTransferInput' : 'payTransferInput').value;
+    }
+    return document.getElementById(scope === 'basic' ? 'basicPayCreditInput' : 'payCreditInput').value;
+  }
+
+  function onBasicPayAmountInput(field){
+    var total = getTotalPayable();
+    var raw = parseMoney(getPayAmountInputValue(field, 'basic'));
+    if(raw < 0) raw = 0;
+    if(raw > total) raw = total;
+    payLastEdited = field;
+    if(payMode === 'mixed'){
+      calcMixedPayAmounts(field, raw, total);
+    } else if(payMode === 'cash'){
+      payCashAmount = raw;
+      payQrAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
+    } else {
+      payQrAmount = raw;
+      payCashAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
+    }
+    paid = false;
+    transferPaid = false;
+    setBasicQrStatusPending();
+    setTransferStatusPending();
+    syncBasicPaymentInputs();
+    updateBasicQrDisplay();
+    updateBasicPaymentPanels();
+    if(payMode === 'mixed') applyBasicPayModeUI();
+    validateAndUpdateBasicCompleteBtn();
+  }
+
+  function confirmBasicQrPayment(){
+    if(payMode === 'cash' || payMode === 'transfer') return false;
+    var qrDue = payMode === 'qr' ? getTotalPayable() : payQrAmount;
+    if(qrDue <= 0 || paid) return false;
+    var v = validatePaymentAmounts();
+    if(!v.valid){
+      showBasicPayError(v.errors);
+      showToast(v.errors[0] || 'Số tiền chưa hợp lệ');
+      return false;
+    }
+    paid = true;
+    qrTxnCode = 'EP-' + Date.now();
+    setBasicQrStatusSuccess();
+    if(payMode === 'mixed') renderMixedPaymentUI('basic', { rebuildCards: false });
+    validateAndUpdateBasicCompleteBtn();
+    showToast('Khách đã quét QR chuyển khoản ' + formatDisplayAmount(qrDue) + ' đ');
+    return true;
   }
 
   function startDeliveryFlow(){
@@ -2605,11 +4248,13 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       return;
     }
     var noteEl = document.getElementById('handleDeliveryNote');
-    proceedToPhotoWithSession(result, {
+    var opts = {
       commonUndeliveredReasonCode: commonUndeliveredReasonCode,
       commonUndeliveredReasonNote: commonUndeliveredReasonNote,
       deliveryNote: noteEl ? noteEl.value.trim() : ''
-    });
+    };
+    if(isDriverBasicMode()) proceedToBasicWithSession(result, opts);
+    else proceedToPhotoWithSession(result, opts);
   }
 
   function storeVersion(){
@@ -2667,6 +4312,9 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     map: document.getElementById('viewMap'),
     ocr: document.getElementById('viewOcr'),
     report: document.getElementById('viewReport'),
+    reportorders: document.getElementById('viewReportOrders'),
+    reportpay: document.getElementById('viewReportPay'),
+    reportperf: document.getElementById('viewReportPerf'),
     reportdetail: document.getElementById('viewReportDetail'),
     other: document.getElementById('viewOther'),
     info: document.getElementById('viewInfo'),
@@ -2674,8 +4322,47 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     handleDelivery: document.getElementById('viewHandleDelivery'),
     photo: document.getElementById('viewPhoto'),
     payment: document.getElementById('viewPayment'),
+    basicDelivery: document.getElementById('viewBasicDelivery'),
     done: document.getElementById('viewDone')
   };
+
+  function isDriverBasicMode(){
+    return driverUIMode === 'basic';
+  }
+
+  function isDriverAdvancedMode(){
+    return driverUIMode === 'advanced';
+  }
+
+  function setDriverUIMode(mode){
+    driverUIMode = mode === 'advanced' ? 'advanced' : 'basic';
+    localStorage.setItem(DRIVER_UI_MODE_KEY, driverUIMode);
+    syncDriverModeUI();
+    showToast('Đã chuyển chế độ giao hàng · ' + (isDriverBasicMode() ? 'Basic' : 'Advance'));
+  }
+
+  function syncDriverModeUI(){
+    var phone = document.getElementById('phoneScreen');
+    if(phone){
+      phone.classList.toggle('driver-mode-basic', isDriverBasicMode());
+      phone.classList.toggle('driver-mode-advanced', isDriverAdvancedMode());
+    }
+    document.querySelectorAll('.driver-mode-tag').forEach(function(el){
+      el.textContent = isDriverBasicMode() ? 'Basic' : 'Advance';
+      el.classList.toggle('is-advanced', isDriverAdvancedMode());
+    });
+    var toggle = document.getElementById('driverModeToggleInput');
+    if(toggle) toggle.checked = isDriverBasicMode();
+    document.querySelectorAll('#orderCards .delivery-card').forEach(updateCardActions);
+    document.querySelectorAll('#orderCards .delivery-card').forEach(syncCardDebtDisplay);
+  }
+
+  function openDeliveryEntry(card){
+    if(!card) return;
+    populateInfoFromCard(card);
+    if(isDriverAdvancedMode()) goTo('info');
+    else startBasicDeliveryFlow();
+  }
 
   function setBottomNav(active){
     document.querySelectorAll('#bottomNav .nav-item, #bottomNavOcr .nav-item, #bottomNavReport .nav-item, #bottomNavOther .nav-item').forEach(function(el){
@@ -2717,6 +4404,9 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     if(name === 'payment'){
       syncPaymentFromCard();
       resetPaymentUI();
+    }
+    if(name === 'basicDelivery'){
+      setupBasicDeliveryView();
     }
     if(name === 'photo' || name === 'info'){
       updateDeliveryFlowUI();
@@ -2769,32 +4459,48 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   }
 
   function getPaymentMethodCode(){
+    if(payMode === 'credit') return 'CREDIT';
     if(payMode === 'cash') return 'CASH';
+    if(payMode === 'transfer') return 'TRANSFER';
     if(payMode === 'mixed') return 'MIXED';
     return 'QR';
   }
 
   function initPaymentAmounts(){
     var total = getTotalPayable();
-    if(payMode === 'cash'){
+    if(payMode === 'credit'){
+      payCashAmount = 0;
+      payQrAmount = 0;
+      payCreditAmount = total;
+      payTransferAmount = 0;
+      paid = true;
+    } else if(payMode === 'cash'){
       payCashAmount = total;
       payQrAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
+    } else if(payMode === 'transfer'){
+      payCashAmount = 0;
+      payQrAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = total;
+      transferPaid = false;
     } else if(payMode === 'qr'){
       payCashAmount = 0;
       payQrAmount = total;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
     } else {
-      payCashAmount = Math.floor(total / 2);
-      payQrAmount = total - payCashAmount;
-      if(payCashAmount <= 0 && total > 0){
-        payCashAmount = Math.min(100000, total - 1);
-        payQrAmount = total - payCashAmount;
-      }
+      resetMixedPaymentState();
     }
     paid = false;
+    transferPaid = false;
     qrTxnCode = '';
     setQrStatusPending();
+    setTransferStatusPending();
     syncPaymentInputsFromState();
     updateQrDisplay();
+    updateTransferDisplay();
     updatePaymentSummaryPanels();
     validateAndUpdateCompleteBtn();
   }
@@ -2802,15 +4508,19 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   function syncPaymentInputsFromState(){
     var cashIn = document.getElementById('payCashInput');
     var qrIn = document.getElementById('payQrInput');
-    if(cashIn) cashIn.value = payCashAmount > 0 ? formatDisplayAmount(payCashAmount) : '';
-    if(qrIn) qrIn.value = payQrAmount > 0 ? formatDisplayAmount(payQrAmount) : '';
+    var creditIn = document.getElementById('payCreditInput');
+    var transferIn = document.getElementById('payTransferInput');
+    setMoneyInputValue(cashIn, payCashAmount);
+    setMoneyInputValue(qrIn, payQrAmount);
+    setMoneyInputValue(creditIn, payCreditAmount);
+    setMoneyInputValue(transferIn, payTransferAmount);
   }
 
   function updateQrDisplay(){
     if(!activeDeliveryCard) return;
     var orderCode = activeDeliveryCard.dataset.order || '';
     var storeCode = activeDeliveryCard.dataset.storeCode || 'CH';
-    var qrPart = payMode === 'cash' ? 0 : (payMode === 'qr' ? getTotalPayable() : payQrAmount);
+    var qrPart = (payMode === 'cash' || payMode === 'transfer') ? 0 : (payMode === 'qr' ? getTotalPayable() : payQrAmount);
     document.querySelector('#qrBox .qr-amount').textContent = formatDisplayAmount(qrPart) + ' VNĐ';
     var note = PayV ? PayV.buildTransferNote(orderCode, storeCode) : (orderCode + ' · EcoPay');
     document.getElementById('qrTransferNote').textContent = note + ' · EcoPay';
@@ -2832,34 +4542,33 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     }
 
     var cashRow = document.getElementById('payCheckCashRow');
+    var transferRow = document.getElementById('payCheckTransferRow');
     var qrRow = document.getElementById('payCheckQrRow');
+    var creditRow = document.getElementById('payCheckCreditRow');
     var showCash = payMode === 'cash' || payMode === 'mixed';
+    var showTransfer = payMode === 'transfer' || payMode === 'mixed';
     var showQr = payMode === 'qr' || payMode === 'mixed';
+    var showCredit = payMode === 'credit' || payMode === 'mixed';
     cashRow.classList.toggle('hidden', !showCash);
+    if(transferRow) transferRow.classList.toggle('hidden', !showTransfer);
     qrRow.classList.toggle('hidden', !showQr);
+    if(creditRow) creditRow.classList.toggle('hidden', !showCredit);
     document.getElementById('payCheckCash').textContent = formatDisplayAmount(payCashAmount) + ' đ';
+    if(transferRow) document.getElementById('payCheckTransfer').textContent = formatDisplayAmount(
+      payMode === 'transfer' ? getTotalPayable() : payTransferAmount) + ' đ';
     document.getElementById('payCheckQr').textContent = formatDisplayAmount(payQrAmount) + ' đ';
+    if(creditRow) document.getElementById('payCheckCredit').textContent = formatDisplayAmount(
+      payMode === 'credit' ? getTotalPayable() : payCreditAmount) + ' đ';
 
     var split = document.getElementById('paySplitSummary');
-    var isMixed = payMode === 'mixed';
-    split.classList.toggle('hidden', !isMixed);
-    if(isMixed){
-      document.getElementById('paySplitTotal').textContent = amountFmt + ' đ';
-      document.getElementById('paySplitCash').textContent = formatDisplayAmount(payCashAmount) + ' đ';
-      document.getElementById('paySplitQr').textContent = formatDisplayAmount(payQrAmount) + ' đ';
-      var diff = total - (payCashAmount + payQrAmount);
-      var diffRow = document.getElementById('paySplitDiffRow');
-      var diffEl = document.getElementById('paySplitDiff');
-      diffRow.classList.toggle('ok', diff === 0);
-      diffEl.textContent = (diff === 0 ? '0' : formatDisplayAmount(Math.abs(diff))) + ' đ' +
-        (diff > 0 ? ' (thiếu)' : diff < 0 ? ' (thừa)' : '');
-    }
+    if(split) split.classList.add('hidden');
 
     var cashHint = document.getElementById('cashPanelHint');
     if(cashHint){
       cashHint.innerHTML = 'Xác nhận đã thu đủ <strong>' + formatDisplayAmount(payCashAmount) +
         ' VNĐ</strong> tiền mặt từ khách hàng.';
     }
+    updateTransferDisplay();
   }
 
   function getPaymentValidationInput(opts){
@@ -2869,6 +4578,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     return {
       paymentMethod: getPaymentMethodCode(),
       paymentCashAmount: payCashAmount,
+      paymentTransferAmount: payTransferAmount,
       paymentQrAmount: payMode === 'qr' ? total : payQrAmount,
       totalPayableAmount: total,
       qrPaymentConfirmed: opts.forAmountCheck ? true : (!needsQr || paid),
@@ -2877,6 +4587,21 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   }
 
   function validatePaymentAmounts(){
+    if(payMode === 'credit'){
+      var total = getTotalPayable();
+      if(total <= 0) return { valid: false, errors: ['Số tiền ghi nợ phải lớn hơn 0'] };
+      var debtErr = getDebtLimitError(activeDeliveryCard, total, true);
+      if(debtErr) return { valid: false, errors: [debtErr] };
+      return { valid: true, errors: [] };
+    }
+    if(payMode === 'mixed'){
+      return validateMixedPaymentLocal(true);
+    }
+    if(payMode === 'transfer'){
+      var totalTransfer = getTotalPayable();
+      if(totalTransfer <= 0) return { valid: false, errors: ['Số tiền chuyển khoản phải lớn hơn 0'] };
+      return { valid: true, errors: [] };
+    }
     return PayV.validatePayment(getPaymentValidationInput({ forAmountCheck: true }));
   }
 
@@ -2899,8 +4624,34 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   }
 
   function validateAndUpdateCompleteBtn(){
+    if(payMode === 'credit'){
+      var total = getTotalPayable();
+      var debtErr = getDebtLimitError(activeDeliveryCard, total, true);
+      showPayError(debtErr ? [debtErr] : (total <= 0 ? ['Số tiền ghi nợ phải lớn hơn 0'] : []));
+      document.getElementById('btnComplete').disabled = !!debtErr || total <= 0;
+      renderDebtWarning(activeDeliveryCard, 'paymentDebtWarn');
+      return;
+    }
+    if(payMode === 'cash'){
+      var cashTotal = getTotalPayable();
+      payCashAmount = cashTotal;
+      showPayError(cashTotal <= 0 ? ['Số tiền cần thu phải lớn hơn 0'] : []);
+      document.getElementById('btnComplete').disabled = cashTotal <= 0;
+      renderDebtWarning(activeDeliveryCard, 'paymentDebtWarn');
+      return;
+    }
+    if(payMode === 'mixed'){
+      var mixedResult = validateMixedPaymentLocal(false);
+      showPayError(mixedResult.errors);
+      document.getElementById('btnComplete').disabled = !mixedResult.valid;
+      document.getElementById('btnRegenQr').style.display =
+        mixedPaymentState && mixedPaymentState.selected.qr && payQrAmount > 0 ? '' : 'none';
+      renderDebtWarning(activeDeliveryCard, 'paymentDebtWarn');
+      return;
+    }
     var total = getTotalPayable();
     var needsQr = payMode === 'qr' || (payMode === 'mixed' && payQrAmount > 0);
+    var needsTransfer = payMode === 'transfer' || (payMode === 'mixed' && payTransferAmount > 0);
     var result = PayV.validatePayment(getPaymentValidationInput());
     var amountResult = validatePaymentAmounts();
     var displayErrors = amountResult.valid
@@ -2910,33 +4661,37 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       displayErrors = [];
     }
     showPayError(displayErrors);
-    var canComplete = amountResult.valid && (!needsQr || payQrAmount <= 0 || paid);
+    var canComplete = amountResult.valid
+      && (!needsQr || payQrAmount <= 0 || paid)
+      && (!needsTransfer || payTransferAmount <= 0 || transferPaid);
     document.getElementById('btnComplete').disabled = !canComplete;
+    renderDebtWarning(activeDeliveryCard, 'paymentDebtWarn');
     return result;
   }
 
   function onPayAmountInput(field){
     var total = getTotalPayable();
-    var raw = parseMoney(field === 'cash'
-      ? document.getElementById('payCashInput').value
-      : document.getElementById('payQrInput').value);
+    var raw = parseMoney(getPayAmountInputValue(field, 'advance'));
     if(raw < 0) raw = 0;
     if(raw > total) raw = total;
     payLastEdited = field;
-    if(payMode === 'mixed' && PayV){
-      var calc = PayV.calcComplement(total, raw, field);
-      payCashAmount = calc.cashAmount;
-      payQrAmount = calc.qrAmount;
+    if(payMode === 'mixed'){
+      calcMixedPayAmounts(field, raw, total);
     } else if(payMode === 'cash'){
       payCashAmount = raw;
       payQrAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
     } else {
       payQrAmount = raw;
       payCashAmount = 0;
+      payCreditAmount = 0;
+      payTransferAmount = 0;
     }
     paid = false;
-    var qrStatus = document.getElementById('qrStatus');
+    transferPaid = false;
     setQrStatusPending();
+    setTransferStatusPending();
     syncPaymentInputsFromState();
     updateQrDisplay();
     updatePaymentSummaryPanels();
@@ -2944,25 +4699,56 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     validateAndUpdateCompleteBtn();
   }
 
+  function appendPaymentAuditLog(orderCode, payload){
+    var store = getOrderStore(orderCode);
+    if(!store || !payload) return;
+    if(!store.paymentHistory) store.paymentHistory = [];
+    store.paymentHistory.push({
+      confirmedAt: new Date().toISOString(),
+      confirmedBy: 'TX-MOCK',
+      payMode: payMode,
+      totalPayableAmount: payload.totalPayableAmount != null ? payload.totalPayableAmount : getTotalPayable(),
+      payments: payload.payments || [],
+      paymentStatus: payload.paymentStatus || payload.paymentMethod || payMode,
+      customerId: activeDeliveryCard ? activeDeliveryCard.dataset.storeCode : '',
+      note: ''
+    });
+  }
+
   function buildPaymentSubmitPayload(){
     var total = getTotalPayable();
+    if(payMode === 'mixed' && MP && mixedPaymentState){
+      syncMixedAutoConfirmFlags();
+      return MP.buildPaymentsPayload(mixedPaymentState, total, {
+        deliveryOrderId: activeDeliveryCard ? activeDeliveryCard.dataset.order : '',
+        qrTransactionCode: qrTxnCode || (paid && payQrAmount > 0 ? 'EP-MOCK-' + Date.now() : ''),
+        qrPaymentConfirmed: paid,
+        cashPaymentConfirmed: cashConfirmed,
+        transferConfirmed: transferPaid,
+        transferTransactionRef: transferTxnCode || (transferPaid && payTransferAmount > 0 ? 'CK-MOCK-' + Date.now() : ''),
+        debtConfirmed: debtConfirmed
+      });
+    }
     var qrAmt = payMode === 'qr' ? total : payQrAmount;
+    var creditAmt = payMode === 'credit' ? total : payCreditAmount;
+    var transferAmt = payMode === 'transfer' ? total : payTransferAmount;
     return {
       paymentMethod: getPaymentMethodCode(),
-      paymentCashAmount: payMode === 'qr' ? 0 : payCashAmount,
+      paymentCashAmount: payMode === 'qr' || payMode === 'transfer' ? 0 : payCashAmount,
+      paymentTransferAmount: transferAmt,
       paymentQrAmount: qrAmt,
+      paymentCreditAmount: creditAmt,
       paymentTotalAmount: total,
       qrTransactionCode: qrTxnCode || (paid && qrAmt > 0 ? 'EP-MOCK-' + Date.now() : ''),
       qrPaymentStatus: qrAmt > 0 ? (paid ? 'SUCCESS' : 'PENDING') : 'N/A',
+      transferPaymentStatus: transferAmt > 0 ? (transferPaid ? 'SUCCESS' : 'PENDING') : 'N/A',
       paymentConfirmedAt: new Date().toISOString(),
       paymentConfirmedBy: 'TX-MOCK'
     };
   }
 
   function resetPaymentUI(){
-    paid = false;
-    qrTxnCode = '';
-    setQrStatusPending();
+    resetPaymentConfirmFlags();
     document.getElementById('paySummary').className = 'payment-summary';
     showPayError([]);
     syncPaymentFromCard();
@@ -2973,28 +4759,57 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   function applyPayModeUI(){
     var qrBox = document.getElementById('qrBox');
     var cashPanel = document.getElementById('cashPanel');
+    var transferPanel = document.getElementById('transferPanel');
+    var creditPanel = document.getElementById('creditPanel');
     var amountFields = document.getElementById('payAmountFields');
     var cashWrap = document.getElementById('payCashFieldWrap');
     var qrWrap = document.getElementById('payQrFieldWrap');
+    var creditWrap = document.getElementById('payCreditFieldWrap');
+    var transferWrap = document.getElementById('payTransferFieldWrap');
     var btnRegen = document.getElementById('btnRegenQr');
+    var mixedPanel = document.getElementById('mixedPayPanel');
 
     amountFields.classList.remove('hidden');
     cashWrap.classList.remove('hidden');
     qrWrap.classList.add('hidden');
+    if(transferWrap) transferWrap.classList.add('hidden');
+    if(creditWrap) creditWrap.classList.add('hidden');
     cashPanel.classList.remove('show');
+    if(transferPanel) transferPanel.classList.remove('show');
+    if(creditPanel) creditPanel.classList.remove('show');
     qrBox.classList.add('hidden');
+    if(mixedPanel) mixedPanel.classList.add('hidden');
 
-    if(payMode === 'cash'){
+    if(payMode === 'credit'){
+      amountFields.classList.add('hidden');
+      if(creditPanel){
+        creditPanel.classList.add('show');
+        var creditAmt = document.getElementById('creditPanelAmount');
+        if(creditAmt) creditAmt.textContent = formatDisplayAmount(getTotalPayable()) + ' đ';
+      }
+      if(btnRegen) btnRegen.style.display = 'none';
+      paid = true;
+    } else if(payMode === 'cash'){
+      amountFields.classList.add('hidden');
+      payCashAmount = getTotalPayable();
+      cashPanel.classList.add('show');
       qrWrap.classList.add('hidden');
+      if(btnRegen) btnRegen.style.display = 'none';
+    } else if(payMode === 'transfer'){
+      amountFields.classList.add('hidden');
+      if(transferPanel) transferPanel.classList.add('show');
+      updateTransferDisplay();
       if(btnRegen) btnRegen.style.display = 'none';
     } else if(payMode === 'qr'){
       amountFields.classList.add('hidden');
       qrBox.classList.remove('hidden');
       if(btnRegen) btnRegen.style.display = '';
-    } else {
-      qrWrap.classList.remove('hidden');
-      if(payQrAmount > 0) qrBox.classList.remove('hidden');
-      if(btnRegen) btnRegen.style.display = payQrAmount > 0 ? '' : 'none';
+    } else if(payMode === 'mixed'){
+      amountFields.classList.add('hidden');
+      document.getElementById('paySplitSummary').classList.add('hidden');
+      renderMixedPaymentUI('advance');
+      if(btnRegen) btnRegen.style.display =
+        mixedPaymentState && mixedPaymentState.selected.qr && payQrAmount > 0 ? '' : 'none';
     }
     updatePaymentSummaryPanels();
     validateAndUpdateCompleteBtn();
@@ -3070,8 +4885,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     }
     if(target === 'info'){
       var card = goEl.closest('.delivery-card');
-      populateInfoFromCard(card);
-      goTo('info');
+      openDeliveryEntry(card);
       return;
     }
     goTo(target);
@@ -3139,10 +4953,6 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     if(!nav) return;
     goTo(nav.dataset.go);
   });
-
-  if (location.hash === '#report') { goTo('report'); }
-  else if (location.hash === '#ocr') { goTo('ocr'); }
-  else if (location.hash === '#other' || location.hash === '#khac') { goTo('other'); }
 
   /* ===== Báo cáo đơn giao hàng ===== */
   var rpFromIso = '2026-06-01';
@@ -3266,6 +5076,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     if(!chip) return;
     document.querySelectorAll('#rpStatusChipsWrap .chip').forEach(function(c){ c.classList.remove('active'); });
     chip.classList.add('active');
+    chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     applyRpFilters();
   });
 
@@ -3298,7 +5109,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   var ocrListTitle = document.getElementById('ocrListTitle');
   var ocrOrderList = document.getElementById('ocrOrderList');
   var ocrEmpty = document.getElementById('ocrEmpty');
-  var deliveryOrderSeq = 8;
+  var deliveryOrderSeq = 14;
   var ocrSheetMode = 'camera'; /* camera | edit | preview-edit | preview-readonly */
   var currentOcrScanAttachment = null;
   var pxkFileRegistry = {};
@@ -3698,6 +5509,232 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     return Math.round(Number(value||0)).toLocaleString('vi-VN');
   }
 
+  /** Format số tiền cho ô nhập — không format khi đang focus để tránh mất con trỏ. */
+  function formatMoneyInput(amount){
+    var n = Math.round(Number(amount || 0));
+    return n > 0 ? formatDisplayAmount(n) : '';
+  }
+  function isActiveMoneyInput(el){
+    return !!(el && document.activeElement === el);
+  }
+  function setMoneyInputValue(el, amount, opts){
+    opts = opts || {};
+    if(!el) return;
+    if(!opts.force && isActiveMoneyInput(el)) return;
+    var next = formatMoneyInput(amount);
+    if(el.value !== next) el.value = next;
+  }
+  function formatMoneyInputElement(el){
+    if(!el) return;
+    el.value = formatMoneyInput(parseMoney(el.value));
+  }
+  function bindPaymentMoneyInputBlur(inputId){
+    var el = document.getElementById(inputId);
+    if(!el || el.dataset.moneyBlurBound === '1') return;
+    el.dataset.moneyBlurBound = '1';
+    el.addEventListener('blur', function(){ formatMoneyInputElement(el); });
+  }
+
+  function resolveCardDebt(card, opts){
+    opts = opts || {};
+    if(!card) return null;
+    if(card.dataset.prepaid === '1') return { na: true };
+    var used = card.dataset.debtUsed !== undefined && card.dataset.debtUsed !== ''
+      ? parseMoney(card.dataset.debtUsed) : null;
+    var limit = card.dataset.debtLimit !== undefined && card.dataset.debtLimit !== ''
+      ? parseMoney(card.dataset.debtLimit) : null;
+    if((used === null || limit === null) && card.dataset.storeCode && DEFAULT_STORE_DEBT){
+      var def = DEFAULT_STORE_DEBT[card.dataset.storeCode];
+      if(def){
+        if(used === null) used = def.used;
+        if(limit === null) limit = def.limit;
+      }
+    }
+    if(!limit) return null;
+    var includeOrder = opts.includeOrderAmount !== false;
+    var orderAdd = includeOrder ? getCardOrderCodAmount(card) : 0;
+    var creditAdd = opts.creditAmount ? parseMoney(opts.creditAmount) : 0;
+    var addAmount = creditAdd > 0 ? creditAdd : orderAdd;
+    var projectedUsed = (used || 0) + addAmount;
+    var remaining = Math.max(0, limit - (used || 0));
+    var projectedRemaining = Math.max(0, limit - projectedUsed);
+    return {
+      used: used || 0,
+      limit: limit,
+      remaining: remaining,
+      orderAdd: orderAdd,
+      projectedUsed: projectedUsed,
+      projectedRemaining: projectedRemaining,
+      isOver: projectedUsed > limit,
+      isWarn: projectedUsed <= limit && projectedUsed > limit * 0.8
+    };
+  }
+
+  function getCardOrderCodAmount(card){
+    if(!card || card.dataset.prepaid === '1') return 0;
+    if(card.dataset.status === 'delivered' || card.dataset.status === 'failed') return 0;
+    if(card === activeDeliveryCard && currentDeliverySession && currentDeliverySession.summary){
+      return currentDeliverySession.summary.totalAmountThisTime || 0;
+    }
+    if(card.dataset.payThisTime) return parseMoney(card.dataset.payThisTime);
+    var store = getOrderStore(card.dataset.order);
+    if(store && store.totalRemainingAmount != null) return store.totalRemainingAmount;
+    return parseMoney(card.dataset.amount || 0);
+  }
+
+  function getDebtLimitError(card, addAmount, isCredit){
+    if(!card) return null;
+    var debt = resolveCardDebt(card, {
+      includeOrderAmount: !isCredit,
+      creditAmount: isCredit ? addAmount : 0
+    });
+    if(!debt || debt.na) return null;
+    if(debt.isOver){
+      return 'Công nợ vượt hạn mức (' + formatDisplayAmount(debt.limit) + ' đ). Còn lại: ' +
+        formatDisplayAmount(debt.remaining) + ' đ, cần thêm: ' + formatDisplayAmount(addAmount) + ' đ';
+    }
+    return null;
+  }
+
+  function renderDebtWarning(card, elId){
+    var el = document.getElementById(elId);
+    if(!el) return;
+    if(!card){
+      el.classList.add('hidden');
+      return;
+    }
+    var debt = resolveCardDebt(card);
+    if(!debt || debt.na || (!debt.isOver && !debt.isWarn)){
+      el.classList.add('hidden');
+      return;
+    }
+    el.classList.remove('hidden');
+    el.className = 'debt-limit-warn ' + (debt.isOver ? 'is-over' : 'is-warn');
+    if(debt.isOver){
+      el.innerHTML = '<i class="ti ti-alert-triangle"></i><span>Công nợ <strong>vượt hạn mức</strong> nếu giao đơn này. ' +
+        'Hiện tại <strong>' + formatDisplayAmount(debt.used) + ' đ</strong> · Đơn <strong>' +
+        formatDisplayAmount(debt.orderAdd) + ' đ</strong> · Hạn mức <strong>' +
+        formatDisplayAmount(debt.limit) + ' đ</strong></span>';
+    } else {
+      el.innerHTML = '<i class="ti ti-clock"></i><span>Công nợ sau đơn này đạt <strong>' +
+        Math.round(debt.projectedUsed / debt.limit * 100) + '%</strong> hạn mức (' +
+        formatDisplayAmount(debt.projectedUsed) + ' / ' + formatDisplayAmount(debt.limit) + ' đ). ' +
+        'Còn lại <strong>' + formatDisplayAmount(debt.projectedRemaining) + ' đ</strong></span>';
+    }
+  }
+
+  function applyDebtOnDelivery(card, amount){
+    if(!card || amount <= 0) return;
+    var debt = resolveCardDebt(card, { includeOrderAmount: false });
+    var used = debt ? debt.used : parseMoney(card.dataset.debtUsed || 0);
+    card.dataset.debtUsed = String(used + amount);
+    syncCardDebtDisplay(card);
+    document.querySelectorAll('#orderCards .delivery-card').forEach(function(c){
+      if(c.dataset.storeCode && c.dataset.storeCode === card.dataset.storeCode && c !== card){
+        c.dataset.debtUsed = card.dataset.debtUsed;
+        if(!c.dataset.debtLimit && card.dataset.debtLimit) c.dataset.debtLimit = card.dataset.debtLimit;
+        syncCardDebtDisplay(c);
+      }
+    });
+  }
+
+  function formatDebtXY(debt, opts){
+    if(!debt || debt.na) return 'Không áp dụng';
+    opts = opts || {};
+    if(opts.showProjected && debt.orderAdd > 0){
+      return formatDisplayAmount(debt.projectedRemaining) + ' / ' + formatDisplayAmount(debt.limit) + ' đ';
+    }
+    return formatDisplayAmount(debt.remaining) + ' / ' + formatDisplayAmount(debt.limit) + ' đ';
+  }
+
+  function debtStatusClass(debt){
+    if(!debt || debt.na) return 'is-na';
+    if(debt.isOver) return 'is-over';
+    if(debt.isWarn) return 'is-warn';
+    return '';
+  }
+
+  function syncCardDebtTag(card){
+    if(!card) return;
+    var main = card.querySelector('.delivery-card-main');
+    if(!main) return;
+    var title = card.querySelector('.delivery-card-title');
+    if(title) title.querySelectorAll('.debt-warn-tag').forEach(function(el){ el.remove(); });
+    var bar = main.querySelector('.delivery-debt-tagbar');
+    if(!bar){
+      bar = document.createElement('div');
+      bar.className = 'delivery-debt-tagbar';
+      main.appendChild(bar);
+    }
+    bar.innerHTML = '';
+    var debt = resolveCardDebt(card);
+    if(!debt || debt.na || (!debt.isOver && !debt.isWarn)){
+      bar.classList.remove('show');
+      return;
+    }
+    bar.classList.add('show');
+    var tag = document.createElement('span');
+    tag.className = 'debt-warn-tag ' + (debt.isOver ? 'debt-warn-tag--over' : 'debt-warn-tag--warn');
+    if(debt.isOver){
+      tag.innerHTML = '<i class="ti ti-alert-triangle"></i> Vượt hạn mức công nợ';
+    } else {
+      tag.innerHTML = '<i class="ti ti-clock"></i> Gần hết hạn mức';
+    }
+    bar.appendChild(tag);
+  }
+
+  function syncCardDebtDisplay(card){
+    if(!card) return;
+    var body = card.querySelector('.delivery-card-body');
+    if(!body) return;
+    var debt = resolveCardDebt(card);
+    var el = body.querySelector('.delivery-debt');
+    if(!debt){
+      if(el) el.remove();
+      syncCardDebtTag(card);
+      return;
+    }
+    var cls = 'delivery-debt ' + debtStatusClass(debt);
+    if(!el){
+      el = document.createElement('div');
+      body.appendChild(el);
+    }
+    el.className = cls;
+    el.innerHTML = '<i class="ti ti-report-money"></i><span>Công nợ khả dụng: <strong>' +
+      formatDebtXY(debt, { showProjected: debt.orderAdd > 0 }) + '</strong></span>';
+    syncCardDebtTag(card);
+  }
+
+  function applyDebtToInfo(card){
+    applyDebtToRow(card, 'infoDebtRow', 'infoDebtAmount');
+    renderDebtWarning(card, 'infoDebtWarn');
+  }
+
+  function applyDebtToPayCheck(card){
+    applyDebtToRow(card, 'payCheckDebtRow', 'payCheckDebt');
+    renderDebtWarning(card, 'paymentDebtWarn');
+  }
+
+  function applyDebtToRow(card, rowId, valueId){
+    var row = document.getElementById(rowId);
+    var val = document.getElementById(valueId);
+    if(!row || !val) return;
+    var debt = resolveCardDebt(card);
+    if(!debt){
+      row.style.display = 'none';
+      return;
+    }
+    row.style.display = 'flex';
+    val.textContent = formatDebtXY(debt, { showProjected: debt.orderAdd > 0 });
+    val.className = 'info-value info-debt-value ' + debtStatusClass(debt);
+  }
+
+  function buildDebtInfoRow(card){
+    var debt = resolveCardDebt(card);
+    if(!debt) return '';
+    return '<div class="info-row"><span class="info-label">Công nợ khả dụng</span><span class="info-value info-debt-value '+debtStatusClass(debt)+'">'+escapeHtml(formatDebtXY(debt, { showProjected: debt.orderAdd > 0 }))+'</span></div>';
+  }
+
   function isPrepaidOrder(card){
     card = card || activeDeliveryCard;
     return !!(card && card.dataset.prepaid === '1');
@@ -3754,6 +5791,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     document.getElementById('paySummary').innerHTML =
       '<div class="label">Số tiền cần thu</div><div class="amount">'+amount+' đ</div>' +
       '<div class="sub">'+escapeHtml(orderCode)+' · '+escapeHtml(storeName)+'</div>';
+    applyDebtToPayCheck(activeDeliveryCard);
     initPaymentAmounts();
   }
 
@@ -3778,13 +5816,27 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     }
     var prepaid = isPrepaidOrder();
     var payAmount = getTotalPayable();
+    if(!prepaid && activeDeliveryCard){
+      var creditAmt = payMode === 'credit' ? payAmount : (payMode === 'mixed' ? payCreditAmount : 0);
+      if(creditAmt > 0){
+        applyDebtOnDelivery(activeDeliveryCard, creditAmt);
+        updateListSummary();
+      }
+    }
     var amount = formatDisplayAmount(payAmount) + ' đ';
     var finalStatus = activeDeliveryCard ? activeDeliveryCard.dataset.status : 'delivered';
-    document.getElementById('doneSummaryLabel').textContent = prepaid ? '✓ Giao hàng hoàn tất' : '✓ Thanh toán thành công';
-    if(finalStatus === 'partial'){
+    if(prepaid){
+      document.getElementById('doneSummaryLabel').textContent = '✓ Giao hàng hoàn tất';
+    } else if(finalStatus === 'partial'){
       document.getElementById('doneSummaryLabel').textContent = '✓ Giao hàng một phần';
     } else if(finalStatus === 'failed'){
       document.getElementById('doneSummaryLabel').textContent = '✗ Không giao được';
+    } else if(payMode === 'credit'){
+      document.getElementById('doneSummaryLabel').textContent = '✓ Ghi nợ công nợ thành công';
+    } else if(payMode === 'mixed' && payCreditAmount > 0){
+      document.getElementById('doneSummaryLabel').textContent = '✓ Thanh toán kết hợp thành công';
+    } else {
+      document.getElementById('doneSummaryLabel').textContent = '✓ Thanh toán thành công';
     }
     document.getElementById('doneAmount').textContent = amount;
     syncStatusBadgeEl(document.getElementById('doneStatusBadge'), finalStatus);
@@ -3802,21 +5854,32 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         'Đã thanh toán khi đặt hàng · Mã GD: ' + (activeDeliveryCard && activeDeliveryCard.dataset.prepaidRef ? activeDeliveryCard.dataset.prepaidRef : '—');
     } else {
       var payload = buildPaymentSubmitPayload();
-      if(payMode === 'cash'){
+      if(payMode === 'credit'){
+        document.getElementById('donePayRef').textContent =
+          'Ghi nợ công nợ · ' + formatDisplayAmount(getTotalPayable()) + ' đ';
+      } else if(payMode === 'mixed'){
+        var labelMap = { QR: 'QR', CASH: 'Tiền mặt', BANK_TRANSFER: 'CK', DEBT: 'Ghi nợ' };
+        var parts = (payload.payments || []).map(function(p){
+          return (labelMap[p.paymentMethod] || p.paymentMethod) + ' ' + formatDisplayAmount(p.amount) + ' đ';
+        });
+        var qrPay = (payload.payments || []).filter(function(p){ return p.paymentMethod === 'QR'; })[0];
+        document.getElementById('donePayRef').textContent =
+          'Kết hợp thanh toán · ' + (parts.length ? parts.join(' · ') : '—') +
+          (qrPay ? ' · Mã GD: ' + (qrPay.transactionRef || qrTxnCode || '—') : '');
+      } else if(payMode === 'cash'){
         document.getElementById('donePayRef').textContent =
           'Tiền mặt · ' + formatDisplayAmount(payload.paymentCashAmount) + ' đ';
+      } else if(payMode === 'transfer'){
+        document.getElementById('donePayRef').textContent =
+          'Chuyển khoản · ' + formatDisplayAmount(payload.paymentTransferAmount) + ' đ';
       } else if(payMode === 'qr'){
         document.getElementById('donePayRef').textContent =
           'EcoPay QR · ' + formatDisplayAmount(payload.paymentQrAmount) + ' đ · Mã GD: ' +
           (payload.qrTransactionCode || '—');
-      } else {
-        document.getElementById('donePayRef').textContent =
-          'Kết hợp · Tiền mặt ' + formatDisplayAmount(payload.paymentCashAmount) +
-          ' đ + QR ' + formatDisplayAmount(payload.paymentQrAmount) + ' đ · Mã GD: ' +
-          (payload.qrTransactionCode || '—');
       }
       if(activeDeliveryCard){
         activeDeliveryCard.dataset.paymentPayload = JSON.stringify(payload);
+        appendPaymentAuditLog(activeDeliveryCard.dataset.order, payload);
       }
     }
     if(activeDeliveryCard){
@@ -3855,6 +5918,12 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     var status = card.dataset.status;
     var actions = card.querySelector('.delivery-card-actions');
     if(!actions) return;
+    var basic = isDriverBasicMode();
+    var store = card.dataset.storeName || '';
+    var addr = card.dataset.address || '';
+    var mapBtn =
+      '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(store)+'" data-address="'+escapeHtml(addr)+'">'+
+      '<i class="ti ti-map-2"></i> Bản đồ</button>';
     if(status === 'delivered'){
       actions.className = 'delivery-card-actions';
       actions.innerHTML = '<button class="btn-delivery secondary" type="button" data-go="done">Xem chi tiết</button>';
@@ -3863,25 +5932,17 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       actions.innerHTML = '<button class="btn-delivery secondary" type="button" disabled>Giao hàng thất bại</button>';
     } else if(status === 'partial'){
       actions.className = 'delivery-card-actions delivery-card-actions-split';
-      var storeP = card.dataset.storeName || '';
-      var addrP = card.dataset.address || '';
-      actions.innerHTML =
-        '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(storeP)+'" data-address="'+escapeHtml(addrP)+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
+      actions.innerHTML = mapBtn +
         '<button class="btn-delivery" type="button" data-go="handleDelivery">Tiếp tục giao</button>';
     } else if(status === 'delivering'){
       actions.className = 'delivery-card-actions delivery-card-actions-split';
-      var store = card.dataset.storeName || '';
-      var addr = card.dataset.address || '';
-      actions.innerHTML =
-        '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(store)+'" data-address="'+escapeHtml(addr)+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
-        '<button class="btn-delivery secondary" type="button" data-go="handleDelivery" data-resume="1">Tiếp tục giao</button>';
+      var resumeBtn = basic
+        ? '<button class="btn-delivery" type="button" data-go="info">Tiếp tục giao</button>'
+        : '<button class="btn-delivery secondary" type="button" data-go="handleDelivery" data-resume="1">Tiếp tục giao</button>';
+      actions.innerHTML = mapBtn + resumeBtn;
     } else {
       actions.className = 'delivery-card-actions delivery-card-actions-split';
-      var store2 = card.dataset.storeName || '';
-      var addr2 = card.dataset.address || '';
-      actions.innerHTML =
-        '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+escapeHtml(store2)+'" data-address="'+escapeHtml(addr2)+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
-        '<button class="btn-delivery" type="button" data-go="info">Giao hàng</button>';
+      actions.innerHTML = mapBtn + '<button class="btn-delivery" type="button" data-go="info">Giao hàng</button>';
     }
   }
 
@@ -3917,6 +5978,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     document.getElementById('infoStoreName').textContent = storeName;
     document.getElementById('infoPhone').textContent = phone;
     document.getElementById('infoAddress').textContent = address;
+    applyDebtToInfo(card);
     document.getElementById('infoTotalAmount').textContent = amount + ' đ';
     document.getElementById('photoOrderTitle').textContent = orderCode + ' · ' + storeName;
     if(store){
@@ -3956,6 +6018,36 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     return 'DLO-20260616-' + seq;
   }
 
+  function calcDashboardMoney(){
+    var toCollect = 0;
+    var collected = 0;
+    document.querySelectorAll('#orderCards .delivery-card').forEach(function(card){
+      if(card.dataset.status === 'failed') return;
+      if(card.dataset.prepaid === '1') return;
+      var store = getOrderStore(card.dataset.order);
+      var orderTotal = store ? store.totalOrderAmount : parseMoney(card.dataset.amount || 0);
+      var deliveredAmt = store ? (store.totalDeliveredAmount || 0) : 0;
+      var remain = store && store.totalRemainingAmount != null
+        ? store.totalRemainingAmount
+        : orderTotal;
+      if(card.dataset.status === 'delivered'){
+        collected += orderTotal;
+      } else {
+        collected += deliveredAmt;
+        toCollect += remain;
+      }
+    });
+    return { toCollect: toCollect, collected: collected };
+  }
+
+  function updateDashboardMoney(){
+    var money = calcDashboardMoney();
+    var toEl = document.getElementById('dashToCollect');
+    var colEl = document.getElementById('dashCollected');
+    if(toEl) toEl.textContent = formatDisplayAmount(money.toCollect) + ' đ';
+    if(colEl) colEl.textContent = formatDisplayAmount(money.collected) + ' đ';
+  }
+
   function updateListSummary(){
     var cards = document.querySelectorAll('#orderCards .delivery-card');
     var wait = 0, delivering = 0, partial = 0, delivered = 0, failed = 0;
@@ -3967,13 +6059,13 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       else if(card.dataset.status === 'failed') failed++;
     });
     var total = cards.length;
-    var strip = document.querySelector('#viewList .summary-strip');
-    if(strip){
-      var nums = strip.querySelectorAll('.sum-num');
-      if(nums[0]) nums[0].textContent = total;
-      if(nums[1]) nums[1].textContent = delivering;
-      if(nums[2]) nums[2].textContent = delivered;
-    }
+    var totalEl = document.getElementById('dashCountTotal');
+    var deliveringEl = document.getElementById('dashCountDelivering');
+    var doneEl = document.getElementById('dashCountDone');
+    if(totalEl) totalEl.textContent = total;
+    if(deliveringEl) deliveringEl.textContent = delivering;
+    if(doneEl) doneEl.textContent = delivered;
+    updateDashboardMoney();
     document.querySelectorAll('#statusChipsWrap .chip').forEach(function(chip){
       var cnt = chip.querySelector('.cnt');
       if(!cnt) return;
@@ -4013,8 +6105,14 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       '<button class="btn-delivery secondary btn-map" type="button" data-go="map" data-store="'+store+'" data-address="'+address+'"><i class="ti ti-map-2"></i> Bản đồ</button>'+
       '<button class="btn-delivery" type="button" data-go="info">Giao hàng</button></div></div></div>';
     document.getElementById('orderCards').insertAdjacentHTML('afterbegin', html);
+    var card = document.querySelector('#orderCards .delivery-card[data-order="'+dloCode+'"]');
+    if(card){
+      updateCardActions(card);
+      syncCardDebtDisplay(card);
+    }
     updateListSummary();
     applyListFilters();
+    return card;
   }
 
   function addOcrHistoryCard(store, phone, address, docCode, productSummary, dloCode, attachment){
@@ -4162,7 +6260,10 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
   document.getElementById('listSearch').addEventListener('input', applyListFilters);
 
-  document.getElementById('btnStartDelivery').addEventListener('click', startDeliveryFlow);
+  document.getElementById('btnStartDelivery').addEventListener('click', function(){
+    if(isDriverBasicMode()) startBasicDeliveryFlow();
+    else startDeliveryFlow();
+  });
 
   document.getElementById('infoProductList').addEventListener('click', function(e){
     var adjBtn = e.target.closest('[data-info-adjust]');
@@ -4175,7 +6276,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   });
 
   document.getElementById('handleBackBtn').addEventListener('click', function(){
-    goTo('info');
+    if(isDriverBasicMode()) goTo('list');
+    else goTo('info');
   });
   document.getElementById('handleFooterBtn').addEventListener('click', proceedFromHandle);
   document.getElementById('handleBtnCall').addEventListener('click', function(){
@@ -4269,27 +6371,35 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     payMode = btn.dataset.pay;
     document.querySelectorAll('.pay-method').forEach(function(el){ el.classList.remove('active'); });
     btn.classList.add('active');
-    paid = false;
-    qrTxnCode = '';
-    setQrStatusPending();
+    resetPaymentConfirmFlags();
     initPaymentAmounts();
     applyPayModeUI();
     if(payMode === 'cash'){
-      showToast('Tiền mặt — nhập số tiền đã thu');
+      showToast('Tiền mặt — thu đủ ' + formatDisplayAmount(getTotalPayable()) + ' đ');
+    } else if(payMode === 'transfer'){
+      showToast('Chuyển khoản — chạm xác nhận khi khách đã chuyển đủ');
     } else if(payMode === 'mixed'){
-      showToast('Kết hợp — nhập một phần, hệ thống tự tính phần còn lại');
+      showToast('Kết hợp thanh toán — chọn phương thức và nhập số tiền');
+    } else if(payMode === 'credit'){
+      showToast('Ghi nợ — số tiền sẽ cộng vào công nợ khách hàng');
     }
   });
 
   document.getElementById('payCashInput').addEventListener('input', function(){
-    if(payMode === 'cash' || payMode === 'mixed') onPayAmountInput('cash');
+    if(payMode === 'cash') return;
   });
   document.getElementById('payQrInput').addEventListener('input', function(){
-    if(payMode === 'mixed') onPayAmountInput('qr');
+    if(payMode === 'qr') onPayAmountInput('qr');
+  });
+  document.getElementById('payTransferInput').addEventListener('input', function(){
+    if(payMode === 'transfer') onPayAmountInput('transfer');
+  });
+  document.getElementById('payCreditInput').addEventListener('input', function(){
+    if(payMode === 'credit') onPayAmountInput('credit');
   });
 
   function confirmQrPayment(){
-    if(payMode === 'cash') return false;
+    if(payMode === 'cash' || payMode === 'transfer') return false;
     var qrDue = payMode === 'qr' ? getTotalPayable() : payQrAmount;
     if(qrDue <= 0 || paid) return false;
     var v = validatePaymentAmounts();
@@ -4301,6 +6411,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     paid = true;
     qrTxnCode = 'EP-' + Date.now();
     setQrStatusSuccess();
+    if(payMode === 'mixed') renderMixedPaymentUI(mixedUiScope, { rebuildCards: false });
     validateAndUpdateCompleteBtn();
     showToast('Khách đã quét QR chuyển khoản ' + formatDisplayAmount(qrDue) + ' đ');
     return true;
@@ -4322,8 +6433,22 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     }
   });
 
+  document.getElementById('transferPanel').addEventListener('click', function(e){
+    if(e.target.closest('#transferStatus')) confirmTransferPayment();
+  });
+  document.getElementById('transferStatus').addEventListener('click', function(e){
+    e.stopPropagation();
+    confirmTransferPayment();
+  });
+  document.getElementById('transferStatus').addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      confirmTransferPayment();
+    }
+  });
+
   document.getElementById('btnRegenQr').addEventListener('click', function(){
-    if(payMode === 'cash') return;
+    if(payMode === 'cash' || payMode === 'transfer') return;
     paid = false;
     qrTxnCode = '';
     setQrStatusPending();
@@ -4334,8 +6459,12 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
   document.getElementById('btnComplete').addEventListener('click', function(){
     if(this.disabled) return;
-    if(!paid && (payMode === 'qr' || (payMode === 'mixed' && payQrAmount > 0))){
+    if(payMode !== 'mixed' && !paid && payMode === 'qr'){
       showToast('Vui lòng chạm "Chờ khách quét thanh toán" sau khi khách quét QR');
+      return;
+    }
+    if(payMode !== 'mixed' && !transferPaid && payMode === 'transfer'){
+      showToast('Vui lòng chạm "Chờ xác nhận chuyển khoản" sau khi khách đã chuyển tiền');
       return;
     }
     var v = validatePaymentAmounts();
@@ -4344,6 +6473,111 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       return;
     }
     completeDelivery();
+  });
+
+  document.getElementById('basicPayMethods').addEventListener('click', function(e){
+    var btn = e.target.closest('.pay-method');
+    if(!btn) return;
+    payMode = btn.dataset.pay;
+    document.querySelectorAll('#basicPayMethods .pay-method').forEach(function(el){ el.classList.remove('active'); });
+    btn.classList.add('active');
+    resetPaymentConfirmFlags();
+    initPaymentAmounts();
+    syncBasicPaymentInputs();
+    updateBasicQrDisplay();
+    updateBasicPaymentPanels();
+    applyBasicPayModeUI();
+    if(payMode === 'cash') showToast('Tiền mặt — thu đủ ' + formatDisplayAmount(getTotalPayable()) + ' đ');
+    else if(payMode === 'transfer') showToast('Chuyển khoản — chạm xác nhận khi khách đã chuyển đủ');
+    else if(payMode === 'mixed') showToast('Kết hợp thanh toán — chọn phương thức và nhập số tiền');
+    else if(payMode === 'credit') showToast('Ghi nợ — số tiền sẽ cộng vào công nợ khách hàng');
+  });
+  document.getElementById('basicPayCashInput').addEventListener('input', function(){
+    if(payMode === 'cash') return;
+  });
+  document.getElementById('basicPayQrInput').addEventListener('input', function(){
+    if(payMode === 'qr') onBasicPayAmountInput('qr');
+  });
+  document.getElementById('basicPayTransferInput').addEventListener('input', function(){
+    if(payMode === 'transfer') onBasicPayAmountInput('transfer');
+  });
+  document.getElementById('basicPayCreditInput').addEventListener('input', function(){
+    if(payMode === 'credit') onBasicPayAmountInput('credit');
+  });
+  document.getElementById('basicQrBox').addEventListener('click', function(e){
+    if(e.target.closest('#basicQrStatus') || e.target.closest('.qr-image') || e.target.closest('.qr-amount')){
+      confirmBasicQrPayment();
+    }
+  });
+  document.getElementById('basicQrStatus').addEventListener('click', function(e){
+    e.stopPropagation();
+    confirmBasicQrPayment();
+  });
+  document.getElementById('basicQrStatus').addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      confirmBasicQrPayment();
+    }
+  });
+  document.getElementById('basicTransferPanel').addEventListener('click', function(e){
+    if(e.target.closest('#basicTransferStatus')) confirmTransferPayment();
+  });
+  document.getElementById('basicTransferStatus').addEventListener('click', function(e){
+    e.stopPropagation();
+    confirmTransferPayment();
+  });
+  document.getElementById('basicTransferStatus').addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      confirmTransferPayment();
+    }
+  });
+  document.getElementById('btnBasicRegenQr').addEventListener('click', function(){
+    if(payMode === 'cash' || payMode === 'transfer') return;
+    paid = false;
+    qrTxnCode = '';
+    setBasicQrStatusPending();
+    updateBasicQrDisplay();
+    validateAndUpdateBasicCompleteBtn();
+    showToast('Đã tạo QR mới · ' + formatDisplayAmount(payMode === 'qr' ? getTotalPayable() : payQrAmount) + ' đ');
+  });
+  document.getElementById('btnBasicConfirm').addEventListener('click', function(){
+    if(this.disabled) return;
+    if(isPrepaidOrder()){
+      completeDelivery();
+      return;
+    }
+    if(payMode !== 'mixed' && !paid && payMode === 'qr'){
+      showToast('Vui lòng chạm "Chờ khách quét thanh toán" sau khi khách quét QR');
+      return;
+    }
+    if(payMode !== 'mixed' && !transferPaid && payMode === 'transfer'){
+      showToast('Vui lòng chạm "Chờ xác nhận chuyển khoản" sau khi khách đã chuyển tiền');
+      return;
+    }
+    var v = validatePaymentAmounts();
+    if(!v.valid){
+      showToast(v.errors[0] || 'Số tiền thanh toán không hợp lệ');
+      return;
+    }
+    completeDelivery();
+  });
+  document.getElementById('btnBasicNotReceive').addEventListener('click', function(){
+    openReasonSheet('not_receive');
+  });
+  document.getElementById('btnBasicReschedule').addEventListener('click', function(){
+    openReasonSheet('reschedule');
+  });
+  document.getElementById('btnBasicPartial').addEventListener('click', function(){
+    if(!activeDeliveryCard || !DLO.isEditableStatus(activeDeliveryCard.dataset.status)){
+      showToast('Đơn không cho phép điều chỉnh giao hàng');
+      return;
+    }
+    openAdjustDelivery();
+  });
+
+  document.getElementById('driverModeToggleInput').addEventListener('change', function(){
+    setDriverUIMode(this.checked ? 'basic' : 'advanced');
   });
 
   /* ===== Từ chối nhận đơn ===== */
@@ -4469,18 +6703,32 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     if(!chip) return;
     document.querySelectorAll('#statusChipsWrap .chip').forEach(function(c){ c.classList.remove('active'); });
     chip.classList.add('active');
+    chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     applyListFilters();
   });
 
   initDeliveryStore();
+  bindMixedPaymentEvents('mixedPayPanel', 'advance');
+  bindMixedPaymentEvents('basicMixedPayPanel', 'basic');
+  ['payCashInput','payQrInput','payTransferInput','payCreditInput',
+   'basicPayCashInput','basicPayQrInput','basicPayTransferInput','basicPayCreditInput'
+  ].forEach(bindPaymentMoneyInputBlur);
+  syncDriverModeUI();
   document.querySelectorAll('#orderCards .delivery-card').forEach(function(c){
     syncCardBadge(c);
-    updateCardActions(c);
+    syncCardDebtDisplay(c);
   });
   updateListSummary();
   updatePhotoUI();
+
+  if (location.hash === '#report') { goTo('report'); }
+  else if (location.hash === '#ocr') { goTo('ocr'); }
+  else if (location.hash === '#other' || location.hash === '#khac') { goTo('other'); }
+  else if (location.hash === '#advanced') { setDriverUIMode('advanced'); }
+  else if (location.hash === '#basic') { setDriverUIMode('basic'); }
 })();
 </script>
+<script src="../_shared/mockup-links.js"></script>
 <script src="../_shared/mockup-fit.js"></script>
 </body>
 </html>
