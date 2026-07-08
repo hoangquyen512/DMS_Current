@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-CTTB00 — Danh sách chương trình trưng bày</title>
+    <link rel="stylesheet" href="../../../../_shared/portal-tokens.css"/>
+    <link rel="stylesheet" href="../../../../_shared/portal-fonts.css"/>
+    <link rel="stylesheet" href="../../../../_shared/portal-components.css"/>
+    <link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
+    <style>
+      .cttb-thumb { width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, #dbeafe, #93c5fd); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    </style>
+</head>
+<body class="portal-page" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+    <main class="portal-page-content" style="padding:20px 28px 40px;max-width:100%;">
+
+        <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../../../main.html">Danh mục</a>
+            <span class="portal-breadcrumb__sep">/</span>
+            <a href="#">CTTB</a>
+            <span class="portal-breadcrumb__sep">/</span>
+            <span class="portal-breadcrumb__current">Chương trình trưng bày</span>
+        </nav>
+
+        <h1 class="portal-page-title">Chương trình trưng bày</h1>
+
+        <div class="portal-card portal-query-filter">
+            <div class="portal-card__hd">Tìm kiếm theo</div>
+            <div class="portal-card__bd">
+                <div class="portal-filter-grid portal-filter-grid--4">
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="cttbSearch">Chương trình</label>
+                        <div class="portal-field__control portal-input-search-wrap">
+                            <input class="portal-input" id="cttbSearch" type="text" placeholder="Mã, tên chương trình"/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="cttbStatus">Trạng thái</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="cttbStatus">
+                                <option value="">Tất cả trạng thái</option>
+                                <option>Khởi tạo</option>
+                                <option>Sắp diễn ra</option>
+                                <option>Đang diễn ra</option>
+                                <option>Kết thúc</option>
+                                <option>Ngưng hoạt động</option>
+                                <option>Hết hạn duyệt</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="cttbType">Loại chương trình</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="cttbType">
+                                <option value="">Tất cả loại</option>
+                                <option>Mua &amp; trưng bày</option>
+                                <option>Trưng bày</option>
+                                <option>Tích điểm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="cttbJoinBtn">Hiển thị nút tham gia</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="cttbJoinBtn">
+                                <option value="">Tất cả</option>
+                                <option>Có</option>
+                                <option>Không</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="cttbAutoApprove">Tự động duyệt</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="cttbAutoApprove">
+                                <option value="">Tất cả</option>
+                                <option>Có</option>
+                                <option>Không</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--span-2">
+                        <label class="portal-field__label">Thời gian</label>
+                        <div class="portal-field__control portal-date-range">
+                            <div class="portal-date-range__inner">
+                                <input class="portal-date-range__input" type="text" value="2025-01-01" placeholder="Từ ngày" aria-label="Từ ngày"/>
+                                <span class="portal-date-range__sep" aria-hidden="true">→</span>
+                                <input class="portal-date-range__input" type="text" value="2026-06-20" placeholder="Đến ngày" aria-label="Đến ngày"/>
+                            </div>
+                            <span class="portal-date-range__icon" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portal-query-actions">
+                    <div class="portal-query-actions__inner">
+                        <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
+                        <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="portal-card portal-protable">
+            <div class="portal-protable__toolbar">
+                <div class="portal-tabs portal-tabs--line" role="tablist">
+                    <button type="button" class="portal-tabs__item portal-tabs__item--active">Tất cả <span class="portal-tabs__count">(605)</span></button>
+                    <button type="button" class="portal-tabs__item">Khởi tạo <span class="portal-tabs__count">(1)</span></button>
+                    <button type="button" class="portal-tabs__item">Sắp diễn ra <span class="portal-tabs__count">(0)</span></button>
+                    <button type="button" class="portal-tabs__item">Đang diễn ra <span class="portal-tabs__count">(8)</span></button>
+                    <button type="button" class="portal-tabs__item">Kết thúc <span class="portal-tabs__count">(343)</span></button>
+                    <button type="button" class="portal-tabs__item">Ngưng hoạt động <span class="portal-tabs__count">(5)</span></button>
+                </div>
+            </div>
+            <div class="portal-protable__list-hd">
+                <h2 class="portal-protable__list-title">Danh sách chương trình trưng bày</h2>
+            </div>
+            <div class="portal-protable__list-actions">
+                <button type="button" class="portal-btn portal-btn--primary">+ Tạo mới</button>
+                <button type="button" class="portal-btn portal-btn--default">Export Excel</button>
+            </div>
+            <div class="portal-card__bd">
+                <div class="portal-table-wrap portal-table-wrap--flush">
+                    <table class="portal-table portal-table--zebra">
+                        <thead>
+                            <tr>
+                                <th style="width:48px">STT</th>
+                                <th style="width:52px">Ảnh</th>
+                                <th>Mã chương trình <span class="sort-icon">⇅</span></th>
+                                <th>Tên chương trình</th>
+                                <th>Nội dung Chương trình</th>
+                                <th>Trạng thái</th>
+                                <th>Mã công ty</th>
+                                <th>Vùng</th>
+                                <th>Loại chương trình</th>
+                                <th>Yêu cầu hợp đồng</th>
+                                <th>Tùy chỉnh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><div class="cttb-thumb" title="CTTB">📋</div></td>
+                                <td><span class="copy-cell">KPPEA4618747659 <button type="button" class="copy-btn" title="Sao chép">⎘</button></span></td>
+                                <td><a href="#" class="portal-table__link" onclick="return false">TÍCH ĐIỂM CHO KHÁCH HÀNG THÂN THIẾT</a></td>
+                                <td><span class="cell-sub">Tích điểm đổi quà T6/2026</span></td>
+                                <td><span class="portal-tag portal-tag--error">Hết hạn duyệt</span></td>
+                                <td>ABI</td>
+                                <td>
+                                    <div class="portal-table__region-tags">
+                                        <span class="portal-table__region-tag">GR8098372 — Miền Nam</span>
+                                        <button type="button" class="portal-table__region-more" title="Xem thêm">+</button>
+                                    </div>
+                                </td>
+                                <td>Mua &amp; trưng bày</td>
+                                <td>Có</td>
+                                <td class="portal-table-actions">
+                                    <button type="button" class="portal-icon-btn" title="Sao chép">⎘</button>
+                                    <button type="button" class="portal-icon-btn" title="Chỉnh sửa">✎</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><div class="cttb-thumb">🎯</div></td>
+                                <td><span class="copy-cell">KPPEA5163352654 <button type="button" class="copy-btn">⎘</button></span></td>
+                                <td><a href="#" class="portal-table__link" onclick="return false">Tích lũy liền tay – Nhận ngay bia Tết</a></td>
+                                <td><span class="cell-sub">Chương trình Tết 2026</span></td>
+                                <td><span class="portal-tag portal-tag--success">Đang diễn ra</span></td>
+                                <td>FCV</td>
+                                <td>
+                                    <div class="portal-table__region-tags">
+                                        <span class="portal-table__region-tag">GR8098371 — Miền Bắc</span>
+                                    </div>
+                                </td>
+                                <td>Trưng bày</td>
+                                <td>Không</td>
+                                <td class="portal-table-actions">
+                                    <button type="button" class="portal-icon-btn">⎘</button>
+                                    <button type="button" class="portal-icon-btn">✎</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><div class="cttb-thumb">🏆</div></td>
+                                <td><span class="copy-cell">#CTTB3 <button type="button" class="copy-btn">⎘</button></span></td>
+                                <td><a href="#" class="portal-table__link" onclick="return false">Chương trình mua và trưng bày Yomost</a></td>
+                                <td><span class="cell-sub">abc</span></td>
+                                <td><span class="portal-tag portal-tag--warning">Khởi tạo</span></td>
+                                <td>FCV</td>
+                                <td>
+                                    <div class="portal-table__region-tags">
+                                        <span class="portal-table__region-tag">GR8098372 — Miền Nam</span>
+                                        <span class="portal-table__region-tag">GR8098371 — Miền Bắc</span>
+                                    </div>
+                                </td>
+                                <td>Mua &amp; trưng bày</td>
+                                <td>Có</td>
+                                <td class="portal-table-actions">
+                                    <button type="button" class="portal-icon-btn">⎘</button>
+                                    <button type="button" class="portal-icon-btn">✎</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="portal-pagination">
+                    <span>1-3 / tổng 605 chương trình</span>
+                    <div class="portal-pagination__pages">
+                        <button class="portal-page-btn" disabled>‹</button>
+                        <button class="portal-page-btn portal-page-btn--active">1</button>
+                        <button class="portal-page-btn">2</button>
+                        <button class="portal-page-btn">›</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p style="margin-top:16px;font-size:12px;color:var(--portal-text-secondary)">
+            Reference UI: Danh mục → CTTB → Chương trình trưng bày · Mockup: <code>MS-W-CTTB00</code>
+        </p>
+    </main>
+
+<script src="../../../../_shared/portal-chrome.js"></script>
+</div>
+</body>
+</html>
