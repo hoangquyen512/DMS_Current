@@ -32,7 +32,7 @@ $fileFolderMap = @{
     'MS-W-CTTB01-cai-dat-phan-thuong-bo-sung.html'                    = 'danh-muc/chuong-trinh-trung-bay/thong-tin-tra-thuong-theo-giai-doan'
     'MS-W-CTTB02-phan-thuong-bo-sung-theo-han-muc.html'               = 'danh-muc/chuong-trinh-trung-bay/thong-tin-tra-thuong-theo-giai-doan'
     'MS-W-DL01-phan-bo-thu-cong-gan-tai-xe.html'                      = 'giam-sat/giao-hang/quan-ly-don-giao-hang'
-    'WEB-CP-B3-don-giao-hang-phan-bo.html'                            = 'giam-sat/giao-hang/danh-sach-phan-bo-don-giao-hang'
+    'WEB-CP-B3-don-giao-hang-phan-bo.html'                            = 'giam-sat/giao-hang/quan-ly-don-giao-hang'
     'WEB-CP-B4-phan-bo-thu-cong-gan-tai-xe.html'                      = 'giam-sat/giao-hang/phan-bo-thu-cong-gan-tai-xe'
     'MS-W-DL02-cai-dat-vung-giao-hang-tai-xe.html'                    = 'giam-sat/giao-hang/cai-dat-vung-giao-hang-cho-tai-xe'
     'WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html'                          = 'giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen'
@@ -52,6 +52,8 @@ $explicitHrefsById = @{
     'bao-cao-nhap-xuat-ton-tai-san'                 = 'danh-muc/tai-san/bao-cao-tai-san/bao-cao-nhap-xuat-ton-tai-san/MS-W-BCNXT01-nhap-xuat-ton-tai-san.html'
     'yeu-cau-xac-minh'                              = 'danh-muc/xac-minh/yeu-cau-xac-minh/US-AI-check-button-states.html'
     'thong-tin-tra-thuong-theo-giai-doan'           = 'danh-muc/chuong-trinh-trung-bay/thong-tin-tra-thuong-theo-giai-doan/MS-W-CTTB01-cai-dat-phan-thuong-bo-sung.html'
+    'quan-ly-don-giao-hang'                         = 'giam-sat/giao-hang/quan-ly-don-giao-hang/WEB-CP-B3-don-giao-hang-phan-bo.html'
+    'cau-hinh-khu-vuc-giao-hang-theo-tuyen'         = 'giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen/WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html'
     'bao-cao-doi-soat-tien-thu-giao-hang'           = 'giam-sat/giao-hang/bao-cao-doi-soat-tien-thu-giao-hang/MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html'
 }
 
@@ -109,6 +111,11 @@ foreach ($kv in $fileFolderMap.GetEnumerator()) {
     $destDir = Join-Path $webRoot ($kv.Value -replace '/', [IO.Path]::DirectorySeparatorChar)
     if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
     $dest = Join-Path $destDir $kv.Key
+    if (Test-Path $dest) {
+        $srcLen = (Get-Item $found.FullName).Length
+        $destLen = (Get-Item $dest).Length
+        if ($destLen -ge $srcLen) { continue }
+    }
     if ($found.FullName -ne $dest) { Move-Item $found.FullName $dest -Force }
 }
 
