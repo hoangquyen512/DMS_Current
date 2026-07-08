@@ -20,9 +20,8 @@ mockups/mobile/
 ├── khac/                  ← Tab Khác (Flow B)
 │   └── cua-hang/          ← Danh sách CH + Tác vụ cửa hàng
 ├── tai-xe/                ← Chế độ Tài xế — thay toàn bộ app shell
-│   ├── main.html          ← App Tài xế (GH01): 4 tab bottom nav
-│   ├── MS-A-DL03-ocr-don-giao-hang.html
-│   └── MS-A-GH01-*.html   ← redirect → main.html
+│   ├── MS-A-GH01-giao-hang-don-hang.html   ← App Tài xế (1 file, multi-view)
+│   └── MS-A-DL03-ocr-don-giao-hang.html    ← redirect → GH01#ocr
 ├── bao-cao/
 └── don-hang/
 ```

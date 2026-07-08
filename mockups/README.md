@@ -31,8 +31,13 @@ mockups/
 │   ├── don-hang/
 │   └── khac/
 └── web/                       ← Mockup Portal (main.html = entry menu)
-    └── MS-WXX-ten-man-hinh.html
+    ├── main.html
+    ├── components-gallery.html   ← Component reference
+    ├── _shared/                  ← portal-components.css, portal-mockup-bridge.css
+    └── …/MS-WXX-ten-man-hinh.html
 ```
+
+**Component portal:** xem `web/_shared/README-COMPONENTS.md` và `design-system/web/patterns/list-screen.md`. Mọi trang con load `portal-chrome.css` → tự có visual Ant Design Pro (kể cả HTML class cũ).
 
 ---
 
