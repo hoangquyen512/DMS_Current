@@ -65,6 +65,13 @@ body {
 }
 .status-bar.blue { background: var(--c-surface); color: var(--c-text); }
 .status-bar .icons, .status-right { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--c-text); }
+.status-portal-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; margin-right: 1px; flex-shrink: 0;
+  color: var(--c-primary); text-decoration: none; border-radius: 6px;
+}
+.status-portal-link:hover { background: var(--c-primary-lt); }
+.status-portal-link i { font-size: 15px; line-height: 1; }
 
 .app-top {
   background: var(--c-surface); border-bottom: 1px solid var(--c-border);
@@ -646,7 +653,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Danh sách đơn ===== -->
     <div class="view active" id="viewList">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -862,7 +869,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: OCR đơn giao hàng ===== -->
     <div class="view" id="viewOcr">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -944,7 +951,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Báo cáo đơn giao hàng ===== -->
     <div class="view" id="viewReport">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="app-top">
         <div class="driver-bar">
           <div class="driver-avatar" aria-hidden="true">
@@ -1053,7 +1060,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Chi tiết đơn giao hàng (Báo cáo) ===== -->
     <div class="view" id="viewReportDetail">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1091,7 +1098,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Bản đồ tất cả cửa hàng ===== -->
     <div class="view" id="viewListMap">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1118,7 +1125,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Bản đồ dẫn đường ===== -->
     <div class="view" id="viewMap">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1145,7 +1152,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Thông tin đơn (Bước 1) ===== -->
     <div class="view" id="viewInfo">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1211,7 +1218,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Chụp ảnh (Bước 2) ===== -->
     <div class="view" id="viewPhoto">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="info"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1264,7 +1271,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Thanh toán (Bước 3) ===== -->
     <div class="view" id="viewPayment">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="photo"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
@@ -1329,7 +1336,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
     <!-- ===== VIEW: Hoàn tất ===== -->
     <div class="view" id="viewDone">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
+      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
