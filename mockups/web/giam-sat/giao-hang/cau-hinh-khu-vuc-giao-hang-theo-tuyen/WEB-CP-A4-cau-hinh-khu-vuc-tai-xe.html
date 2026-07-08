@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
@@ -14,7 +14,7 @@
     --info-50: #F0F9FF; --info-100: #E0F2FE; --info-700: #0369A1;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif); background: var(--neutral-100); min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; background: var(--neutral-100); min-height: 100vh; }
 .app { display: flex; min-height: 100vh; }
 .main { flex: 1; background: var(--neutral-50); overflow-y: auto; }
 
@@ -61,7 +61,7 @@ body { font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe U
 .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
 .toggle-slider { position: absolute; inset: 0; cursor: pointer; background: var(--neutral-300); border-radius: 999px; transition: background 0.2s; }
 .toggle-slider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-.toggle-switch input:checked + .toggle-slider { background: var(--success-700); }
+.toggle-switch input:checked + .toggle-slider { background: var(--primary-500); }
 .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
 .table-container { background: white; border: 1px solid var(--neutral-200); border-radius: 8px; overflow: hidden; }
 
@@ -266,55 +266,118 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
     .driver-summary { grid-template-columns: 1fr 1fr; }
 }
 </style>
+<link rel="stylesheet" href="../../../_shared/portal-tokens.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-fonts.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-components.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-mockup-bridge.css"/>
 </head>
 <body class="portal-page" data-portal-base="../../../">
 <div id="portal-chrome-root"></div>
 <div class="portal-page-body">
 
-
 <div class="app">
   <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">Giám sát / Giao hàng / Cấu hình khu vực giao hàng theo tuyến</div>
-      <div class="topbar-actions">
-        <span class="company-badge">Finviet</span>
-        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
-      </div>
-    </div>
+    <div class="page" style="padding:20px 28px 40px;">
+      <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+        <a href="../../../main.html">Giám sát</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <a href="#">Giao hàng</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <span class="portal-breadcrumb__current">Cấu hình khu vực giao hàng theo tuyến</span>
+      </nav>
+      <h1 class="portal-page-title">Cấu hình khu vực giao hàng theo Tuyến giao hàng</h1>
 
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Cấu hình khu vực giao hàng theo Tuyến giao hàng</div>
-        </div>
-      </div>
-
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field"><div class="filter-label">* Công ty</div><select class="filter-select" id="filterCompany"><option selected>Công ty TNHH NPP HCM</option><option>Công ty TNHH NPP Bình Dương</option></select></div>
-          <div class="filter-field" style="flex:1.5;"><div class="filter-label">Tìm kiếm</div><input class="filter-search" id="filterSearch" placeholder="Mã tuyến, tên tuyến, tài xế, phường, đường..." type="text"/></div>
-          <div class="filter-field"><div class="filter-label">Trạng thái tuyến</div><select class="filter-select" id="filterStatus"><option value="">Tất cả</option><option value="active">Đang hoạt động</option><option value="inactive">Ngưng</option></select></div>
-          <div class="filter-field"><div class="filter-label">Gán tài xế</div><select class="filter-select" id="filterDriverStatus"><option value="">Tất cả</option><option value="has">Đã gán</option><option value="none">Chưa gán</option></select></div>
-        </div>
-        <div class="filter-row">
-          <div class="filter-field"><div class="filter-label">Vùng</div><select class="filter-select" id="filterRegion"><option value="">Tất cả vùng</option></select></div>
-          <div class="filter-field"><div class="filter-label">Khu vực</div><select class="filter-select" id="filterArea" disabled><option value="">Tất cả khu vực</option></select></div>
-          <div class="filter-field"><div class="filter-label">Tỉnh / TP</div><select class="filter-select" id="filterProvince" disabled><option value="">Tất cả tỉnh/TP</option></select></div>
-          <div class="filter-field"><div class="filter-label">Phường / Xã</div><select class="filter-select" id="filterWard" disabled><option value="">Tất cả phường/xã</option></select></div>
-          <div class="filter-actions"><button class="btn btn-secondary" id="btnRefresh" type="button">Làm mới</button><button class="btn btn-primary" id="btnSearch" type="button">Tìm kiếm</button></div>
-        </div>
-      </div>
-
-      <div class="list-section">
-        <div class="list-section-header">
-          <div class="list-section-title" id="listTitle">Danh sách tuyến giao hàng (4)</div>
-          <div class="list-section-actions">
-            <button class="btn btn-secondary" type="button">📤 Export</button>
-            <button class="btn btn-primary" id="btnAssignArea" type="button">Tạo tuyến</button>
+      <div class="portal-card portal-query-filter">
+        <div class="portal-card__hd">Tìm kiếm theo</div>
+        <div class="portal-card__bd">
+          <div class="portal-filter-grid portal-filter-grid--4">
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterCompany">* Công ty</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterCompany">
+                  <option selected>Công ty TNHH NPP HCM</option>
+                  <option>Công ty TNHH NPP Bình Dương</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field portal-field--span-2">
+              <label class="portal-field__label" for="filterSearch">Tìm kiếm</label>
+              <div class="portal-field__control portal-input-search-wrap">
+                <input class="portal-input filter-search" id="filterSearch" placeholder="Mã tuyến, tên tuyến, tài xế, phường, đường..." type="text"/>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterStatus">Trạng thái tuyến</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterStatus">
+                  <option value="">Tất cả</option>
+                  <option value="active">Đang hoạt động</option>
+                  <option value="inactive">Ngưng</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterDriverStatus">Gán tài xế</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterDriverStatus">
+                  <option value="">Tất cả</option>
+                  <option value="has">Đã gán</option>
+                  <option value="none">Chưa gán</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterRegion">Vùng</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterRegion">
+                  <option value="">Tất cả vùng</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterArea">Khu vực</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterArea" disabled>
+                  <option value="">Tất cả khu vực</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterProvince">Tỉnh / TP</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterProvince" disabled>
+                  <option value="">Tất cả tỉnh/TP</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterWard">Phường / Xã</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterWard" disabled>
+                  <option value="">Tất cả phường/xã</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="portal-query-actions">
+            <div class="portal-query-actions__inner">
+              <button class="portal-btn portal-btn--default btn btn-secondary" id="btnRefresh" type="button">Làm mới</button>
+              <button class="portal-btn portal-btn--primary btn btn-primary" id="btnSearch" type="button">Tìm kiếm</button>
+            </div>
           </div>
         </div>
+      </div>
 
+      <div class="portal-card portal-protable list-section">
+        <div class="portal-protable__list-hd">
+          <h2 class="portal-protable__list-title list-section-title" id="listTitle">Danh sách tuyến giao hàng (4)</h2>
+          <div class="portal-protable__list-actions list-section-actions">
+            <button class="portal-btn portal-btn--default btn btn-secondary" type="button">📤 Export</button>
+            <button class="portal-btn portal-btn--primary btn btn-primary" id="btnAssignArea" type="button">Tạo tuyến</button>
+          </div>
+        </div>
+        <div class="portal-card__bd">
         <div class="table-container">
           <div style="overflow-x:auto;">
             <table><thead><tr>
@@ -331,6 +394,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
           <div class="pagination"><span id="paginationInfo">Hiển thị <strong>1–4</strong> / tổng <strong>4</strong></span>
             <div class="pagination-controls"><button class="page-btn" type="button">‹</button><button class="page-btn active" type="button">1</button><button class="page-btn" type="button">›</button></div>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -1404,4 +1468,3 @@ bindTreeMultiSelect(checkedLeft, renderBothTrees);
 </div><!-- /portal-page-body -->
 </body>
 </html>
-
