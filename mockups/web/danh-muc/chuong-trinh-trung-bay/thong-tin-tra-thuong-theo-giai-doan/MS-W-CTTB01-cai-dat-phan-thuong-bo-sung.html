@@ -617,8 +617,11 @@ td.actions { text-align: right; white-space: nowrap; }
 /* hint (ẩn) */
 .hint { display: none; }
 </style>
+<link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
 </head>
-<body>
+<body class="portal-page has-portal-switcher" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
 
 <!-- ======= SWITCHER BAR ======= -->
 <div class="switcher">
@@ -1539,10 +1542,13 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
         <div class="filter-row">
           <div class="filter-field">
             <div class="filter-label">Ngày tạo</div>
-            <div style="display:flex;gap:4px;align-items:center;">
-              <input class="filter-input" placeholder="Từ ngày" type="text"/>
-              <span style="font-size:12px;color:var(--neutral-500);">→</span>
-              <input class="filter-input" placeholder="Đến ngày" type="text"/>
+            <div class="portal-date-range filter-date-range">
+              <div class="portal-date-range__inner">
+                <input class="portal-date-range__input filter-input" type="text" placeholder="Từ ngày"/>
+                <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                <input class="portal-date-range__input filter-input" type="text" placeholder="Đến ngày"/>
+              </div>
+              <span class="portal-date-range__icon" aria-hidden="true"></span>
             </div>
           </div>
           <div class="filter-field">
@@ -1567,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
             <table>
               <thead>
                 <tr>
-                  <th style="width:36px;"><input type="checkbox"/></th>
+                  <th class="col-check"><input type="checkbox"/></th>
                   <th class="sortable">Mã ↕</th>
                   <th class="sortable">Tên ↕</th>
                   <th>Trạng thái</th>
@@ -1697,7 +1703,7 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
           <table>
             <thead>
               <tr>
-                <th style="width:36px;"><input disabled type="checkbox"/></th>
+                <th class="col-check"><input disabled type="checkbox"/></th>
                 <th>Mã</th>
                 <th>Tên</th>
                 <th>Trạng thái</th>
@@ -1787,6 +1793,10 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 </div><!-- /sw3 -->
 
 </template>
+</div><!-- /portal-page-body -->
+<script src="../../../../menu-tree.js"></script>
+<script src="../../../../_shared/portal-menu.js"></script>
+<script src="../../../../_shared/portal-chrome.js"></script>
 </body>
 </html>
 

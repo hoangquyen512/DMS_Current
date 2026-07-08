@@ -617,8 +617,11 @@ td.actions { text-align: right; white-space: nowrap; }
 /* hint (ẩn) */
 .hint { display: none; }
 </style>
+<link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
 </head>
-<body>
+<body class="portal-page has-portal-switcher" data-portal-base="../../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
 
 <div class="switcher">
   <span class="switcher-label">MS-W-CTTB02</span>
@@ -837,6 +840,10 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 </div>
 </div>
 
+</div><!-- /portal-page-body -->
+<script src="../../../../menu-tree.js"></script>
+<script src="../../../../_shared/portal-menu.js"></script>
+<script src="../../../../_shared/portal-chrome.js"></script>
 </body>
 </html>
 
