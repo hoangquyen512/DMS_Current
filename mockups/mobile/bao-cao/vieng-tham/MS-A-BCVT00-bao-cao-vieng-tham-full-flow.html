@@ -13,6 +13,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 .status-bar{background:var(--primary-500);color:#fff}
+.status-bar.status-bar--primary .status-portal-link{color:rgba(255,255,255,.95)}
 .app-header{background:var(--primary-500);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:56px;flex-shrink:0}
 .app-header .back{width:28px;font-size:22px;cursor:pointer;border:none;background:transparent;color:#fff;line-height:1}
 .app-header .htitle{flex:1;text-align:center}
@@ -90,7 +91,7 @@
 
 <div class="phone">
   <div class="phone-screen">
-    <div class="status-bar"><span>15:15</span><span>📶 🔋 80%</span></div>
+    <div class="status-bar status-bar--primary"><span>15:15</span><span class="status-icons"><a class="status-portal-link" href="../../../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal">🌐</a><span>📶 🔋 80%</span></span></div>
 
     <!-- 1. DASHBOARD -->
     <div class="screen active" id="scr-dashboard">
