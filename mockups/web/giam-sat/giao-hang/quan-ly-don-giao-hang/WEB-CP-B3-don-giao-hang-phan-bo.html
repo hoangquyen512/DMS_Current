@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[WEB] Quản lý đơn giao hàng — Danh sách &amp; Phân bổ</title>
+<style>
+:root {
+    --primary-50: #EFF6FF;
+    --primary-100: #DBEAFE;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --primary-700: #1D4ED8;
+    --neutral-0: #FFFFFF;
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-500: #6B7280;
+    --neutral-700: #374151;
+    --neutral-900: #111827;
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-700: #047857;
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-700: #B45309;
+    --error-50: #FEF2F2;
+    --error-500: #EF4444;
+    --error-700: #B91C1C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--neutral-100);
+    min-height: 100vh;
+}
+
+.app { display: flex; min-height: 100vh; }
+.sidebar { display: none; }
+.main { flex: 1; background: var(--neutral-50); overflow-y: auto; position: relative; }
+
+.topbar {
+    background: white;
+    padding: 10px 28px;
+    border-bottom: 1px solid var(--neutral-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.breadcrumb { font-size: 13px; color: var(--neutral-500); }
+.breadcrumb a { color: var(--primary-500); text-decoration: none; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); }
+.avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 600; font-size: 11px;
+}
+
+.page { padding: 20px 28px 40px; }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.page-title { font-size: 22px; font-weight: 700; color: var(--neutral-900); }
+.page-subtitle { font-size: 12px; color: var(--neutral-500); margin-top: 3px; }
+
+.btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-primary { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: white; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-secondary:hover { background: var(--neutral-50); }
+.btn-text { background: transparent; color: var(--primary-500); border: none; padding: 4px 8px; }
+.btn-text:hover { background: var(--primary-50); border-radius: 4px; }
+.btn-text:disabled { color: var(--neutral-300); cursor: not-allowed; }
+.btn-danger { background: white; color: var(--error-700); border-color: #fecaca; }
+.btn-danger:hover { background: var(--error-50); }
+.btn-text-danger { background: transparent; color: var(--error-600, var(--error-700)); border: none; padding: 4px 8px; }
+.btn-text-danger:hover { background: var(--error-50); border-radius: 4px; }
+
+.modal-note.warning { background: var(--warning-50); border: 1px solid #fde68a; color: var(--warning-700); }
+.modal-note.error { background: var(--error-50); border: 1px solid #fecaca; color: var(--error-700); }
+
+.row-actions { display: inline-flex; gap: 4px; flex-wrap: nowrap; justify-content: flex-end; }
+
+.status-tabs {
+    display: flex;
+    gap: 0;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+}
+
+.status-tab {
+    padding: 12px 0;
+    margin-right: 24px;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--neutral-700);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.status-tab:hover { color: var(--primary-600); }
+.status-tab.active {
+    color: var(--primary-600);
+    border-bottom-color: var(--primary-500);
+    font-weight: 600;
+    background: transparent;
+}
+
+.status-tab .tab-count {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+}
+
+.status-tab.active .tab-count { background: transparent; color: inherit; }
+
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.stat-card:hover { border-color: var(--primary-300); }
+.stat-card.active { border-color: var(--primary-500); background: var(--primary-50); }
+
+.stat-card-label { font-size: 11px; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-card-value { font-size: 20px; font-weight: 700; color: var(--neutral-900); margin-top: 4px; }
+.stat-card-value.warning { color: var(--warning-700); }
+
+.filter-card {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.filter-row:last-child { margin-bottom: 0; }
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select, .filter-input {
+    padding: 6px 10px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--neutral-700);
+    background: white;
+    width: 100%;
+}
+
+.filter-select {
+    padding-right: 28px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+.filter-search {
+    padding: 7px 12px 7px 34px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 10px center;
+    color: var(--neutral-700);
+    width: 100%;
+}
+
+.filter-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.filter-active-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--primary-700);
+    background: var(--primary-50);
+    border: 1px solid var(--primary-100);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-top: 6px;
+}
+
+.bulk-bar {
+    display: none;
+}
+
+.range-calendar-popup {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 50;
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 12px;
+    min-width: 280px;
+}
+
+.range-calendar-popup.open { display: block; }
+
+.range-calendar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.range-calendar-head button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--neutral-700);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.range-calendar-head button:hover { background: var(--neutral-100); }
+
+.range-calendar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--neutral-900);
+}
+
+.range-calendar-weekdays,
+.range-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.range-calendar-weekdays span {
+    font-size: 11px;
+    color: var(--neutral-500);
+    text-align: center;
+    padding: 4px 0;
+}
+
+.range-calendar-day {
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    padding: 6px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--neutral-700);
+}
+
+.range-calendar-day:hover { background: var(--primary-50); }
+
+.range-calendar-day.is-other { color: var(--neutral-300); }
+
+.range-calendar-day.is-start,
+.range-calendar-day.is-end {
+    background: var(--primary-500);
+    color: white;
+}
+
+.range-calendar-day.in-range { background: var(--primary-50); color: var(--primary-700); }
+
+.range-calendar-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--neutral-100);
+}
+
+.filter-delivery-date-wrap { position: relative; }
+
+.bulk-count { font-size: 13px; font-weight: 600; color: var(--primary-700); }
+.bulk-meta { font-size: 12px; color: var(--neutral-500); }
+.bulk-actions { display: flex; gap: 8px; margin-left: auto; }
+
+.list-section {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.list-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.list-section-header__left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.selection-summary {
+    font-size: 12px;
+    color: var(--primary-700);
+    font-weight: 500;
+}
+
+.selection-summary.is-hidden {
+    display: none;
+}
+
+.list-section-title { font-size: 15px; font-weight: 700; color: var(--neutral-900); margin: 0; }
+.list-section-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+
+.table-container {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--neutral-50); }
+
+th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    border-bottom: 1px solid var(--neutral-200);
+    white-space: nowrap;
+}
+
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--primary-500); }
+
+td {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--neutral-900);
+    border-bottom: 1px solid var(--neutral-100);
+    vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafbfc; }
+tr.selected td { background: var(--primary-50); }
+tr.hidden { display: none; }
+
+td.code {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 12px;
+    color: var(--primary-600);
+}
+
+td.code .copy-icon {
+    cursor: pointer;
+    color: var(--neutral-300);
+    margin-left: 4px;
+    font-size: 11px;
+}
+td.code .copy-icon:hover { color: var(--primary-500); }
+
+td.muted { color: var(--neutral-500); font-size: 12px; }
+td.money { font-weight: 600; text-align: right; white-space: nowrap; }
+td.actions { text-align: right; white-space: nowrap; }
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-pending { background: var(--warning-50); color: var(--warning-700); border: 1px solid #fde68a; }
+.badge-assigned { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-delivering { background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; }
+.badge-completed { background: var(--success-50); color: var(--success-700); border: 1px solid #a7f3d0; }
+.badge-failed { background: var(--error-50); color: var(--error-700); border: 1px solid #fecaca; }
+.badge-cancelled { background: var(--neutral-100); color: var(--neutral-700); border: 1px solid var(--neutral-300); }
+.badge-pay-unpaid { background: var(--warning-50); color: var(--warning-700); border: 1px solid #fde68a; }
+.badge-pay-paid { background: var(--success-50); color: #047857; border: 1px solid #a7f3d0; }
+.badge-pay-method { background: var(--neutral-50); color: var(--neutral-700); border: 1px solid var(--neutral-200); }
+.badge-source-ecom { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
+.badge-source-dms { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+.badge-source-merchant { background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8; }
+.badge-source-ocr { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+
+.company-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-700);
+    background: var(--primary-50);
+    border: 1px solid var(--primary-100);
+    border-radius: 6px;
+    padding: 4px 10px;
+}
+
+.cell-link {
+    color: var(--primary-600);
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+.cell-link:hover { text-decoration: underline; }
+
+.driver-cell { font-size: 12px; color: var(--neutral-700); }
+.driver-cell.empty, .driver-name.empty, .driver-code.empty { color: var(--neutral-300); font-style: italic; }
+.driver-name { font-size: 13px; color: var(--neutral-700); }
+
+.pagination {
+    padding: 12px 16px;
+    border-top: 1px solid var(--neutral-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--neutral-500);
+}
+
+.pagination-controls { display: flex; gap: 4px; align-items: center; }
+.page-btn {
+    width: 28px; height: 28px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--neutral-700);
+}
+.page-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.page-select { padding: 4px 8px; border: 1px solid var(--neutral-200); border-radius: 5px; font-size: 12px; margin-left: 8px; }
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+    background: white;
+    border-radius: 10px;
+    width: 560px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--neutral-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); }
+.modal-close { cursor: pointer; color: var(--neutral-500); font-size: 18px; padding: 4px; }
+.modal-close:hover { color: var(--neutral-900); }
+
+.modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
+
+.modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--neutral-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--neutral-50);
+}
+
+.confirm-info-panel {
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+}
+
+.confirm-info-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 6px;
+    align-items: start;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.confirm-info-row:last-child { margin-bottom: 0; }
+.confirm-info-label { color: var(--neutral-500); }
+.confirm-info-value { color: var(--neutral-900); font-weight: 600; }
+
+.form-field { margin-bottom: 16px; }
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--neutral-700);
+    margin-bottom: 5px;
+}
+.form-label .required { color: var(--error-500); margin-right: 2px; }
+
+.form-select {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    appearance: none;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+}
+
+.form-select:focus { outline: none; border-color: var(--primary-500); }
+
+.driver-option-hint {
+    font-size: 11px;
+    color: var(--neutral-500);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-counter { text-align: right; font-size: 11px; color: var(--neutral-500); margin-top: 3px; }
+
+.modal-note {
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+.modal-note.info { background: var(--primary-50); border: 1px solid var(--primary-100); color: var(--primary-700); }
+
+.mini-order-list {
+    border: 1px solid var(--neutral-200);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.mini-order-list table { font-size: 12px; }
+.mini-order-list th { padding: 8px 12px; font-size: 11px; }
+.mini-order-list td { padding: 8px 12px; }
+
+/* —— Popup Gán tài xế / Phân bổ lại —— */
+.assign-modal { width: 600px; }
+.assign-modal__header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--neutral-200);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(180deg, var(--primary-50) 0%, #fff 100%);
+}
+.assign-modal__subtitle {
+    font-size: 12px;
+    color: var(--neutral-500);
+    margin-top: 4px;
+    line-height: 1.45;
+}
+.assign-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.assign-summary__card {
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+.assign-summary__card--money {
+    background: var(--primary-50);
+    border-color: var(--primary-100);
+}
+.assign-summary__label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+}
+.assign-summary__value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--neutral-900);
+    line-height: 1.2;
+}
+.assign-summary__card--money .assign-summary__value {
+    color: var(--primary-700);
+    font-size: 16px;
+}
+.assign-driver-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--success-50);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+}
+.assign-driver-preview.is-hidden { display: none; }
+.assign-driver-preview__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-500);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.assign-driver-preview__main { flex: 1; min-width: 0; }
+.assign-driver-preview__name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--neutral-900);
+}
+.assign-driver-preview__meta {
+    font-size: 12px;
+    color: var(--neutral-600);
+    margin-top: 2px;
+}
+.assign-driver-preview__badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.assign-driver-preview__badge.ready {
+    background: #dcfce7;
+    color: #166534;
+}
+.assign-driver-preview__badge.busy {
+    background: #fef3c7;
+    color: #92400e;
+}
+.assign-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--neutral-700);
+}
+.assign-section-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--neutral-200);
+    color: var(--neutral-700);
+}
+.assign-mini-order-list { margin-bottom: 0; max-height: 180px; }
+.assign-modal__footer {
+    justify-content: flex-end;
+    align-items: center;
+}
+.assign-footer-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--neutral-900);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    max-width: 420px;
+}
+
+.toast.show { display: flex; }
+.toast.success { background: var(--success-700); }
+</style>
+<link rel="stylesheet" href="../../../_shared/portal-tokens.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-fonts.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-components.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-mockup-bridge.css"/>
+</head>
+<body class="portal-page" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+<div class="app">
+  <div class="main" id="mainArea">
+    <div class="page" style="padding:20px 28px 40px;">
+      <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+        <a href="../../../main.html">Giám sát</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <a href="#">Giao hàng</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <span class="portal-breadcrumb__current">Quản lý đơn giao hàng</span>
+      </nav>
+      <h1 class="portal-page-title">Quản lý đơn giao hàng</h1>
+
+      <div class="portal-card portal-query-filter">
+        <div class="portal-card__hd">Tìm kiếm theo</div>
+        <div class="portal-card__bd">
+          <div class="portal-filter-grid portal-filter-grid--4">
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterCompany">Công ty</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterCompany">
+                  <option value="">Tất cả công ty theo phân quyền</option>
+                  <option value="HCM">Công ty TNHH NPP HCM</option>
+                  <option value="BD">Công ty TNHH NPP Bình Dương</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterRegion">Vùng</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterRegion">
+                  <option value="">Chọn vùng</option>
+                  <option value="MN" data-company="HCM">GR8098372 — Miền Nam</option>
+                  <option value="MN" data-company="BD">GR8098372 — Miền Nam</option>
+                  <option value="MB" data-company="HCM">GR8098371 — Miền Bắc</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="filterGroup">Nhóm</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select filter-select" id="filterGroup">
+                  <option value="">Chọn nhóm</option>
+                  <option value="NPP-HCM" data-region="MN" data-company="HCM">Nhóm NPP Miền Nam HCM</option>
+                  <option value="NPP-BD" data-region="MN" data-company="BD">Nhóm NPP Bình Dương</option>
+                  <option value="DEVGR" data-region="MB" data-company="HCM">(KENH_PHAN_PHOI_DEVGR6195980124) — Nhóm Thái test</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field portal-field--span-2">
+              <label class="portal-field__label" for="filterSearch">Tìm kiếm theo</label>
+              <div class="portal-field__control portal-input-search-wrap">
+                <input class="portal-input filter-search" id="filterSearch" placeholder="Nhập mã đơn, tên cửa hàng, SĐT" type="text"/>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msSource">Nguồn đơn</label>
+              <div class="portal-field__control portal-multi-select" id="msSource">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn nguồn đơn</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="Ecom">Ecom</li>
+                  <li class="portal-multi-select__option" data-value="DMS">DMS</li>
+                  <li class="portal-multi-select__option" data-value="Merchant App">Merchant App</li>
+                  <li class="portal-multi-select__option" data-value="OCR">OCR</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterSource" multiple hidden>
+                  <option value="Ecom">Ecom</option>
+                  <option value="DMS">DMS</option>
+                  <option value="Merchant App">Merchant App</option>
+                  <option value="OCR">OCR</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msDeliveryStatus">Trạng thái giao hàng</label>
+              <div class="portal-field__control portal-multi-select" id="msDeliveryStatus">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn trạng thái giao hàng</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="pending">Chờ phân bổ</li>
+                  <li class="portal-multi-select__option" data-value="assigned">Chưa giao</li>
+                  <li class="portal-multi-select__option" data-value="delivering">Đang giao</li>
+                  <li class="portal-multi-select__option" data-value="completed">Hoàn thành</li>
+                  <li class="portal-multi-select__option" data-value="failed">Thất bại</li>
+                  <li class="portal-multi-select__option" data-value="cancelled">Đã hủy</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterDeliveryStatus" multiple hidden>
+                  <option value="pending">Chờ phân bổ</option>
+                  <option value="assigned">Chưa giao</option>
+                  <option value="delivering">Đang giao</option>
+                  <option value="completed">Hoàn thành</option>
+                  <option value="failed">Thất bại</option>
+                  <option value="cancelled">Đã hủy</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field portal-field--span-2">
+              <label class="portal-field__label">Ngày thực tế giao hàng</label>
+              <div class="portal-field__control portal-date-range filter-delivery-date-wrap" id="filterDeliveryDateWrap">
+                <div class="portal-date-range__inner" id="filterDeliveryDateTrigger">
+                  <input class="portal-date-range__input filter-input" id="filterDeliveryDateFrom" placeholder="Từ ngày" type="text" value="" readonly aria-label="Từ ngày"/>
+                  <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                  <input class="portal-date-range__input filter-input" id="filterDeliveryDateTo" placeholder="Đến ngày" type="text" value="" readonly aria-label="Đến ngày"/>
+                </div>
+                <span class="portal-date-range__icon" aria-hidden="true"></span>
+                <div class="range-calendar-popup" id="deliveryDatePopup">
+                  <div class="range-calendar-head">
+                    <button id="calPrevMonth" type="button" aria-label="Tháng trước">‹</button>
+                    <span class="range-calendar-title" id="calMonthTitle">Tháng 6 / 2026</span>
+                    <button id="calNextMonth" type="button" aria-label="Tháng sau">›</button>
+                  </div>
+                  <div class="range-calendar-weekdays">
+                    <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+                  </div>
+                  <div class="range-calendar-days" id="calDaysGrid"></div>
+                  <div class="range-calendar-foot">
+                    <button class="btn btn-secondary" id="calClear" type="button">Xóa</button>
+                    <button class="btn btn-primary" id="calApply" type="button">Áp dụng</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msNpp">Nhà phân phối</label>
+              <div class="portal-field__control portal-multi-select" id="msNpp">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn nhà phân phối</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</li>
+                  <li class="portal-multi-select__option" data-value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</li>
+                  <li class="portal-multi-select__option" data-value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterNpp" multiple hidden>
+                  <option value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</option>
+                  <option value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</option>
+                  <option value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msSalesRep">Nhân viên bán hàng</label>
+              <div class="portal-field__control portal-multi-select" id="msSalesRep">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn nhân viên bán hàng</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="SR-001">SR-001 — Trần Văn Bình</li>
+                  <li class="portal-multi-select__option" data-value="SR-002">SR-002 — Lê Thị Hoa</li>
+                  <li class="portal-multi-select__option" data-value="SR-003">SR-003 — Phạm Minh Tuấn</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterSalesRep" multiple hidden>
+                  <option value="SR-001">SR-001 — Trần Văn Bình</option>
+                  <option value="SR-002">SR-002 — Lê Thị Hoa</option>
+                  <option value="SR-003">SR-003 — Phạm Minh Tuấn</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msDriver">Tài xế</label>
+              <div class="portal-field__control portal-multi-select" id="msDriver">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn tài xế</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="TX-001" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-001 — Nguyễn Văn Tài (Đang hoạt động)</li>
+                  <li class="portal-multi-select__option" data-value="TX-002" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-002 — Trần Minh Đức (Đang hoạt động)</li>
+                  <li class="portal-multi-select__option" data-value="TX-003" data-company="BD" data-region="MN" data-group="NPP-BD">TX-003 — Lê Hoàng Nam (Đang hoạt động)</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterDriver" multiple hidden>
+                  <option value="TX-001" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-001 — Nguyễn Văn Tài (Đang hoạt động)</option>
+                  <option value="TX-002" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-002 — Trần Minh Đức (Đang hoạt động)</option>
+                  <option value="TX-003" data-company="BD" data-region="MN" data-group="NPP-BD">TX-003 — Lê Hoàng Nam (Đang hoạt động)</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msPaymentStatus">Trạng thái thanh toán</label>
+              <div class="portal-field__control portal-multi-select" id="msPaymentStatus">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn trạng thái thanh toán</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="unpaid">Chưa thanh toán</li>
+                  <li class="portal-multi-select__option" data-value="paid">Đã thanh toán</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterPaymentStatus" multiple hidden>
+                  <option value="unpaid">Chưa thanh toán</option>
+                  <option value="paid">Đã thanh toán</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field">
+              <label class="portal-field__label" for="msPaymentMethod">Phương thức thanh toán</label>
+              <div class="portal-field__control portal-multi-select" id="msPaymentMethod">
+                <div class="portal-multi-select__inner portal-multi-select__tags">
+                  <span class="portal-multi-select__placeholder">Chọn phương thức thanh toán</span>
+                </div>
+                <span class="portal-multi-select__arrow"></span>
+                <ul class="portal-multi-select__dropdown">
+                  <li class="portal-multi-select__option" data-value="qrcode">QRCode</li>
+                  <li class="portal-multi-select__option" data-value="cash">Tiền mặt</li>
+                  <li class="portal-multi-select__option" data-value="transfer">Chuyển khoản</li>
+                  <li class="portal-multi-select__option" data-value="debt">Công nợ</li>
+                  <li class="portal-multi-select__option" data-value="mixed">Thanh toán kết hợp</li>
+                </ul>
+                <select class="portal-multi-select__hidden" id="filterPaymentMethod" multiple hidden>
+                  <option value="qrcode">QRCode</option>
+                  <option value="cash">Tiền mặt</option>
+                  <option value="transfer">Chuyển khoản</option>
+                  <option value="debt">Công nợ</option>
+                  <option value="mixed">Thanh toán kết hợp</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="portal-query-actions">
+            <div class="portal-query-actions__inner">
+              <button class="portal-btn portal-btn--default btn btn-secondary" id="btnRefresh" type="button">Làm mới</button>
+              <button class="portal-btn portal-btn--primary btn btn-primary" id="btnSearch" type="button">Tìm kiếm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="portal-card portal-protable list-section">
+        <div class="portal-protable__toolbar">
+          <div class="status-tabs portal-tabs portal-tabs--line" id="statusTabs">
+            <button class="status-tab portal-tabs__item portal-tabs__item--active active" data-status="all" type="button">
+              Tất cả <span class="tab-count portal-tabs__count" id="count-all">9</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="pending" type="button">
+              ⏳ Chờ phân bổ <span class="tab-count portal-tabs__count" id="count-pending">3</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="assigned" type="button">
+              📋 Chưa giao <span class="tab-count portal-tabs__count" id="count-assigned">2</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="delivering" type="button">
+              🚚 Đang giao <span class="tab-count portal-tabs__count" id="count-delivering">1</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="completed" type="button">
+              ✓ Hoàn thành <span class="tab-count portal-tabs__count" id="count-completed">1</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="failed" type="button">
+              ✕ Thất bại <span class="tab-count portal-tabs__count" id="count-failed">1</span>
+            </button>
+            <button class="status-tab portal-tabs__item" data-status="cancelled" type="button">
+              🚫 Đã hủy <span class="tab-count portal-tabs__count" id="count-cancelled">1</span>
+            </button>
+          </div>
+        </div>
+        <div class="portal-protable__list-hd list-section-header">
+          <div class="list-section-header__left">
+            <h2 class="portal-protable__list-title list-section-title" id="listTitle">Danh sách đơn giao hàng (9)</h2>
+            <span class="selection-summary is-hidden" id="selectionSummary"></span>
+          </div>
+          <div class="list-section-actions">
+            <button class="btn btn-danger" disabled id="btnBulkCancel" type="button">🚫 Hủy đơn</button>
+            <button class="btn btn-primary" disabled id="btnBulkChangeDriver" type="button">🔄 Đổi tài xế</button>
+            <button class="btn btn-primary" id="btnBulkReassign" style="display:none;" type="button">🚚 Phân bổ lại</button>
+            <button class="btn btn-primary" disabled id="btnBulkAssign" type="button">🚚 Gán Tài xế</button>
+            <button class="btn btn-secondary" id="btnExport" type="button">📥 Export Excel</button>
+          </div>
+        </div>
+        <div class="portal-card__bd">
+        <div class="table-container">
+          <div style="overflow-x:auto;">
+            <table id="orderTable">
+              <thead>
+                <tr>
+                  <th style="width:36px;"><input id="checkAll" type="checkbox" title="Chọn tất cả đơn có thể thao tác"/></th>
+                  <th class="sortable">Mã đơn giao hàng ↕</th>
+                  <th class="sortable">Mã đơn bán ↕</th>
+                  <th class="sortable">Mã PXK/HĐ ↕</th>
+                  <th class="sortable">Mã cửa hàng ↕</th>
+                  <th class="sortable">Cửa hàng ↕</th>
+                  <th>Địa chỉ giao hàng</th>
+                  <th class="sortable" style="text-align:right;">Tổng tiền ↕</th>
+                  <th>Nguồn đơn hàng</th>
+                  <th>Trạng thái</th>
+                  <th>Phương thức thanh toán</th>
+                  <th>Trạng thái thanh toán</th>
+                  <th>Mã tài xế</th>
+                  <th>Tài xế</th>
+                  <th class="sortable">Ngày gán tài xế ↕</th>
+                  <th class="sortable">Ngày thực tế giao hàng ↕</th>
+                  <th>Nhân viên bán hàng</th>
+                  <th>Tuyến bán hàng</th>
+                  <th class="sortable">Ngày tạo ↓</th>
+                  <th style="text-align:right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="orderBody">
+                <tr data-id="1" data-status="pending" data-amount="2450000" data-source="Ecom" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q1" data-zone="VUNG-Q1-A" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q1-01" data-search="DLO-20260615-0042 SO-ECOM-88921 CH Minh Phát">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0042 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-ECOM-88921 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-MP-001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">CH Minh Phát — Q.1</a></td>
+                  <td class="muted">12 Nguyễn Huệ, P.Bến Nghé, Q.1, TP.HCM</td>
+                  <td class="money">2.450.000</td>
+                  <td><span class="badge badge-source-ecom">Ecom</span></td>
+                  <td><span class="badge badge-pending status-badge">⏳ Chờ phân bổ</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code empty">—</td>
+                  <td class="driver-name empty">—</td>
+                  <td class="muted assign-date">—</td>
+                  <td class="muted delivery-date">15-06-2026</td>
+                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
+                  <td class="muted sales-route">TUY-Q1-01</td>
+                  <td class="muted">15-06-2026 08:30:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-assign-one" type="button">Gán ngay</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="2" data-status="pending" data-amount="890000" data-source="Merchant App" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q9" data-zone="VUNG-Q9-C" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-002" data-sales-route="TUY-Q9-03" data-search="DLO-20260615-0041 SO-APP-77210 Tạp hóa Hoa Mai">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260615-0041 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-APP-77210 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-HM-002 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Tạp hóa Hoa Mai</a></td>
+                  <td class="muted">45 Lê Văn Việt, P.Tăng Nhơn Phú A, Q.9</td>
+                  <td class="money">890.000</td>
+                  <td><span class="badge badge-source-merchant">Merchant App</span></td>
+                  <td><span class="badge badge-pending status-badge">⏳ Chờ phân bổ</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code empty">—</td>
+                  <td class="driver-name empty">—</td>
+                  <td class="muted assign-date">—</td>
+                  <td class="muted delivery-date">15-06-2026</td>
+                  <td class="muted sales-rep">SR-002 — Lê Thị Hoa</td>
+                  <td class="muted sales-route">TUY-Q9-03</td>
+                  <td class="muted">15-06-2026 07:45:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-assign-one" type="button">Gán ngay</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="3" data-status="pending" data-amount="5120000" data-source="OCR" data-company="BD" data-region="MN" data-group="NPP-BD" data-area="Q7" data-zone="VUNG-Q7-B" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-02" data-salesrep="SR-003" data-sales-route="TUY-Q7-02" data-search="DLO-20260614-0038 PXK-55102 Siêu thị Việt An">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0038 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">PXK-55102 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">CH-VA-003 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Siêu thị Việt An</a></td>
+                  <td class="muted">88 Nguyễn Văn Linh, Q.7, TP.HCM</td>
+                  <td class="money">5.120.000</td>
+                  <td><span class="badge badge-source-ocr">OCR</span></td>
+                  <td><span class="badge badge-pending status-badge">⏳ Chờ phân bổ</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code empty">—</td>
+                  <td class="driver-name empty">—</td>
+                  <td class="muted assign-date">—</td>
+                  <td class="muted delivery-date">16-06-2026</td>
+                  <td class="muted sales-rep">SR-003 — Phạm Minh Tuấn</td>
+                  <td class="muted sales-route">TUY-Q7-02</td>
+                  <td class="muted">14-06-2026 16:20:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-assign-one" type="button">Gán ngay</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="4" data-status="assigned" data-amount="1200000" data-source="DMS" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q3" data-zone="VUNG-Q1-A" data-driver="TX-001" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q3-01" data-search="DLO-20260614-0035 SO-DMS-88900 Cửa hàng Bình An">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0035 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-DMS-88900 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-BA-004 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Cửa hàng Bình An</a></td>
+                  <td class="muted">22 Cách Mạng Tháng 8, Q.3</td>
+                  <td class="money">1.200.000</td>
+                  <td><span class="badge badge-source-dms">DMS</span></td>
+                  <td><span class="badge badge-assigned status-badge">📋 Chưa giao</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code">TX-001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="driver-name">Nguyễn Văn Tài</td>
+                  <td class="muted assign-date">14-06-2026 14:15:00</td>
+                  <td class="muted delivery-date">15-06-2026</td>
+                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
+                  <td class="muted sales-route">TUY-Q3-01</td>
+                  <td class="muted">14-06-2026 14:10:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-change-one" type="button">Đổi tài xế</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="5" data-status="assigned" data-amount="780000" data-source="Merchant App" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q7" data-zone="VUNG-Q7-B" data-driver="TX-002" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-002" data-sales-route="TUY-Q7-02" data-search="DLO-20260614-0032 SO-MA-77100 Mart Gia Định">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260614-0032 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-MA-77100 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-GD-005 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Mart Gia Định</a></td>
+                  <td class="muted">15 Phan Xích Long, Q.Phú Nhuận</td>
+                  <td class="money">780.000</td>
+                  <td><span class="badge badge-source-merchant">Merchant App</span></td>
+                  <td><span class="badge badge-assigned status-badge">📋 Chưa giao</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code">TX-002 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="driver-name">Trần Minh Đức</td>
+                  <td class="muted assign-date">14-06-2026 11:05:00</td>
+                  <td class="muted delivery-date">15-06-2026</td>
+                  <td class="muted sales-rep">SR-002 — Lê Thị Hoa</td>
+                  <td class="muted sales-route">TUY-Q7-02</td>
+                  <td class="muted">14-06-2026 11:00:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-change-one" type="button">Đổi tài xế</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="6" data-status="delivering" data-amount="3200000" data-source="Ecom" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q1" data-zone="VUNG-Q1-A" data-driver="TX-001" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q1-01" data-search="DLO-20260613-0028 SO-ECOM-88800 Siêu thị Thành Công">
+                  <td><input class="row-check" disabled type="checkbox"/></td>
+                  <td class="code">DLO-20260613-0028 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-ECOM-88800 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-TC-006 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Siêu thị Thành Công</a></td>
+                  <td class="muted">5 Nguyễn Thị Minh Khai, Q.1</td>
+                  <td class="money">3.200.000</td>
+                  <td><span class="badge badge-source-ecom">Ecom</span></td>
+                  <td><span class="badge badge-delivering status-badge">🚚 Đang giao</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code">TX-001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="driver-name">Nguyễn Văn Tài</td>
+                  <td class="muted assign-date">13-06-2026 09:00:00</td>
+                  <td class="muted delivery-date">14-06-2026</td>
+                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
+                  <td class="muted sales-route">TUY-Q1-01</td>
+                  <td class="muted">13-06-2026 09:15:00</td>
+                  <td class="actions"><button class="btn btn-text" disabled type="button">—</button></td>
+                </tr>
+                <tr data-id="7" data-status="completed" data-amount="1560000" data-source="Ecom" data-company="BD" data-region="MN" data-group="NPP-BD" data-area="Q7" data-zone="VUNG-Q7-B" data-driver="TX-003" data-payment="paid" data-payment-method="qrcode" data-npp="NPP-HCM-02" data-salesrep="SR-003" data-sales-route="TUY-Q7-02" data-search="DLO-20260612-0020 SO-ECOM-88700 CH Phúc Lộc QRCode">
+                  <td><input class="row-check" disabled type="checkbox"/></td>
+                  <td class="code">DLO-20260612-0020 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-ECOM-88700 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-PL-007 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">CH Phúc Lộc</a></td>
+                  <td class="muted">120 Huỳnh Tấn Phát, Q.7</td>
+                  <td class="money">1.560.000</td>
+                  <td><span class="badge badge-source-ecom">Ecom</span></td>
+                  <td><span class="badge badge-completed status-badge">✓ Hoàn thành</span></td>
+                  <td><span class="badge badge-pay-method">QRCode</span></td>
+                  <td><span class="badge badge-pay-paid pay-status-badge">Đã thanh toán</span></td>
+                  <td class="code driver-code">TX-003 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="driver-name">Lê Hoàng Nam</td>
+                  <td class="muted assign-date">12-06-2026 08:30:00</td>
+                  <td class="muted delivery-date">12-06-2026</td>
+                  <td class="muted sales-rep">SR-003 — Phạm Minh Tuấn</td>
+                  <td class="muted sales-route">TUY-Q7-02</td>
+                  <td class="muted">12-06-2026 16:40:00</td>
+                  <td class="actions"><button class="btn btn-text" disabled type="button">—</button></td>
+                </tr>
+                <tr data-id="8" data-status="failed" data-amount="650000" data-source="OCR" data-company="BD" data-region="MN" data-group="NPP-BD" data-area="Q1" data-zone="VUNG-Q1-A" data-driver="TX-001" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q1-01" data-search="DLO-20260611-0015 PXK-99001 Tạp hóa Kim Ngân">
+                  <td><input class="row-check" type="checkbox"/></td>
+                  <td class="code">DLO-20260611-0015 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">PXK-99001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">CH-KN-008 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Tạp hóa Kim Ngân</a></td>
+                  <td class="muted">8 Trần Hưng Đạo, Q.1</td>
+                  <td class="money">650.000</td>
+                  <td><span class="badge badge-source-ocr">OCR</span></td>
+                  <td><span class="badge badge-failed status-badge">✕ Thất bại</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code">TX-001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="driver-name">Nguyễn Văn Tài</td>
+                  <td class="muted assign-date">11-06-2026 10:00:00</td>
+                  <td class="muted delivery-date">11-06-2026</td>
+                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
+                  <td class="muted sales-route">TUY-Q1-01</td>
+                  <td class="muted">11-06-2026 10:20:00</td>
+                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-reassign-one" type="button">Phân bổ lại</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                </tr>
+                <tr data-id="9" data-status="cancelled" data-amount="420000" data-source="DMS" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q3" data-zone="VUNG-Q1-A" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q3-01" data-search="DLO-20260610-0010 SO-DMS-88001 Cửa hàng Thắng Lợi">
+                  <td><input class="row-check" disabled type="checkbox"/></td>
+                  <td class="code">DLO-20260610-0010 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="code">SO-DMS-88001 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td class="muted">—</td>
+                  <td class="code">CH-TL-009 <span class="copy-icon" title="Sao chép">⎘</span></td>
+                  <td><a class="cell-link" href="#">Cửa hàng Thắng Lợi</a></td>
+                  <td class="muted">55 Võ Văn Tần, Q.3</td>
+                  <td class="money">420.000</td>
+                  <td><span class="badge badge-source-dms">DMS</span></td>
+                  <td><span class="badge badge-cancelled status-badge">🚫 Đã hủy</span></td>
+                  <td class="muted pay-method-cell">—</td>
+                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
+                  <td class="code driver-code empty">—</td>
+                  <td class="driver-name empty">—</td>
+                  <td class="muted assign-date">—</td>
+                  <td class="muted delivery-date">10-06-2026</td>
+                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
+                  <td class="muted sales-route">TUY-Q3-01</td>
+                  <td class="muted">10-06-2026 09:00:00</td>
+                  <td class="actions"><button class="btn btn-text" disabled type="button">—</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="paginationInfo">Hiển thị <strong>1–9</strong> / tổng <strong>9</strong> bản ghi</span>
+            <div class="pagination-controls">
+              <button class="page-btn" type="button">‹</button>
+              <button class="page-btn active" type="button">1</button>
+              <button class="page-btn" type="button">›</button>
+              <select class="page-select"><option>20 / trang</option></select>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal gán tài xế / phân bổ lại (1 popup, 2 entry point) -->
+<div class="modal-overlay" id="assignModal">
+  <div class="modal assign-modal">
+    <div class="assign-modal__header">
+      <div>
+        <div class="modal-title" id="assignModalTitle">🚚 Gán tài xế giao hàng</div>
+        <div class="assign-modal__subtitle" id="assignModalSubtitle">Chọn tài xế để gán cho đơn đang chờ phân bổ.</div>
+      </div>
+      <button class="modal-close" id="modalClose" title="Đóng" type="button">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="assign-summary">
+        <div class="assign-summary__card">
+          <span class="assign-summary__label">Số đơn được chọn</span>
+          <span class="assign-summary__value" id="modalOrderCount">0</span>
+        </div>
+        <div class="assign-summary__card assign-summary__card--money">
+          <span class="assign-summary__label">Tổng tiền thu</span>
+          <span class="assign-summary__value" id="modalTotalAmount">0 VNĐ</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label"><span class="required">*</span> Tài xế</label>
+        <select class="form-select" id="driverSelect">
+          <option value="">— Chọn tài xế —</option>
+          <option value="TX-001" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-001 — Nguyễn Văn Tài (Đang hoạt động)</option>
+          <option value="TX-002" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-002 — Trần Minh Đức (Đang hoạt động)</option>
+          <option value="TX-003" data-company="BD" data-region="MN" data-group="NPP-BD">TX-003 — Lê Hoàng Nam (Đang hoạt động)</option>
+        </select>
+      </div>
+
+      <div class="assign-driver-preview is-hidden" id="assignDriverPreview">
+        <div class="assign-driver-preview__avatar" id="assignDriverAvatar">TX</div>
+        <div class="assign-driver-preview__main">
+          <div class="assign-driver-preview__name" id="assignDriverPreviewName">—</div>
+        </div>
+      </div>
+
+      <div class="assign-section-head">
+        <span>Danh sách đơn giao hàng</span>
+        <span class="assign-section-badge" id="assignOrderBadge">0 đơn</span>
+      </div>
+      <div class="mini-order-list assign-mini-order-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn giao hàng</th>
+              <th>Cửa hàng</th>
+              <th style="text-align:right;">Tổng tiền</th>
+            </tr>
+          </thead>
+          <tbody id="modalOrderList"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer assign-modal__footer">
+      <div class="assign-footer-actions">
+        <button class="btn btn-secondary" id="modalCancel" type="button">Hủy</button>
+        <button class="btn btn-primary" id="modalConfirm" type="button">Xác nhận gán tài xế</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal đổi tài xế -->
+<div class="modal-overlay" id="changeDriverModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔄 Đổi tài xế giao hàng</div>
+      <div class="modal-close" id="changeModalClose" title="Đóng">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label"><span class="required">*</span> Tài xế mới</label>
+        <select class="form-select" id="changeDriverSelect">
+          <option value="">— Chọn tài xế —</option>
+          <option value="TX-001" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-001 — Nguyễn Văn Tài (Đang hoạt động)</option>
+          <option value="TX-002" data-company="HCM" data-region="MN" data-group="NPP-HCM">TX-002 — Trần Minh Đức (Đang hoạt động)</option>
+          <option value="TX-003" data-company="BD" data-region="MN" data-group="NPP-BD">TX-003 — Lê Hoàng Nam (Đang hoạt động)</option>
+        </select>
+      </div>
+      <div class="confirm-info-panel">
+        <div class="confirm-info-row">
+          <span class="confirm-info-label">Số đơn được chọn:</span>
+          <span class="confirm-info-value" id="changeOrderCount">0 đơn giao hàng</span>
+        </div>
+      </div>
+      <div class="mini-order-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn giao hàng</th>
+              <th>Cửa hàng</th>
+              <th>Tài xế hiện tại</th>
+            </tr>
+          </thead>
+          <tbody id="changeOrderList"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="changeModalCancel" type="button">Hủy</button>
+      <button class="btn btn-primary" id="changeModalConfirm" type="button">Xác nhận đổi tài xế</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal hủy đơn giao hàng -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🚫 Hủy đơn giao hàng</div>
+      <div class="modal-close" id="cancelModalClose" title="Đóng">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-note warning">
+        <strong>Lưu ý:</strong> Đơn giao hàng sau khi hủy sẽ chuyển sang trạng thái <strong>Đã hủy</strong>.
+        Nếu cần giao lại, phải <strong>tạo lại đơn giao hàng mới</strong> từ đơn bán / phiếu xuất kho tương ứng.
+      </div>
+      <div class="confirm-info-panel" style="margin-top:14px;">
+        <div class="confirm-info-row">
+          <span class="confirm-info-label">Số đơn hủy:</span>
+          <span class="confirm-info-value" id="cancelOrderCount">0 đơn giao hàng</span>
+        </div>
+      </div>
+      <div class="mini-order-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn giao hàng</th>
+              <th>Cửa hàng</th>
+              <th>Trạng thái hiện tại</th>
+            </tr>
+          </thead>
+          <tbody id="cancelOrderList"></tbody>
+        </table>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Ghi chú</label>
+        <textarea class="form-textarea" id="cancelNote" maxlength="500" placeholder="Lý do hủy (tuỳ chọn)..."></textarea>
+        <div class="form-counter" id="cancelNoteCounter">0/500</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancelModalCancelBtn" type="button">Quay lại</button>
+      <button class="btn btn-danger" id="cancelModalConfirm" type="button">Xác nhận hủy</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast success" id="toast"></div>
+
+<script src="../../../_shared/portal-mockup-widgets.js"></script>
+<script>
+(function () {
+  var currentStatus = 'all';
+  var assignTargetIds = [];
+  var changeTargetIds = [];
+  var cancelTargetIds = [];
+  var assignMode = 'assign'; // assign | reassign
+
+  var statusLabels = {
+    all: 'Tất cả trạng thái',
+    pending: 'Chờ phân bổ',
+    assigned: 'Chưa giao',
+    delivering: 'Đang giao',
+    completed: 'Hoàn thành',
+    failed: 'Thất bại',
+    cancelled: 'Đã hủy'
+  };
+
+  var statusBadgeText = {
+    pending: '⏳ Chờ phân bổ',
+    assigned: '📋 Chưa giao',
+    delivering: '🚚 Đang giao',
+    completed: '✓ Hoàn thành',
+    failed: '✕ Thất bại',
+    cancelled: '🚫 Đã hủy'
+  };
+
+  var driverNames = {
+    'TX-001': 'Nguyễn Văn Tài',
+    'TX-002': 'Trần Minh Đức',
+    'TX-003': 'Lê Hoàng Nam'
+  };
+
+  var STATUSES_WITHOUT_PAY_METHOD = {
+    pending: true,
+    assigned: true,
+    delivering: true,
+    failed: true,
+    cancelled: true
+  };
+
+  function getMultiValues(selectId) {
+    var el = document.getElementById(selectId);
+    if (!el) return [];
+    return Array.from(el.options).filter(function (o) { return o.selected; }).map(function (o) {
+      return o.value;
+    });
+  }
+
+  function matchMulti(values, rowValue) {
+    return values.length === 0 || values.indexOf(rowValue) >= 0;
+  }
+
+  function optionInScope(opt, company, region, group) {
+    if (!opt || !opt.value) return true;
+    if (company && opt.dataset.company && opt.dataset.company !== company) return false;
+    if (region && opt.dataset.region && opt.dataset.region !== region) return false;
+    if (group && opt.dataset.group && opt.dataset.group !== group) return false;
+    return true;
+  }
+
+  function refreshRegionGroupCascade() {
+    var company = document.getElementById('filterCompany').value;
+    var regionSelect = document.getElementById('filterRegion');
+    var groupSelect = document.getElementById('filterGroup');
+    Array.from(regionSelect.options).forEach(function (opt) {
+      opt.hidden = !!opt.value && !optionInScope(opt, company, '', '');
+    });
+    if (regionSelect.selectedOptions[0] && regionSelect.selectedOptions[0].hidden) {
+      regionSelect.value = '';
+    }
+    var region = regionSelect.value;
+    Array.from(groupSelect.options).forEach(function (opt) {
+      opt.hidden = !!opt.value && !optionInScope(opt, company, region, '');
+    });
+    if (groupSelect.selectedOptions[0] && groupSelect.selectedOptions[0].hidden) {
+      groupSelect.value = '';
+    }
+    refreshDriverScope();
+  }
+
+  function refreshDriverScope() {
+    var company = document.getElementById('filterCompany').value;
+    var region = document.getElementById('filterRegion').value;
+    var group = document.getElementById('filterGroup').value;
+    ['driverSelect', 'changeDriverSelect'].forEach(function (id) {
+      var select = document.getElementById(id);
+      if (!select) return;
+      Array.from(select.options).forEach(function (opt) {
+        opt.hidden = !!opt.value && !optionInScope(opt, company, region, group);
+      });
+      if (select.selectedOptions[0] && select.selectedOptions[0].hidden) select.value = '';
+    });
+    var msDriver = document.getElementById('msDriver');
+    if (!msDriver) return;
+    msDriver.querySelectorAll('.portal-multi-select__option').forEach(function (opt) {
+      opt.style.display = optionInScope(opt, company, region, group) ? '' : 'none';
+    });
+    var hidden = document.getElementById('filterDriver');
+    if (hidden) {
+      Array.from(hidden.options).forEach(function (opt) {
+        opt.disabled = !!opt.value && !optionInScope(opt, company, region, group);
+        if (opt.disabled) opt.selected = false;
+      });
+    }
+  }
+
+  function clearMultiSelect(rootId) {
+    var root = document.getElementById(rootId);
+    if (!root) return;
+    root.querySelectorAll('.portal-multi-select__tag').forEach(function (tag) { tag.remove(); });
+    var placeholder = root.querySelector('.portal-multi-select__placeholder');
+    if (placeholder) placeholder.style.display = '';
+    var hidden = root.querySelector('select.portal-multi-select__hidden');
+    if (hidden) {
+      Array.from(hidden.options).forEach(function (opt) { opt.selected = false; });
+    }
+  }
+
+  function setMultiSelectValues(rootId, values) {
+    clearMultiSelect(rootId);
+    if (!values || !values.length) return;
+    var root = document.getElementById(rootId);
+    if (!root) return;
+    values.forEach(function (value) {
+      var opt = root.querySelector('.portal-multi-select__option[data-value="' + value + '"]');
+      if (!opt) return;
+      var tag = document.createElement('span');
+      tag.className = 'portal-multi-select__tag';
+      tag.setAttribute('data-value', value);
+      tag.innerHTML =
+        '<span class="portal-multi-select__tag-text">' + opt.textContent.trim() + '</span>' +
+        '<button type="button" class="portal-multi-select__tag-remove" aria-label="Xóa">×</button>';
+      var placeholder = root.querySelector('.portal-multi-select__placeholder');
+      var tagsWrap = root.querySelector('.portal-multi-select__tags') || root.querySelector('.portal-multi-select__inner');
+      if (placeholder && placeholder.parentNode === tagsWrap) tagsWrap.insertBefore(tag, placeholder);
+      else tagsWrap.appendChild(tag);
+      var hidden = root.querySelector('select.portal-multi-select__hidden');
+      if (hidden) {
+        Array.from(hidden.options).forEach(function (o) {
+          if (o.value === value) o.selected = true;
+        });
+      }
+    });
+    var placeholder = root.querySelector('.portal-multi-select__placeholder');
+    if (placeholder) placeholder.style.display = root.querySelector('.portal-multi-select__tag') ? 'none' : '';
+  }
+
+  function parseFilterDate(str) {
+    if (!str) return null;
+    var parts = str.trim().split(/[\/\-\.]/);
+    if (parts.length !== 3) return null;
+    var d = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10);
+    var y = parseInt(parts[2], 10);
+    return new Date(y, m - 1, d);
+  }
+
+  function parseRowDeliveryDate(str) {
+    if (!str) return null;
+    var parts = str.trim().split('-');
+    if (parts.length !== 3) return null;
+    return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+  }
+
+  function formatFilterDate(date) {
+    if (!date) return '';
+    var pad = function (n) { return n < 10 ? '0' + n : n; };
+    return pad(date.getDate()) + '/' + pad(date.getMonth() + 1) + '/' + date.getFullYear();
+  }
+
+  function matchDeliveryDateRange(row, fromStr, toStr) {
+    if (!fromStr && !toStr) return true;
+    var cell = row.querySelector('.delivery-date');
+    var rowDate = parseRowDeliveryDate(cell ? cell.textContent.trim() : '');
+    if (!rowDate) return true;
+    var from = fromStr ? parseFilterDate(fromStr) : null;
+    var to = toStr ? parseFilterDate(toStr) : null;
+    if (from) from.setHours(0, 0, 0, 0);
+    if (to) to.setHours(23, 59, 59, 999);
+    rowDate.setHours(12, 0, 0, 0);
+    if (from && rowDate < from) return false;
+    if (to && rowDate > to) return false;
+    return true;
+  }
+
+  function syncPaymentMethodDisplay(row) {
+    if (!STATUSES_WITHOUT_PAY_METHOD[row.dataset.status]) return;
+    row.dataset.paymentMethod = '';
+  }
+
+  function nowAssignDate() {
+    var d = new Date();
+    var pad = function (n) { return n < 10 ? '0' + n : n; };
+    return pad(d.getDate()) + '-' + pad(d.getMonth() + 1) + '-' + d.getFullYear() + ' ' +
+      pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':00';
+  }
+
+  function formatMoney(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function getRows() {
+    return Array.prototype.slice.call(document.querySelectorAll('#orderBody tr'));
+  }
+
+  function getVisibleRows() {
+    return getRows().filter(function (r) { return !r.classList.contains('hidden'); });
+  }
+
+  function isSelectableStatus(status) {
+    return status === 'pending' || status === 'assigned' || status === 'failed';
+  }
+
+  function getSelectableVisibleRows() {
+    return getVisibleRows().filter(function (r) { return isSelectableStatus(r.dataset.status); });
+  }
+
+  function getSelectedRows() {
+    return getRows().filter(function (r) {
+      var cb = r.querySelector('.row-check');
+      return cb && cb.checked && !cb.disabled;
+    });
+  }
+
+  function getSelectionProfile(selected) {
+    var statuses = selected.map(function (r) { return r.dataset.status; });
+    return {
+      allPending: statuses.length > 0 && statuses.every(function (s) { return s === 'pending'; }),
+      allAssigned: statuses.length > 0 && statuses.every(function (s) { return s === 'assigned'; }),
+      allFailed: statuses.length > 0 && statuses.every(function (s) { return s === 'failed'; }),
+      canCancel: statuses.length > 0 && statuses.every(function (s) {
+        return s === 'pending' || s === 'assigned' || s === 'failed';
+      }),
+      sameStatus: statuses.length > 0 && statuses.every(function (s) { return s === statuses[0]; })
+    };
+  }
+
+  function getRowDlo(row) {
+    return row.querySelector('td.code').textContent.replace('⎘', '').trim();
+  }
+
+  function getRowStore(row) {
+    return row.querySelector('.cell-link').textContent;
+  }
+
+  function setRowActions(row) {
+    var actions = row.querySelector('.actions');
+    var status = row.dataset.status;
+    if (status === 'pending') {
+      actions.innerHTML = '<span class="row-actions"><button class="btn btn-text btn-assign-one" type="button">Gán ngay</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span>';
+    } else if (status === 'assigned') {
+      actions.innerHTML = '<span class="row-actions"><button class="btn btn-text btn-change-one" type="button">Đổi tài xế</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span>';
+    } else if (status === 'failed') {
+      actions.innerHTML = '<span class="row-actions"><button class="btn btn-text btn-reassign-one" type="button">Phân bổ lại</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span>';
+    } else {
+      actions.innerHTML = '<button class="btn btn-text" disabled type="button">—</button>';
+    }
+  }
+
+  function getFilterCriteria() {
+    return {
+      search: document.getElementById('filterSearch').value.trim().toLowerCase(),
+      company: (document.getElementById('filterCompany') || {}).value || '',
+      region: (document.getElementById('filterRegion') || {}).value || '',
+      group: (document.getElementById('filterGroup') || {}).value || '',
+      sources: getMultiValues('filterSource'),
+      deliveryStatuses: getMultiValues('filterDeliveryStatus'),
+      paymentStatuses: getMultiValues('filterPaymentStatus'),
+      drivers: getMultiValues('filterDriver'),
+      npps: getMultiValues('filterNpp'),
+      salesReps: getMultiValues('filterSalesRep'),
+      paymentMethods: getMultiValues('filterPaymentMethod'),
+      dateFrom: document.getElementById('filterDeliveryDateFrom').value.trim(),
+      dateTo: document.getElementById('filterDeliveryDateTo').value.trim()
+    };
+  }
+
+  function rowMatchesFilters(row, criteria, opts) {
+    opts = opts || {};
+    syncPaymentMethodDisplay(row);
+    var status = row.dataset.status;
+
+    if (!opts.skipStatus) {
+      var matchStatus = criteria.deliveryStatuses.length > 0
+        ? criteria.deliveryStatuses.indexOf(status) >= 0
+        : (currentStatus === 'all' || status === currentStatus);
+      if (!matchStatus) return false;
+    }
+
+    if (!matchMulti(criteria.sources, row.dataset.source)) return false;
+    if (criteria.company && row.dataset.company !== criteria.company) return false;
+    if (criteria.region && row.dataset.region !== criteria.region) return false;
+    if (criteria.group && row.dataset.group !== criteria.group) return false;
+    if (!matchMulti(criteria.drivers, row.dataset.driver)) return false;
+    if (!matchMulti(criteria.npps, row.dataset.npp)) return false;
+    if (!matchMulti(criteria.salesReps, row.dataset.salesrep)) return false;
+    if (!matchMulti(criteria.paymentStatuses, row.dataset.payment)) return false;
+    if (criteria.paymentMethods.length > 0) {
+      if (STATUSES_WITHOUT_PAY_METHOD[status]) return false;
+      if (criteria.paymentMethods.indexOf(row.dataset.paymentMethod) < 0) return false;
+    }
+    if (criteria.search && (row.dataset.search || '').toLowerCase().indexOf(criteria.search) < 0) return false;
+    if (!matchDeliveryDateRange(row, criteria.dateFrom, criteria.dateTo)) return false;
+    return true;
+  }
+
+  function applyFilters() {
+    var criteria = getFilterCriteria();
+
+    getRows().forEach(function (row) {
+      var visible = rowMatchesFilters(row, criteria);
+      row.classList.toggle('hidden', !visible);
+    });
+
+    var visible = getVisibleRows();
+
+    document.getElementById('listTitle').textContent =
+      'Danh sách đơn giao hàng (' + visible.length + ')';
+
+    document.getElementById('paginationInfo').innerHTML =
+      'Hiển thị <strong>1–' + visible.length + '</strong> / tổng <strong>' + visible.length + '</strong> bản ghi';
+
+    updateBulkBar();
+    updateCheckAll();
+    updateStatusCounts(criteria);
+  }
+
+  function updateStatusCounts(criteria) {
+    criteria = criteria || getFilterCriteria();
+    var counts = { all: 0, pending: 0, assigned: 0, delivering: 0, completed: 0, failed: 0, cancelled: 0 };
+    getRows().forEach(function (r) {
+      if (!rowMatchesFilters(r, criteria, { skipStatus: true })) return;
+      counts.all++;
+      if (counts[r.dataset.status] !== undefined) counts[r.dataset.status]++;
+    });
+    Object.keys(counts).forEach(function (k) {
+      var el = document.getElementById('count-' + k);
+      if (el) el.textContent = counts[k];
+    });
+  }
+
+  function updateBulkBar() {
+    var selected = getSelectedRows();
+    var summary = document.getElementById('selectionSummary');
+    var total = selected.reduce(function (s, r) { return s + parseInt(r.dataset.amount, 10); }, 0);
+    var profile = getSelectionProfile(selected);
+
+    var btnAssign = document.getElementById('btnBulkAssign');
+    var btnChange = document.getElementById('btnBulkChangeDriver');
+    var btnReassign = document.getElementById('btnBulkReassign');
+    var btnCancel = document.getElementById('btnBulkCancel');
+    var hasSelection = selected.length > 0;
+
+    if (hasSelection) {
+      summary.classList.remove('is-hidden');
+      var metaParts = ['✓ Đã chọn ' + selected.length + ' đơn giao hàng', 'Tổng tiền: <strong>' + formatMoney(total) + '</strong>'];
+      if (profile.allPending) metaParts.push('Trạng thái: Chờ phân bổ');
+      else if (profile.allAssigned) metaParts.push('Trạng thái: Chưa giao');
+      else if (profile.allFailed) metaParts.push('Trạng thái: Thất bại');
+      else metaParts.push('<span style="color:var(--warning-700);">⚠ Chọn đơn cùng trạng thái để thao tác hàng loạt</span>');
+      summary.innerHTML = metaParts.join(' · ');
+
+      btnReassign.style.display = profile.allFailed ? 'inline-flex' : 'none';
+
+      if (profile.allAssigned) {
+        btnChange.textContent = '🔄 Đổi tài xế (' + selected.length + ')';
+      } else {
+        btnChange.textContent = '🔄 Đổi tài xế';
+      }
+      if (profile.allFailed) {
+        btnReassign.textContent = '🚚 Phân bổ lại (' + selected.length + ')';
+      }
+      if (profile.canCancel) {
+        btnCancel.textContent = '🚫 Hủy đơn (' + selected.length + ')';
+      } else {
+        btnCancel.textContent = '🚫 Hủy đơn';
+      }
+      if (profile.allPending) {
+        btnAssign.textContent = '🚚 Gán Tài xế (' + selected.length + ')';
+      } else {
+        btnAssign.textContent = '🚚 Gán Tài xế';
+      }
+    } else {
+      summary.classList.add('is-hidden');
+      summary.innerHTML = '';
+      btnReassign.style.display = 'none';
+      btnCancel.textContent = '🚫 Hủy đơn';
+      btnAssign.textContent = '🚚 Gán Tài xế';
+      btnChange.textContent = '🔄 Đổi tài xế';
+    }
+
+    btnAssign.disabled = !hasSelection || !profile.allPending;
+    btnChange.disabled = !hasSelection || !profile.allAssigned;
+    btnCancel.disabled = !hasSelection || !profile.sameStatus || !profile.canCancel;
+    btnAssign.style.display = 'inline-flex';
+    btnChange.style.display = 'inline-flex';
+    btnCancel.style.display = 'inline-flex';
+
+    getRows().forEach(function (r) {
+      var cb = r.querySelector('.row-check');
+      r.classList.toggle('selected', cb && cb.checked && !cb.disabled);
+    });
+  }
+
+  function updateCheckAll() {
+    var checkAll = document.getElementById('checkAll');
+    var selectable = getSelectableVisibleRows();
+    var selectedSelectable = selectable.filter(function (r) {
+      return r.querySelector('.row-check').checked;
+    });
+    checkAll.disabled = selectable.length === 0;
+    checkAll.checked = selectable.length > 0 && selectedSelectable.length === selectable.length;
+    checkAll.indeterminate = selectedSelectable.length > 0 && selectedSelectable.length < selectable.length;
+  }
+
+  function updateAssignDriverPreview(driverId) {
+    var preview = document.getElementById('assignDriverPreview');
+    if (!driverId) {
+      preview.classList.add('is-hidden');
+      return;
+    }
+    var name = driverNames[driverId] || driverId;
+    var initials = driverId.replace('TX-', '');
+    document.getElementById('assignDriverAvatar').textContent = initials;
+    document.getElementById('assignDriverPreviewName').textContent = driverId + ' — ' + name;
+    preview.classList.remove('is-hidden');
+  }
+
+  function openAssignModal(ids, mode) {
+    assignMode = mode || 'assign';
+    assignTargetIds = ids.slice();
+    var rows = ids.map(function (id) {
+      return document.querySelector('#orderBody tr[data-id="' + id + '"]');
+    }).filter(Boolean);
+
+    var total = rows.reduce(function (s, r) { return s + parseInt(r.dataset.amount, 10); }, 0);
+    var isReassign = assignMode === 'reassign';
+    document.getElementById('assignModalTitle').textContent =
+      isReassign ? '🚚 Phân bổ lại tài xế' : '🚚 Gán tài xế giao hàng';
+    document.getElementById('assignModalSubtitle').textContent = isReassign
+      ? 'Chọn tài xế mới để giao lại các đơn giao hàng thất bại.'
+      : 'Chọn tài xế để gán cho đơn đang chờ phân bổ.';
+    document.getElementById('modalConfirm').textContent =
+      isReassign ? 'Xác nhận phân bổ lại' : 'Xác nhận gán tài xế';
+    document.getElementById('modalOrderCount').textContent = String(rows.length);
+    document.getElementById('modalTotalAmount').textContent = formatMoney(total) + ' VNĐ';
+    document.getElementById('assignOrderBadge').textContent = rows.length + ' đơn';
+
+    document.getElementById('modalOrderList').innerHTML = rows.map(function (r) {
+      return '<tr><td class="code">' + getRowDlo(r) + '</td><td>' + getRowStore(r) +
+        '</td><td class="money">' + r.querySelector('.money').textContent + '</td></tr>';
+    }).join('');
+
+    document.getElementById('driverSelect').value = '';
+    updateAssignDriverPreview('');
+    document.getElementById('assignModal').classList.add('open');
+  }
+
+  function closeAssignModal() {
+    document.getElementById('assignModal').classList.remove('open');
+    assignTargetIds = [];
+    assignMode = 'assign';
+  }
+
+  function openChangeDriverModal(ids) {
+    changeTargetIds = ids.slice();
+    var rows = ids.map(function (id) {
+      return document.querySelector('#orderBody tr[data-id="' + id + '"]');
+    }).filter(Boolean);
+
+    document.getElementById('changeOrderCount').textContent = rows.length + ' đơn giao hàng';
+
+    document.getElementById('changeOrderList').innerHTML = rows.map(function (r) {
+      var driverId = r.dataset.driver;
+      var currentDriver = driverId ? driverId + ' — ' + (driverNames[driverId] || driverId) : '—';
+      return '<tr><td class="code">' + getRowDlo(r) + '</td><td>' + getRowStore(r) +
+        '</td><td class="muted">' + currentDriver + '</td></tr>';
+    }).join('');
+
+    document.getElementById('changeDriverSelect').value = '';
+    document.getElementById('changeDriverModal').classList.add('open');
+  }
+
+  function closeChangeDriverModal() {
+    document.getElementById('changeDriverModal').classList.remove('open');
+    changeTargetIds = [];
+  }
+
+  function openCancelModal(ids) {
+    cancelTargetIds = ids.slice();
+    var rows = ids.map(function (id) {
+      return document.querySelector('#orderBody tr[data-id="' + id + '"]');
+    }).filter(Boolean);
+
+    document.getElementById('cancelOrderCount').textContent = rows.length + ' đơn giao hàng';
+    document.getElementById('cancelOrderList').innerHTML = rows.map(function (r) {
+      var badgeClass = r.dataset.status === 'failed' ? 'failed' : r.dataset.status === 'assigned' ? 'assigned' : 'pending';
+      return '<tr><td class="code">' + getRowDlo(r) + '</td><td>' + getRowStore(r) +
+        '</td><td><span class="badge badge-' + badgeClass + '">' +
+        statusLabels[r.dataset.status] + '</span></td></tr>';
+    }).join('');
+
+    document.getElementById('cancelNote').value = '';
+    document.getElementById('cancelNoteCounter').textContent = '0/500';
+    document.getElementById('cancelModal').classList.add('open');
+  }
+
+  function closeCancelModal() {
+    document.getElementById('cancelModal').classList.remove('open');
+    cancelTargetIds = [];
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    toast.textContent = '✓ ' + msg;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 3500);
+  }
+
+  function updateDriverCells(row, driverId) {
+    var driverName = driverNames[driverId] || driverId;
+    row.dataset.driver = driverId;
+    var codeCell = row.querySelector('.driver-code');
+    codeCell.className = 'code driver-code';
+    codeCell.innerHTML = driverId + ' <span class="copy-icon" title="Sao chép">⎘</span>';
+    var nameCell = row.querySelector('.driver-name');
+    nameCell.className = 'driver-name';
+    nameCell.textContent = driverName;
+    row.querySelector('.assign-date').textContent = nowAssignDate();
+  }
+
+  function setAssignedStatus(row) {
+    row.dataset.status = 'assigned';
+    var badge = row.querySelector('.status-badge');
+    badge.className = 'badge badge-assigned status-badge';
+    badge.textContent = statusBadgeText.assigned;
+    var cb = row.querySelector('.row-check');
+    cb.checked = false;
+    cb.disabled = false;
+    setRowActions(row);
+  }
+
+  function assignOrders(ids, driverId) {
+    var driverName = driverNames[driverId] || driverId;
+    ids.forEach(function (id) {
+      var row = document.querySelector('#orderBody tr[data-id="' + id + '"]');
+      if (!row) return;
+      if (assignMode === 'assign' && row.dataset.status !== 'pending') return;
+      if (assignMode === 'reassign' && row.dataset.status !== 'failed') return;
+      updateDriverCells(row, driverId);
+      setAssignedStatus(row);
+    });
+    closeAssignModal();
+    applyFilters();
+    var action = assignMode === 'reassign' ? 'phân bổ lại' : 'gán';
+    showToast('Đã ' + action + ' ' + ids.length + ' đơn giao hàng cho ' + driverId + ' — ' + driverName);
+  }
+
+  function changeDriverOrders(ids, driverId) {
+    var driverName = driverNames[driverId] || driverId;
+    ids.forEach(function (id) {
+      var row = document.querySelector('#orderBody tr[data-id="' + id + '"]');
+      if (!row || row.dataset.status !== 'assigned') return;
+      if (row.dataset.driver === driverId) return;
+      updateDriverCells(row, driverId);
+    });
+    closeChangeDriverModal();
+    applyFilters();
+    showToast('Đã đổi tài xế ' + ids.length + ' đơn giao hàng sang ' + driverId + ' — ' + driverName);
+  }
+
+  function targetHasDriver(ids, driverId) {
+    return ids.some(function (id) {
+      var row = document.querySelector('#orderBody tr[data-id="' + id + '"]');
+      return row && row.dataset.driver === driverId;
+    });
+  }
+
+  function cancelOrders(ids) {
+    ids.forEach(function (id) {
+      var row = document.querySelector('#orderBody tr[data-id="' + id + '"]');
+      if (!row) return;
+      if (row.dataset.status !== 'pending' && row.dataset.status !== 'assigned' && row.dataset.status !== 'failed') return;
+
+      row.dataset.status = 'cancelled';
+      row.dataset.driver = '';
+      var badge = row.querySelector('.status-badge');
+      badge.className = 'badge badge-cancelled status-badge';
+      badge.textContent = statusBadgeText.cancelled;
+
+      var codeCell = row.querySelector('.driver-code');
+      codeCell.className = 'code driver-code empty';
+      codeCell.textContent = '—';
+      var nameCell = row.querySelector('.driver-name');
+      nameCell.className = 'driver-name empty';
+      nameCell.textContent = '—';
+      row.querySelector('.assign-date').textContent = '—';
+
+      var cb = row.querySelector('.row-check');
+      cb.checked = false;
+      cb.disabled = true;
+      setRowActions(row);
+    });
+    closeCancelModal();
+    applyFilters();
+    showToast('Đã hủy ' + ids.length + ' đơn giao hàng. Cần tạo lại đơn giao hàng nếu muốn giao tiếp.');
+  }
+
+  document.getElementById('statusTabs').addEventListener('click', function (e) {
+    var tab = e.target.closest('.status-tab');
+    if (!tab) return;
+    currentStatus = tab.dataset.status;
+    clearMultiSelect('msDeliveryStatus');
+    if (currentStatus !== 'all') {
+      setMultiSelectValues('msDeliveryStatus', [currentStatus]);
+    }
+    document.querySelectorAll('.status-tab').forEach(function (t) {
+      var on = t === tab;
+      t.classList.toggle('active', on);
+      t.classList.toggle('portal-tabs__item--active', on);
+    });
+    applyFilters();
+  });
+
+  document.getElementById('checkAll').addEventListener('change', function () {
+    var checked = this.checked;
+    getSelectableVisibleRows().forEach(function (r) {
+      r.querySelector('.row-check').checked = checked;
+    });
+    updateBulkBar();
+    updateCheckAll();
+  });
+
+  document.getElementById('orderBody').addEventListener('change', function (e) {
+    if (e.target.classList.contains('row-check')) {
+      updateBulkBar();
+      updateCheckAll();
+    }
+  });
+
+  document.getElementById('orderBody').addEventListener('click', function (e) {
+    var row = e.target.closest('tr');
+    if (!row) return;
+    if (e.target.classList.contains('btn-assign-one')) {
+      openAssignModal([row.dataset.id], 'assign');
+    }
+    if (e.target.classList.contains('btn-reassign-one')) {
+      openAssignModal([row.dataset.id], 'reassign');
+    }
+    if (e.target.classList.contains('btn-change-one')) {
+      openChangeDriverModal([row.dataset.id]);
+    }
+    if (e.target.classList.contains('btn-cancel-one')) {
+      openCancelModal([row.dataset.id]);
+    }
+    if (e.target.classList.contains('copy-icon')) {
+      var code = e.target.parentElement.textContent.replace('⎘', '').trim();
+      navigator.clipboard.writeText(code).then(function () {
+        showToast('Đã sao chép: ' + code);
+      });
+    }
+  });
+
+  document.getElementById('btnBulkAssign').addEventListener('click', function () {
+    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    var profile = getSelectionProfile(getSelectedRows());
+    if (!profile.allPending) {
+      alert('Chọn đơn cùng trạng thái để thao tác hàng loạt');
+      return;
+    }
+    if (ids.length) openAssignModal(ids, 'assign');
+  });
+
+  document.getElementById('btnBulkChangeDriver').addEventListener('click', function () {
+    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    var profile = getSelectionProfile(getSelectedRows());
+    if (!profile.allAssigned) {
+      alert('Chọn đơn cùng trạng thái để thao tác hàng loạt');
+      return;
+    }
+    if (ids.length) openChangeDriverModal(ids);
+  });
+
+  document.getElementById('btnBulkReassign').addEventListener('click', function () {
+    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    var profile = getSelectionProfile(getSelectedRows());
+    if (!profile.allFailed) {
+      alert('Chọn đơn cùng trạng thái để thao tác hàng loạt');
+      return;
+    }
+    if (ids.length) openAssignModal(ids, 'reassign');
+  });
+
+  document.getElementById('btnBulkCancel').addEventListener('click', function () {
+    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    var profile = getSelectionProfile(getSelectedRows());
+    if (!profile.sameStatus || !profile.canCancel) {
+      alert('Chọn đơn cùng trạng thái để thao tác hàng loạt');
+      return;
+    }
+    if (ids.length) openCancelModal(ids);
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeAssignModal);
+  document.getElementById('modalCancel').addEventListener('click', closeAssignModal);
+  document.getElementById('assignModal').addEventListener('click', function (e) {
+    if (e.target === this) closeAssignModal();
+  });
+
+  document.getElementById('modalConfirm').addEventListener('click', function () {
+    var driverId = document.getElementById('driverSelect').value;
+    if (!driverId) {
+      alert('Vui lòng chọn tài xế.');
+      return;
+    }
+    if (targetHasDriver(assignTargetIds, driverId)) {
+      alert('Tài xế mới phải khác với tài xế hiện tại của đơn đã chọn.');
+      return;
+    }
+    assignOrders(assignTargetIds, driverId);
+  });
+
+  document.getElementById('changeModalClose').addEventListener('click', closeChangeDriverModal);
+  document.getElementById('changeModalCancel').addEventListener('click', closeChangeDriverModal);
+  document.getElementById('changeDriverModal').addEventListener('click', function (e) {
+    if (e.target === this) closeChangeDriverModal();
+  });
+  document.getElementById('changeModalConfirm').addEventListener('click', function () {
+    var driverId = document.getElementById('changeDriverSelect').value;
+    if (!driverId) {
+      alert('Vui lòng chọn tài xế mới.');
+      return;
+    }
+    var sameDriver = changeTargetIds.every(function (id) {
+      var row = document.querySelector('#orderBody tr[data-id="' + id + '"]');
+      return row && row.dataset.driver === driverId;
+    });
+    if (sameDriver || targetHasDriver(changeTargetIds, driverId)) {
+      alert('Tài xế mới phải khác với tài xế hiện tại của đơn đã chọn.');
+      return;
+    }
+    changeDriverOrders(changeTargetIds, driverId);
+  });
+
+  document.getElementById('cancelModalClose').addEventListener('click', closeCancelModal);
+  document.getElementById('cancelModalCancelBtn').addEventListener('click', closeCancelModal);
+  document.getElementById('cancelModal').addEventListener('click', function (e) {
+    if (e.target === this) closeCancelModal();
+  });
+  document.getElementById('cancelModalConfirm').addEventListener('click', function () {
+    cancelOrders(cancelTargetIds);
+  });
+
+  document.getElementById('driverSelect').addEventListener('change', function () {
+    updateAssignDriverPreview(this.value);
+  });
+
+  document.getElementById('cancelNote').addEventListener('input', function () {
+    document.getElementById('cancelNoteCounter').textContent = this.value.length + '/500';
+  });
+
+  function exportExcel() {
+    var rows = getVisibleRows();
+    var headers = [
+      'Mã đơn giao hàng', 'Mã đơn bán', 'Mã PXK/HĐ', 'Mã cửa hàng', 'Cửa hàng', 'Địa chỉ giao hàng',
+      'Tổng tiền', 'Nguồn đơn hàng', 'Trạng thái', 'Phương thức thanh toán',
+      'Trạng thái thanh toán', 'Mã tài xế', 'Tài xế', 'Ngày gán tài xế', 'Ngày thực tế giao hàng',
+      'Nhân viên bán hàng', 'Tuyến bán hàng', 'Ngày tạo'
+    ];
+    var lines = [headers.join('\t')];
+    rows.forEach(function (row) {
+      var cells = row.querySelectorAll('td');
+      var payMethodCell = cells[10];
+      var payMethod = payMethodCell ? payMethodCell.textContent.trim() : '';
+      lines.push([
+        getRowDlo(row),
+        cells[2].textContent.replace('⎘', '').trim(),
+        cells[3].textContent.replace('⎘', '').trim(),
+        cells[4].textContent.replace('⎘', '').trim(),
+        getRowStore(row),
+        cells[6].textContent.trim(),
+        cells[7].textContent.trim(),
+        cells[8].textContent.trim(),
+        cells[9].textContent.trim(),
+        payMethod,
+        cells[11].textContent.trim(),
+        cells[12].textContent.replace('⎘', '').trim(),
+        cells[13].textContent.trim(),
+        cells[14].textContent.trim(),
+        cells[15].textContent.trim(),
+        cells[16].textContent.trim(),
+        cells[17].textContent.trim(),
+        cells[18].textContent.trim()
+      ].join('\t'));
+    });
+    var blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    var now = new Date();
+    var pad = function (n) { return n < 10 ? '0' + n : n; };
+    var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()) + '-' +
+      pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+    link.href = URL.createObjectURL(blob);
+    link.download = 'don-giao-hang_' + stamp + '.xlsx';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showToast('Đã xuất ' + rows.length + ' bản ghi ra file Excel');
+  }
+
+  function initDeliveryDateRangePicker() {
+    var wrap = document.getElementById('filterDeliveryDateWrap');
+    var popup = document.getElementById('deliveryDatePopup');
+    var fromInput = document.getElementById('filterDeliveryDateFrom');
+    var toInput = document.getElementById('filterDeliveryDateTo');
+    var grid = document.getElementById('calDaysGrid');
+    var title = document.getElementById('calMonthTitle');
+    var viewDate = new Date();
+    var pickStart = null;
+    var pickEnd = null;
+
+    function renderCalendar() {
+      var y = viewDate.getFullYear();
+      var m = viewDate.getMonth();
+      title.textContent = 'Tháng ' + (m + 1) + ' / ' + y;
+      var first = new Date(y, m, 1);
+      var startOffset = (first.getDay() + 6) % 7;
+      var daysInMonth = new Date(y, m + 1, 0).getDate();
+      var prevDays = new Date(y, m, 0).getDate();
+      grid.innerHTML = '';
+      for (var i = 0; i < 42; i++) {
+        var dayNum;
+        var cellDate;
+        var other = false;
+        if (i < startOffset) {
+          dayNum = prevDays - startOffset + i + 1;
+          cellDate = new Date(y, m - 1, dayNum);
+          other = true;
+        } else if (i >= startOffset + daysInMonth) {
+          dayNum = i - startOffset - daysInMonth + 1;
+          cellDate = new Date(y, m + 1, dayNum);
+          other = true;
+        } else {
+          dayNum = i - startOffset + 1;
+          cellDate = new Date(y, m, dayNum);
+        }
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'range-calendar-day' + (other ? ' is-other' : '');
+        btn.textContent = dayNum;
+        btn.dataset.iso = cellDate.toISOString();
+        if (pickStart && cellDate.toDateString() === pickStart.toDateString()) btn.classList.add('is-start');
+        if (pickEnd && cellDate.toDateString() === pickEnd.toDateString()) btn.classList.add('is-end');
+        if (pickStart && pickEnd) {
+          var min = pickStart < pickEnd ? pickStart : pickEnd;
+          var max = pickStart < pickEnd ? pickEnd : pickStart;
+          if (cellDate > min && cellDate < max) btn.classList.add('in-range');
+        }
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var d = new Date(this.dataset.iso);
+          if (!pickStart || (pickStart && pickEnd)) {
+            pickStart = d;
+            pickEnd = null;
+          } else if (d < pickStart) {
+            pickEnd = pickStart;
+            pickStart = d;
+          } else {
+            pickEnd = d;
+          }
+          renderCalendar();
+        });
+        grid.appendChild(btn);
+      }
+    }
+
+    function openPopup() {
+      pickStart = parseFilterDate(fromInput.value);
+      pickEnd = parseFilterDate(toInput.value);
+      if (pickStart) viewDate = new Date(pickStart.getTime());
+      popup.classList.add('open');
+      renderCalendar();
+    }
+
+    function closePopup() {
+      popup.classList.remove('open');
+    }
+
+    wrap.addEventListener('click', function (e) {
+      if (e.target.closest('#deliveryDatePopup')) return;
+      openPopup();
+    });
+
+    document.getElementById('calPrevMonth').addEventListener('click', function (e) {
+      e.stopPropagation();
+      viewDate.setMonth(viewDate.getMonth() - 1);
+      renderCalendar();
+    });
+    document.getElementById('calNextMonth').addEventListener('click', function (e) {
+      e.stopPropagation();
+      viewDate.setMonth(viewDate.getMonth() + 1);
+      renderCalendar();
+    });
+    document.getElementById('calClear').addEventListener('click', function (e) {
+      e.stopPropagation();
+      pickStart = null;
+      pickEnd = null;
+      fromInput.value = '';
+      toInput.value = '';
+      renderCalendar();
+    });
+    document.getElementById('calApply').addEventListener('click', function (e) {
+      e.stopPropagation();
+      fromInput.value = pickStart ? formatFilterDate(pickStart) : '';
+      toInput.value = pickEnd ? formatFilterDate(pickEnd) : pickStart ? formatFilterDate(pickStart) : '';
+      closePopup();
+      applyFilters();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) closePopup();
+    });
+  }
+
+  function resetAdvancedFilters() {
+    ['filterCompany', 'filterRegion', 'filterGroup'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.selectedIndex = 0;
+    });
+    var tags = document.querySelector('.portal-context-tags[data-context-tags="page"]');
+    if (tags) tags.innerHTML = '';
+  }
+
+  document.addEventListener('portal-advanced-filter-confirm', function () {
+    applyFilters();
+  });
+
+  document.getElementById('btnSearch').addEventListener('click', applyFilters);
+  document.getElementById('btnExport').addEventListener('click', exportExcel);
+  document.getElementById('filterSearch').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') applyFilters();
+  });
+
+  document.getElementById('filterCompany').addEventListener('change', function () {
+    refreshRegionGroupCascade();
+    applyFilters();
+  });
+  document.getElementById('filterRegion').addEventListener('change', function () {
+    refreshRegionGroupCascade();
+    applyFilters();
+  });
+  document.getElementById('filterGroup').addEventListener('change', function () {
+    refreshDriverScope();
+    applyFilters();
+  });
+
+  ['msSource', 'msDeliveryStatus', 'msPaymentStatus', 'msNpp', 'msSalesRep', 'msDriver', 'msPaymentMethod'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('portal-multiselect-change', function () {
+      var values = getMultiValues(el.querySelector('select.portal-multi-select__hidden').id);
+      if (id === 'msDeliveryStatus') {
+        if (values.length === 1) {
+          currentStatus = values[0];
+        } else {
+          currentStatus = 'all';
+        }
+        document.querySelectorAll('.status-tab').forEach(function (t) {
+          var on = t.dataset.status === currentStatus;
+          t.classList.toggle('active', on);
+          t.classList.toggle('portal-tabs__item--active', on);
+        });
+      }
+      applyFilters();
+    });
+  });
+
+  document.getElementById('btnRefresh').addEventListener('click', function () {
+    document.getElementById('filterSearch').value = '';
+    resetAdvancedFilters();
+    ['msSource', 'msDeliveryStatus', 'msPaymentStatus', 'msNpp', 'msSalesRep', 'msDriver', 'msPaymentMethod'].forEach(clearMultiSelect);
+    document.getElementById('filterDeliveryDateFrom').value = '';
+    document.getElementById('filterDeliveryDateTo').value = '';
+    currentStatus = 'all';
+    document.querySelectorAll('.status-tab').forEach(function (t) {
+      var on = t.dataset.status === 'all';
+      t.classList.toggle('active', on);
+      t.classList.toggle('portal-tabs__item--active', on);
+    });
+    applyFilters();
+    showToast('Đã làm mới danh sách');
+  });
+
+  if (window.PortalMockupWidgets && window.PortalMockupWidgets.initMultiSelect) {
+    ['msSource', 'msDeliveryStatus', 'msPaymentStatus', 'msNpp', 'msSalesRep', 'msDriver', 'msPaymentMethod'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) window.PortalMockupWidgets.initMultiSelect(el);
+    });
+  }
+
+  if (window.PortalMockupWidgets && window.PortalMockupWidgets.initPageAdvancedFilter) {
+    document.body.dataset.portalAdvancedBarInit = '';
+    window.PortalMockupWidgets.initPageAdvancedFilter();
+  }
+
+  initDeliveryDateRangePicker();
+  refreshRegionGroupCascade();
+  getRows().forEach(syncPaymentMethodDisplay);
+  updateBulkBar();
+  applyFilters();
+})();
+</script>
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
+</body>
+</html>

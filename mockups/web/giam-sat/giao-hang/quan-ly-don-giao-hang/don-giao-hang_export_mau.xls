@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <Styles>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1"/>
+   <Interior ss:Color="#D9EAF7" ss:Pattern="Solid"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="Text">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="Money">
+   <NumberFormat ss:Format="#,##0"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Data">
+  <Table>
+   <Column ss:Width="130"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="160"/>
+   <Column ss:Width="260"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="130"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="130"/>
+   <Column ss:Width="130"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="160"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="140"/>
+   <Row>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Mã đơn giao hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Mã đơn bán</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Mã PXK/HĐ</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Mã cửa hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Cửa hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Địa chỉ giao hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Tổng tiền</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Nguồn đơn hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Trạng thái</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Phương thức thanh toán</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Trạng thái thanh toán</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Mã tài xế</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Tài xế</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Ngày gán tài xế</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Ngày thực tế giao hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Nhân viên bán hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Tuyến bán hàng</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Ngày tạo</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">DLO-20260615-0042</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">SO-ECOM-88921</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">CH-MP-001</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">CH Minh Phát — Q.1</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">12 Nguyễn Huệ, P.Bến Nghé, Q.1, TP.HCM</Data></Cell>
+    <Cell ss:StyleID="Money"><Data ss:Type="Number">2450000</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Ecom</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Chờ phân bổ</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Chưa thanh toán</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">15-06-2026</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">SR-001 — Trần Văn Bình</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">TUY-Q1-01</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">15-06-2026 08:30:00</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">DLO-20260614-0038</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">PXK-55102</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">CH-VA-003</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Siêu thị Việt An</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">88 Nguyễn Văn Linh, Q.7, TP.HCM</Data></Cell>
+    <Cell ss:StyleID="Money"><Data ss:Type="Number">5120000</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">OCR</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Chờ phân bổ</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Chưa thanh toán</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">16-06-2026</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">SR-003 — Phạm Minh Tuấn</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">TUY-Q7-02</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">14-06-2026 16:20:00</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">DLO-20260612-0020</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">SO-ECOM-88700</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">—</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">CH-PL-007</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">CH Phúc Lộc</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">120 Huỳnh Tấn Phát, Q.7</Data></Cell>
+    <Cell ss:StyleID="Money"><Data ss:Type="Number">1560000</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Ecom</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Hoàn thành</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">QRCode</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Đã thanh toán</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">TX-003</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">Lê Hoàng Nam</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">12-06-2026 08:30:00</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">12-06-2026</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">SR-003 — Phạm Minh Tuấn</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">TUY-Q7-02</Data></Cell>
+    <Cell ss:StyleID="Text"><Data ss:Type="String">12-06-2026 16:40:00</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+</Workbook>
