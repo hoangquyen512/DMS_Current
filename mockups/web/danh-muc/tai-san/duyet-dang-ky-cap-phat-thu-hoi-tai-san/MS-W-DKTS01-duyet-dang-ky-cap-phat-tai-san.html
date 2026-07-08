@@ -1162,12 +1162,13 @@
                                 </div>
                                 <div class="filter-field" style="min-width:200px;">
                                     <div class="filter-label">Thời gian đăng ký</div>
-                                    <div style="display:flex;gap:4px;align-items:center;">
-                                        <input type="text" class="filter-input" placeholder="Từ ngày"
-                                            style="width:100px;">
-                                        <span style="font-size:12px;color:var(--neutral-500);">→</span>
-                                        <input type="text" class="filter-input" placeholder="Đến ngày"
-                                            style="width:100px;">
+                                    <div class="portal-date-range filter-date-range">
+                                        <div class="portal-date-range__inner">
+                                            <input type="text" class="portal-date-range__input filter-input" placeholder="Từ ngày" aria-label="Từ ngày">
+                                            <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                                            <input type="text" class="portal-date-range__input filter-input" placeholder="Đến ngày" aria-label="Đến ngày">
+                                        </div>
+                                        <span class="portal-date-range__icon" aria-hidden="true"></span>
                                     </div>
                                 </div>
                                 <div class="filter-field" style="min-width:130px;max-width:160px;">
@@ -1204,7 +1205,7 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th style="width:36px;"><input type="checkbox" checked></th>
+                                            <th class="col-check"><input type="checkbox" checked></th>
                                             <th class="sortable" style="white-space:nowrap;">Mã đơn ↕</th>
                                             <th class="sortable" style="min-width:140px;">Nhân viên ↕</th>
                                             <th class="sortable" style="min-width:150px;">Cửa hàng ↕</th>
@@ -1478,7 +1479,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width:36px;"><input type="checkbox" disabled></th>
+                                        <th class="col-check"><input type="checkbox" disabled></th>
                                         <th>Mã đơn ↕</th>
                                         <th>Nhân viên ↕</th>
                                         <th>Cửa hàng ↕</th>
