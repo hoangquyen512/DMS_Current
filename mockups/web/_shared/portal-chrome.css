@@ -2,6 +2,7 @@
 @import url("portal-tokens.css");
 @import url("portal-fonts.css");
 @import url("portal-components.css");
+@import url("portal-mockup-bridge.css");
 
 body.portal-page {
     font-family: var(--font-sans);
@@ -31,7 +32,9 @@ body.portal-page .topbar {
   justify-content: flex-start;
 }
 body.portal-page header.topbar .user-info,
-body.portal-page .topbar .user-info {
+body.portal-page .topbar .user-info,
+body.portal-page header.topbar .topbar-actions,
+body.portal-page .topbar .topbar-actions {
   display: none !important;
 }
 

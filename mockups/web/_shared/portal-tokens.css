@@ -1,7 +1,7 @@
 /**
  * [WEB] DMS Portal — Design tokens
  * Nguồn: dms-portal-dev.finviet.com.vn (Ant Design Pro / ecodms)
- * Quét: 24/06/2026 — header, list Tin tức, dashboard
+ * Quét: 24/06/2026 — Browser MCP live (dashboard + /category/news/)
  */
 :root {
   /* Brand Finviet / ecodms */
@@ -15,9 +15,16 @@
   /* Semantic */
   --portal-primary: var(--portal-brand);
   --portal-primary-hover: var(--portal-brand-light);
-  --portal-role-green: #10b981;
+  --portal-role-green: #5bd8a6;
+  --portal-role-green-solid: #1cbc77;
   --portal-company-tag-bg: rgba(255, 255, 255, 0.12);
   --portal-user-orange: #f59e0b;
+  --portal-tag-orange-bg: #fff7e6;
+  --portal-tag-orange-text: #d46b08;
+  --portal-tag-blue-bg: #e6f4ff;
+  --portal-tag-blue-text: #0958d9;
+  --portal-btn-primary-shadow: 0 2px 0 rgba(0, 35, 65, 0.2);
+  --portal-table-head-bg: #fafafa;
 
   /* Neutral (Ant Design default scale) */
   --portal-bg: #f0f2f5;

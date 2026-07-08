@@ -34,6 +34,15 @@
     if (backBtn) backBtn.addEventListener('click', function() { window.location.href = mainHref; });
 
     renderPortalMenu(document.getElementById('navL1'));
+
+    var basePath = base + '_shared/portal-mockup-widgets.js';
+    if (!document.querySelector('script[data-portal-widgets]')) {
+      var widgetScript = document.createElement('script');
+      widgetScript.src = basePath;
+      widgetScript.setAttribute('data-portal-widgets', '1');
+      widgetScript.defer = true;
+      document.body.appendChild(widgetScript);
+    }
   }
 
   if (document.readyState === 'loading') {
