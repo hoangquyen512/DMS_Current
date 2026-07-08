@@ -11,7 +11,9 @@ mockups/mobile/
 │   ├── app-chrome.css     ← Tab bar + status (main)
 │   ├── mockup-shell.css   ← Khung phone 375×812 (mọi sub-page)
 │   ├── mockup-tokens.css  ← Màu brand từ APK (#009add)
-│   └── app-components.css ← Class .app-* chuẩn
+│   ├── app-components.css ← Class .app-* chuẩn
+│   ├── mockup-fit.js      ← Scale phone + auto inject icon 🌐 nếu thiếu
+│   └── STATUS-BAR-SNIPPET.md ← ⭐ Snippet status bar + icon DMS Portal
 ├── components-gallery.html ← Gallery Design System
 ├── vieng-tham/            ← Tab Viếng thăm (Flow A)
 │   ├── chi-tiet-cua-hang/
@@ -146,6 +148,13 @@ Sub-page: `<body class="mockup-page">` + `mockup-shell.css` + `mockup-fit.js`
 Main hub: `app-chrome.css` (đã import shell) + `mockup-fit.js`.
 
 **Viewport fit:** `mockup-fit.js` tự scale khung phone để nằm trọn trong cửa sổ browser (không scroll trang). Resize/orientation → tự cập nhật.
+
+## Icon DMS Portal trên Status Bar (BẮT BUỘC)
+
+Mọi màn hình mobile **phải có icon 🌐** (hoặc Tabler `ti-world` ở shell Tài xế) trên status bar — góc phải, trước icon sóng/pin — link tới `mockups/web/main.html`.
+
+➡️ Snippet + quy tắc: `_shared/STATUS-BAR-SNIPPET.md`  
+➡️ Template mẫu: `mockups/templates/mobile-template.html`
 
 ## Tái tổ chức khi thêm mockup mới
 
