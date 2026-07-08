@@ -615,12 +615,15 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">Từ ngày (*)</div>
-                                <input type="text" class="filter-input filter-input-date" value="01-05-2026">
-                            </div>
-                            <div class="filter-group">
-                                <div class="filter-label">Đến ngày (*)</div>
-                                <input type="text" class="filter-input filter-input-date" value="12-05-2026">
+                                <div class="filter-label">Từ ngày (*) — Đến ngày (*)</div>
+                                <div class="portal-date-range filter-date-range">
+                                    <div class="portal-date-range__inner">
+                                        <input type="text" class="portal-date-range__input filter-input filter-input-date" value="01-05-2026" placeholder="Từ ngày" aria-label="Từ ngày">
+                                        <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                                        <input type="text" class="portal-date-range__input filter-input filter-input-date" value="12-05-2026" placeholder="Đến ngày" aria-label="Đến ngày">
+                                    </div>
+                                    <span class="portal-date-range__icon" aria-hidden="true"></span>
+                                </div>
                             </div>
                         </div>
                         <div class="filter-row" style="margin-top:10px;">
@@ -682,7 +685,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width:36px;"><input type="checkbox"></th>
+                                    <th class="col-check"><input type="checkbox"></th>
                                     <th>Công ty</th>
                                     <th>Mã chuyển kho ↕</th>
                                     <th>Ngày CK ↓</th>
@@ -874,12 +877,15 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">Từ ngày (*)</div>
-                                <input type="text" class="filter-input filter-input-date" value="01-05-2026">
-                            </div>
-                            <div class="filter-group">
-                                <div class="filter-label">Đến ngày (*)</div>
-                                <input type="text" class="filter-input filter-input-date" value="12-05-2026">
+                                <div class="filter-label">Từ ngày (*) — Đến ngày (*)</div>
+                                <div class="portal-date-range filter-date-range">
+                                    <div class="portal-date-range__inner">
+                                        <input type="text" class="portal-date-range__input filter-input filter-input-date" value="01-05-2026" placeholder="Từ ngày" aria-label="Từ ngày">
+                                        <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                                        <input type="text" class="portal-date-range__input filter-input filter-input-date" value="12-05-2026" placeholder="Đến ngày" aria-label="Đến ngày">
+                                    </div>
+                                    <span class="portal-date-range__icon" aria-hidden="true"></span>
+                                </div>
                             </div>
                         </div>
                         <div class="filter-actions">
