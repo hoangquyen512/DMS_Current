@@ -111,6 +111,12 @@ body.mockup-gallery .mockup-stage {
 .flow-bar,
 .dev-bar,
 .hint-bar {
+  display: none !important;
+}
+
+.flow-bar,
+.dev-bar,
+.hint-bar {
   width: 100%;
   max-width: var(--mockup-phone-w);
   text-align: center;
