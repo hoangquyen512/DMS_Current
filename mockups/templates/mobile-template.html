@@ -75,7 +75,26 @@
     position: relative;
     z-index: 2;
   }
-  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .status-portal-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    line-height: 1;
+    text-decoration: none;
+    border-radius: 6px;
+    flex-shrink: 0;
+    color: var(--primary-500);
+  }
+  .status-portal-link:hover { background: var(--primary-50); }
 
   /* ======= App Header ======= */
   .app-header {
@@ -296,10 +315,13 @@
 <div>
   <div class="phone">
     <div class="phone-screen">
-      <!-- Status bar -->
+      <!-- Status bar — BẮT BUỘC icon 🌐 mở DMS Portal (mockups/web/main.html) -->
       <div class="status-bar">
         <span>9:41</span>
-        <span class="icons">📶 📡 🔋</span>
+        <span class="status-icons">
+          <a class="status-portal-link" href="../web/main.html" title="DMS Portal" aria-label="Mở DMS Portal">🌐</a>
+          <span>📶 🔋</span>
+        </span>
       </div>
 
       <!-- App Header -->
