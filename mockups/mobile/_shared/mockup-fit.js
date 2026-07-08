@@ -1,5 +1,6 @@
 /**
  * Scale mockup phone + dev bars to fit browser viewport (no page scroll).
+ * + inject icon DMS Portal (🌐) vào status bar nếu thiếu.
  */
 (function () {
   var BODY_FIT =
@@ -73,9 +74,65 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  function resolvePortalHref() {
+    var body = document.body;
+    if (body && body.dataset.portalHref) return body.dataset.portalHref;
+    var path = (location.pathname || '').replace(/\\/g, '/');
+    var marker = '/mobile/';
+    var idx = path.indexOf(marker);
+    if (idx >= 0) {
+      var after = path.slice(idx + marker.length);
+      var depth = after.split('/').length - 1;
+      var up = '';
+      for (var i = 0; i <= depth; i++) up += '../';
+      return up + 'web/main.html';
+    }
+    return '../web/main.html';
+  }
+
+  function createPortalLink(href) {
+    var link = document.createElement('a');
+    link.className = 'status-portal-link';
+    link.href = href;
+    link.title = 'DMS Portal';
+    link.setAttribute('aria-label', 'Mở DMS Portal');
+    link.textContent = '🌐';
+    return link;
+  }
+
+  function injectStatusPortalLinks() {
+    var href = resolvePortalHref();
+    document.querySelectorAll('.status-bar').forEach(function (bar) {
+      if (bar.querySelector('.status-portal-link')) return;
+      var right = bar.querySelector('.status-right, .status-icons, .icons');
+      if (right) {
+        right.insertBefore(createPortalLink(href), right.firstChild);
+        if (right.classList.contains('icons')) right.classList.add('status-icons');
+        return;
+      }
+      var spans = bar.querySelectorAll(':scope > span');
+      var last = spans[spans.length - 1];
+      if (!last) return;
+      var wrap = document.createElement('span');
+      wrap.className = 'status-icons';
+      bar.replaceChild(wrap, last);
+      wrap.appendChild(createPortalLink(href));
+      var signal = document.createElement('span');
+      signal.innerHTML = last.innerHTML;
+      wrap.appendChild(signal);
+    });
+  }
+
+  window.injectStatusPortalLinks = injectStatusPortalLinks;
+
+  function boot() {
+    injectStatusPortalLinks();
     init();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();

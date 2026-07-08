@@ -107,6 +107,36 @@ body.mockup-gallery .mockup-stage {
   font-weight: 600;
   flex-shrink: 0;
 }
+.status-icons,
+.status-bar .icons,
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.status-portal-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none;
+  border-radius: 6px;
+  flex-shrink: 0;
+  color: var(--app-primary, #009ADD);
+}
+.status-portal-link:hover { background: rgba(0, 154, 221, 0.12); }
+.status-bar.on-primary .status-portal-link,
+.status-bar.status-bar--primary .status-portal-link {
+  color: rgba(255, 255, 255, 0.95);
+}
+.status-bar.on-primary .status-portal-link:hover,
+.status-bar.status-bar--primary .status-portal-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .flow-bar,
 .dev-bar,
