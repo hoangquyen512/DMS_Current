@@ -52,6 +52,7 @@ $explicitHrefsById = @{
     'bao-cao-nhap-xuat-ton-tai-san'                 = 'danh-muc/tai-san/bao-cao-tai-san/bao-cao-nhap-xuat-ton-tai-san/MS-W-BCNXT01-nhap-xuat-ton-tai-san.html'
     'yeu-cau-xac-minh'                              = 'danh-muc/xac-minh/yeu-cau-xac-minh/US-AI-check-button-states.html'
     'thong-tin-tra-thuong-theo-giai-doan'           = 'danh-muc/chuong-trinh-trung-bay/thong-tin-tra-thuong-theo-giai-doan/MS-W-CTTB01-cai-dat-phan-thuong-bo-sung.html'
+    'bao-cao-doi-soat-tien-thu-giao-hang'           = 'giam-sat/giao-hang/bao-cao-doi-soat-tien-thu-giao-hang/MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html'
 }
 
 function Ensure-Dir([string]$relPath) {

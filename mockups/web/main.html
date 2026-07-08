@@ -1,13 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>[WEB] DMS Portal — Dashboard</title>
+<title>[WEB] DMS Portal — Dashboard điều hành</title>
 <link rel="stylesheet" href="_shared/portal-tokens.css"/>
 <link rel="stylesheet" href="_shared/portal-fonts.css"/>
 <link rel="stylesheet" href="_shared/portal-components.css"/>
 <link rel="stylesheet" href="_shared/rich-dashboard.css"/>
+<link rel="stylesheet" href="_shared/portal-mockup-bridge.css"/>
+
 <style>
 :root {
     --neutral-900: #111827;
@@ -190,7 +192,6 @@ a { text-decoration: none; color: inherit; }
     z-index: 30;
 }
 
-/* Vùng đệm để di chuột sang flyout không bị đóng */
 .menu-flyout::before {
     content: '';
     position: absolute;
@@ -233,26 +234,6 @@ a { text-decoration: none; color: inherit; }
     flex-shrink: 0;
 }
 
-.header-tag {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 16px;
-    padding: 3px 10px;
-    border-radius: 3px;
-    white-space: nowrap;
-}
-
-.header-tag.company {
-    background: rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.9);
-}
-
-.header-tag.role {
-    background: var(--role-green);
-    color: white;
-    font-weight: 400;
-}
-
 .header-icon-btn {
     width: 30px;
     height: 30px;
@@ -289,12 +270,6 @@ a { text-decoration: none; color: inherit; }
     background: rgba(255,255,255,0.18);
     border-color: rgba(255,255,255,0.55);
 }
-.header-app-link__icon {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
 .header-app-link__glyph { font-size: 14px; line-height: 1; flex-shrink: 0; }
 
 .header-user-btn {
@@ -313,20 +288,7 @@ a { text-decoration: none; color: inherit; }
     white-space: nowrap;
 }
 
-/* ======= Dashboard (portal + rich charts) ======= */
-.dashboard {
-    padding: var(--portal-space-lg) var(--portal-space-xl) 48px;
-    max-width: none;
-    margin: 0 auto;
-}
-
-.rich-dash {
-    background:
-        radial-gradient(circle at top left, rgba(37,99,235,.06), transparent 36%),
-        radial-gradient(circle at 82% 12%, rgba(236,72,153,.05), transparent 30%);
-    border-radius: var(--portal-radius);
-    padding: 8px 4px 16px;
-}
+.portal-header .portal-tag { font-size: 12px; }
 
 .chat-fab {
     position: fixed;
@@ -361,7 +323,7 @@ a { text-decoration: none; color: inherit; }
 .dev-bar a { color: #93c5fd; }
 </style>
 </head>
-<body>
+<body class="portal-page">
 
 <header class="portal-header">
   <div class="header-top">
@@ -380,8 +342,8 @@ a { text-decoration: none; color: inherit; }
         <span class="header-app-link__glyph" aria-hidden="true">📱</span>
         <span>Salesman App</span>
       </a>
-      <span class="header-tag company">Công ty: FINVIET</span>
-      <span class="header-tag role">Vai trò: Admin</span>
+      <span class="portal-tag portal-tag--orange">Công ty: FINVIET</span>
+      <span class="portal-tag portal-tag--role">Vai trò: Admin Finviet</span>
       <button class="header-icon-btn" title="Thông báo">🔔</button>
       <button class="header-icon-btn" title="Hồ sơ">👤</button>
       <button class="header-icon-btn" title="Trợ giúp">?</button>
@@ -390,53 +352,100 @@ a { text-decoration: none; color: inherit; }
   </div>
 </header>
 
-<main class="dashboard">
-  <div class="rich-dash">
-    <div class="topbar">
+<main class="portal-page-content rich-dash">
+      <div class="portal-page-hd rich-dash__page-hd">
         <div>
-          <h1>Dashboard</h1>
-          <p class="subtext">Tổng quan vận hành bán hàng, viếng thăm, giao hàng và cảnh báo realtime.</p>
+          <h1 class="portal-page-title">Dashboard điều hành Portal DMS</h1>
+          <p class="subtext portal-page-subtitle">Bản UI nhiều màu và nhiều dạng chart hơn để đánh giá bố cục, dữ liệu vận hành, drill-down và cảnh báo.</p>
         </div>
-        <div class="top-actions">
-          <div class="chip"><span class="dot"></span> Realtime 09:12 · 26/06/2026</div>
-          <button class="btn secondary">Xuất Excel</button>
-          <button class="btn">Làm mới dữ liệu</button>
+        <div class="portal-page-hd__aside rich-dash__top-aside">
+          <div class="portal-context-tags" data-context-tags="page"></div>
+          <div class="top-actions">
+            <div class="chip"><span class="dot"></span> Realtime 09:12 · 26/06/2026</div>
+            <button type="button" class="btn secondary">Xuất Excel</button>
+            <button type="button" class="btn">Làm mới dữ liệu</button>
+          </div>
+          <div class="portal-page-hd__filter-slot"></div>
         </div>
       </div>
 
-      <section class="filters">
-        <div class="filter-head">
-          <strong>Bộ lọc dữ liệu</strong>
-          <div class="chip">Dashboard tổng hợp · HO/NPP/Sales Sup</div>
-        </div>
-        <div class="filter-grid">
-          <div class="field">
-            <label>Từ ngày</label>
-            <input class="control" type="date" value="2026-06-26"/>
+      <section class="filters portal-card portal-query-filter">
+        <div class="portal-card__hd">Tìm kiếm theo</div>
+        <div class="portal-card__bd">
+          <div class="portal-filter-grid portal-filter-grid--4 filter-grid">
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterCompany">* Công ty</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select control" id="dashFilterCompany">
+                  <option selected>Công ty TNHH FINVIET</option>
+                  <option>Công ty TNHH NPP HCM</option>
+                  <option>Công ty TNHH NPP Bình Dương</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterRegion">Vùng</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select control" id="dashFilterRegion">
+                  <option value="">Toàn quốc</option>
+                  <option>Miền Nam</option>
+                  <option>Miền Trung</option>
+                  <option>Miền Bắc</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterFrom">Từ ngày</label>
+              <div class="portal-field__control">
+                <input class="portal-input control" id="dashFilterFrom" type="date" value="2026-06-26"/>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterTo">Đến ngày</label>
+              <div class="portal-field__control">
+                <input class="portal-input control" id="dashFilterTo" type="date" value="2026-06-26"/>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterNpp">Nhà phân phối</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select control" id="dashFilterNpp">
+                  <option>Tất cả NPP</option>
+                  <option>NPP Bình Tân</option>
+                  <option>NPP Thủ Đức</option>
+                  <option>NPP Đà Nẵng</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterChannel">Kênh bán hàng</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select control" id="dashFilterChannel">
+                  <option>Tất cả kênh</option>
+                  <option>GT</option>
+                  <option>MT</option>
+                  <option>Online</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field field">
+              <label class="portal-field__label" for="dashFilterGroup">Nhóm dashboard</label>
+              <div class="portal-field__control portal-select-wrap">
+                <select class="portal-select control" id="dashFilterGroup">
+                  <option>Tổng hợp</option>
+                  <option>Bán hàng</option>
+                  <option>Viếng thăm</option>
+                  <option>Giao hàng</option>
+                  <option>Tồn kho</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="field">
-            <label>Đến ngày</label>
-            <input class="control" type="date" value="2026-06-26"/>
-          </div>
-          <div class="field">
-            <label>Vùng/Khu vực</label>
-            <select class="control"><option>Toàn quốc</option><option>Miền Nam</option><option>Miền Trung</option><option>Miền Bắc</option></select>
-          </div>
-          <div class="field">
-            <label>Nhà phân phối</label>
-            <select class="control"><option>Tất cả NPP</option><option>NPP Bình Tân</option><option>NPP Thủ Đức</option><option>NPP Đà Nẵng</option></select>
-          </div>
-          <div class="field">
-            <label>Kênh bán hàng</label>
-            <select class="control"><option>Tất cả kênh</option><option>GT</option><option>MT</option><option>Online</option></select>
-          </div>
-          <div class="field">
-            <label>Nhóm dashboard</label>
-            <select class="control"><option>Tổng hợp</option><option>Bán hàng</option><option>Viếng thăm</option><option>Giao hàng</option><option>Tồn kho</option></select>
-          </div>
-          <div class="filter-actions">
-            <button class="btn">Áp dụng</button>
-            <button class="btn secondary">Đặt lại</button>
+          <div class="portal-query-actions filter-actions">
+            <div class="portal-query-actions__inner">
+              <button type="button" class="portal-btn portal-btn--default btn secondary">Đặt lại</button>
+              <button type="button" class="portal-btn portal-btn--primary btn">Tìm kiếm</button>
+            </div>
           </div>
         </div>
       </section>
@@ -486,25 +495,25 @@ a { text-decoration: none; color: inherit; }
               <svg class="chart-svg" viewBox="0 0 900 270" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="saleArea" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stop-color="#2563eb" stop-opacity=".27"/>
-                    <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="#4a6fa5" stop-opacity=".27"/>
+                    <stop offset="100%" stop-color="#4a6fa5" stop-opacity="0"/>
                   </linearGradient>
                   <linearGradient id="visitArea" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stop-color="#16a34a" stop-opacity=".18"/>
-                    <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="#4a8f6a" stop-opacity=".18"/>
+                    <stop offset="100%" stop-color="#4a8f6a" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
                 <path d="M0,214 C70,182 102,190 150,170 C210,145 238,118 300,134 C362,151 408,80 462,92 C534,108 560,148 628,125 C698,100 730,48 790,66 C842,82 865,56 900,42 L900,270 L0,270 Z" fill="url(#saleArea)"/>
-                <path d="M0,214 C70,182 102,190 150,170 C210,145 238,118 300,134 C362,151 408,80 462,92 C534,108 560,148 628,125 C698,100 730,48 790,66 C842,82 865,56 900,42" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+                <path d="M0,214 C70,182 102,190 150,170 C210,145 238,118 300,134 C362,151 408,80 462,92 C534,108 560,148 628,125 C698,100 730,48 790,66 C842,82 865,56 900,42" fill="none" stroke="#4a6fa5" stroke-width="5" stroke-linecap="round"/>
                 <path d="M0,230 C68,210 110,198 158,205 C220,212 250,170 310,181 C368,191 412,144 468,152 C530,162 578,155 635,142 C702,126 736,112 798,118 C850,123 870,92 900,88 L900,270 L0,270 Z" fill="url(#visitArea)"/>
-                <path d="M0,230 C68,210 110,198 158,205 C220,212 250,170 310,181 C368,191 412,144 468,152 C530,162 578,155 635,142 C702,126 736,112 798,118 C850,123 870,92 900,88" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
-                <path d="M0,242 C70,228 112,222 160,220 C222,212 254,198 314,202 C374,206 420,176 470,180 C535,186 582,171 640,165 C708,158 742,148 800,150 C852,152 870,132 900,128" fill="none" stroke="#f97316" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9"/>
+                <path d="M0,230 C68,210 110,198 158,205 C220,212 250,170 310,181 C368,191 412,144 468,152 C530,162 578,155 635,142 C702,126 736,112 798,118 C850,123 870,92 900,88" fill="none" stroke="#4a8f6a" stroke-width="4" stroke-linecap="round"/>
+                <path d="M0,242 C70,228 112,222 160,220 C222,212 254,198 314,202 C374,206 420,176 470,180 C535,186 582,171 640,165 C708,158 742,148 800,150 C852,152 870,132 900,128" fill="none" stroke="#b87a48" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9"/>
               </svg>
             </div>
             <div class="legend-inline">
-              <span class="legend-dot"><i style="background:#2563eb"></i>Doanh số</span>
-              <span class="legend-dot"><i style="background:#16a34a"></i>Viếng thăm</span>
-              <span class="legend-dot"><i style="background:#f97316"></i>Đơn hàng</span>
+              <span class="legend-dot"><i style="background:#4a6fa5"></i>Doanh số</span>
+              <span class="legend-dot"><i style="background:#4a8f6a"></i>Viếng thăm</span>
+              <span class="legend-dot"><i style="background:#b87a48"></i>Đơn hàng</span>
             </div>
           </div>
         </div>
@@ -520,11 +529,11 @@ a { text-decoration: none; color: inherit; }
             <div class="donut-grid">
               <div class="donut"></div>
               <div class="legend-list">
-                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#2563eb"></i>Hoàn tất</span><span>36%</span></div>
-                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#16a34a"></i>Đã duyệt</span><span>22%</span></div>
-                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#f59e0b"></i>Đang giao</span><span>16%</span></div>
-                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#ec4899"></i>Chờ xử lý</span><span>12%</span></div>
-                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#7c3aed"></i>Trả/Hủy</span><span>8%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#4a6fa5"></i>Hoàn tất</span><span>36%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#4a8f6a"></i>Đã duyệt</span><span>22%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#b8893a"></i>Đang giao</span><span>16%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#a85a82"></i>Chờ xử lý</span><span>12%</span></div>
+                <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#6f5a9e"></i>Trả/Hủy</span><span>8%</span></div>
                 <div class="legend-row"><span class="legend-left"><i class="sq" style="background:#94a3b8"></i>Khác</span><span>6%</span></div>
               </div>
             </div>
@@ -549,9 +558,9 @@ a { text-decoration: none; color: inherit; }
             </div>
             <div class="x-axis"><span>HCM</span><span>ĐNB</span><span>MT</span><span>TNB</span><span>HN</span><span>ĐB</span></div>
             <div class="legend-inline">
-              <span class="legend-dot"><i style="background:#2563eb"></i>Đơn hàng</span>
-              <span class="legend-dot"><i style="background:#16a34a"></i>Viếng thăm</span>
-              <span class="legend-dot"><i style="background:#f97316"></i>Doanh số</span>
+              <span class="legend-dot"><i style="background:#4a6fa5"></i>Đơn hàng</span>
+              <span class="legend-dot"><i style="background:#4a8f6a"></i>Viếng thăm</span>
+              <span class="legend-dot"><i style="background:#b87a48"></i>Doanh số</span>
             </div>
           </div>
         </div>
@@ -573,10 +582,10 @@ a { text-decoration: none; color: inherit; }
               <div class="stack-row"><span>Đông Bắc</span><div class="stack-track"><div class="seg blue" style="width:30%"></div><div class="seg green" style="width:34%"></div><div class="seg amber" style="width:21%"></div><div class="seg red" style="width:15%"></div></div><span>609</span></div>
             </div>
             <div class="legend-inline">
-              <span class="legend-dot"><i style="background:#2563eb"></i>GT</span>
-              <span class="legend-dot"><i style="background:#16a34a"></i>MT</span>
-              <span class="legend-dot"><i style="background:#f59e0b"></i>Online</span>
-              <span class="legend-dot"><i style="background:#ef4444"></i>Trả/Hủy</span>
+              <span class="legend-dot"><i style="background:#4a6fa5"></i>GT</span>
+              <span class="legend-dot"><i style="background:#4a8f6a"></i>MT</span>
+              <span class="legend-dot"><i style="background:#b8893a"></i>Online</span>
+              <span class="legend-dot"><i style="background:#b85c5c"></i>Trả/Hủy</span>
             </div>
           </div>
         </div>
@@ -590,11 +599,11 @@ a { text-decoration: none; color: inherit; }
           </div>
           <div class="panel-body">
             <div class="funnel">
-              <div class="funnel-step" style="width:96%;background:linear-gradient(135deg,#2563eb,#06b6d4)">Kế hoạch tuyến · 6,780</div>
-              <div class="funnel-step" style="width:84%;background:linear-gradient(135deg,#06b6d4,#14b8a6)">Đã check-in · 5,892</div>
-              <div class="funnel-step" style="width:68%;background:linear-gradient(135deg,#16a34a,#84cc16)">Có tương tác · 4,761</div>
-              <div class="funnel-step" style="width:51%;background:linear-gradient(135deg,#f59e0b,#f97316)">Có đơn hàng · 3,418</div>
-              <div class="funnel-step" style="width:36%;background:linear-gradient(135deg,#ec4899,#7c3aed)">Đơn hoàn tất · 2,496</div>
+              <div class="funnel-step" style="width:96%;background:linear-gradient(135deg,#4a6fa5,#5a9aaa)">Kế hoạch tuyến · 6,780</div>
+              <div class="funnel-step" style="width:84%;background:linear-gradient(135deg,#5a9aaa,#4a8f88)">Đã check-in · 5,892</div>
+              <div class="funnel-step" style="width:68%;background:linear-gradient(135deg,#4a8f6a,#7a9e52)">Có tương tác · 4,761</div>
+              <div class="funnel-step" style="width:51%;background:linear-gradient(135deg,#b8893a,#b87a48)">Có đơn hàng · 3,418</div>
+              <div class="funnel-step" style="width:36%;background:linear-gradient(135deg,#a85a82,#6f5a9e)">Đơn hoàn tất · 2,496</div>
             </div>
           </div>
         </div>
@@ -637,11 +646,11 @@ a { text-decoration: none; color: inherit; }
           </div>
           <div class="panel-body">
             <div class="ranking">
-              <div class="rank-row"><span>NPP Bình Tân</span><div class="rank-track"><div class="rank-fill" style="width:96%;background:linear-gradient(90deg,#2563eb,#06b6d4)"></div></div><span>3.8 tỷ</span></div>
-              <div class="rank-row"><span>NPP Đà Nẵng</span><div class="rank-track"><div class="rank-fill" style="width:84%;background:linear-gradient(90deg,#16a34a,#84cc16)"></div></div><span>3.2 tỷ</span></div>
-              <div class="rank-row"><span>NPP Thủ Đức</span><div class="rank-track"><div class="rank-fill" style="width:76%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div><span>2.9 tỷ</span></div>
-              <div class="rank-row"><span>NPP Biên Hòa</span><div class="rank-track"><div class="rank-fill" style="width:68%;background:linear-gradient(90deg,#ec4899,#7c3aed)"></div></div><span>2.4 tỷ</span></div>
-              <div class="rank-row"><span>NPP Cần Thơ</span><div class="rank-track"><div class="rank-fill" style="width:59%;background:linear-gradient(90deg,#14b8a6,#06b6d4)"></div></div><span>2.0 tỷ</span></div>
+              <div class="rank-row"><span>NPP Bình Tân</span><div class="rank-track"><div class="rank-fill" style="width:96%;background:linear-gradient(90deg,#4a6fa5,#5a9aaa)"></div></div><span>3.8 tỷ</span></div>
+              <div class="rank-row"><span>NPP Đà Nẵng</span><div class="rank-track"><div class="rank-fill" style="width:84%;background:linear-gradient(90deg,#4a8f6a,#7a9e52)"></div></div><span>3.2 tỷ</span></div>
+              <div class="rank-row"><span>NPP Thủ Đức</span><div class="rank-track"><div class="rank-fill" style="width:76%;background:linear-gradient(90deg,#b8893a,#b87a48)"></div></div><span>2.9 tỷ</span></div>
+              <div class="rank-row"><span>NPP Biên Hòa</span><div class="rank-track"><div class="rank-fill" style="width:68%;background:linear-gradient(90deg,#a85a82,#6f5a9e)"></div></div><span>2.4 tỷ</span></div>
+              <div class="rank-row"><span>NPP Cần Thơ</span><div class="rank-track"><div class="rank-fill" style="width:59%;background:linear-gradient(90deg,#4a8f88,#5a9aaa)"></div></div><span>2.0 tỷ</span></div>
               <div class="rank-row"><span>NPP Hà Nội</span><div class="rank-track"><div class="rank-fill" style="width:47%;background:linear-gradient(90deg,#64748b,#94a3b8)"></div></div><span>1.7 tỷ</span></div>
             </div>
           </div>
@@ -693,12 +702,12 @@ a { text-decoration: none; color: inherit; }
           </div>
           <div class="panel-body">
             <div class="scatter">
-              <div class="bubble" style="left:12%;bottom:24%;width:38px;height:38px;background:linear-gradient(135deg,#2563eb,#06b6d4)">A</div>
-              <div class="bubble" style="left:28%;bottom:38%;width:48px;height:48px;background:linear-gradient(135deg,#16a34a,#84cc16)">B</div>
-              <div class="bubble" style="left:43%;bottom:26%;width:34px;height:34px;background:linear-gradient(135deg,#f59e0b,#f97316)">C</div>
-              <div class="bubble" style="left:58%;bottom:62%;width:58px;height:58px;background:linear-gradient(135deg,#ec4899,#7c3aed)">D</div>
-              <div class="bubble" style="left:74%;bottom:48%;width:44px;height:44px;background:linear-gradient(135deg,#14b8a6,#06b6d4)">E</div>
-              <div class="bubble" style="left:82%;bottom:78%;width:66px;height:66px;background:linear-gradient(135deg,#4f46e5,#2563eb)">F</div>
+              <div class="bubble" style="left:12%;bottom:24%;width:38px;height:38px;background:linear-gradient(135deg,#4a6fa5,#5a9aaa)">A</div>
+              <div class="bubble" style="left:28%;bottom:38%;width:48px;height:48px;background:linear-gradient(135deg,#4a8f6a,#7a9e52)">B</div>
+              <div class="bubble" style="left:43%;bottom:26%;width:34px;height:34px;background:linear-gradient(135deg,#b8893a,#b87a48)">C</div>
+              <div class="bubble" style="left:58%;bottom:62%;width:58px;height:58px;background:linear-gradient(135deg,#a85a82,#6f5a9e)">D</div>
+              <div class="bubble" style="left:74%;bottom:48%;width:44px;height:44px;background:linear-gradient(135deg,#4a8f88,#5a9aaa)">E</div>
+              <div class="bubble" style="left:82%;bottom:78%;width:66px;height:66px;background:linear-gradient(135deg,#5a5a9e,#4a6fa5)">F</div>
             </div>
             <div class="note">Dạng này dùng tốt để phát hiện sales viếng thăm nhiều nhưng doanh số thấp, hoặc sales ít visit nhưng tạo doanh số cao bất thường.</div>
           </div>
@@ -824,13 +833,13 @@ a { text-decoration: none; color: inherit; }
           </div>
         </div>
       </section>
-
-  </div>
 </main>
 
 <button class="chat-fab" title="Hỗ trợ">💬</button>
-<div class="dev-bar">MAIN · Dashboard ecodms — <a href="../mobile/main.html">Salesman App →</a></div>
+<div class="dev-bar">MAIN · Dashboard điều hành — <span id="api-health">API: …</span> — <a href="components-gallery.html">Component Gallery</a> · <a href="../mobile/main.html">Salesman App →</a></div>
 
+<script src="_shared/api-client.js"></script>
+<script src="_shared/portal-mockup-widgets.js"></script>
 <script src="menu-tree.js"></script>
 <script>
 var L1_ICONS = {
@@ -950,8 +959,28 @@ function renderMenu() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', renderMenu);
+document.addEventListener('DOMContentLoaded', function () {
+  renderMenu();
+  if (window.PortalMockupWidgets) {
+    window.PortalMockupWidgets.initAll();
+  }
+
+  if (window.DMS_API) {
+    window.DMS_API.health()
+      .then(function (data) {
+        var el = document.getElementById('api-health');
+        if (el) {
+          el.textContent = 'API: ' + data.status + ' (' + data.env + ')';
+        }
+      })
+      .catch(function () {
+        var el = document.getElementById('api-health');
+        if (el) {
+          el.textContent = 'API: offline (chạy dev.cmd hoặc run_local.bat)';
+        }
+      });
+  }
+});
 </script>
 </body>
 </html>
-
