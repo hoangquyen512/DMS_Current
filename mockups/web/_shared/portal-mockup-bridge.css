@@ -1,0 +1,649 @@
+/**
+ * [WEB] Bridge — map class mockup cũ → visual portal (Ant Design Pro)
+ * Tự load qua portal-chrome.css. Dùng khi HTML chưa refactor sang .portal-* thuần.
+ */
+@import url("portal-tokens.css");
+
+/* ── Layout trang con ── */
+body.portal-page .sidebar { display: none !important; }
+body.portal-page .app {
+  display: block;
+  height: auto;
+  min-height: calc(100vh - var(--portal-header-h, 56px));
+  margin-top: 0;
+}
+body.portal-page .main { width: 100%; flex: none; }
+body.portal-page .page,
+body.portal-page .page-content {
+  padding: var(--portal-space-lg) var(--portal-space-xl) var(--portal-space-xl);
+  background: var(--portal-bg);
+  min-height: calc(100vh - var(--portal-header-h, 56px));
+}
+body.portal-page .browser { background: transparent; }
+body.portal-page .state-title {
+  margin: 0;
+  padding: 8px 24px;
+  font-size: 11px;
+  font-family: ui-monospace, monospace;
+  color: var(--portal-text-tertiary);
+  background: var(--portal-surface);
+  border-bottom: 1px solid var(--portal-border);
+}
+
+/* ── Breadcrumb / title ── */
+body.portal-page .breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--portal-space-sm);
+  font-size: var(--portal-font-size);
+  color: var(--portal-text-tertiary);
+  margin-bottom: var(--portal-space-sm);
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+body.portal-page .breadcrumb a {
+  color: var(--portal-text-tertiary);
+  text-decoration: none;
+}
+body.portal-page .breadcrumb a:hover { color: var(--portal-primary); }
+body.portal-page .page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--portal-text);
+  line-height: 1.4;
+  margin-bottom: var(--portal-space-sm);
+}
+body.portal-page .page-subtitle {
+  font-size: 12px;
+  color: var(--portal-text-tertiary);
+  margin-bottom: var(--portal-space-md);
+}
+
+/* ── QueryFilter (legacy .filter-card) ── */
+body.portal-page .filter-card,
+body.portal-page .search-card,
+body.portal-page .filter-panel {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius);
+  box-shadow: var(--portal-shadow-card);
+  padding: 20px 24px 16px;
+  margin-bottom: var(--portal-space-lg);
+}
+body.portal-page .filter-card:not([data-advanced-filter-v2]):not(.portal-filter-card--v2)::before,
+body.portal-page .search-card:not([data-advanced-filter-v2])::before {
+  content: "Tìm kiếm theo";
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--portal-text);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--portal-border);
+}
+body.portal-page .filter-card[data-advanced-filter-v2]::before,
+body.portal-page .filter-card.portal-filter-card--v2::before,
+body.portal-page .search-card[data-advanced-filter-v2]::before {
+  display: none;
+}
+body.portal-page .portal-query-filter .portal-card__hd.portal-filter-card__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+body.portal-page .filter-row,
+body.portal-page .search-row,
+body.portal-page .filter-card > .filter-grid--4,
+body.portal-page .filter-card > .portal-filter-grid--4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+body.portal-page .filter-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+body.portal-page .filter-group,
+body.portal-page .search-group,
+body.portal-page .form-group-inline {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+body.portal-page .filter-label,
+body.portal-page .search-label,
+body.portal-page .form-label-inline {
+  height: 22px;
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--portal-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body.portal-page .filter-input,
+body.portal-page .filter-select,
+body.portal-page .search-input,
+body.portal-page .search-select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 4px 11px;
+  border: 1px solid var(--portal-border-strong);
+  border-radius: var(--portal-radius-sm);
+  font-size: var(--portal-font-size);
+  font-family: inherit;
+  color: var(--portal-text);
+  background: var(--portal-surface);
+  box-sizing: border-box;
+  outline: none;
+}
+/* Date range — một ô (portal + legacy class) */
+body.portal-page .portal-date-range,
+body.portal-page .filter-date-range {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+body.portal-page .filter-field .portal-date-range,
+body.portal-page .filter-field .filter-date-range,
+body.portal-page .portal-field .portal-date-range,
+body.portal-page .portal-field__control.portal-date-range {
+  width: 100%;
+  max-width: none;
+}
+body.portal-page .portal-date-range .portal-date-range__inner,
+body.portal-page .filter-date-range .portal-date-range__inner {
+  width: 100%;
+  box-sizing: border-box;
+}
+body.portal-page .portal-date-range .filter-input,
+body.portal-page .filter-date-range .filter-input {
+  height: 30px;
+  border: none;
+  background: transparent;
+  padding: 0 4px;
+  text-align: left;
+  width: auto;
+  max-width: none;
+}
+body.portal-page .filter-select,
+body.portal-page .search-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c8c8c'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 6px;
+}
+body.portal-page textarea,
+body.portal-page .form-textarea,
+body.portal-page .portal-textarea {
+  width: 100%;
+  min-height: 80px;
+  height: auto;
+  padding: 8px 11px;
+  line-height: 1.5715;
+  border: 1px solid var(--portal-border-strong);
+  border-radius: var(--portal-radius-sm);
+  font-size: var(--portal-font-size);
+  font-family: inherit;
+  color: var(--portal-text);
+  background: var(--portal-surface);
+  box-sizing: border-box;
+  resize: vertical;
+  outline: none;
+}
+body.portal-page textarea:hover,
+body.portal-page .form-textarea:hover,
+body.portal-page .portal-textarea:hover {
+  border-color: var(--portal-primary);
+}
+body.portal-page textarea:focus,
+body.portal-page .form-textarea:focus,
+body.portal-page .portal-textarea:focus {
+  border-color: var(--portal-primary);
+  box-shadow: 0 0 0 2px rgba(43, 87, 154, 0.15);
+}
+body.portal-page .filter-input:hover,
+body.portal-page .filter-select:hover,
+body.portal-page .search-input:hover,
+body.portal-page .search-select:hover {
+  border-color: var(--portal-primary);
+}
+/* Nút Làm mới / Tìm kiếm — luôn cuối panel filter, căn phải */
+body.portal-page .filter-card > .filter-actions,
+body.portal-page .search-card > .filter-actions,
+body.portal-page .filter-row .filter-actions,
+body.portal-page .search-actions,
+body.portal-page .portal-query-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  flex: 1 1 100%;
+  align-self: flex-end;
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: none;
+  box-sizing: border-box;
+}
+body.portal-page .filter-date-range,
+body.portal-page .portal-date-range {
+  height: 32px;
+  max-height: 32px;
+}
+body.portal-page .filter-date-range .portal-date-range__inner,
+body.portal-page .portal-date-range .portal-date-range__inner {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+}
+body.portal-page .topbar .company-badge,
+body.portal-page .topbar-actions .company-badge {
+  display: none !important;
+}
+
+/* ── Buttons ── */
+body.portal-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 4px 15px;
+  border-radius: var(--portal-radius-sm);
+  font-size: var(--portal-font-size);
+  font-family: inherit;
+  font-weight: 400;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+body.portal-page .btn-primary {
+  background: var(--portal-primary);
+  border-color: var(--portal-primary);
+  color: #fff;
+}
+body.portal-page .btn-primary:hover {
+  background: var(--portal-primary-hover);
+  border-color: var(--portal-primary-hover);
+}
+body.portal-page .btn-secondary,
+body.portal-page .btn-default {
+  background: var(--portal-surface);
+  border-color: var(--portal-border-strong);
+  color: var(--portal-text);
+}
+body.portal-page .btn-secondary:hover,
+body.portal-page .btn-default:hover {
+  color: var(--portal-primary);
+  border-color: var(--portal-primary);
+}
+body.portal-page .btn-danger {
+  background: var(--portal-error-text);
+  border-color: var(--portal-error-text);
+  color: #fff;
+}
+body.portal-page .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+body.portal-page .btn-icon {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--portal-radius-sm);
+  color: var(--portal-text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+}
+body.portal-page .btn-icon:hover {
+  color: var(--portal-primary);
+  background: rgba(43, 87, 154, 0.08);
+}
+
+/* ── ProTable (legacy table) ── */
+body.portal-page .table-container,
+body.portal-page .table-wrap,
+body.portal-page .data-grid-wrap {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius);
+  box-shadow: var(--portal-shadow-card);
+  overflow: hidden;
+  margin-bottom: var(--portal-space-lg);
+}
+body.portal-page .table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--portal-border);
+  font-size: var(--portal-font-size);
+  color: var(--portal-text-secondary);
+  min-height: 48px;
+}
+body.portal-page .table-toolbar > *:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body.portal-page .table-toolbar > *:last-child {
+  flex-shrink: 0;
+}
+body.portal-page .table-container table,
+body.portal-page .table-wrap table,
+body.portal-page .page table:not(.no-portal),
+body.portal-page .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--portal-font-size);
+}
+body.portal-page .table-container thead th,
+body.portal-page .table-wrap thead th,
+body.portal-page .page table:not(.no-portal) thead th,
+body.portal-page .data-table thead th {
+  background: #fafafa;
+  color: var(--portal-text);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--portal-border);
+  white-space: nowrap;
+}
+body.portal-page .table-container tbody td,
+body.portal-page .table-wrap tbody td,
+body.portal-page .page table:not(.no-portal) tbody td,
+body.portal-page .data-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--portal-border);
+  color: var(--portal-text);
+  vertical-align: middle;
+}
+body.portal-page .table-container tbody tr:nth-child(even),
+body.portal-page .table-wrap tbody tr:nth-child(even),
+body.portal-page .page table:not(.no-portal) tbody tr:nth-child(even),
+body.portal-page .data-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+body.portal-page .table-container tbody tr:hover,
+body.portal-page .table-wrap tbody tr:hover,
+body.portal-page .page table:not(.no-portal) tbody tr:hover {
+  background: #f5f5f5;
+}
+body.portal-page .table-container tbody tr.selected,
+body.portal-page .table-container tbody tr.row-selected,
+body.portal-page .data-table tbody tr.selected {
+  background: #e6f4ff !important;
+}
+body.portal-page .table-container a,
+body.portal-page .page table a {
+  color: var(--portal-primary);
+  text-decoration: none;
+}
+body.portal-page .table-container a:hover,
+body.portal-page .page table a:hover {
+  text-decoration: underline;
+}
+
+/* Checkbox column — thẳng hàng check-all */
+body.portal-page th.col-check,
+body.portal-page td.col-check,
+body.portal-page th.checkbox-col,
+body.portal-page td.checkbox-col,
+body.portal-page .table-container th:first-child:has(input[type="checkbox"]),
+body.portal-page .table-container td:first-child:has(input[type="checkbox"]) {
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  padding: 12px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+body.portal-page th.col-check input[type="checkbox"],
+body.portal-page td.col-check input[type="checkbox"],
+body.portal-page th.checkbox-col input[type="checkbox"],
+body.portal-page td.checkbox-col input[type="checkbox"],
+body.portal-page .table-container th:first-child input[type="checkbox"],
+body.portal-page .table-container td:first-child input[type="checkbox"] {
+  display: inline-block;
+  margin: 0;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* ── Tag / badge ── */
+body.portal-page .badge,
+body.portal-page .tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 7px;
+  height: 22px;
+  border-radius: var(--portal-radius-xs);
+  font-size: 12px;
+  line-height: 20px;
+  border: 1px solid transparent;
+}
+body.portal-page .badge-success,
+body.portal-page .badge-approved,
+body.portal-page .badge-active,
+body.portal-page .tag-success { background: var(--portal-success-bg); color: var(--portal-success-text); border-color: #b7eb8f; }
+body.portal-page .badge-warning,
+body.portal-page .badge-pending,
+body.portal-page .tag-warning { background: var(--portal-warning-bg); color: var(--portal-warning-text); border-color: #ffe58f; }
+body.portal-page .badge-error,
+body.portal-page .badge-rejected,
+body.portal-page .tag-error { background: var(--portal-error-bg); color: var(--portal-error-text); border-color: #ffccc7; }
+body.portal-page .badge-init,
+body.portal-page .badge-default,
+body.portal-page .tag-default { background: #fafafa; color: var(--portal-text-secondary); border-color: var(--portal-border-strong); }
+body.portal-page .badge-info,
+body.portal-page .tag-blue { background: var(--portal-tag-blue-bg); color: var(--portal-tag-blue-text); border-color: #91caff; }
+body.portal-page .tag-orange,
+body.portal-page .badge-orange { background: var(--portal-tag-orange-bg); color: var(--portal-tag-orange-text); border-color: #ffd591; }
+
+/* ── Pagination ── */
+body.portal-page .pagination,
+body.portal-page .table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--portal-space-md);
+  padding: var(--portal-space-md) var(--portal-space-lg);
+  font-size: var(--portal-font-size);
+  color: var(--portal-text-secondary);
+  border-top: 1px solid var(--portal-border);
+}
+
+/* ── Page header: tên màn + Bộ lọc nâng cao cùng 1 dòng ── */
+body.portal-page .portal-page-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+  margin-bottom: 16px;
+  min-height: 40px;
+}
+body.portal-page .portal-page-hd .portal-page-title,
+body.portal-page .portal-page-hd .page-title {
+  margin: 0 !important;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+body.portal-page .portal-page-hd__aside {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Page header toolbar ── */
+body.portal-page .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--portal-space-md);
+  margin-bottom: var(--portal-space-lg);
+}
+body.portal-page .page-header-actions,
+body.portal-page .header-actions {
+  display: flex;
+  gap: var(--portal-space-sm);
+  flex-wrap: wrap;
+}
+
+/* ── List section: title + actions cùng 1 dòng ── */
+body.portal-page .list-section-header,
+body.portal-page .section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 12px;
+  min-height: 48px;
+}
+body.portal-page .list-section-title,
+body.portal-page .section-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--portal-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body.portal-page .list-section-actions,
+body.portal-page .section-header .btn-group,
+body.portal-page .section-header > div:last-child:not(:only-child) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 1100px) {
+  body.portal-page .filter-row,
+  body.portal-page .search-row,
+  body.portal-page .filter-card > .filter-grid--4,
+  body.portal-page .filter-card > .portal-filter-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  body.portal-page .filter-row,
+  body.portal-page .search-row,
+  body.portal-page .filter-card > .filter-grid--4,
+  body.portal-page .filter-card > .portal-filter-grid--4 {
+    grid-template-columns: 1fr;
+  }
+  body.portal-page .list-section-header,
+  body.portal-page .section-header {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  body.portal-page .section-header button {
+    width: auto;
+  }
+}
+
+/* ── Line tabs — legacy .status-tab / .tab → chỉ gạch xanh focus ── */
+body.portal-page .portal-tabs--line,
+body.portal-page .portal-protable__toolbar .status-tabs.portal-tabs--line,
+body.portal-page .portal-protable__toolbar .tabs.portal-tabs--line {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  border-bottom: 1px solid var(--portal-border);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+body.portal-page .portal-tabs--line .status-tab,
+body.portal-page .portal-tabs--line .tab,
+body.portal-page .portal-tabs--line .portal-tabs__item {
+  padding: 12px 0;
+  margin: 0 24px 0 0;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--portal-text-secondary);
+  font-weight: 400;
+  box-shadow: none !important;
+  border-bottom: 2px solid transparent !important;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+body.portal-page .portal-tabs--line .status-tab:hover,
+body.portal-page .portal-tabs--line .tab:hover,
+body.portal-page .portal-tabs--line .portal-tabs__item:hover {
+  color: var(--portal-primary);
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+}
+body.portal-page .portal-tabs--line .status-tab.active,
+body.portal-page .portal-tabs--line .tab.active,
+body.portal-page .portal-tabs--line .portal-tabs__item--active {
+  color: var(--portal-primary) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid var(--portal-primary) !important;
+  font-weight: 600;
+}
+body.portal-page .portal-tabs--line .status-tab .tab-count,
+body.portal-page .portal-tabs--line .portal-tabs__count {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0;
+  border-radius: 0;
+  background: transparent !important;
+  color: inherit;
+  margin-left: 4px;
+}
+body.portal-page .portal-tabs--line .status-tab.active .tab-count {
+  background: transparent !important;
+  color: inherit;
+}
+
+/* ── Toggle switch — màu xanh dương khi bật ── */
+body.portal-page .toggle-switch input:checked + .toggle-slider {
+  background: var(--portal-primary);
+}
+body.portal-page .toggle-switch input:focus-visible + .toggle-slider {
+  box-shadow: 0 0 0 2px rgba(43, 87, 154, 0.2);
+}
