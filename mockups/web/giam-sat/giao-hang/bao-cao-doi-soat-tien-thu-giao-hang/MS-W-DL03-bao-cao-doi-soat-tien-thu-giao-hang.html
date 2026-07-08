@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -46,7 +46,7 @@
             min-height: 100vh;
             background: var(--neutral-50);
             color: var(--neutral-900);
-            font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
             letter-spacing: 0;
         }
 
@@ -363,26 +363,29 @@
         }
 
         .tabs {
-            margin-bottom: 12px;
+            margin-bottom: 0;
             overflow-x: auto;
         }
 
         .tab {
-            min-height: 32px;
-            border: 1px solid var(--neutral-200);
-            border-radius: 999px;
-            background: white;
+            min-height: auto;
+            border: none;
+            border-radius: 0;
+            border-bottom: 2px solid transparent;
+            background: transparent;
             color: var(--neutral-700);
-            padding: 7px 13px;
+            padding: 12px 0;
+            margin-right: 24px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 400;
             white-space: nowrap;
         }
 
         .tab.active {
-            border-color: var(--primary-500);
-            background: var(--primary-50);
-            color: var(--primary-700);
+            border-bottom-color: var(--primary-500);
+            background: transparent;
+            color: var(--primary-600);
+            font-weight: 600;
         }
 
         .bulk-bar {
@@ -875,103 +878,120 @@
             }
         }
     </style>
+<link rel="stylesheet" href="../../../_shared/portal-tokens.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-fonts.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-components.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-mockup-bridge.css"/>
 </head>
 <body class="portal-page" data-portal-base="../../../">
 <div id="portal-chrome-root"></div>
 <div class="portal-page-body">
 
-    <header class="topbar">
-        <div class="breadcrumb">
-            Giám sát / Giao hàng / Báo cáo đối soát tiền thu
-        </div>
-        <div class="user-info">
-            <span>Admin DMS</span>
-            <span class="avatar">AD</span>
-        </div>
-    </header>
+    <main class="page" style="padding:20px 28px 40px;">
+        <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../../main.html">Giám sát</a>
+            <span class="portal-breadcrumb__sep">/</span>
+            <a href="#">Giao hàng</a>
+            <span class="portal-breadcrumb__sep">/</span>
+            <span class="portal-breadcrumb__current">Báo cáo đối soát tiền thu</span>
+        </nav>
+        <h1 class="portal-page-title">Báo cáo đối soát tiền thu giao hàng</h1>
+        <p class="page-subtitle portal-page-subtitle">Theo dõi tiền phải thu, tiền đã thu và chênh lệch giữa đơn giao hàng, xác nhận tài xế và giao dịch thanh toán.</p>
 
-    <main class="page">
-        <section class="page-header">
-            <div>
-                <h1 class="page-title">Báo cáo đối soát tiền thu giao hàng</h1>
-                <div class="page-subtitle">Theo dõi tiền phải thu, tiền đã thu và chênh lệch giữa đơn giao hàng, xác nhận tài xế và giao dịch thanh toán.</div>
-            </div>
-        </section>
-
-        <section class="filter-card">
-            <div class="filter-row">
-                <label class="filter-field">
-                    <span class="filter-label">* Công ty</span>
-                    <select class="filter-select" id="companyFilter">
-                        <option selected>Công ty TNHH NPP HCM</option>
-                        <option>Công ty TNHH NPP Bình Dương</option>
-                    </select>
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Tìm kiếm</span>
-                    <input class="filter-input" id="searchInput" placeholder="Mã DLO, mã CH, cửa hàng, mã GD, tài xế">
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Từ ngày</span>
-                    <input class="filter-input" id="fromDate" type="date" value="2026-06-01">
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Đến ngày</span>
-                    <input class="filter-input" id="toDate" type="date" value="2026-06-16">
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Tài xế</span>
-                    <select class="filter-select" id="driverFilter">
-                        <option value="">Tất cả</option>
-                        <option>TX001 - Nguyễn Văn Tài</option>
-                        <option>TX006 - Lê Thanh Tùng</option>
-                        <option>TX014 - Trần Minh Khoa</option>
-                    </select>
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Phương thức thu</span>
-                    <select class="filter-select" id="methodFilter">
-                        <option value="">Tất cả</option>
-                        <option value="EcoPay QR">EcoPay QR</option>
-                        <option value="Tiền mặt">Tiền mặt</option>
-                    </select>
-                </label>
-                <div class="filter-actions">
-                    <button class="btn btn-primary" type="button" id="applyFilterBtn">Lọc</button>
-                    <button class="btn btn-secondary" type="button" id="resetFilterBtn">Làm mới</button>
+        <div class="portal-card portal-query-filter">
+            <div class="portal-card__hd">Tìm kiếm theo</div>
+            <div class="portal-card__bd">
+                <div class="portal-filter-grid portal-filter-grid--4">
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="companyFilter">* Công ty</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="companyFilter">
+                                <option selected>Công ty TNHH NPP HCM</option>
+                                <option>Công ty TNHH NPP Bình Dương</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--span-2">
+                        <label class="portal-field__label" for="searchInput">Tìm kiếm</label>
+                        <div class="portal-field__control portal-input-search-wrap">
+                            <input class="portal-input filter-input" id="searchInput" placeholder="Mã DLO, mã CH, cửa hàng, mã GD, tài xế" type="text"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--span-2">
+                        <label class="portal-field__label">Thời gian</label>
+                        <div class="portal-field__control portal-date-range">
+                            <div class="portal-date-range__inner">
+                                <input class="portal-date-range__input filter-input" id="fromDate" type="date" value="2026-06-01" aria-label="Từ ngày"/>
+                                <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                                <input class="portal-date-range__input filter-input" id="toDate" type="date" value="2026-06-16" aria-label="Đến ngày"/>
+                            </div>
+                            <span class="portal-date-range__icon" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="driverFilter">Tài xế</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="driverFilter">
+                                <option value="">Tất cả</option>
+                                <option>TX001 - Nguyễn Văn Tài</option>
+                                <option>TX006 - Lê Thanh Tùng</option>
+                                <option>TX014 - Trần Minh Khoa</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="methodFilter">Phương thức thu</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="methodFilter">
+                                <option value="">Tất cả</option>
+                                <option value="EcoPay QR">EcoPay QR</option>
+                                <option value="Tiền mặt">Tiền mặt</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="statusFilter">Trạng thái đối soát</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="statusFilter">
+                                <option value="">Tất cả</option>
+                                <option>Đã khớp</option>
+                                <option>Chênh lệch</option>
+                                <option>Chờ đối soát</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="sourceFilter">Nguồn đơn hàng</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="sourceFilter">
+                                <option value="">Tất cả</option>
+                                <option>Ecom</option>
+                                <option>Merchant</option>
+                                <option>DMS</option>
+                                <option>OCR</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="diffFilter">Mức chênh lệch</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select filter-select" id="diffFilter">
+                                <option value="">Tất cả</option>
+                                <option value="has-diff">Có chênh lệch</option>
+                                <option value="no-diff">Không chênh lệch</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="portal-query-actions">
+                    <div class="portal-query-actions__inner">
+                        <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="resetFilterBtn">Làm mới</button>
+                        <button class="portal-btn portal-btn--primary btn btn-primary" type="button" id="applyFilterBtn">Tìm kiếm</button>
+                    </div>
                 </div>
             </div>
-            <div class="filter-row">
-                <label class="filter-field">
-                    <span class="filter-label">Trạng thái đối soát</span>
-                    <select class="filter-select" id="statusFilter">
-                        <option value="">Tất cả</option>
-                        <option>Đã khớp</option>
-                        <option>Chênh lệch</option>
-                        <option>Chờ đối soát</option>
-                    </select>
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Nguồn đơn hàng</span>
-                    <select class="filter-select" id="sourceFilter">
-                        <option value="">Tất cả</option>
-                        <option>Ecom</option>
-                        <option>Merchant</option>
-                        <option>DMS</option>
-                        <option>OCR</option>
-                    </select>
-                </label>
-                <label class="filter-field">
-                    <span class="filter-label">Mức chênh lệch</span>
-                    <select class="filter-select" id="diffFilter">
-                        <option value="">Tất cả</option>
-                        <option value="has-diff">Có chênh lệch</option>
-                        <option value="no-diff">Không chênh lệch</option>
-                    </select>
-                </label>
-            </div>
-        </section>
+        </div>
 
         <section class="report-grid" aria-label="Chỉ số đối soát">
             <div class="report-card">
@@ -1018,13 +1038,6 @@
             </div>
         </section>
 
-        <nav class="tabs" aria-label="Lọc nhanh trạng thái">
-            <button class="tab active" type="button" data-tab="">Tất cả</button>
-            <button class="tab" type="button" data-tab="Đã khớp">Đã khớp</button>
-            <button class="tab" type="button" data-tab="Chênh lệch">Chênh lệch</button>
-            <button class="tab" type="button" data-tab="Chờ đối soát">Chờ đối soát</button>
-        </nav>
-
         <section class="bulk-bar" id="bulkBar">
             <div><strong id="selectedCount">0</strong> đơn đã chọn · Tổng tiền phải thu <strong id="selectedAmount">0đ</strong></div>
             <div class="bulk-actions">
@@ -1032,17 +1045,24 @@
             </div>
         </section>
 
-        <section class="table-card">
-            <div class="table-head">
-                <div>
-                    <div class="table-title">Danh sách đơn giao cần đối soát</div>
-                </div>
-                <div class="header-actions">
-                    <button class="btn btn-secondary" type="button" id="codRecordBtn">Ghi nhận thu COD</button>
-                    <button class="btn btn-secondary" type="button" id="exportBtn">Xuất Excel</button>
-                    <button class="btn btn-primary" type="button" id="bulkReconcileBtn" disabled>Chốt đối soát</button>
+        <section class="portal-card portal-protable table-card">
+            <div class="portal-protable__toolbar">
+                <nav class="tabs portal-tabs portal-tabs--line" aria-label="Lọc nhanh trạng thái">
+                    <button class="tab portal-tabs__item portal-tabs__item--active active" type="button" data-tab="">Tất cả</button>
+                    <button class="tab portal-tabs__item" type="button" data-tab="Đã khớp">Đã khớp</button>
+                    <button class="tab portal-tabs__item" type="button" data-tab="Chênh lệch">Chênh lệch</button>
+                    <button class="tab portal-tabs__item" type="button" data-tab="Chờ đối soát">Chờ đối soát</button>
+                </nav>
+            </div>
+            <div class="portal-protable__list-hd table-head">
+                <h2 class="portal-protable__list-title table-title">Danh sách đơn giao cần đối soát</h2>
+                <div class="portal-protable__list-actions header-actions">
+                    <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="codRecordBtn">Ghi nhận thu COD</button>
+                    <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="exportBtn">Xuất Excel</button>
+                    <button class="portal-btn portal-btn--primary btn btn-primary" type="button" id="bulkReconcileBtn" disabled>Chốt đối soát</button>
                 </div>
             </div>
+            <div class="portal-card__bd">
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -1170,6 +1190,7 @@
                     <button class="page-btn active" type="button">1</button>
                     <button class="page-btn" type="button" disabled>›</button>
                 </div>
+            </div>
             </div>
         </section>
     </main>
@@ -1635,7 +1656,9 @@
             });
             currentTab = '';
             document.querySelectorAll('.tab').forEach(function (tab) {
-                tab.classList.toggle('active', tab.dataset.tab === '');
+                var isActive = tab.dataset.tab === '';
+                tab.classList.toggle('active', isActive);
+                tab.classList.toggle('portal-tabs__item--active', isActive);
             });
             applyFilters();
             showToast('Đã làm mới bộ lọc.');
@@ -1649,8 +1672,10 @@
         document.querySelectorAll('.tab').forEach(function (tab) {
             tab.addEventListener('click', function () {
                 currentTab = tab.dataset.tab;
-                document.querySelectorAll('.tab').forEach(function (item) { item.classList.remove('active'); });
-                tab.classList.add('active');
+                document.querySelectorAll('.tab').forEach(function (item) {
+                    item.classList.remove('active', 'portal-tabs__item--active');
+                });
+                tab.classList.add('active', 'portal-tabs__item--active');
                 statusFilter.value = '';
                 applyFilters();
             });
@@ -1717,4 +1742,3 @@
 </div><!-- /portal-page-body -->
 </body>
 </html>
-
