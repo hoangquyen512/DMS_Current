@@ -1,0 +1,11 @@
+{
+  "name": "dms-portal-menu-scan",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scan": "node scan-all.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
