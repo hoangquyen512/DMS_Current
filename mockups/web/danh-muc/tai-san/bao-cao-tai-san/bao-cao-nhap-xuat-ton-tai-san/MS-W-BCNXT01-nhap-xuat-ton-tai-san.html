@@ -286,12 +286,15 @@
 <!-- Row 1: 4 cols -->
 <div class="grid grid-cols-4 gap-4 mb-3">
 <div class="flex flex-col gap-1">
-<label class="text-xs font-medium text-gray-500">Từ ngày <span class="text-red-500">*</span></label>
-<input class="filter-input" type="text" value="01/05/2026"/>
+<label class="text-xs font-medium text-gray-500">Khoảng thời gian <span class="text-red-500">*</span></label>
+<div class="portal-date-range filter-date-range">
+<div class="portal-date-range__inner">
+<input class="portal-date-range__input filter-input" type="text" value="01/05/2026" placeholder="Từ ngày" aria-label="Từ ngày"/>
+<span class="portal-date-range__sep" aria-hidden="true">—</span>
+<input class="portal-date-range__input filter-input" type="text" value="21/05/2026" placeholder="Đến ngày" aria-label="Đến ngày"/>
 </div>
-<div class="flex flex-col gap-1">
-<label class="text-xs font-medium text-gray-500">Đến ngày <span class="text-red-500">*</span></label>
-<input class="filter-input" type="text" value="21/05/2026"/>
+<span class="portal-date-range__icon" aria-hidden="true"></span>
+</div>
 </div>
 <div class="flex flex-col gap-1">
 <label class="text-xs font-medium text-gray-500">Trạng thái tài sản</label>
@@ -594,12 +597,15 @@
 <div class="mx-6 mb-4 bg-white border border-gray-200 rounded-xl p-4">
 <div class="grid grid-cols-4 gap-4 mb-3">
 <div class="flex flex-col gap-1">
-<label class="text-xs font-medium text-gray-500">📅 Từ ngày <span class="text-red-500">*</span></label>
-<input class="filter-input" type="text" value="01/05/2026"/>
+<label class="text-xs font-medium text-gray-500">📅 Khoảng thời gian <span class="text-red-500">*</span></label>
+<div class="portal-date-range filter-date-range">
+<div class="portal-date-range__inner">
+<input class="portal-date-range__input filter-input" type="text" value="01/05/2026" placeholder="Từ ngày" aria-label="Từ ngày"/>
+<span class="portal-date-range__sep" aria-hidden="true">—</span>
+<input class="portal-date-range__input filter-input" type="text" value="21/05/2026" placeholder="Đến ngày" aria-label="Đến ngày"/>
 </div>
-<div class="flex flex-col gap-1">
-<label class="text-xs font-medium text-gray-500">📅 Đến ngày <span class="text-red-500">*</span></label>
-<input class="filter-input" type="text" value="21/05/2026"/>
+<span class="portal-date-range__icon" aria-hidden="true"></span>
+</div>
 </div>
 <div class="flex flex-col gap-1">
 <label class="text-xs font-medium text-gray-500">🏢 Cấp quản lý</label>

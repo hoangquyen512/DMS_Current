@@ -342,12 +342,15 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
           <input class="filter-search" id="searchInput" oninput="applyFilters()" placeholder="Tìm theo mã kiểm tra, mã SKU, tên SKU, mã SPU, cửa hàng, nhân viên..." type="text"/>
         </div>
         <div class="filter-field">
-          <div class="filter-label">Từ ngày nhập</div>
-          <input class="filter-input" id="fromDate" onchange="applyFilters()" type="text" value="01/06/2026"/>
-        </div>
-        <div class="filter-field">
-          <div class="filter-label">Đến ngày nhập</div>
-          <input class="filter-input" id="toDate" onchange="applyFilters()" type="text" value="05/06/2026"/>
+          <div class="filter-label">Thời gian nhập</div>
+          <div class="portal-date-range filter-date-range">
+            <div class="portal-date-range__inner">
+              <input class="portal-date-range__input filter-input" id="fromDate" onchange="applyFilters()" type="text" value="01/06/2026" aria-label="Từ ngày"/>
+              <span class="portal-date-range__sep" aria-hidden="true">—</span>
+              <input class="portal-date-range__input filter-input" id="toDate" onchange="applyFilters()" type="text" value="05/06/2026" aria-label="Đến ngày"/>
+            </div>
+            <span class="portal-date-range__icon" aria-hidden="true"></span>
+          </div>
         </div>
         <div class="filter-field">
           <div class="filter-label">Nhân viên</div>
@@ -379,10 +382,11 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
             <option value="Chăm sóc">Chăm sóc</option>
           </select>
         </div>
-        <div class="filter-actions">
-          <button class="btn btn-secondary" onclick="resetFilters()">Làm mới</button>
-          <button class="btn btn-primary" onclick="applyFilters()">Tìm kiếm</button>
         </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-secondary" onclick="resetFilters()">Làm mới</button>
+        <button class="btn btn-primary" onclick="applyFilters()">Tìm kiếm</button>
       </div>
     </div>
 
