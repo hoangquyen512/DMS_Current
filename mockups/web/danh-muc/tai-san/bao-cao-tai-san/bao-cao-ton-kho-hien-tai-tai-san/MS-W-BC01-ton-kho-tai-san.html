@@ -739,7 +739,6 @@
             </tbody>
           </table>
         </div>
-        <div class="empty-state" id="emptyState">Không có dữ liệu phù hợp với điều kiện tìm kiếm.</div>
       </div>
     </section>
   </main>
@@ -922,7 +921,6 @@
         if (matched) visibleCount += 1;
       });
 
-      document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
       document.getElementById('snapshotTime').value = formatDateTime(new Date());
     }
 
