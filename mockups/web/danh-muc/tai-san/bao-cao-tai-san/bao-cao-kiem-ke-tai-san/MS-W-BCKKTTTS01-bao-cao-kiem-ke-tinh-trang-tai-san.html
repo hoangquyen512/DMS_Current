@@ -439,10 +439,18 @@ td.actions { text-align: right; white-space: nowrap; }
 
 <div class="switcher">
   <span class="switcher-label">MS-W-BCKKTTTS01</span>
-  <button class="sw-btn active" onclick="switchScreen(1)">1 · Mặc định</button>
-  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-  <button class="sw-btn" onclick="switchScreen(3)">3 · Chi tiết ảnh</button>
+  <button class="sw-btn active" data-target="sw1" onclick="switchScreen('sw1')">1 · Mặc định</button>
+  <button class="sw-btn" data-target="sw3" onclick="switchScreen('sw3')">2 · Chi tiết ảnh</button>
 </div>
+<script>
+function switchScreen(id) {
+  document.querySelectorAll('.screen-wrapper').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.sw-btn').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  var btn = document.querySelector('.sw-btn[data-target="' + id + '"]');
+  if (btn) btn.classList.add('active');
+}
+</script>
 
 <div class="screen-wrapper active" id="sw1">
 <div class="app">
@@ -551,11 +559,11 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted">Kệ còn sử dụng tốt, đã vệ sinh khu vực trưng bày...</td>
                   <td>
                     <div class="photo-strip">
-                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 1"></button>
-                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-a" onclick="switchScreen('sw3')" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-b" onclick="switchScreen('sw3')" title="Ảnh 2"></button>
                     </div>
                   </td>
-                  <td class="actions"><button class="btn-icon" title="Xem chi tiết" onclick="switchScreen(3)">👁</button></td>
+                  <td class="actions"><button class="btn-icon" title="Xem chi tiết" onclick="switchScreen('sw3')">👁</button></td>
                 </tr>
                 <tr>
                   <td class="code">KKTS-20260617-0007 <span class="copy-icon">⧉</span></td>
@@ -573,9 +581,9 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted">Đèn tủ mát hoạt động không ổn định...</td>
                   <td>
                     <div class="photo-strip">
-                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 1"></button>
-                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 2"></button>
-                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 3"></button>
+                      <button class="photo-thumb photo-b" onclick="switchScreen('sw3')" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen('sw3')" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-d" onclick="switchScreen('sw3')" title="Ảnh 3"></button>
                     </div>
                   </td>
                   <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
@@ -596,7 +604,7 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted">Hết chương trình, cửa hàng đề nghị thu hồi.</td>
                   <td>
                     <div class="photo-strip">
-                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-a" onclick="switchScreen('sw3')" title="Ảnh 1"></button>
                     </div>
                   </td>
                   <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
@@ -617,10 +625,10 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted">Decal rách, bạc màu, không còn sử dụng.</td>
                   <td>
                     <div class="photo-strip">
-                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 1"></button>
-                      <button class="photo-thumb photo-a" onclick="switchScreen(3)" title="Ảnh 2"></button>
-                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 3"></button>
-                      <button class="photo-more" onclick="switchScreen(3)" title="Xem thêm ảnh">+1</button>
+                      <button class="photo-thumb photo-d" onclick="switchScreen('sw3')" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-a" onclick="switchScreen('sw3')" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen('sw3')" title="Ảnh 3"></button>
+                      <button class="photo-more" onclick="switchScreen('sw3')" title="Xem thêm ảnh">+1</button>
                     </div>
                   </td>
                   <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
@@ -641,10 +649,10 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted">Cửa hàng xác nhận không còn thiết bị tại điểm bán.</td>
                   <td>
                     <div class="photo-strip">
-                      <button class="photo-thumb photo-b" onclick="switchScreen(3)" title="Ảnh 1"></button>
-                      <button class="photo-thumb photo-d" onclick="switchScreen(3)" title="Ảnh 2"></button>
-                      <button class="photo-thumb photo-c" onclick="switchScreen(3)" title="Ảnh 3"></button>
-                      <button class="photo-more" onclick="switchScreen(3)" title="Xem thêm ảnh">+2</button>
+                      <button class="photo-thumb photo-b" onclick="switchScreen('sw3')" title="Ảnh 1"></button>
+                      <button class="photo-thumb photo-d" onclick="switchScreen('sw3')" title="Ảnh 2"></button>
+                      <button class="photo-thumb photo-c" onclick="switchScreen('sw3')" title="Ảnh 3"></button>
+                      <button class="photo-more" onclick="switchScreen('sw3')" title="Xem thêm ảnh">+2</button>
                     </div>
                   </td>
                   <td class="actions"><button class="btn-icon" title="Xem chi tiết">👁</button></td>
@@ -668,108 +676,6 @@ td.actions { text-align: right; white-space: nowrap; }
     </div>
   </div>
 </div>
-<div class="hint">MS-W-BCKKTTTS01 · State 1: Mặc định</div>
-</div>
-
-<div class="screen-wrapper" id="sw2">
-<div class="app">
-  <aside class="sidebar"></aside>
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb"><a href="#">Trang chủ</a> / <a href="#">Báo cáo</a> / Kiểm kê tình trạng tài sản</div>
-      <div class="topbar-actions">
-        <div class="user-info"><div class="avatar">AD</div><span>Admin hệ thống</span></div>
-      </div>
-    </div>
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Báo cáo kiểm kê tình trạng tài sản</div>
-          <div class="page-subtitle">Không có dữ liệu phù hợp với điều kiện lọc hiện tại.</div>
-        </div>
-      </div>
-
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field">
-            <div class="filter-label">* Công ty</div>
-            <select class="filter-select"><option>FINVIET</option></select>
-          </div>
-          <div class="filter-field wide">
-            <div class="filter-label">Thời gian kiểm kê</div>
-            <input class="filter-input" type="text" value="01/01/2026 - 05/01/2026"/>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Nhân viên</div>
-            <select class="filter-select"><option>Tất cả nhân viên</option></select>
-          </div>
-        </div>
-        <div class="filter-row">
-          <div class="filter-field">
-            <div class="filter-label">Cửa hàng</div>
-            <select class="filter-select"><option>Tất cả cửa hàng</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Nhóm tài sản</div>
-            <select class="filter-select"><option>Tất cả nhóm</option><option>Tài sản định danh</option><option>Tài sản không định danh</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Loại tài sản</div>
-            <select class="filter-select"><option>Tất cả loại</option><option>POSM</option><option>ASSET</option><option>TOT</option><option>MÁY POS</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Kết quả kiểm tra</div>
-            <select class="filter-select"><option>Tất cả kết quả</option><option>Đang hoạt động</option><option>Cần sửa chữa</option><option>Hư hỏng</option><option>Mất</option><option>Cần thu hồi</option></select>
-          </div>
-          <div class="filter-actions">
-            <button class="btn btn-secondary">Làm mới</button>
-            <button class="btn btn-primary">Tìm kiếm</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="list-section">
-        <div class="list-section-header">
-          <div class="list-section-title">Danh sách kết quả kiểm kê</div>
-          <div class="list-section-actions">
-            <button class="btn btn-primary">⇩ Export Excel</button>
-          </div>
-        </div>
-        <div class="table-container">
-          <div style="overflow-x:auto;">
-            <table style="min-width:2550px;">
-              <thead>
-                <tr>
-                  <th>Mã kiểm kê</th>
-                  <th>Ngày kiểm kê</th>
-                  <th>Vùng</th>
-                  <th>Mã nhân viên</th>
-                  <th>Nhân viên</th>
-                  <th>Mã cửa hàng</th>
-                  <th>Cửa hàng</th>
-                  <th>Mã tài sản</th>
-                  <th>Tài sản</th>
-                  <th>Nhóm tài sản</th>
-                  <th>Loại tài sản</th>
-                  <th>Kết quả</th>
-                  <th>Hình ảnh</th>
-                  <th style="text-align:right;">Thao tác</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <div class="empty-title">Không có kết quả phù hợp</div>
-            <div class="empty-desc">Điều chỉnh khoảng thời gian, bỏ bớt bộ lọc hoặc nhấn "Làm mới" để xem lại toàn bộ dữ liệu kiểm kê.</div>
-            <button class="btn btn-secondary">Làm mới</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="hint">MS-W-BCKKTTTS01 · State 2: Trống</div>
 </div>
 
 <div class="screen-wrapper" id="sw3">
@@ -794,7 +700,7 @@ td.actions { text-align: right; white-space: nowrap; }
       <div class="modal">
         <div class="modal-header">
           <div class="modal-title">Chi tiết kiểm kê tài sản</div>
-          <div class="modal-close" onclick="switchScreen(1)">✕</div>
+          <div class="modal-close" onclick="switchScreen('sw1')">✕</div>
         </div>
         <div class="modal-body">
           <div class="confirm-info-panel">
@@ -855,7 +761,7 @@ td.actions { text-align: right; white-space: nowrap; }
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="switchScreen(1)">Đóng</button>
+          <button class="btn btn-secondary" onclick="switchScreen('sw1')">Đóng</button>
           <button class="btn btn-primary">⇩ Tải ảnh</button>
         </div>
       </div>
@@ -865,18 +771,6 @@ td.actions { text-align: right; white-space: nowrap; }
 <div class="hint">MS-W-BCKKTTTS01 · State 3: Chi tiết ảnh</div>
 </div>
 
-<script>
-function switchScreen(index) {
-  document.querySelectorAll(".screen-wrapper").forEach(function(screen) {
-    screen.classList.remove("active");
-  });
-  document.querySelectorAll(".sw-btn").forEach(function(button) {
-    button.classList.remove("active");
-  });
-  document.getElementById("sw" + index).classList.add("active");
-  document.querySelectorAll(".sw-btn")[index - 1].classList.add("active");
-}
-</script>
 <script src="../../../../menu-tree.js"></script>
 <script src="../../../../_shared/portal-menu.js"></script>
 <script src="../../../../_shared/portal-chrome.js"></script>
