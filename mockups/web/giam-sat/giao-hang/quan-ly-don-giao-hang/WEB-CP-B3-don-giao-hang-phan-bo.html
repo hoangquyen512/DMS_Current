@@ -120,8 +120,76 @@ body {
 .status-tabs {
     display: flex;
     gap: 6px;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.list-section-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: nowrap;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--neutral-200);
+    position: relative;
+    z-index: 20;
+    isolation: isolate;
+}
+
+.list-section-toolbar .status-tabs {
+    border-bottom: none;
+    padding-bottom: 0;
+    position: relative;
+    z-index: 21;
+    pointer-events: auto;
+}
+
+.list-section-toolbar .status-tab {
+    position: relative;
+    z-index: 22;
+    pointer-events: auto;
+    flex-shrink: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.list-section-toolbar .list-section-actions {
+    flex: 0 0 auto;
+    margin-left: auto;
+    position: relative;
+    z-index: 21;
+}
+
+.list-section-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    min-height: 0;
+}
+
+.list-section-meta .list-section-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.list-section-meta:has(.selection-summary.is-hidden) {
+    display: none;
+    margin-bottom: 0;
 }
 
 .status-tab {
@@ -356,6 +424,8 @@ body {
     border: 1px solid var(--neutral-200);
     border-radius: 8px;
     padding: 16px;
+    display: block;
+    overflow: visible;
 }
 
 .list-section-header {
@@ -364,7 +434,8 @@ body {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    margin: 0 0 12px;
+    width: 100%;
 }
 
 .list-section-header__left {
@@ -792,53 +863,24 @@ td.actions { text-align: right; white-space: nowrap; }
 <link rel="stylesheet" href="../../../_shared/portal-tokens.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-fonts.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-components.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-mockup-bridge.css"/>
 </head>
-<body>
+<body class="portal-page" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
 
 <div class="app">
   <div class="main" id="mainArea">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <a href="#">Trang chủ</a> / <a href="#">Mua hàng</a> / Quản lý đơn giao hàng
-      </div>
-      <div class="topbar-actions">
-        <span class="company-badge">Finviet</span>
-        <div class="user-info"><div class="avatar">NA</div><span>NPP Admin</span></div>
-      </div>
-    </div>
-
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Quản lý đơn giao hàng</div>
-        </div>
-        
-      </div>
-
-      <div class="status-tabs" id="statusTabs">
-        <button class="status-tab active" data-status="all" type="button">
-          Tất cả <span class="tab-count" id="count-all">9</span>
-        </button>
-        <button class="status-tab" data-status="pending" type="button">
-          ⏳ Chờ phân bổ <span class="tab-count" id="count-pending">3</span>
-        </button>
-        <button class="status-tab" data-status="assigned" type="button">
-          📋 Chưa giao <span class="tab-count" id="count-assigned">2</span>
-        </button>
-        <button class="status-tab" data-status="delivering" type="button">
-          🚚 Đang giao <span class="tab-count" id="count-delivering">1</span>
-        </button>
-        <button class="status-tab" data-status="completed" type="button">
-          ✓ Hoàn thành <span class="tab-count" id="count-completed">1</span>
-        </button>
-        <button class="status-tab" data-status="failed" type="button">
-          ✕ Thất bại <span class="tab-count" id="count-failed">1</span>
-        </button>
-        <button class="status-tab" data-status="cancelled" type="button">
-          🚫 Đã hủy <span class="tab-count" id="count-cancelled">1</span>
-        </button>
-      </div>
+    <div class="page" style="padding:20px 28px 40px;">
+      <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+        <a href="../../../main.html">Giám sát</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <a href="#">Giao hàng</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <span class="portal-breadcrumb__current">Quản lý đơn giao hàng</span>
+      </nav>
+      <h1 class="portal-page-title">Quản lý đơn giao hàng</h1>
 
             <div class="portal-card portal-query-filter">
         <div class="portal-card__bd">
@@ -1053,14 +1095,30 @@ td.actions { text-align: right; white-space: nowrap; }
         </div>
       </div>
 
-      <div class="portal-card portal-protable list-section">
-        </div>
-      </div>
-      <div class="portal-card portal-protable list-section">
-        <div class="portal-protable__list-hd list-section-header">
-          <div class="list-section-header__left">
-            <h2 class="portal-protable__list-title list-section-title" id="listTitle">Danh sách đơn giao hàng (9)</h2>
-            <span class="selection-summary is-hidden" id="selectionSummary"></span>
+      <div class="portal-card list-section">
+        <div class="list-section-toolbar">
+          <div class="status-tabs" id="statusTabs" role="tablist">
+            <button class="status-tab active" data-status="all" type="button">
+              Tất cả <span class="tab-count" id="count-all">9</span>
+            </button>
+            <button class="status-tab" data-status="pending" type="button">
+              ⏳ Chờ phân bổ <span class="tab-count" id="count-pending">3</span>
+            </button>
+            <button class="status-tab" data-status="assigned" type="button">
+              📋 Chưa giao <span class="tab-count" id="count-assigned">2</span>
+            </button>
+            <button class="status-tab" data-status="delivering" type="button">
+              🚚 Đang giao <span class="tab-count" id="count-delivering">1</span>
+            </button>
+            <button class="status-tab" data-status="completed" type="button">
+              ✓ Hoàn thành <span class="tab-count" id="count-completed">1</span>
+            </button>
+            <button class="status-tab" data-status="failed" type="button">
+              ✕ Thất bại <span class="tab-count" id="count-failed">1</span>
+            </button>
+            <button class="status-tab" data-status="cancelled" type="button">
+              🚫 Đã hủy <span class="tab-count" id="count-cancelled">1</span>
+            </button>
           </div>
           <div class="list-section-actions">
             <button class="btn btn-danger" disabled id="btnBulkCancel" type="button">🚫 Hủy đơn</button>
@@ -1069,6 +1127,10 @@ td.actions { text-align: right; white-space: nowrap; }
             <button class="btn btn-primary" disabled id="btnBulkAssign" type="button">🚚 Gán Tài xế</button>
             <button class="btn btn-secondary" id="btnExport" type="button">📥 Export Excel</button>
           </div>
+        </div>
+        <div class="list-section-meta">
+          <h2 class="list-section-title" id="listTitle">Danh sách đơn giao hàng (9)</h2>
+          <span class="selection-summary is-hidden" id="selectionSummary"></span>
         </div>
         <div class="table-container">
           <div style="overflow-x:auto;">
@@ -1221,30 +1283,9 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
                   <td class="muted sales-route">TUY-Q1-01</td>
                   <td class="muted">13-06-2026 09:15:00</td>
-                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-reassign-one" type="button">Phân bổ lại</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
+                  <td class="actions"><button class="btn btn-text" disabled type="button">—</button></td>
                 </tr>
                 <tr data-id="9" data-status="cancelled" data-amount="420000" data-source="DMS" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q3" data-zone="VUNG-Q1-A" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q3-01" data-search="DLO-20260610-0010 SO-DMS-88001 Cửa hàng Thắng Lợi">
-                  <td><input class="row-check" disabled type="checkbox"/></td>
-                  <td class="code">DLO-20260610-0010 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td class="code">SO-DMS-88001 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td class="code">CH-TL-009 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td><a class="cell-link" href="#">Cửa hàng Thắng Lợi</a></td>
-                  <td class="muted">55 Võ Văn Tần, Q.3</td>
-                  <td class="money">420.000</td>
-                  <td><span class="badge badge-source-dms">DMS</span></td>
-                  <td><span class="badge badge-cancelled status-badge">🚫 Đã hủy</span></td>
-                  <td class="muted pay-method-cell">—</td>
-                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
-                  <td class="code driver-code empty">—</td>
-                  <td class="driver-name empty">—</td>
-                  <td class="muted assign-date">—</td>
-                  <td class="muted delivery-date">10-06-2026</td>
-                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
-                  <td class="muted sales-route">TUY-Q3-01</td>
-                  <td class="muted">10-06-2026 09:00:00</td>
-                  <td class="actions"><span class="row-actions"><button class="btn btn-text btn-reassign-one" type="button">Phân bổ lại</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
-                </tr>
-                <tr data-id="9" data-status="cancelled" data-amount="420000" data-source="DMS" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q3" data-zone="VUNG-Q1-A" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q3-01" data-search="DLO-20260610-0010 SO-DMS-88001 Cửa hàng Thắng Lợi">
                   <td><input class="row-check" disabled type="checkbox"/></td>
                   <td class="code">DLO-20260610-0010 <span class="copy-icon" title="Sao chép">⎘</span></td>
                   <td class="code">SO-DMS-88001 <span class="copy-icon" title="Sao chép">⎘</span></td>
@@ -1306,27 +1347,6 @@ td.actions { text-align: right; white-space: nowrap; }
                   <td class="muted sales-route">TUY-Q1-01</td>
                   <td class="muted">11-06-2026 10:20:00</td>
                   <td class="actions"><span class="row-actions"><button class="btn btn-text btn-reassign-one" type="button">Phân bổ lại</button><button class="btn btn-text-danger btn-cancel-one" type="button">Hủy</button></span></td>
-                </tr>
-                <tr data-id="9" data-status="cancelled" data-amount="420000" data-source="DMS" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-company="HCM" data-region="MN" data-group="NPP-HCM" data-area="Q3" data-zone="VUNG-Q1-A" data-driver="" data-payment="unpaid" data-payment-method="" data-npp="NPP-HCM-01" data-salesrep="SR-001" data-sales-route="TUY-Q3-01" data-search="DLO-20260610-0010 SO-DMS-88001 Cửa hàng Thắng Lợi">
-                  <td><input class="row-check" disabled type="checkbox"/></td>
-                  <td class="code">DLO-20260610-0010 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td class="code">SO-DMS-88001 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td class="code">CH-TL-009 <span class="copy-icon" title="Sao chép">⎘</span></td>
-                  <td><a class="cell-link" href="#">Cửa hàng Thắng Lợi</a></td>
-                  <td class="muted">55 Võ Văn Tần, Q.3</td>
-                  <td class="money">420.000</td>
-                  <td><span class="badge badge-source-dms">DMS</span></td>
-                  <td><span class="badge badge-cancelled status-badge">🚫 Đã hủy</span></td>
-                  <td class="muted pay-method-cell">—</td>
-                  <td><span class="badge badge-pay-unpaid pay-status-badge">Chưa thanh toán</span></td>
-                  <td class="code driver-code empty">—</td>
-                  <td class="driver-name empty">—</td>
-                  <td class="muted assign-date">—</td>
-                  <td class="muted delivery-date">10-06-2026</td>
-                  <td class="muted sales-rep">SR-001 — Trần Văn Bình</td>
-                  <td class="muted sales-route">TUY-Q3-01</td>
-                  <td class="muted">10-06-2026 09:00:00</td>
-                  <td class="actions"><button class="btn btn-text" disabled type="button">—</button></td>
                 </tr>
               </tbody>
             </table>
@@ -1591,6 +1611,7 @@ td.actions { text-align: right; white-space: nowrap; }
 <script>
 (function () {
   var currentStatus = 'all';
+  var syncingStatusFromTab = false;
   var assignTargetIds = [];
   var changeTargetIds = [];
   var cancelTargetIds = [];
@@ -1725,8 +1746,6 @@ td.actions { text-align: right; white-space: nowrap; }
     row.dataset.paymentMethod = '';
   }
 
-  }
-
   function getRows() {
     return Array.prototype.slice.call(document.querySelectorAll('#orderBody tr'));
   }
@@ -1808,9 +1827,14 @@ td.actions { text-align: right; white-space: nowrap; }
     var status = row.dataset.status;
 
     if (!opts.skipStatus) {
-      var matchStatus = criteria.deliveryStatuses.length > 0
-        ? criteria.deliveryStatuses.indexOf(status) >= 0
-        : (currentStatus === 'all' || status === currentStatus);
+      var matchStatus;
+      if (currentStatus !== 'all') {
+        matchStatus = status === currentStatus;
+      } else if (criteria.deliveryStatuses.length > 0) {
+        matchStatus = criteria.deliveryStatuses.indexOf(status) >= 0;
+      } else {
+        matchStatus = true;
+      }
       if (!matchStatus) return false;
     }
 
@@ -2126,21 +2150,39 @@ td.actions { text-align: right; white-space: nowrap; }
     showToast('Đã hủy ' + ids.length + ' đơn giao hàng. Cần tạo lại đơn giao hàng nếu muốn giao tiếp.');
   }
 
-  document.getElementById('statusTabs').addEventListener('click', function (e) {
-    var tab = e.target.closest('.status-tab');
+  function syncStatusTabsUI(activeStatus) {
+    document.querySelectorAll('#statusTabs .status-tab').forEach(function (t) {
+      var on = (t.dataset.status || 'all') === activeStatus;
+      t.classList.toggle('active', on);
+      t.classList.toggle('portal-tabs__item--active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
+  function onStatusTabSelect(tab) {
     if (!tab) return;
-    currentStatus = tab.dataset.status;
+    currentStatus = tab.dataset.status || 'all';
+    syncingStatusFromTab = true;
     clearMultiSelect('msDeliveryStatus');
     if (currentStatus !== 'all') {
       setMultiSelectValues('msDeliveryStatus', [currentStatus]);
     }
-    document.querySelectorAll('.status-tab').forEach(function (t) {
-      var on = t === tab;
-      t.classList.toggle('active', on);
-      t.classList.toggle('portal-tabs__item--active', on);
-    });
+    syncingStatusFromTab = false;
+    syncStatusTabsUI(currentStatus);
     applyFilters();
-  });
+  }
+
+  function bindStatusTabs() {
+    document.querySelectorAll('#statusTabs .status-tab').forEach(function (tab) {
+      tab.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        onStatusTabSelect(tab);
+      });
+    });
+  }
+
+  bindStatusTabs();
 
   document.getElementById('checkAll').addEventListener('change', function () {
     var checked = this.checked;
@@ -2438,6 +2480,7 @@ td.actions { text-align: right; white-space: nowrap; }
     var el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('portal-multiselect-change', function () {
+      if (syncingStatusFromTab) return;
       var values = getMultiValues(el.querySelector('select.portal-multi-select__hidden').id);
       if (id === 'msDeliveryStatus') {
         if (values.length === 1) {
@@ -2445,11 +2488,7 @@ td.actions { text-align: right; white-space: nowrap; }
         } else {
           currentStatus = 'all';
         }
-        document.querySelectorAll('.status-tab').forEach(function (t) {
-          var on = t.dataset.status === currentStatus;
-          t.classList.toggle('active', on);
-          t.classList.toggle('portal-tabs__item--active', on);
-        });
+        syncStatusTabsUI(currentStatus);
       }
       applyFilters();
     });
@@ -2462,11 +2501,7 @@ td.actions { text-align: right; white-space: nowrap; }
     document.getElementById('filterDeliveryDateFrom').value = '';
     document.getElementById('filterDeliveryDateTo').value = '';
     currentStatus = 'all';
-    document.querySelectorAll('.status-tab').forEach(function (t) {
-      var on = t.dataset.status === 'all';
-      t.classList.toggle('active', on);
-      t.classList.toggle('portal-tabs__item--active', on);
-    });
+    syncStatusTabsUI('all');
     applyFilters();
     showToast('Đã làm mới danh sách');
   });
@@ -2483,7 +2518,10 @@ td.actions { text-align: right; white-space: nowrap; }
   updateBulkBar();
   applyFilters();
 })();
-})();
 </script>
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
 </body>
 </html>
