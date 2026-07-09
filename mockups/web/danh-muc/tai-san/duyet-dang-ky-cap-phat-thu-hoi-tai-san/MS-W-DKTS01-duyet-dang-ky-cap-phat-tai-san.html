@@ -1033,23 +1033,23 @@
     <!-- Switcher bar -->
     <div class="switcher">
         <span class="switcher-label">MS-W-DKTS01/02</span>
-        <button class="sw-btn" onclick="switchScreen(1)">1 · Danh sách</button>
-        <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-        <button class="sw-btn" onclick="switchScreen(3)">3 · Từ chối (nhóm)</button>
-        <button class="sw-btn" onclick="switchScreen(4)">4 · Xác nhận duyệt</button>
-        <button class="sw-btn" onclick="switchScreen(5)">5 · Chi tiết đơn</button>
-        <button class="sw-btn" onclick="switchScreen(6)">6 · Lỗi tồn kho (đơn lẻ)</button>
-        <button class="sw-btn" onclick="switchScreen(7)">7 · Lỗi nhóm — Dừng toàn bộ</button>
+        <button class="sw-btn" data-target="sw1" onclick="switchScreen('sw1')">1 · Danh sách</button>
+        <button class="sw-btn" data-target="sw3" onclick="switchScreen('sw3')">3 · Từ chối (nhóm)</button>
+        <button class="sw-btn" data-target="sw4" onclick="switchScreen('sw4')">4 · Xác nhận duyệt</button>
+        <button class="sw-btn" data-target="sw5" onclick="switchScreen('sw5')">5 · Chi tiết đơn</button>
+        <button class="sw-btn" data-target="sw6" onclick="switchScreen('sw6')">6 · Lỗi tồn kho (đơn lẻ)</button>
+        <button class="sw-btn" data-target="sw7" onclick="switchScreen('sw7')">7 · Lỗi nhóm — Dừng toàn bộ</button>
     </div>
 
     <script>
-        function switchScreen(n) {
+        function switchScreen(id) {
             document.querySelectorAll('.screen-wrapper').forEach(function (el) { el.classList.remove('active'); });
             document.querySelectorAll('.sw-btn').forEach(function (el) { el.classList.remove('active'); });
-            document.getElementById('sw' + n).classList.add('active');
-            document.querySelectorAll('.sw-btn')[n - 1].classList.add('active');
+            document.getElementById(id).classList.add('active');
+            var btn = document.querySelector('.sw-btn[data-target="' + id + '"]');
+            if (btn) btn.classList.add('active');
         }
-        document.addEventListener('DOMContentLoaded', function () { switchScreen(1); });
+        document.addEventListener('DOMContentLoaded', function () { switchScreen('sw1'); });
     </script>
 
     <!-- ================================================================ -->
@@ -1396,122 +1396,6 @@
     </div><!-- /screen-wrapper -->
 
     <div class="hint">MS-W-DKTS01 · Trạng thái 1: Mặc định — 3 dòng đã chọn (thanh hành động nhóm đang hiển thị)</div>
-
-
-    <!-- ================================================================ -->
-    <!-- MÀN HÌNH 2: DANH SÁCH — TRẠNG THÁI TRỐNG -->
-    <!-- ================================================================ -->
-    <div class="screen-wrapper" id="sw2">
-        <div class="screen-label">MS-W-DKTS01 — Danh sách đăng ký cấp phát tài sản · TRẠNG THÁI: Trống (không có đơn chờ
-            duyệt)</div>
-
-        <div class="browser">
-            <div class="browser-header">
-                <div class="browser-dots">
-                    <div class="browser-dot"></div>
-                    <div class="browser-dot"></div>
-                    <div class="browser-dot"></div>
-                </div>
-                <div class="browser-url">https://dms.finviet.com.vn/tai-san/duyet-dang-ky</div>
-            </div>
-            <div class="app">
-
-                <aside class="sidebar">
-                    <div class="sidebar-logo">📊 DMS Quản lý</div>
-                    <div class="sidebar-section">
-                        <div class="sidebar-section-title">Tài sản</div>
-                        <div class="sidebar-item sub">📋 Danh sách tài sản</div>
-                        <div class="sidebar-item sub">🏭 Kho tài sản</div>
-                        <div class="sidebar-item sub active">✅ Đăng ký cấp phát</div>
-                        <div class="sidebar-item sub">📄 Phiếu giao nhận</div>
-                    </div>
-                </aside>
-
-                <div class="main">
-                    <div class="topbar">
-                        <div class="breadcrumb">
-                            <a href="#">Trang chủ</a> / <a href="#">Tài sản</a> / Đăng ký cấp phát
-                        </div>
-                        <div class="topbar-actions">
-                            <div class="user-info">
-                                <div class="avatar">AT</div><span>Quản trị NPP</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="page">
-                        <div class="page-header">
-                            <div>
-                                <div class="page-title">Duyệt đăng ký cấp phát tài sản</div>
-                                <div class="page-subtitle">Xem xét và phê duyệt các đơn đăng ký từ nhân viên sales</div>
-                            </div>
-                        </div>
-
-                        <!-- Filter card (thu gọn) -->
-                        <div class="filter-card">
-                            <div class="filter-row">
-                                <input type="text" class="filter-search" placeholder="Tìm mã đơn...">
-                                <div class="filter-field" style="min-width:140px;max-width:160px;">
-                                    <div class="filter-label">* Công ty</div>
-                                    <select class="filter-select">
-                                        <option value="">Tất cả công ty</option>
-                                    </select>
-                                </div>
-                                <div class="filter-field" style="min-width:130px;max-width:160px;">
-                                    <div class="filter-label">Trạng thái</div>
-                                    <select class="filter-select">
-                                        <option value="">Tất cả</option>
-                                        <option>Chờ duyệt</option>
-                                        <option>Đã duyệt</option>
-                                        <option>Từ chối</option>
-                                        <option>Đã hủy</option>
-                                    </select>
-                                </div>
-                                <div class="filter-actions">
-                                    <button class="btn btn-secondary">🔄 Làm mới</button>
-                                    <button class="btn btn-primary">🔍 Tìm kiếm</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bảng dữ liệu khi không có đơn -->
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="col-check"><input type="checkbox" disabled></th>
-                                        <th>Mã đơn ↕</th>
-                                        <th>Nhân viên ↕</th>
-                                        <th>Cửa hàng ↕</th>
-                                        <th>Tài sản</th>
-                                        <th style="text-align:center;">Tổng SL</th>
-                                        <th>Ngày đăng ký ↓</th>
-                                        <th>Ngày duyệt</th>
-                                        <th>Lý do từ chối</th>
-                                        <th>Trạng thái</th>
-                                        <th>Người tạo</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Người cập nhật</th>
-                                        <th>Ngày cập nhật</th>
-                                        <th style="text-align:right;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div class="empty-state">
-                                <div class="empty-icon">✅</div>
-                                <div class="empty-title">Không có đơn nào đang chờ duyệt</div>
-                                <div class="empty-desc">Tất cả đơn đăng ký đã được xử lý. Chưa có đơn mới từ nhân viên.
-                                </div>
-                                <button class="btn btn-secondary">Xem tất cả đơn</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="hint">MS-W-DKTS01 · Trạng thái 2: Trống — không có đơn chờ duyệt</div>
 
 
     <!-- ================================================================ -->
