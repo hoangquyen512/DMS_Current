@@ -4,13 +4,16 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>[WEB] Component Gallery — DMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="_shared/portal-chrome.css"/>
 <style>
 body { margin: 0; background: var(--portal-bg); }
 .gallery-wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
 </style>
 </head>
-<body class="portal-page">
+<body class="portal-page" data-portal-base="">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
 
 <div class="gallery-wrap">
   <h1 class="portal-page-title">DMS Portal — Component Gallery</h1>
@@ -313,5 +316,9 @@ body { margin: 0; background: var(--portal-bg); }
 </div>
 
 <script src="_shared/portal-mockup-widgets.js"></script>
+<script src="menu-tree.js"></script>
+<script src="_shared/portal-menu.js"></script>
+<script src="_shared/portal-chrome.js"></script>
+</div><!-- /portal-page-body -->
 </body>
 </html>
