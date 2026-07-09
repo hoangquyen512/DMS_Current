@@ -619,27 +619,10 @@ td.actions { text-align: right; white-space: nowrap; }
 </style>
 <link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
 </head>
-<body class="portal-page has-portal-switcher" data-portal-base="../../../../">
+<body class="portal-page" data-portal-base="../../../../">
 <div id="portal-chrome-root"></div>
 <div class="portal-page-body">
 
-<div class="switcher">
-  <span class="switcher-label">MS-W-CTTB02</span>
-  <button class="sw-btn" onclick="switchScreen(1)">1 · Mặc định</button>
-  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-</div>
-
-<script>
-function switchScreen(n) {
-  document.querySelectorAll('.screen-wrapper').forEach(function(el){ el.classList.remove('active'); });
-  document.querySelectorAll('.sw-btn').forEach(function(el){ el.classList.remove('active'); });
-  document.getElementById('sw'+n).classList.add('active');
-  document.querySelectorAll('.sw-btn')[n-1].classList.add('active');
-}
-document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
-</script>
-
-<div class="screen-wrapper" id="sw1">
 <div class="app">
   <aside class="sidebar">
     <div class="sidebar-logo">📊 DMS Portal</div>
@@ -777,67 +760,6 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
       </div>
     </div>
   </div>
-</div>
-</div>
-
-<div class="screen-wrapper" id="sw2">
-<div class="app">
-  <aside class="sidebar">
-    <div class="sidebar-logo">📊 DMS Portal</div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">Danh mục</div>
-      <div class="sidebar-item">📦 Sản phẩm</div>
-      <div class="sidebar-item">🏢 NPP</div>
-      <div class="sidebar-item sub active">📋 Chương trình trưng bày</div>
-    </div>
-  </aside>
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <a href="#">Trang chủ</a> / <a href="#">Danh mục</a> / <a href="#">Chương trình trưng bày</a> / Phần thưởng bổ sung
-      </div>
-      <div class="topbar-actions"><div class="user-info"><div class="avatar">AD</div><span>Admin</span></div></div>
-    </div>
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Phần thưởng bổ sung theo hạn mức</div>
-          <div class="page-subtitle">Trạng thái chưa cấu hình nhóm thưởng bổ sung cho hạn mức.</div>
-        </div>
-        <div class="actions"><button class="btn btn-secondary">Hủy</button><button class="btn btn-primary">Lưu</button></div>
-      </div>
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field"><div class="filter-label">* Công ty</div><select class="filter-select"><option>FVC - Công ty Finviet</option></select></div>
-          <div class="filter-field"><div class="filter-label">Mã CTTB</div><input class="filter-input" value="CTTB-202604-001" readonly type="text"/></div>
-          <div class="filter-field"><div class="filter-label">Tên chương trình</div><input class="filter-input" value="Trưng bày Basachi Quý 2/2026" readonly type="text"/></div>
-          <div class="filter-field"><div class="filter-label">Loại trả thưởng</div><select class="filter-select"><option>Theo kỳ</option></select></div>
-        </div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Hạn mức 1</div>
-        <div class="detail-grid">
-          <div class="detail-field"><div class="detail-label">* Công ty</div><div class="detail-value">FVC - Công ty Finviet</div></div>
-          <div class="detail-field"><div class="detail-label">Tên hạn mức</div><div class="detail-value">HM01 - Cửa hàng trọng điểm</div></div>
-          <div class="detail-field"><div class="detail-label">Doanh số tối thiểu</div><div class="detail-value">20,000,000 VND</div></div>
-          <div class="detail-field"><div class="detail-label">Số suất đăng ký</div><div class="detail-value">120</div></div>
-        </div>
-      </div>
-      <div class="list-section">
-        <div class="list-section-header">
-          <div class="list-section-title">Phần thưởng bổ sung</div>
-          <div class="list-section-actions"><button class="btn btn-primary">➕ Thêm nhóm thưởng bổ sung</button></div>
-        </div>
-        <div class="empty-state">
-          <div class="empty-icon">📋</div>
-          <div class="empty-title">Chưa có nhóm phần thưởng bổ sung</div>
-          <div class="empty-desc">Nhấn "Thêm nhóm thưởng bổ sung" để cấu hình thưởng tiền hoặc quà tặng cho hạn mức này.</div>
-          <button class="btn btn-primary">➕ Thêm nhóm thưởng bổ sung</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 
 </div><!-- /portal-page-body -->
