@@ -89,8 +89,7 @@ body {
 /* ======= App Layout ======= */
 .app {
     display: flex;
-    height: calc(100vh - 48px);
-    margin-top: 48px;
+    min-height: calc(100vh - var(--portal-header-h, 56px));
 }
 
 /* Sidebar (ẩn mặc định để tối ưu diện tích) */
@@ -619,25 +618,11 @@ td.actions { text-align: right; white-space: nowrap; }
 </style>
 <link rel="stylesheet" href="../../../../_shared/portal-chrome.css"/>
 </head>
-<body class="portal-page has-portal-switcher" data-portal-base="../../../../">
+<body class="portal-page" data-portal-base="../../../../">
 <div id="portal-chrome-root"></div>
 <div class="portal-page-body">
 
-<!-- ======= SWITCHER BAR ======= -->
-<div class="switcher">
-  <span class="switcher-label">MS-W-CTTB01</span>
-  <button class="sw-btn" onclick="switchScreen(1)">1 · Mặc định</button>
-  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-</div>
-
 <script>
-function switchScreen(n) {
-  document.querySelectorAll('.screen-wrapper').forEach(function(el){ el.classList.remove('active'); });
-  document.querySelectorAll('.sw-btn').forEach(function(el){ el.classList.remove('active'); });
-  document.getElementById('sw'+n).classList.add('active');
-  document.querySelectorAll('.sw-btn')[n-1].classList.add('active');
-}
-
 function setSmoothVisibility(el, show, instant) {
   if (!el) return;
   el.style.overflow = 'hidden';
@@ -759,7 +744,6 @@ function initRewardTypeToggle() {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-  switchScreen(1);
   initBonusToggle();
   initMultiChoice();
   initRewardTypeToggle();
@@ -769,7 +753,6 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- ================================================================ -->
 <!-- MÀN HÌNH 1: DEFAULT — cấu hình thưởng bổ sung trong từng Kỳ       -->
 <!-- ================================================================ -->
-<div class="screen-wrapper" id="sw1">
 <div class="app">
   <aside class="sidebar"></aside>
   <div class="main">
@@ -1284,169 +1267,6 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
   </div>
 </div>
-<div class="hint">MS-W-CTTB01 · State 1: Default</div>
-</div>
-
-<!-- ================================================================ -->
-<!-- MÀN HÌNH 2: EMPTY — chưa có Kỳ nào bật thưởng bổ sung             -->
-<!-- ================================================================ -->
-<div class="screen-wrapper" id="sw2">
-<div class="app">
-  <aside class="sidebar"></aside>
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <a href="#">Trang chủ</a> / <a href="#">Danh mục</a> / <a href="#">Chương trình trưng bày</a> / Cập nhật CTTB
-      </div>
-      <div class="topbar-actions">
-        <div class="user-info"><div class="avatar">AD</div><span>Admin</span></div>
-      </div>
-    </div>
-
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Cập nhật Chương trình trưng bày</div>
-          <div class="page-subtitle">Tab Hạn mức trưng bày · Chưa cấu hình phần thưởng bổ sung trong các Kỳ</div>
-        </div>
-        <div class="list-section-actions">
-          <button class="btn btn-secondary">Hủy</button>
-          <button class="btn btn-primary">Lưu</button>
-        </div>
-      </div>
-
-      <div class="detail-card">
-        <div class="detail-card-title">Thông tin chương trình</div>
-        <div class="detail-grid cols-3">
-          <div class="detail-field">
-            <div class="detail-label">* Công ty</div>
-            <div class="detail-value">FVC - Finviet</div>
-          </div>
-          <div class="detail-field">
-            <div class="detail-label">Mã chương trình</div>
-            <div class="detail-value mono">CTTB-2026-Q2-001</div>
-          </div>
-          <div class="detail-field">
-            <div class="detail-label">Tên chương trình</div>
-            <div class="detail-value">Trưng bày quý 2 - kênh GT</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field">
-            <div class="filter-label">* Công ty</div>
-            <select class="filter-select active"><option>FVC - Finviet</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Hạn mức đang xem</div>
-            <select class="filter-select"><option>HM-001 - Hạn mức Vàng</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Trạng thái thưởng bổ sung</div>
-            <select class="filter-select active"><option>Chưa cấu hình</option></select>
-          </div>
-          <div class="filter-actions">
-            <button class="btn btn-secondary">↻ Làm mới</button>
-            <button class="btn btn-primary">+ Cấu hình thưởng bổ sung</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="list-section">
-        <div class="list-section-header">
-          <div>
-            <div class="list-section-title">Danh sách Hạn mức</div>
-            <div class="page-subtitle">Trạng thái trống: chưa có Kỳ nào trong Hạn mức được bật phần thưởng bổ sung.</div>
-          </div>
-          <div class="list-section-actions">
-            <button class="btn btn-primary">+ Cấu hình thưởng bổ sung</button>
-          </div>
-        </div>
-
-        <div class="table-container" style="padding:12px;background:var(--neutral-50);">
-          <div style="border:1px solid var(--neutral-200);border-radius:8px;overflow:hidden;background:white;">
-            <div style="height:44px;background:var(--neutral-100);display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--neutral-200);">
-              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--neutral-900);">
-                <span>⌄</span>
-                <span>Hạn mức 1</span>
-                <span class="badge badge-cancelled">Chưa có thưởng bổ sung</span>
-              </div>
-              <button class="btn-icon" title="Sao chép hạn mức">⎘</button>
-            </div>
-            <div style="padding:12px;">
-              <div style="border:1px solid var(--neutral-200);border-radius:6px;overflow:hidden;background:white;">
-                <div style="height:36px;background:var(--neutral-100);display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--neutral-200);">
-                  <strong style="font-size:13px;">Kỳ 5</strong>
-                  <button class="btn-icon" title="Sao chép kỳ">⎘</button>
-                </div>
-                <div style="padding:12px;">
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div>
-                      <div style="border:1px solid var(--neutral-200);border-radius:6px;overflow:hidden;">
-                        <div style="background:var(--primary-50);padding:10px 12px;font-weight:700;font-size:13px;">Điều kiện trưng bày *</div>
-                        <div style="padding:12px;">
-                          <div class="form-field">
-                            <label class="form-label">* Số lượng hình ảnh yêu cầu</label>
-                            <input class="form-input" placeholder="Nhập số lượng hình ảnh"/>
-                          </div>
-                          <div class="form-field" style="margin-bottom:0;">
-                            <label class="form-label">* Số lần yêu cầu duyệt hình ảnh</label>
-                            <input class="form-input readonly" readonly value="1"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div style="border:1px solid var(--neutral-200);border-radius:6px;overflow:hidden;margin-bottom:8px;">
-                        <div style="background:var(--primary-50);padding:10px 12px;font-weight:700;font-size:13px;">Phần thưởng *</div>
-                        <div style="padding:12px;">
-                          <label class="form-label">* Loại phần thưởng</label>
-                          <select class="filter-select"><option>Chọn loại phần thưởng</option></select>
-                        </div>
-                      </div>
-                      <div style="border:1px solid var(--neutral-200);border-radius:6px;overflow:hidden;">
-                        <div style="background:var(--primary-50);padding:10px 12px;font-weight:700;font-size:13px;">Hình mẫu chương trình</div>
-                        <div style="padding:12px;">
-                          <button class="btn btn-secondary" style="width:100%;justify-content:center;">+ Thêm hình mẫu</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div data-bonus-section style="border:1px solid var(--neutral-200);border-radius:6px;overflow:hidden;margin-top:12px;">
-                    <div style="background:var(--primary-50);padding:10px 12px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:space-between;">
-                      <span>Phần thưởng bổ sung</span>
-                      <label style="font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;">
-                        <span>Kích hoạt</span>
-                        <input data-bonus-toggle type="checkbox" style="accent-color:var(--primary-500);"/>
-                      </label>
-                    </div>
-                    <div data-bonus-body hidden style="padding:12px;">
-                      <div class="empty-state" style="padding:28px 16px;">
-                        <div class="empty-icon">📋</div>
-                        <div class="empty-title">Chưa cấu hình phần thưởng bổ sung tại Kỳ này</div>
-                        <div class="empty-desc">Bật Kích hoạt nếu Kỳ 5 là Kỳ tạo thưởng bổ sung cho điều kiện đạt Kỳ 1, Kỳ 3 và Kỳ 5.</div>
-                        <button class="btn btn-primary">+ Bật cấu hình tại Kỳ 5</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="height:40px;border:1px solid var(--neutral-200);border-radius:6px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;margin-top:12px;">
-                    <strong style="font-size:13px;">Chấm trưng bày AI</strong>
-                    <input type="checkbox" style="accent-color:var(--primary-500);"/>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-<div class="hint">MS-W-CTTB01 · State 2: Empty</div>
-</div>
 
 <template>
 
@@ -1454,8 +1274,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="switcher">
   <span class="switcher-label">{MS-CODE}</span>
   <button class="sw-btn" onclick="switchScreen(1)">1 · Mặc định</button>
-  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-  <button class="sw-btn" onclick="switchScreen(3)">3 · Modal</button>
+  <button class="sw-btn" onclick="switchScreen(2)">2 · Modal</button>
 </div>
 
 <script>
@@ -1652,84 +1471,9 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 </div><!-- /sw1 -->
 
 <!-- ================================================================ -->
-<!-- MÀN HÌNH 2: EMPTY — không có dữ liệu                            -->
+<!-- MÀN HÌNH 2: MODAL — ví dụ modal xác nhận                        -->
 <!-- ================================================================ -->
 <div class="screen-wrapper" id="sw2">
-<div class="app">
-  <aside class="sidebar"></aside>
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <a href="#">Trang chủ</a> / <a href="#">{Module}</a> / {Tên màn hình}
-      </div>
-      <div class="topbar-actions">
-        <div class="user-info"><div class="avatar">AD</div><span>Admin</span></div>
-      </div>
-    </div>
-    <div class="page">
-      <div class="page-header">
-        <div><div class="page-title">{Tên màn hình}</div></div>
-      </div>
-      <!-- Filter card (thu gọn) -->
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field">
-            <div class="filter-label">Mã / Tên</div>
-            <input class="filter-search" placeholder="Tìm theo mã, tên..." type="text"/>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">* Công ty</div>
-            <select class="filter-select"><option value="">Tất cả công ty</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">Trạng thái</div>
-            <select class="filter-select"><option value="">Tất cả</option></select>
-          </div>
-          <div class="filter-actions">
-            <button class="btn btn-secondary">🔄 Làm mới</button>
-            <button class="btn btn-primary">🔍 Tìm kiếm</button>
-          </div>
-        </div>
-      </div>
-      <!-- List section: empty state -->
-      <div class="list-section">
-        <div class="list-section-header">
-          <div class="list-section-title">Danh sách {tên đối tượng}</div>
-          <div class="list-section-actions">
-            <button class="btn btn-primary">+ Tạo mới</button>
-          </div>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-check"><input disabled type="checkbox"/></th>
-                <th>Mã</th>
-                <th>Tên</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th style="text-align:right;">Thao tác</th>
-              </tr>
-            </thead>
-          </table>
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <div class="empty-title">Chưa có dữ liệu</div>
-            <div class="empty-desc">Chưa có {tên đối tượng} nào. Nhấn "Tạo mới" để bắt đầu.</div>
-            <button class="btn btn-primary">+ Tạo mới</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="hint">{MS-CODE} · State 2: Empty</div>
-</div><!-- /sw2 -->
-
-<!-- ================================================================ -->
-<!-- MÀN HÌNH 3: MODAL — ví dụ modal xác nhận                        -->
-<!-- ================================================================ -->
-<div class="screen-wrapper" id="sw3">
 <div class="app">
   <aside class="sidebar"></aside>
   <div class="main" style="position:relative;">
@@ -1789,8 +1533,8 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
     </div>
   </div>
 </div>
-<div class="hint">{MS-CODE} · State 3: Modal</div>
-</div><!-- /sw3 -->
+<div class="hint">{MS-CODE} · State 2: Modal</div>
+</div><!-- /sw2 -->
 
 </template>
 </div><!-- /portal-page-body -->
