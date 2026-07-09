@@ -324,26 +324,10 @@ td.actions { text-align: right; white-space: nowrap; }
 </style>
 <link rel="stylesheet" href="../../_shared/portal-chrome.css"/>
 </head>
-<body class="portal-page has-portal-switcher" data-portal-base="../../">
+<body class="portal-page" data-portal-base="../../">
 <div id="portal-chrome-root"></div>
 <div class="portal-page-body">
 
-<div class="switcher">
-  <span class="switcher-label">MS-W-DTCH01</span>
-  <button class="sw-btn" onclick="switchScreen(1)">1 · Mặc định</button>
-  <button class="sw-btn" onclick="switchScreen(2)">2 · Trống</button>
-</div>
-<script>
-function switchScreen(n) {
-  document.querySelectorAll('.screen-wrapper').forEach(function(el){ el.classList.remove('active'); });
-  document.querySelectorAll('.sw-btn').forEach(function(el){ el.classList.remove('active'); });
-  document.getElementById('sw'+n).classList.add('active');
-  document.querySelectorAll('.sw-btn')[n-1].classList.add('active');
-}
-document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
-</script>
-
-<div class="screen-wrapper" id="sw1">
 <div class="app">
   <aside class="sidebar"></aside>
   <div class="main">
@@ -518,91 +502,7 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
     </div>
   </div>
 </div>
-<div class="hint">MS-W-DTCH01 · State 1: Default</div>
-</div>
 
-<div class="screen-wrapper" id="sw2">
-<div class="app">
-  <aside class="sidebar"></aside>
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <a href="#">Trang chủ</a> / <a href="#">Giám sát</a> / Định tuyến / Tạo mới
-      </div>
-      <div class="topbar-actions">
-        <div class="user-info"><div class="avatar">BA</div><span>BA User</span></div>
-      </div>
-    </div>
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Tạo mới định tuyến</div>
-          <div class="page-subtitle">Chưa có cửa hàng nào trong định tuyến</div>
-        </div>
-        <div class="list-section-actions">
-          <button class="btn btn-secondary">Hủy</button>
-          <button class="btn btn-primary">Lưu</button>
-        </div>
-      </div>
-      <div class="filter-card">
-        <div class="filter-row">
-          <div class="filter-field">
-            <div class="filter-label">* Công ty</div>
-            <select class="filter-select"><option>FVC - Công ty Cổ phần Finviet</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">* Tên tuyến</div>
-            <input class="filter-input" value="Tuyến mới chưa có cửa hàng" type="text"/>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">* Vùng</div>
-            <select class="filter-select"><option>HCM1 - Hồ Chí Minh</option></select>
-          </div>
-          <div class="filter-field">
-            <div class="filter-label">* Nhóm sale</div>
-            <select class="filter-select"><option>GR-Q5 - Nhóm Quận 5</option></select>
-          </div>
-        </div>
-      </div>
-      <div class="list-section">
-        <div class="list-section-header">
-          <div class="list-section-title">Danh sách cửa hàng trong định tuyến</div>
-          <div class="list-section-actions">
-            <button class="btn btn-secondary">📥 Import</button>
-            <button class="btn btn-primary">+ Thêm cửa hàng</button>
-          </div>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Mã cửa hàng</th>
-                <th>Tên cửa hàng</th>
-                <th>Thứ 2</th>
-                <th>Thứ 3</th>
-                <th>Thứ 4</th>
-                <th>Thứ 5</th>
-                <th>Thứ 6</th>
-                <th>Thứ 7</th>
-                <th>Chủ nhật</th>
-                <th style="text-align:right;">Thao tác</th>
-              </tr>
-            </thead>
-          </table>
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <div class="empty-title">Chưa có cửa hàng trong định tuyến</div>
-            <div class="empty-desc">Thêm cửa hàng thủ công hoặc import file excel. Tần suất theo ngày có thể để trống khi thêm mới.</div>
-            <button class="btn btn-primary">+ Thêm cửa hàng</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="hint">MS-W-DTCH01 · State 2: Empty</div>
-</div>
 <script src="../../menu-tree.js"></script>
 <script src="../../_shared/portal-menu.js"></script>
 <script src="../../_shared/portal-chrome.js"></script>
