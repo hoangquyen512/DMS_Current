@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>[WEB] MS-W-QT01 — Cấu hình chung</title>
+  <link rel="stylesheet" href="../../_shared/portal-tokens.css"/>
+  <link rel="stylesheet" href="../../_shared/portal-fonts.css"/>
+  <link rel="stylesheet" href="../../_shared/portal-components.css"/>
+  <link rel="stylesheet" href="../../_shared/portal-chrome.css"/>
+  <style>
+    /* ── Config card ── */
+    .cfg-section {
+      margin-bottom: 24px;
+    }
+    .cfg-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--portal-text-secondary, #6b7280);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--portal-border, #e5e7eb);
+    }
+    .cfg-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--portal-border, #e5e7eb);
+    }
+    .cfg-item:last-child { border-bottom: none; }
+    .cfg-item__body {
+      flex: 1;
+      min-width: 0;
+    }
+    .cfg-item__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--portal-text, #111827);
+      margin-bottom: 4px;
+    }
+    .cfg-item__key {
+      display: inline-block;
+      font-size: 11px;
+      font-family: 'SF Mono', Consolas, monospace;
+      background: var(--neutral-100, #f3f4f6);
+      color: var(--portal-text-secondary, #6b7280);
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-bottom: 6px;
+      letter-spacing: .01em;
+    }
+    .cfg-item__desc {
+      font-size: 13px;
+      color: var(--portal-text-secondary, #6b7280);
+      line-height: 1.5;
+    }
+    .cfg-item__desc strong { color: var(--portal-text, #111827); font-weight: 600; }
+    .cfg-item__control {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      min-width: 80px;
+    }
+
+    /* Toggle switch */
+    .cfg-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      gap: 8px;
+    }
+    .cfg-toggle__input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .cfg-toggle__track {
+      width: 44px;
+      height: 24px;
+      border-radius: 24px;
+      background: var(--neutral-300, #d1d5db);
+      position: relative;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .cfg-toggle__thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+      transition: transform .2s;
+    }
+    .cfg-toggle__input:checked + .cfg-toggle__track {
+      background: var(--primary-500, #3b82f6);
+    }
+    .cfg-toggle__input:checked + .cfg-toggle__track .cfg-toggle__thumb {
+      transform: translateX(20px);
+    }
+    .cfg-toggle__label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--portal-text-secondary, #6b7280);
+      min-width: 48px;
+      text-align: right;
+    }
+    .cfg-toggle__input:checked ~ .cfg-toggle__label {
+      color: var(--primary-600, #2563eb);
+    }
+
+    .cfg-state-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .cfg-state-badge.on {
+      background: var(--success-50, #ecfdf5);
+      color: var(--success-700, #047857);
+      border: 1px solid #a7f3d0;
+    }
+    .cfg-state-badge.off {
+      background: var(--neutral-100, #f3f4f6);
+      color: var(--neutral-500, #6b7280);
+      border: 1px solid var(--neutral-200, #e5e7eb);
+    }
+
+    .cfg-tag-mobile {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .cfg-tag-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #faf5ff;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+
+    .cfg-save-bar {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid var(--portal-border, #e5e7eb);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      z-index: 100;
+      box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+    }
+    .cfg-last-updated {
+      font-size: 12px;
+      color: var(--portal-text-secondary, #6b7280);
+      margin-right: auto;
+    }
+
+    .portal-page-subtitle {
+      font-size: 13px;
+      color: var(--portal-text-secondary, #6b7280);
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body class="portal-page" data-portal-base="../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+<main class="portal-page-content" style="padding:20px 28px 80px;">
+  <nav class="portal-breadcrumb">
+    <a href="../../main.html">Quản trị</a>
+    <span class="portal-breadcrumb__sep">/</span>
+    <span class="portal-breadcrumb__current">Cấu hình chung</span>
+  </nav>
+  <h1 class="portal-page-title" style="margin-bottom:4px;">Cấu hình chung</h1>
+  <p class="portal-page-subtitle">Quản lý cấu hình bật/tắt các tính năng trên App và Portal theo từng công ty.</p>
+
+  <!-- Bộ lọc công ty -->
+  <div class="portal-card portal-query-filter" style="margin-top:20px;">
+    <div class="portal-card__hd">Công ty áp dụng</div>
+    <div class="portal-card__bd">
+      <div class="portal-filter-grid portal-filter-grid--3">
+        <div class="portal-field">
+          <label class="portal-field__label">* Công ty</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select">
+              <option>KPP — Kênh Phân Phối</option>
+              <option>Đại Tân Việt</option>
+              <option>Vifon</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="portal-query-actions"><div class="portal-query-actions__inner">
+        <button type="button" class="portal-btn portal-btn--primary" onclick="loadCompanyConfig()">Tải cấu hình</button>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Nhóm: App Tài xế -->
+  <div class="portal-card" style="margin-top:20px;" id="configCard">
+    <div class="portal-card__hd" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>Danh sách cấu hình</span>
+      <span style="font-size:12px;color:var(--portal-text-secondary);">Công ty: <strong>KPP — Kênh Phân Phối</strong></span>
+    </div>
+    <div class="portal-card__bd" style="padding:0 20px 8px;">
+
+      <!-- Nhóm: App tài xế -->
+      <div class="cfg-section">
+        <div class="cfg-section-title">
+          <span class="cfg-tag-mobile">📱 App tài xế</span>
+        </div>
+
+        <!-- Config 1: Mode Basic/Advance -->
+        <div class="cfg-item">
+          <div class="cfg-item__body">
+            <div class="cfg-item__name">Chế độ giao hàng trên App</div>
+            <div class="cfg-item__key">DRIVER_APP_MODE</div>
+            <div class="cfg-item__desc">
+              Kiểm soát chế độ giao diện giao hàng của tài xế trên App.<br>
+              <strong>Bật = Advance</strong> — Hiển thị đầy đủ luồng giao hàng nâng cao (chụp ảnh, chỉnh sửa hàng, xem thông tin chi tiết).<br>
+              <strong>Tắt = Basic</strong> — Hiển thị giao diện giao hàng rút gọn, chỉ cần xác nhận thanh toán.
+            </div>
+          </div>
+          <div class="cfg-item__control">
+            <label class="cfg-toggle" id="toggleMode">
+              <input type="checkbox" class="cfg-toggle__input" id="inputMode" checked onchange="updateBadge('badgeMode', this.checked, 'Advance', 'Basic')"/>
+              <span class="cfg-toggle__track"><span class="cfg-toggle__thumb"></span></span>
+              <span class="cfg-toggle__label" id="lblMode">Advance</span>
+            </label>
+            <span class="cfg-state-badge on" id="badgeMode">Bật</span>
+          </div>
+        </div>
+
+        <!-- Config 2: Thông tin công nợ ngoài Danh sách -->
+        <div class="cfg-item">
+          <div class="cfg-item__body">
+            <div class="cfg-item__name">Thông tin công nợ ngoài màn hình Danh sách</div>
+            <div class="cfg-item__key">SHOW_DEBT_ON_LIST</div>
+            <div class="cfg-item__desc">
+              Kiểm soát hiển thị thông tin công nợ khả dụng của cửa hàng ngay trên thẻ đơn giao hàng ở màn hình Danh sách.<br>
+              <strong>Bật</strong> — Hiển thị thông tin công nợ (đã dùng / hạn mức) trên thẻ đơn.<br>
+              <strong>Tắt</strong> — Ẩn thông tin công nợ khỏi màn hình Danh sách (vẫn hiển thị khi vào chi tiết đơn).
+            </div>
+          </div>
+          <div class="cfg-item__control">
+            <label class="cfg-toggle" id="toggleDebt">
+              <input type="checkbox" class="cfg-toggle__input" id="inputDebt" checked onchange="updateBadge('badgeDebt', this.checked, 'Hiển thị', 'Ẩn')"/>
+              <span class="cfg-toggle__track"><span class="cfg-toggle__thumb"></span></span>
+              <span class="cfg-toggle__label" id="lblDebt">Bật</span>
+            </label>
+            <span class="cfg-state-badge on" id="badgeDebt">Bật</span>
+          </div>
+        </div>
+
+        <!-- Config 3: Chức năng OCR -->
+        <div class="cfg-item">
+          <div class="cfg-item__body">
+            <div class="cfg-item__name">Chức năng OCR trên App tài xế</div>
+            <div class="cfg-item__key">ENABLE_DRIVER_OCR</div>
+            <div class="cfg-item__desc">
+              Kiểm soát hiển thị menu OCR trên bottom navigation của App tài xế.<br>
+              <strong>Bật</strong> — Hiển thị tab OCR trên thanh điều hướng, cho phép tài xế quét PXK/đơn hàng để tạo đơn giao hàng.<br>
+              <strong>Tắt</strong> — Ẩn tab OCR khỏi thanh điều hướng, tài xế không thấy và không dùng được chức năng OCR.
+            </div>
+          </div>
+          <div class="cfg-item__control">
+            <label class="cfg-toggle" id="toggleOcr">
+              <input type="checkbox" class="cfg-toggle__input" id="inputOcr" checked onchange="updateBadge('badgeOcr', this.checked, 'Hiển thị', 'Ẩn')"/>
+              <span class="cfg-toggle__track"><span class="cfg-toggle__thumb"></span></span>
+              <span class="cfg-toggle__label" id="lblOcr">Bật</span>
+            </label>
+            <span class="cfg-state-badge on" id="badgeOcr">Bật</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ghi chú áp dụng -->
+      <div style="margin:8px 0 16px;padding:12px 14px;border-radius:8px;background:#fffbeb;border:1px solid #fcd34d;">
+        <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:4px;"><i class="ti ti-info-circle"></i> Lưu ý áp dụng</div>
+        <div style="font-size:12px;color:#78350f;line-height:1.55;">
+          Cấu hình có hiệu lực ngay sau khi lưu. App tài xế đang mở sẽ <strong>tự cập nhật</strong> (hoặc mở lại tab App nếu chưa mở).<br>
+          Mỗi cấu hình áp dụng riêng theo từng <strong>Công ty</strong>. Thay đổi ở đây không ảnh hưởng đến các công ty khác.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lịch sử thay đổi -->
+  <div class="portal-card" style="margin-top:16px;">
+    <div class="portal-card__hd">Lịch sử thay đổi gần nhất</div>
+    <div class="portal-card__bd" style="padding:0;">
+      <table class="portal-table" style="width:100%;">
+        <thead>
+          <tr>
+            <th>Tên cấu hình</th>
+            <th>Từ khóa</th>
+            <th>Giá trị cũ</th>
+            <th>Giá trị mới</th>
+            <th>Người thay đổi</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chức năng OCR trên App tài xế</td>
+            <td><code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px;">ENABLE_DRIVER_OCR</code></td>
+            <td><span class="cfg-state-badge off">Tắt</span></td>
+            <td><span class="cfg-state-badge on">Bật</span></td>
+            <td>Admin Nguyễn</td>
+            <td>15/07/2026 10:32</td>
+          </tr>
+          <tr>
+            <td>Chế độ giao hàng trên App</td>
+            <td><code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px;">DRIVER_APP_MODE</code></td>
+            <td><span class="cfg-state-badge off">Tắt</span></td>
+            <td><span class="cfg-state-badge on">Bật</span></td>
+            <td>Admin Nguyễn</td>
+            <td>10/07/2026 09:15</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Save bar -->
+<div class="cfg-save-bar">
+  <span class="cfg-last-updated">Cập nhật lần cuối: <strong>15/07/2026 10:32</strong> bởi Admin Nguyễn</span>
+  <button type="button" class="portal-btn portal-btn--default" onclick="resetConfig()">Đặt lại</button>
+  <button type="button" class="portal-btn portal-btn--primary" onclick="saveConfig()">Lưu cấu hình</button>
+</div>
+
+</div><!-- /.portal-page-body -->
+
+<script src="../../../mobile/_shared/driver-portal-config.js"></script>
+<script src="../../menu-tree.js"></script>
+<script src="../../_shared/portal-menu.js"></script>
+<script src="../../_shared/portal-chrome.js"></script>
+<script>
+(function(){
+  var DPC = window.DriverPortalConfig;
+  var savedSnapshot = null;
+
+  function readFormConfig() {
+    return {
+      DRIVER_APP_MODE: !!document.getElementById('inputMode').checked,
+      SHOW_DEBT_ON_LIST: !!document.getElementById('inputDebt').checked,
+      ENABLE_DRIVER_OCR: !!document.getElementById('inputOcr').checked
+    };
+  }
+
+  function applyFormConfig(cfg) {
+    var mode = document.getElementById('inputMode');
+    var debt = document.getElementById('inputDebt');
+    var ocr = document.getElementById('inputOcr');
+    if (mode) {
+      mode.checked = !!cfg.DRIVER_APP_MODE;
+      updateBadge('badgeMode', mode.checked, 'Advance', 'Basic');
+    }
+    if (debt) {
+      debt.checked = !!cfg.SHOW_DEBT_ON_LIST;
+      updateBadge('badgeDebt', debt.checked, 'Hiển thị', 'Ẩn');
+    }
+    if (ocr) {
+      ocr.checked = !!cfg.ENABLE_DRIVER_OCR;
+      updateBadge('badgeOcr', ocr.checked, 'Hiển thị', 'Ẩn');
+    }
+  }
+
+  function updateLastSaved(meta) {
+    var el = document.querySelector('.cfg-last-updated');
+    if (!el || !meta) return;
+    el.innerHTML = 'Cập nhật lần cuối: <strong>' + (meta.updatedAt || '—') + '</strong> bởi ' + (meta.updatedBy || 'Admin');
+  }
+
+  window.updateBadge = function(badgeId, isOn, onLabel, offLabel){
+    var badge = document.getElementById(badgeId);
+    if(!badge) return;
+    badge.textContent = isOn ? 'Bật' : 'Tắt';
+    badge.className = 'cfg-state-badge ' + (isOn ? 'on' : 'off');
+    var lbl = badge.closest('.cfg-item__control').querySelector('.cfg-toggle__label');
+    if(lbl) lbl.textContent = isOn ? onLabel : offLabel;
+  };
+
+  window.loadCompanyConfig = function(){
+    savedSnapshot = DPC.load();
+    applyFormConfig(savedSnapshot);
+    updateLastSaved(DPC.loadMeta());
+    showToast('Đã tải cấu hình công ty');
+  };
+
+  window.saveConfig = function(){
+    var cfg = readFormConfig();
+    var meta = {
+      updatedAt: DPC.formatDateTime(new Date()),
+      updatedBy: 'Admin Nguyễn',
+      company: 'KPP — Kênh Phân Phối'
+    };
+    DPC.save(cfg, meta);
+    savedSnapshot = cfg;
+    updateLastSaved(meta);
+    showToast('Đã lưu cấu hình · App tài xế sẽ áp dụng khi mở lại hoặc đang mở sẽ cập nhật ngay');
+  };
+
+  window.resetConfig = function(){
+    if(!confirm('Đặt lại về cấu hình đã lưu gần nhất?')) return;
+    if (savedSnapshot) applyFormConfig(savedSnapshot);
+    else applyFormConfig(DPC.load());
+    showToast('Đã đặt lại cấu hình trên form');
+  };
+
+  function showToast(msg){
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.2);white-space:nowrap;max-width:90vw;text-align:center;line-height:1.4;';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3200);
+  }
+
+  // Khởi tạo form từ config đã lưu
+  savedSnapshot = DPC.load();
+  applyFormConfig(savedSnapshot);
+  updateLastSaved(DPC.loadMeta());
+})();
+</script>
+<script src="../../_shared/mockup-links.js" onerror="void 0"></script>
+</body>
+</html>
