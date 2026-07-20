@@ -1,89 +1,86 @@
 # Typography — Web Portal Design System
 
-> Typography system cho DMS Web Portal, dựa trên Visily default (Inter font family).
-> BA điều chỉnh nếu team dùng font khác.
+> Nguồn chuẩn: **dms-portal-dev.finviet.com.vn** (Ant Design 5 + Ant Design Pro / ecodms).  
+> Đồng bộ đo live: **16/07/2026** (`/category/news/`).  
+> **Không dùng Inter** — mockup web dùng system UI giống Portal thật.
 
 ---
 
-## 🔤 Font Family
+## Font Family
 
 ```
 Primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif
-Mono:    "SF Mono", "Fira Code", Consolas, monospace  (cho code/ID hiển thị)
+Mono:    "SF Mono", "Fira Code", Consolas, monospace  (mã / ID)
 ```
 
-> **Nguồn**: Quét từ `dms-portal-dev.finviet.com.vn` (Ant Design Pro / ecodms).  
-> **Không dùng Inter** — mockup web đồng bộ font system UI như Portal thật.
+Portal load **Roboto** trong stack; không load Inter.
+
+CSS: `--portal-font` trong `mockups/web/_shared/portal-tokens.css` · ép qua `portal-fonts.css`.
 
 ---
 
-## 📏 Text Styles
+## Text Styles (Ant Design 5)
 
-### Headings — Tiêu đề
-| Style | Size | Weight | Line height | Khi dùng |
-|-------|------|--------|-------------|----------|
-| `Heading/H1` | 28px | 700 (Bold) | 36px | Title màn hình (1 màn 1 H1) |
-| `Heading/H2` | 22px | 600 (SemiBold) | 30px | Section title trong page |
-| `Heading/H3` | 18px | 600 (SemiBold) | 26px | Sub-section, modal title |
-| `Heading/H4` | 16px | 600 (SemiBold) | 24px | Card title, group label |
+### Tiêu đề
 
-### Body — Nội dung chính
-| Style | Size | Weight | Line height | Khi dùng |
-|-------|------|--------|-------------|----------|
-| `Body/Large` | 16px | 400 (Regular) | 24px | Mô tả dài, intro paragraph |
-| `Body/Default` | 14px | 400 (Regular) | 20px | Text mặc định, table cell, input |
-| `Body/Small` | 12px | 400 (Regular) | 18px | Caption, footnote, helper text |
+| Vị trí | Size | Weight | Line height | Color |
+|--------|------|--------|-------------|-------|
+| Page title (`.portal-page-title`) | **20px** | **600** | **32px** | `rgba(0,0,0,0.88)` |
+| Toolbar list title | **16px** | **500** | **16px** | `rgba(0,0,0,0.88)` |
+| Card / filter section head | 14px | 600 | 22px | `rgba(0,0,0,0.88)` |
 
-### Special — Đặc thù
-| Style | Size | Weight | Line height | Khi dùng |
-|-------|------|--------|-------------|----------|
-| `Label/Default` | 14px | 500 (Medium) | 20px | Label của input field |
-| `Label/Small` | 12px | 500 (Medium) | 16px | Mini label, status badge text |
-| `Button/Default` | 14px | 500 (Medium) | 20px | Text trong button medium |
-| `Button/Small` | 12px | 500 (Medium) | 16px | Text trong button small |
-| `Link/Default` | 14px | 500 (Medium) | 20px | Hyperlink, breadcrumb |
+### Body & control
 
----
+| Vị trí | Size | Weight | Line height | Color |
+|--------|------|--------|-------------|-------|
+| Body / table cell / input / select | **14px** | **400** | **22px** (1.5715) | `rgba(0,0,0,0.88)` |
+| Field label | **14px** | **400** | **22px** | `rgba(0,0,0,0.88)` |
+| Button (primary / default) | **14px** | **400** | **22px** | — |
+| Breadcrumb | **14px** | **400** | **22px** | `rgba(0,0,0,0.45)` |
+| Table header (`th`) | **14px** | **600** | **22px** | `rgba(0,0,0,0.88)` |
+| Link trong bảng | **14px** | **400** | **22px** | `#1677ff` (info) |
+| Tag | **12px** | **400** | **20px** | theo variant |
+| Caption / helper | **12px** | **400** | 18–20px | `rgba(0,0,0,0.45)` |
 
-## 📌 Quy tắc dùng
+### Header portal
 
-### Hierarchy — Phân cấp nội dung
-- Mỗi page chỉ có **1 H1** (Title chính)
-- H2 dùng cho mỗi section lớn
-- H3 dùng cho sub-section
-- KHÔNG nhảy cấp (H1 → H3 không qua H2)
-
-### Color
-- Heading mặc định: `Neutral/900`
-- Body mặc định: `Neutral/700`
-- Label: `Neutral/500` (cho field) hoặc `Neutral/700` (cho section label)
-- Caption / helper text: `Neutral/500`
-- Link: `Primary/500`
-
-### Weight
-- KHÔNG dùng quá 3 weight trong 1 màn hình
-- Bold chỉ dùng cho heading hoặc emphasis cực mạnh
-- Medium dùng cho label, button, link
-- Regular dùng cho body
-
-### Length
-- Title màn hình: ≤ 60 ký tự
-- Title section: ≤ 80 ký tự
-- Button label: ≤ 24 ký tự
-- Helper text: ≤ 120 ký tự
+| Vị trí | Size | Weight | Ghi chú |
+|--------|------|--------|---------|
+| Menu L1 | 14px | 400 | chữ trắng trên `#2B579A` |
+| Brand / logo text | ~15–16px | 500–600 | header |
 
 ---
 
-## ⚙️ Cách Claude áp dụng khi gen UI
+## Token CSS
 
-| Vị trí trong spec | Style |
-|-------------------|-------|
-| Tên màn hình (page title) | `Heading/H1` |
-| Tên section (vd "Thông tin chung") | `Heading/H2` |
-| Tên modal | `Heading/H3` |
-| Label field | `Label/Default` |
-| Value field hiển thị | `Body/Default` |
-| Helper text dưới input | `Body/Small`, color `Neutral/500` |
-| Error message dưới input | `Body/Small`, color `Error/700` |
-| Button text | `Button/Default` |
-| Status badge | `Label/Small` |
+| Token | Giá trị |
+|-------|---------|
+| `--portal-font-size` | `14px` |
+| `--portal-line-height` | `1.5715` |
+| `--portal-line-height-px` | `22px` |
+| `--portal-page-title-size` | `20px` |
+| `--portal-page-title-weight` | `600` |
+| `--portal-toolbar-title-size` | `16px` |
+| `--portal-text` | `rgba(0,0,0,0.88)` |
+| `--portal-text-secondary` | `rgba(0,0,0,0.65)` |
+| `--portal-text-tertiary` | `rgba(0,0,0,0.45)` |
+| `--portal-info-text` | `#1677ff` |
+
+---
+
+## Quy tắc khi gen mockup
+
+1. **Cấm** `font-family: Inter` hoặc Google Fonts Inter trong mockup web.
+2. Page title = **20px / 600 / line-height 32px** — không dùng 22px/700.
+3. Button / body = **14px / 400** — không dùng 13px hoặc weight 500 cho button thường.
+4. Link trong bảng = `#1677ff`, không phải brand `#2B579A` (brand dùng cho primary button / tab active).
+5. Luôn load `portal-chrome.css` (kéo theo `portal-fonts.css` + tokens).
+
+---
+
+## Change History
+
+| Ngày | Mô tả |
+|------|-------|
+| 16/07/2026 | Đồng bộ Ant Design 5 từ portal live — bỏ Visily/Inter defaults |
+| 24/06/2026 | Bản đầu (Visily Inter — đã thay) |

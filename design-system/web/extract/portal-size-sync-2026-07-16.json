@@ -1,0 +1,46 @@
+{
+  "extractedAt": "2026-07-16T01:48:00.000Z",
+  "source": "dms-portal-dev.finviet.com.vn — Browser MCP SSO (0797070999)",
+  "pages": ["/dashboard", "/category/news/"],
+  "findings": {
+    "headerHeight": "56px",
+    "brandPrimary": "#2B579A",
+    "fontSizeBase": "14px",
+    "lineHeight": "22px",
+    "pageTitle": { "fontSize": "20px", "fontWeight": "600", "height": "32px" },
+    "button": { "height": "32px", "padding": "0 15px", "borderRadius": "6px", "fontSize": "14px" },
+    "buttonPrimaryShadow": "0 2px 0 rgba(0, 35, 65, 0.2)",
+    "queryFilter": {
+      "padding": "24px",
+      "marginBottom": "16px",
+      "borderRadius": "6px",
+      "note": "option-render-style: form-item-label hidden; custom wrapper css-y3rlva"
+    },
+    "filterControls": {
+      "selectHeight": "41px",
+      "inputAffixHeight": "41.33px",
+      "pickerHeight": "41px",
+      "selectInnerLineHeight": "30px",
+      "cssRule": ".css-y3rlva .ant-select:not(.ant-select-multiple) { height: 41px; }"
+    },
+    "defaultAntSelectHeight": "32px",
+    "table": {
+      "size": "small",
+      "thPadding": "8px",
+      "tdPadding": "8px",
+      "thHeightApprox": "39px",
+      "tdHeightApprox": "39px",
+      "headBg": "#fafafa"
+    },
+    "pagination": { "mode": "mini", "itemSize": "24px" },
+    "tag": { "fontSize": "12px", "heightApprox": "21px", "borderRadius": "4px", "padding": "0 7px" },
+    "pageContainerPadding": "0 40px 32px",
+    "pageHeaderPadding": "8px 40px 16px",
+    "toolbarTitle": { "fontSize": "16px", "fontWeight": "500" }
+  },
+  "mockupSync": {
+    "tokens": "portal-tokens.css — --portal-control-height-filter: 41px",
+    "components": "portal-components.css — QueryFilter 41px; Button 32px; table cell 8px",
+    "bridge": "portal-mockup-bridge.css — filter-input/select 41px"
+  }
+}

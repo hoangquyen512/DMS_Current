@@ -16,15 +16,13 @@ design-system/web/
 │   └── spacing.md
 └── components/
     ├── _index.md
+    ├── select.md             ← ⭐ Select one choice + allowClear ×
+    ├── multi-select.md       ← ⭐ Select multi choice
+    ├── date-range-picker.md  ← ⭐ Date range calendar + allowClear ×
     ├── navigation.md         ← Header L1 + mega menu
-    ├── breadcrumbs.md
-    ├── buttons.md
-    ├── inputs.md
-    ├── filters.md
-    ├── tables.md
     ├── tags.md
-    ├── cards.md
-    └── pagination.md
+    ├── tables.md
+    └── …
 
 mockups/web/_shared/
 ├── portal-tokens.css         ← CSS variables
@@ -43,10 +41,11 @@ design-system/web/extract/          ← Snapshot JSON + screenshots (sau khi ch�
 
 ## Quy trình thiết kế mới
 
-1. Pattern → `patterns/web/[list|form|detail]-screen.md`
-2. Component → `components/_index.md`
+1. Pattern → `patterns/portal-crud-list-modal-pattern.md` (list CRUD) / `patterns/list-screen.md`
+2. Component → `components/select.md` (allowClear × Create/Edit) · `_index.md`
 3. Token → `tokens/*.md` + `portal-tokens.css`
-4. Mockup HTML → import `portal-chrome.css`, dùng class `.portal-*`
+4. **Copy template** → `mockups/templates/web-portal-crud-list-modal-snippet.html` + `web-select-snippet.html`
+5. Mockup HTML → import `portal-chrome.css`, dùng class `.portal-*`
 
 ---
 
@@ -60,6 +59,7 @@ design-system/web/extract/          ← Snapshot JSON + screenshots (sau khi ch�
 | Trang list | Breadcrumb + filter card + table + pagination |
 | Nút chính | 「Tạo mới」— primary brand blue |
 | Tag trạng thái | Xanh lá 「Bình thường」 |
+| Select Create/Edit | Tùy chọn: nút × · Bắt buộc: `data-clearable="false"` |
 
 ---
 
@@ -69,3 +69,4 @@ design-system/web/extract/          ← Snapshot JSON + screenshots (sau khi ch�
 |-----------|------|-------|
 | 1.0 | 24/06/2026 | Trích từ portal dev live |
 | 1.1 | 24/06/2026 | Browser MCP — snapshot `extract/portal-live-snapshot.json` |
+| 1.2 | 20/07/2026 | Template Create/Edit Select allowClear × — CRUD snippet + select snippet |

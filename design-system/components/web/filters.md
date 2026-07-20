@@ -39,7 +39,8 @@
 - **Style**: giống Select component nhưng compact
 - **Width**: auto theo content, min 120px
 - **Height**: 36px
-- **Default state**: hiện label + "Tất cả" hoặc placeholder
+- **Default state**: hiện label; option trống (`value=""`) hoặc giá trị cụ thể đã chọn — **không** dùng option "Tất cả…"
+
 - **Active state** (đã chọn): hiện label + giá trị + dot indicator
 
 ### Reset button
@@ -180,7 +181,7 @@ Cho power user thường xuyên dùng cùng 1 set filter:
 | Apply button cho mỗi filter | Auto-apply khi chọn |
 | Search không debounce (fire mỗi keystroke) | Debounce 500ms |
 | Reset không có confirmation feedback | Toast "Đã reset filter" hoặc visual feedback rõ ràng |
-| Không có default value | Filter luôn có default (vd: "Tất cả") |
+| Không có default value | Filter: option trống `value=""` hoặc giá trị cụ thể — **cấm** "Tất cả…" |
 
 ---
 
@@ -192,8 +193,8 @@ Cho power user thường xuyên dùng cùng 1 set filter:
 | # | Filter | Loại | Default | Options/Source | Apply | Note |
 |---|--------|------|---------|---------------|-------|------|
 | 1 | Search | Text | rỗng | — | Debounce 500ms | Tìm theo Mã, Tên, SDT |
-| 2 | Khu vực | Multi-select | Tất cả | API /api/regions | Auto | — |
-| 3 | Trạng thái | Multi-select | Tất cả | enum: Active, Inactive, Pending | Auto | — |
+| 2 | Khu vực | Multi-select | (trống / giá trị cụ thể — cấm "Tất cả…") | API /api/regions | Auto | — |
+| 3 | Trạng thái | Multi-select | (trống / giá trị cụ thể — cấm "Tất cả…") | enum: Active, Inactive, Pending | Auto | — |
 | 4 | Ngày tạo | Date range | rỗng | — | Auto | Preset: 7 ngày, 30 ngày, 90 ngày |
 | 5 | Reset | Button | — | — | Click | Reset all + reload |
 
