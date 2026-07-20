@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>[WEB] MS-W-CH00 — Enhance Ứng vốn kinh doanh (Before/After)</title>
+    <link rel="stylesheet" href="../../_shared/portal-tokens.css"/>
+    <link rel="stylesheet" href="../../_shared/portal-fonts.css"/>
+    <link rel="stylesheet" href="../../_shared/portal-components.css"/>
+    <link rel="stylesheet" href="../../_shared/portal-chrome.css"/>
+    <style>
+      .enhance-new {
+        outline: 2px solid var(--portal-warning, #f59e0b);
+        outline-offset: 2px;
+        background: #fffbeb !important;
+      }
+      .enhance-tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: #b45309;
+        background: #fef3c7;
+        border: 1px solid #fcd34d;
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .compare-banner {
+        margin: 0 0 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        border: 1px solid var(--portal-border, #e5e7eb);
+        background: #fff;
+      }
+      .compare-banner.before { border-left: 4px solid var(--portal-text-secondary, #6b7280); }
+      .compare-banner.after { border-left: 4px solid #f59e0b; }
+      .portal-advanced-filter__popover { position: relative; box-shadow: none; border: 1px solid var(--portal-border); margin-bottom: 16px; }
+      .portal-advanced-filter__popover[hidden] { display: block !important; }
+      .detail-ro { padding: 16px 0; }
+      .detail-ro-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px 24px;
+      }
+      .detail-ro-item label {
+        display: block;
+        font-size: 12px;
+        color: var(--portal-text-secondary);
+        margin-bottom: 4px;
+      }
+      .detail-ro-item .val {
+        font-size: 14px;
+        color: var(--portal-text);
+        font-weight: 500;
+      }
+    </style>
+</head>
+<body class="portal-page has-portal-switcher" data-portal-base="../../">
+<div class="switcher" style="position:fixed;top:0;left:0;right:0;height:48px;background:#111827;display:flex;align-items:center;gap:6px;padding:0 16px;z-index:99999;">
+  <span style="color:rgba(255,255,255,.35);font-size:11px;font-family:monospace;margin-right:8px;">MS-W-CH00</span>
+  <button type="button" class="sw-btn active" onclick="switchScreen(1)" style="padding:5px 12px;border-radius:4px;font-size:12px;border:1px solid rgba(255,255,255,.2);background:#3b82f6;color:#fff;cursor:pointer;">1 · BEFORE — Danh sách</button>
+  <button type="button" class="sw-btn" onclick="switchScreen(2)" style="padding:5px 12px;border-radius:4px;font-size:12px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;">2 · AFTER — Danh sách</button>
+  <button type="button" class="sw-btn" onclick="switchScreen(3)" style="padding:5px 12px;border-radius:4px;font-size:12px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;">3 · AFTER — Bộ lọc</button>
+  <button type="button" class="sw-btn" onclick="switchScreen(4)" style="padding:5px 12px;border-radius:4px;font-size:12px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;">4 · AFTER — Chi tiết</button>
+</div>
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body" style="padding-top:48px;">
+
+<!-- ===== SCREEN 1: BEFORE ===== -->
+<div class="screen-wrapper active" id="sw1">
+<main class="portal-page-content" style="padding:20px 28px 40px;">
+  <div class="compare-banner before"><strong>BEFORE</strong> — Danh sách cửa hàng (chưa có thông tin ứng vốn kinh doanh)</div>
+  <nav class="portal-breadcrumb"><a href="../../main.html">Quản trị</a><span class="portal-breadcrumb__sep">/</span><a href="#">Cửa hàng</a><span class="portal-breadcrumb__sep">/</span><span class="portal-breadcrumb__current">Danh sách cửa hàng</span></nav>
+  <h1 class="portal-page-title">Danh sách cửa hàng</h1>
+
+  <div class="portal-card portal-query-filter">
+    <div class="portal-card__hd">Tìm kiếm theo</div>
+    <div class="portal-card__bd">
+      <div class="portal-filter-grid portal-filter-grid--4">
+        <div class="portal-field">
+          <label class="portal-field__label">* Công ty</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select"><option>KPP — Kênh Phân Phối</option></select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label">Tìm kiếm</label>
+          <div class="portal-field__control"><input class="portal-input" type="text" placeholder="Mã, tên, SĐT cửa hàng"/></div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label">Tình trạng xác thực ví</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select"><option value="" selected hidden>Tình trạng xác thực ví</option></select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label">Tình trạng Map Bank</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select"><option value="" selected hidden>Tình trạng Map Bank</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="portal-query-actions"><div class="portal-query-actions__inner">
+        <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
+        <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="portal-card portal-protable">
+    <div class="portal-protable__list-hd"><h2 class="portal-protable__list-title">Danh sách cửa hàng</h2></div>
+    <div class="portal-protable__list-actions">
+      <button type="button" class="portal-btn portal-btn--primary">+ Tạo mới</button>
+      <button type="button" class="portal-btn portal-btn--default">Export Excel</button>
+    </div>
+    <div class="portal-card__bd">
+      <div class="portal-table-wrap portal-table-wrap--flush">
+        <table class="portal-table portal-table--zebra">
+          <thead>
+            <tr>
+              <th>Mã cửa hàng</th>
+              <th>Tên cửa hàng</th>
+              <th>Số điện thoại</th>
+              <th>Tình trạng xác thực ví</th>
+              <th>Tình trạng Map Bank</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="copy-cell">KPPST0909900902 <button type="button" class="copy-btn">⎘</button></span></td>
+              <td><a href="#" class="portal-table__link" onclick="return false">Cửa hàng số 1</a></td>
+              <td>0909900902</td>
+              <td><span class="portal-tag portal-tag--success">Đã xác thực</span></td>
+              <td>Map</td>
+              <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+            </tr>
+            <tr>
+              <td><span class="copy-cell">KPPST0989867477 <button type="button" class="copy-btn">⎘</button></span></td>
+              <td><a href="#" class="portal-table__link" onclick="return false">CH new 1311</a></td>
+              <td>0932799687</td>
+              <td><span class="portal-tag portal-tag--warning">Chờ xác thực</span></td>
+              <td>Unmap</td>
+              <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- ===== SCREEN 2: AFTER LIST ===== -->
+<div class="screen-wrapper" id="sw2">
+<main class="portal-page-content" style="padding:20px 28px 40px;">
+  <div class="compare-banner after"><strong>AFTER</strong> — Thêm 2 cột lưới <span class="enhance-tag">MỚI</span></div>
+  <nav class="portal-breadcrumb"><a href="../../main.html">Quản trị</a><span class="portal-breadcrumb__sep">/</span><span class="portal-breadcrumb__current">Danh sách cửa hàng</span></nav>
+  <h1 class="portal-page-title">Danh sách cửa hàng</h1>
+
+  <div class="portal-card portal-query-filter">
+    <div class="portal-card__hd">Tìm kiếm theo</div>
+    <div class="portal-card__bd">
+      <div class="portal-filter-grid portal-filter-grid--4">
+        <div class="portal-field">
+          <label class="portal-field__label">* Công ty</label>
+          <div class="portal-field__control portal-select-wrap"><select class="portal-select"><option>KPP — Kênh Phân Phối</option></select></div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label">Tìm kiếm</label>
+          <div class="portal-field__control"><input class="portal-input" type="text" placeholder="Mã, tên, SĐT cửa hàng"/></div>
+        </div>
+        <div class="portal-field enhance-new">
+          <label class="portal-field__label">Ứng vốn kinh doanh <span class="enhance-tag">MỚI</span></label>
+          <div class="portal-field__control portal-select-wrap"><select class="portal-select"><option value="" selected hidden>Ứng vốn kinh doanh</option><option>Có</option><option>Không</option></select></div>
+        </div>
+        <div class="portal-field enhance-new">
+          <label class="portal-field__label">Trạng thái đăng ký ứng vốn KD <span class="enhance-tag">MỚI</span></label>
+          <div class="portal-field__control portal-select-wrap"><select class="portal-select"><option value="" selected hidden>Trạng thái đăng ký ứng vốn KD</option><option>Chưa đăng ký</option><option>Đăng ký thành công</option><option>Đăng ký thất bại</option></select></div>
+        </div>
+      </div>
+      <div class="portal-query-actions"><div class="portal-query-actions__inner">
+        <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
+        <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
+        <button type="button" class="portal-btn portal-btn--default" onclick="switchScreen(3)">🔽 Bộ lọc nâng cao</button>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="portal-card portal-protable">
+    <div class="portal-protable__list-hd"><h2 class="portal-protable__list-title">Danh sách cửa hàng</h2></div>
+    <div class="portal-protable__list-actions">
+      <button type="button" class="portal-btn portal-btn--default">Export Excel</button>
+    </div>
+    <div class="portal-card__bd">
+      <div class="portal-table-wrap portal-table-wrap--flush">
+        <table class="portal-table portal-table--zebra">
+          <thead>
+            <tr>
+              <th>Mã cửa hàng</th>
+              <th>Tên cửa hàng</th>
+              <th>Tình trạng Map Bank</th>
+              <th class="enhance-new">Ứng vốn kinh doanh <span class="enhance-tag">MỚI</span></th>
+              <th class="enhance-new">Trạng thái đăng ký ứng vốn KD <span class="enhance-tag">MỚI</span></th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="copy-cell">KPPST0909900902 <button type="button" class="copy-btn">⎘</button></span></td>
+              <td><a href="#" class="portal-table__link" onclick="switchScreen(4);return false">Cửa hàng số 1</a></td>
+              <td>Map</td>
+              <td class="enhance-new">Có</td>
+              <td class="enhance-new"><span class="portal-tag portal-tag--success">Đăng ký thành công</span></td>
+              <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+            </tr>
+            <tr>
+              <td><span class="copy-cell">KPPST0989867477 <button type="button" class="copy-btn">⎘</button></span></td>
+              <td><a href="#" class="portal-table__link" onclick="return false">CH new 1311</a></td>
+              <td>Unmap</td>
+              <td class="enhance-new">Không</td>
+              <td class="enhance-new">—</td>
+              <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+            </tr>
+            <tr>
+              <td><span class="copy-cell">KPPST0911223344 <button type="button" class="copy-btn">⎘</button></span></td>
+              <td><a href="#" class="portal-table__link" onclick="return false">Tạp hóa Minh Anh</a></td>
+              <td>Map</td>
+              <td class="enhance-new">Có</td>
+              <td class="enhance-new"><span class="portal-tag portal-tag--warning">Chưa đăng ký</span></td>
+              <td><span class="portal-tag portal-tag--success">Hoạt động</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--portal-text-secondary)">Export Excel: bổ sung 2 cột tương ứng.</p>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- ===== SCREEN 3: AFTER FILTER ===== -->
+<div class="screen-wrapper" id="sw3">
+<main class="portal-page-content" style="padding:20px 28px 40px;">
+  <div class="compare-banner after"><strong>AFTER</strong> — Bộ lọc nâng cao: 2 tiêu chí <strong>song song</strong> (không sub-filter) <span class="enhance-tag">MỚI</span></div>
+  <nav class="portal-breadcrumb"><a href="../../main.html">Quản trị</a><span class="portal-breadcrumb__sep">/</span><span class="portal-breadcrumb__current">Danh sách cửa hàng</span></nav>
+  <h1 class="portal-page-title">Danh sách cửa hàng</h1>
+
+  <div class="portal-advanced-filter__popover" role="dialog" aria-label="Bộ lọc nâng cao">
+    <div class="portal-advanced-filter__popover-hd">
+      <strong>Bộ lọc nâng cao</strong>
+      <span class="portal-advanced-filter__info" title="Điều kiện VÀ giữa các tiêu chí">ℹ</span>
+    </div>
+    <div class="portal-advanced-filter__popover-bd">
+      <div class="portal-filter-grid portal-filter-grid--3">
+        <div class="portal-field">
+          <label class="portal-field__label">Tình trạng xác thực ví</label>
+          <div class="portal-field__control portal-select-wrap"><select class="portal-select" multiple size="3"><option>Đã xác thực</option><option>Chờ xác thực</option></select></div>
+        </div>
+        <div class="portal-field enhance-new">
+          <label class="portal-field__label">Ứng vốn kinh doanh <span class="enhance-tag">MỚI</span></label>
+          <div class="portal-field__control">
+            <label style="display:block;font-size:13px;margin:4px 0"><input type="checkbox" checked/> Có</label>
+            <label style="display:block;font-size:13px;margin:4px 0"><input type="checkbox"/> Không</label>
+          </div>
+        </div>
+        <div class="portal-field enhance-new">
+          <label class="portal-field__label">Trạng thái đăng ký ứng vốn KD <span class="enhance-tag">MỚI</span></label>
+          <div class="portal-field__control">
+            <label style="display:block;font-size:13px;margin:4px 0"><input type="checkbox" checked/> Chưa đăng ký</label>
+            <label style="display:block;font-size:13px;margin:4px 0"><input type="checkbox"/> Đăng ký thành công</label>
+            <label style="display:block;font-size:13px;margin:4px 0"><input type="checkbox"/> Đăng ký thất bại</label>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--portal-text-secondary);margin-top:8px">Hai tiêu chí ứng vốn luôn hiển thị cùng cấp. Lọc <em>Không</em> + bất kỳ trạng thái → không có kết quả.</p>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+        <button type="button" class="portal-btn portal-btn--default">Đặt lại</button>
+        <button type="button" class="portal-btn portal-btn--primary" onclick="switchScreen(2)">Áp dụng</button>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- ===== SCREEN 4: AFTER DETAIL ===== -->
+<div class="screen-wrapper" id="sw4">
+<main class="portal-page-content" style="padding:20px 28px 40px;">
+  <div class="compare-banner after"><strong>AFTER</strong> — Chi tiết cửa hàng: 2 field read-only <span class="enhance-tag">MỚI</span></div>
+  <nav class="portal-breadcrumb"><a href="../../main.html">Quản trị</a><span class="portal-breadcrumb__sep">/</span><a href="#" onclick="switchScreen(2);return false">Danh sách cửa hàng</a><span class="portal-breadcrumb__sep">/</span><span class="portal-breadcrumb__current">Chi tiết cửa hàng</span></nav>
+  <h1 class="portal-page-title">Chi tiết cửa hàng — Cửa hàng số 1</h1>
+
+  <div class="portal-card">
+    <div class="portal-card__hd">Thông tin cửa hàng</div>
+    <div class="portal-card__bd detail-ro">
+      <div class="detail-ro-grid">
+        <div class="detail-ro-item">
+          <label>* Công ty</label>
+          <div class="val">KPP — Kênh Phân Phối</div>
+        </div>
+        <div class="detail-ro-item">
+          <label>Mã cửa hàng</label>
+          <div class="val">KPPST0909900902</div>
+        </div>
+        <div class="detail-ro-item">
+          <label>Tên cửa hàng</label>
+          <div class="val">Cửa hàng số 1</div>
+        </div>
+        <div class="detail-ro-item">
+          <label>Tình trạng Map Bank</label>
+          <div class="val">Map</div>
+        </div>
+        <div class="detail-ro-item enhance-new">
+          <label>Ứng vốn kinh doanh <span class="enhance-tag">MỚI</span></label>
+          <div class="val">Có</div>
+        </div>
+        <div class="detail-ro-item enhance-new">
+          <label>Trạng thái đăng ký ứng vốn kinh doanh <span class="enhance-tag">MỚI</span></label>
+          <div class="val"><span class="portal-tag portal-tag--success">Đăng ký thành công</span></div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--portal-text-secondary);margin-top:12px">Dữ liệu sync hàng ngày từ Portal Lending — chỉ xem, không chỉnh sửa.</p>
+    </div>
+  </div>
+</main>
+</div>
+
+</div>
+<script src="../../menu-tree.js"></script>
+<script src="../../_shared/portal-menu.js"></script>
+<script src="../../_shared/portal-chrome.js"></script>
+<script>
+function switchScreen(n) {
+  document.querySelectorAll('.screen-wrapper').forEach(function(w, i) {
+    w.classList.toggle('active', i + 1 === n);
+  });
+  document.querySelectorAll('.sw-btn').forEach(function(b, i) {
+    var on = i + 1 === n;
+    b.style.background = on ? '#3b82f6' : 'transparent';
+    b.style.color = on ? '#fff' : 'rgba(255,255,255,.7)';
+    b.classList.toggle('active', on);
+  });
+}
+</script>
+<style>
+.screen-wrapper { display: none; }
+.screen-wrapper.active { display: block; }
+</style>
+</body>
+</html>
