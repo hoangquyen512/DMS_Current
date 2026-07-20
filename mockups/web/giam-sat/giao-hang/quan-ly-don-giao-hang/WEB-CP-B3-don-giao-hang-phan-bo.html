@@ -33,7 +33,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--neutral-100);
     min-height: 100vh;
 }
@@ -100,6 +100,7 @@ body {
 .btn-text:disabled { color: var(--neutral-300); cursor: not-allowed; }
 .btn-danger { background: white; color: var(--error-700); border-color: #fecaca; }
 .btn-danger:hover { background: var(--error-50); }
+.btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-text-danger { background: transparent; color: var(--error-600, var(--error-700)); border: none; padding: 4px 8px; }
 .btn-text-danger:hover { background: var(--error-50); border-radius: 4px; }
 
@@ -109,6 +110,7 @@ body {
 .row-actions { display: inline-flex; gap: 4px; flex-wrap: nowrap; justify-content: flex-end; }
 .btn-danger { background: white; color: var(--error-700); border-color: #fecaca; }
 .btn-danger:hover { background: var(--error-50); }
+.btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-text-danger { background: transparent; color: var(--error-600, var(--error-700)); border: none; padding: 4px 8px; }
 .btn-text-danger:hover { background: var(--error-50); border-radius: 4px; }
 
@@ -137,21 +139,20 @@ body {
     padding-bottom: 8px;
     border-bottom: 1px solid var(--neutral-200);
     position: relative;
-    z-index: 20;
-    isolation: isolate;
+    z-index: 1;
 }
 
 .list-section-toolbar .status-tabs {
     border-bottom: none;
     padding-bottom: 0;
     position: relative;
-    z-index: 21;
+    z-index: 1;
     pointer-events: auto;
 }
 
 .list-section-toolbar .status-tab {
     position: relative;
-    z-index: 22;
+    z-index: 1;
     pointer-events: auto;
     flex-shrink: 0;
     padding: 6px 10px;
@@ -163,7 +164,20 @@ body {
     flex: 0 0 auto;
     margin-left: auto;
     position: relative;
-    z-index: 21;
+    z-index: 1;
+}
+
+/* Filter — popup nổi fixed, không đẩy layout grid */
+.portal-query-filter {
+    position: relative;
+    overflow: visible;
+}
+
+.portal-query-filter > .portal-card__bd,
+.portal-query-filter .portal-filter-grid,
+.portal-query-filter .portal-field,
+.portal-query-filter .portal-field__control {
+    overflow: visible;
 }
 
 .list-section-meta {
@@ -326,94 +340,6 @@ body {
 .bulk-bar {
     display: none;
 }
-
-.range-calendar-popup {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    z-index: 50;
-    background: white;
-    border: 1px solid var(--neutral-200);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 12px;
-    min-width: 280px;
-}
-
-.range-calendar-popup.open { display: block; }
-
-.range-calendar-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.range-calendar-head button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 16px;
-    color: var(--neutral-700);
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.range-calendar-head button:hover { background: var(--neutral-100); }
-
-.range-calendar-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--neutral-900);
-}
-
-.range-calendar-weekdays,
-.range-calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-}
-
-.range-calendar-weekdays span {
-    font-size: 11px;
-    color: var(--neutral-500);
-    text-align: center;
-    padding: 4px 0;
-}
-
-.range-calendar-day {
-    border: none;
-    background: transparent;
-    font-size: 12px;
-    padding: 6px 0;
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--neutral-700);
-}
-
-.range-calendar-day:hover { background: var(--primary-50); }
-
-.range-calendar-day.is-other { color: var(--neutral-300); }
-
-.range-calendar-day.is-start,
-.range-calendar-day.is-end {
-    background: var(--primary-500);
-    color: white;
-}
-
-.range-calendar-day.in-range { background: var(--primary-50); color: var(--primary-700); }
-
-.range-calendar-foot {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--neutral-100);
-}
-
-.filter-delivery-date-wrap { position: relative; }
 
 .bulk-count { font-size: 13px; font-weight: 600; color: var(--primary-700); }
 .bulk-meta { font-size: 12px; color: var(--neutral-500); }
@@ -865,6 +791,7 @@ td.actions { text-align: right; white-space: nowrap; }
 <link rel="stylesheet" href="../../../_shared/portal-components.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
 <link rel="stylesheet" href="../../../_shared/portal-mockup-bridge.css"/>
+<link rel="stylesheet" href="../../../_shared/portal-date-range-picker.css"/>
 </head>
 <body class="portal-page" data-portal-base="../../../">
 <div id="portal-chrome-root"></div>
@@ -888,8 +815,8 @@ td.actions { text-align: right; white-space: nowrap; }
             <div class="portal-field">
               <label class="portal-field__label" for="filterCompany">* Công ty</label>
               <div class="portal-field__control portal-select-wrap">
-                <select class="portal-select filter-select" id="filterCompany">
-                  <option value="">Chọn công ty</option>
+                <select class="portal-select filter-select" id="filterCompany" data-clearable="false">
+                  <option value="" selected hidden>Công ty</option>
                   <option value="HCM">Công ty TNHH NPP HCM</option>
                   <option value="BD">Công ty TNHH NPP Bình Dương</option>
                 </select>
@@ -899,7 +826,7 @@ td.actions { text-align: right; white-space: nowrap; }
               <label class="portal-field__label" for="filterRegion">Vùng</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select filter-select" id="filterRegion">
-                  <option value="">Chọn vùng</option>
+                  <option value="" selected hidden>Vùng</option>
                   <option value="MN">GR8098372 — Miền Nam</option>
                   <option value="MB">GR8098371 — Miền Bắc</option>
                 </select>
@@ -909,7 +836,7 @@ td.actions { text-align: right; white-space: nowrap; }
               <label class="portal-field__label" for="filterGroup">Nhóm</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select filter-select" id="filterGroup">
-                  <option value="">Chọn nhóm</option>
+                  <option value="" selected hidden>Nhóm</option>
                   <option value="NPP-HCM">Nhóm NPP Miền Nam HCM</option>
                   <option value="NPP-BD">Nhóm NPP Bình Dương</option>
                   <option value="DEVGR">(KENH_PHAN_PHOI_DEVGR6195980124) — Nhóm Thái test</option>
@@ -969,29 +896,14 @@ td.actions { text-align: right; white-space: nowrap; }
               </div>
             </div>
             <div class="portal-field portal-field--span-2">
-              <label class="portal-field__label">Ngày giao hàng</label>
-              <div class="portal-field__control portal-date-range filter-delivery-date-wrap" id="filterDeliveryDateWrap">
-                <div class="portal-date-range__inner" id="filterDeliveryDateTrigger">
+              <label class="portal-field__label">Thời gian</label>
+              <div class="portal-field__control portal-date-range portal-date-range--picker filter-delivery-date-wrap" id="filterDeliveryDateWrap" data-date-range-picker>
+                <div class="portal-date-range__inner">
                   <input class="portal-date-range__input filter-input" id="filterDeliveryDateFrom" placeholder="Từ ngày" type="text" value="" readonly aria-label="Từ ngày"/>
-                  <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                  <span class="portal-date-range__sep" aria-hidden="true">→</span>
                   <input class="portal-date-range__input filter-input" id="filterDeliveryDateTo" placeholder="Đến ngày" type="text" value="" readonly aria-label="Đến ngày"/>
                 </div>
                 <span class="portal-date-range__icon" aria-hidden="true"></span>
-                <div class="range-calendar-popup" id="deliveryDatePopup">
-                  <div class="range-calendar-head">
-                    <button id="calPrevMonth" type="button" aria-label="Tháng trước">‹</button>
-                    <span class="range-calendar-title" id="calMonthTitle">Tháng 6 / 2026</span>
-                    <button id="calNextMonth" type="button" aria-label="Tháng sau">›</button>
-                  </div>
-                  <div class="range-calendar-weekdays">
-                    <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
-                  </div>
-                  <div class="range-calendar-days" id="calDaysGrid"></div>
-                  <div class="range-calendar-foot">
-                    <button class="btn btn-secondary" id="calClear" type="button">Xóa</button>
-                    <button class="btn btn-primary" id="calApply" type="button">Áp dụng</button>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="portal-field">
@@ -1391,7 +1303,7 @@ td.actions { text-align: right; white-space: nowrap; }
       <div class="form-field">
         <label class="form-label"><span class="required">*</span> Tài xế</label>
         <select class="form-select" id="driverSelect">
-          <option value="">— Chọn tài xế —</option>
+          <option value="" selected hidden>— Chọn tài xế —</option>
           <option value="TX-001">TX-001 — Nguyễn Văn Tài</option>
           <option value="TX-002">TX-002 — Trần Minh Đức</option>
           <option value="TX-003">TX-003 — Lê Hoàng Nam</option>
@@ -1442,7 +1354,7 @@ td.actions { text-align: right; white-space: nowrap; }
       <div class="form-field">
         <label class="form-label"><span class="required">*</span> Tài xế mới</label>
         <select class="form-select" id="changeDriverSelect">
-          <option value="">— Chọn tài xế —</option>
+          <option value="" selected hidden>— Chọn tài xế —</option>
           <option value="TX-001">TX-001 — Nguyễn Văn Tài</option>
           <option value="TX-002">TX-002 — Trần Minh Đức</option>
           <option value="TX-003">TX-003 — Lê Hoàng Nam</option>
@@ -1519,95 +1431,9 @@ td.actions { text-align: right; white-space: nowrap; }
 
 <div class="toast success" id="toast"></div>
 
-<!-- Modal đổi tài xế -->
-<div class="modal-overlay" id="changeDriverModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">🔄 Đổi tài xế giao hàng</div>
-      <div class="modal-close" id="changeModalClose" title="Đóng">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-field">
-        <label class="form-label"><span class="required">*</span> Tài xế mới</label>
-        <select class="form-select" id="changeDriverSelect">
-          <option value="">— Chọn tài xế —</option>
-          <option value="TX-001">TX-001 — Nguyễn Văn Tài</option>
-          <option value="TX-002">TX-002 — Trần Minh Đức</option>
-          <option value="TX-003">TX-003 — Lê Hoàng Nam</option>
-        </select>
-      </div>
-      <div class="confirm-info-panel">
-        <div class="confirm-info-row">
-          <span class="confirm-info-label">Số đơn được chọn:</span>
-          <span class="confirm-info-value" id="changeOrderCount">0 đơn giao hàng</span>
-        </div>
-      </div>
-      <div class="mini-order-list">
-        <table>
-          <thead>
-            <tr>
-              <th>Mã đơn giao hàng</th>
-              <th>Cửa hàng</th>
-              <th>Tài xế hiện tại</th>
-            </tr>
-          </thead>
-          <tbody id="changeOrderList"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="changeModalCancel" type="button">Hủy</button>
-      <button class="btn btn-primary" id="changeModalConfirm" type="button">Xác nhận đổi tài xế</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal hủy đơn giao hàng -->
-<div class="modal-overlay" id="cancelModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">🚫 Hủy đơn giao hàng</div>
-      <div class="modal-close" id="cancelModalClose" title="Đóng">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-note warning">
-        <strong>Lưu ý:</strong> Đơn giao hàng sau khi hủy sẽ chuyển sang trạng thái <strong>Đã hủy</strong>.
-        Nếu cần giao lại, phải <strong>tạo lại đơn giao hàng mới</strong> từ đơn bán / phiếu xuất kho tương ứng.
-      </div>
-      <div class="confirm-info-panel" style="margin-top:14px;">
-        <div class="confirm-info-row">
-          <span class="confirm-info-label">Số đơn hủy:</span>
-          <span class="confirm-info-value" id="cancelOrderCount">0 đơn giao hàng</span>
-        </div>
-      </div>
-      <div class="mini-order-list">
-        <table>
-          <thead>
-            <tr>
-              <th>Mã đơn giao hàng</th>
-              <th>Cửa hàng</th>
-              <th>Trạng thái hiện tại</th>
-            </tr>
-          </thead>
-          <tbody id="cancelOrderList"></tbody>
-        </table>
-      </div>
-      <div class="form-field">
-        <label class="form-label">Ghi chú</label>
-        <textarea class="form-textarea" id="cancelNote" maxlength="500" placeholder="Lý do hủy (tuỳ chọn)..."></textarea>
-        <div class="form-counter" id="cancelNoteCounter">0/500</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="cancelModalCancelBtn" type="button">Quay lại</button>
-      <button class="btn btn-danger" id="cancelModalConfirm" type="button">Xác nhận hủy</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast success" id="toast"></div>
-
+<script src="../../../_shared/api-client.js"></script>
 <script src="../../../_shared/portal-mockup-widgets.js"></script>
+<script src="../../../_shared/portal-date-range-picker.js" data-portal-date-picker="1"></script>
 <script>
 (function () {
   var currentStatus = 'all';
@@ -1642,6 +1468,71 @@ td.actions { text-align: right; white-space: nowrap; }
     'TX-003': 'Lê Hoàng Nam'
   };
 
+  function formatMoney(amount) {
+    var n = Math.round(Number(amount || 0));
+    return n.toLocaleString('vi-VN');
+  }
+
+  function nowAssignDate() {
+    var d = new Date();
+    var pad = function (n) { return n < 10 ? '0' + n : n; };
+    return pad(d.getDate()) + '-' + pad(d.getMonth() + 1) + '-' + d.getFullYear() + ' ' +
+      pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  function populateDriverSelects(drivers) {
+    var selectIds = ['driverSelect', 'changeDriverSelect'];
+    selectIds.forEach(function (id) {
+      document.querySelectorAll('[id="' + id + '"]').forEach(function (sel) {
+        var current = sel.value;
+        sel.innerHTML = '<option value="" selected hidden>— Chọn tài xế —</option>';
+        drivers.forEach(function (d) {
+          driverNames[d.staffCode] = d.fullName;
+          var opt = document.createElement('option');
+          opt.value = d.staffCode;
+          opt.textContent = d.staffCode + ' — ' + d.fullName;
+          sel.appendChild(opt);
+        });
+        if (current) sel.value = current;
+      });
+    });
+    var filterRoot = document.getElementById('filterDriver')
+      ? document.getElementById('filterDriver').closest('.portal-multi-select')
+      : null;
+    var filterList = filterRoot
+      ? (filterRoot.querySelector('.portal-multi-select__dropdown') || filterRoot.querySelector('.portal-multi-select__list'))
+      : null;
+    var filterHidden = document.getElementById('filterDriver');
+    if (filterList && filterHidden) {
+      filterList.innerHTML = '';
+      filterHidden.innerHTML = '';
+      drivers.forEach(function (d) {
+        driverNames[d.staffCode] = d.fullName;
+        var li = document.createElement('li');
+        li.className = 'portal-multi-select__option';
+        li.dataset.value = d.staffCode;
+        li.textContent = d.staffCode + ' — ' + d.fullName;
+        filterList.appendChild(li);
+        var opt = document.createElement('option');
+        opt.value = d.staffCode;
+        opt.textContent = d.staffCode + ' — ' + d.fullName;
+        filterHidden.appendChild(opt);
+      });
+      if (window.PortalMockupWidgets && window.PortalMockupWidgets.syncMultiSelectOptions) {
+        window.PortalMockupWidgets.syncMultiSelectOptions(filterRoot);
+      }
+    }
+  }
+
+  function loadAvailableDrivers() {
+    if (!window.DMS_API || !window.DMS_API.getAvailableDrivers) return;
+    window.DMS_API.getAvailableDrivers().then(function (res) {
+      if (res.items && res.items.length) populateDriverSelects(res.items);
+    }).catch(function () { /* giữ fallback hardcoded */ });
+  }
+
+  loadAvailableDrivers();
+
   var STATUSES_WITHOUT_PAY_METHOD = {
     pending: true,
     assigned: true,
@@ -1658,11 +1549,37 @@ td.actions { text-align: right; white-space: nowrap; }
     });
   }
 
+  function getFilterCard() {
+    return document.querySelector('.portal-query-filter');
+  }
+
+  function syncFilterOverlayState() {
+    var card = getFilterCard();
+    if (!card) return;
+    card.classList.toggle('is-filter-overlay-open', !!document.querySelector('.portal-query-filter .portal-multi-select.is-open'));
+  }
+
+  function closeFilterOverlays(except) {
+    if (except !== 'calendar' && window.PortalDateRangePicker && window.PortalDateRangePicker.closeAll) {
+      window.PortalDateRangePicker.closeAll();
+    }
+    if (except !== 'multiselect') {
+      document.querySelectorAll('.portal-query-filter .portal-multi-select.is-open').forEach(function (el) {
+        el.classList.remove('is-open');
+      });
+    }
+    syncFilterOverlayState();
+  }
+
   function matchMulti(values, rowValue) {
     return values.length === 0 || values.indexOf(rowValue) >= 0;
   }
 
   function clearMultiSelect(rootId) {
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.clearMultiSelect) {
+      window.PortalMockupWidgets.clearMultiSelect(rootId);
+      return;
+    }
     var root = document.getElementById(rootId);
     if (!root) return;
     root.querySelectorAll('.portal-multi-select__tag').forEach(function (tag) { tag.remove(); });
@@ -1675,6 +1592,10 @@ td.actions { text-align: right; white-space: nowrap; }
   }
 
   function setMultiSelectValues(rootId, values) {
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.setMultiSelectValues) {
+      window.PortalMockupWidgets.setMultiSelectValues(rootId, values);
+      return;
+    }
     clearMultiSelect(rootId);
     if (!values || !values.length) return;
     var root = document.getElementById(rootId);
@@ -1758,14 +1679,22 @@ td.actions { text-align: right; white-space: nowrap; }
     return status === 'pending' || status === 'assigned' || status === 'failed';
   }
 
+  function syncRowCheckboxState(row) {
+    var cb = row.querySelector('.row-check');
+    if (!cb) return;
+    var selectable = isSelectableStatus(row.dataset.status);
+    cb.disabled = !selectable;
+    if (!selectable) cb.checked = false;
+  }
+
   function getSelectableVisibleRows() {
     return getVisibleRows().filter(function (r) { return isSelectableStatus(r.dataset.status); });
   }
 
   function getSelectedRows() {
-    return getRows().filter(function (r) {
+    return getVisibleRows().filter(function (r) {
       var cb = r.querySelector('.row-check');
-      return cb && cb.checked && !cb.disabled;
+      return cb && cb.checked && !cb.disabled && isSelectableStatus(r.dataset.status);
     });
   }
 
@@ -1775,6 +1704,7 @@ td.actions { text-align: right; white-space: nowrap; }
       allPending: statuses.length > 0 && statuses.every(function (s) { return s === 'pending'; }),
       allAssigned: statuses.length > 0 && statuses.every(function (s) { return s === 'assigned'; }),
       allFailed: statuses.length > 0 && statuses.every(function (s) { return s === 'failed'; }),
+      // Hủy khi mọi đơn đang chọn thuộc Chờ phân bổ hoặc Thất bại
       canCancel: statuses.length > 0 && statuses.every(function (s) {
         return s === 'pending' || s === 'failed';
       })
@@ -1859,8 +1789,14 @@ td.actions { text-align: right; white-space: nowrap; }
     var criteria = getFilterCriteria();
 
     getRows().forEach(function (row) {
+      syncRowCheckboxState(row);
+      setRowActions(row);
       var visible = rowMatchesFilters(row, criteria);
       row.classList.toggle('hidden', !visible);
+      if (!visible) {
+        var hiddenCb = row.querySelector('.row-check');
+        if (hiddenCb) hiddenCb.checked = false;
+      }
     });
 
     var visible = getVisibleRows();
@@ -1900,56 +1836,71 @@ td.actions { text-align: right; white-space: nowrap; }
     var btnChange = document.getElementById('btnBulkChangeDriver');
     var btnReassign = document.getElementById('btnBulkReassign');
     var btnCancel = document.getElementById('btnBulkCancel');
+    if (!btnAssign || !btnChange || !btnReassign || !btnCancel || !summary) return;
+
     var hasSelection = selected.length > 0;
+    var showAssign = hasSelection && profile.allPending;
+    var showChange = hasSelection && profile.allAssigned;
+    var showReassign = hasSelection && profile.allFailed;
+    var showCancel = hasSelection && profile.canCancel;
 
     if (hasSelection) {
       summary.classList.remove('is-hidden');
-      var metaParts = ['✓ Đã chọn ' + selected.length + ' đơn giao hàng', 'Tổng tiền: <strong>' + formatMoney(total) + '</strong>'];
+      var metaParts = [
+        '✓ Đã chọn ' + selected.length + ' đơn giao hàng',
+        'Tổng tiền: <strong>' + formatMoney(total) + '</strong>'
+      ];
       if (profile.allPending) metaParts.push('Trạng thái: Chờ phân bổ');
       else if (profile.allAssigned) metaParts.push('Trạng thái: Chưa giao');
       else if (profile.allFailed) metaParts.push('Trạng thái: Thất bại');
+      else if (profile.canCancel) metaParts.push('Trạng thái: Chờ phân bổ / Thất bại');
       else metaParts.push('<span style="color:var(--warning-700);">Chọn đơn cùng trạng thái để thao tác hàng loạt</span>');
       summary.innerHTML = metaParts.join(' · ');
-
-      btnReassign.style.display = profile.allFailed ? 'inline-flex' : 'none';
-
-      if (profile.allAssigned) {
-        btnChange.textContent = '🔄 Đổi tài xế (' + selected.length + ')';
-      } else {
-        btnChange.textContent = '🔄 Đổi tài xế';
-      }
-      if (profile.allFailed) {
-        btnReassign.textContent = '🚚 Phân bổ lại (' + selected.length + ')';
-      }
-      if (profile.canCancel) {
-        btnCancel.textContent = '🚫 Hủy đơn (' + selected.length + ')';
-      } else {
-        btnCancel.textContent = '🚫 Hủy đơn';
-      }
-      if (profile.allPending) {
-        btnAssign.textContent = '🚚 Gán Tài xế (' + selected.length + ')';
-      } else {
-        btnAssign.textContent = '🚚 Gán Tài xế';
-      }
     } else {
       summary.classList.add('is-hidden');
       summary.innerHTML = '';
-      btnReassign.style.display = 'none';
-      btnCancel.textContent = '🚫 Hủy đơn';
-      btnAssign.textContent = '🚚 Gán Tài xế';
-      btnChange.textContent = '🔄 Đổi tài xế';
     }
 
-    btnAssign.disabled = !hasSelection;
-    btnChange.disabled = !hasSelection || !profile.allAssigned;
-    btnCancel.disabled = !hasSelection;
+    btnAssign.textContent = showAssign
+      ? '🚚 Gán Tài xế (' + selected.length + ')'
+      : '🚚 Gán Tài xế';
+    btnChange.textContent = showChange
+      ? '🔄 Đổi tài xế (' + selected.length + ')'
+      : '🔄 Đổi tài xế';
+    btnReassign.textContent = showReassign
+      ? '🚚 Phân bổ lại (' + selected.length + ')'
+      : '🚚 Phân bổ lại';
+    btnCancel.textContent = showCancel
+      ? '🚫 Hủy đơn (' + selected.length + ')'
+      : '🚫 Hủy đơn';
+
+    // Luôn hiện 3 nút chính; Phân bổ lại hiện khi chọn đơn Thất bại
     btnAssign.style.display = 'inline-flex';
     btnChange.style.display = 'inline-flex';
     btnCancel.style.display = 'inline-flex';
+    btnReassign.style.display = showReassign ? 'inline-flex' : 'none';
+
+    btnAssign.disabled = !showAssign;
+    btnChange.disabled = !showChange;
+    btnReassign.disabled = !showReassign;
+    btnCancel.disabled = !showCancel;
+
+    btnAssign.title = showAssign
+      ? 'Gán tài xế cho ' + selected.length + ' đơn Chờ phân bổ'
+      : 'Chọn một hoặc nhiều đơn trạng thái Chờ phân bổ';
+    btnChange.title = showChange
+      ? 'Đổi tài xế cho ' + selected.length + ' đơn Chưa giao'
+      : 'Chọn một hoặc nhiều đơn trạng thái Chưa giao';
+    btnCancel.title = showCancel
+      ? 'Hủy ' + selected.length + ' đơn đã chọn'
+      : 'Chọn đơn Chờ phân bổ hoặc Thất bại để hủy';
+    btnReassign.title = showReassign
+      ? 'Phân bổ lại ' + selected.length + ' đơn Thất bại'
+      : 'Chọn đơn Thất bại để phân bổ lại';
 
     getRows().forEach(function (r) {
       var cb = r.querySelector('.row-check');
-      r.classList.toggle('selected', cb && cb.checked && !cb.disabled);
+      r.classList.toggle('selected', !!(cb && cb.checked && !cb.disabled));
     });
   }
 
@@ -2086,8 +2037,8 @@ td.actions { text-align: right; white-space: nowrap; }
     badge.className = 'badge badge-assigned status-badge';
     badge.textContent = statusBadgeText.assigned;
     var cb = row.querySelector('.row-check');
-    cb.checked = false;
-    cb.disabled = false;
+    if (cb) cb.checked = false;
+    syncRowCheckboxState(row);
     setRowActions(row);
   }
 
@@ -2141,8 +2092,8 @@ td.actions { text-align: right; white-space: nowrap; }
       row.querySelector('.assign-date').textContent = '—';
 
       var cb = row.querySelector('.row-check');
-      cb.checked = false;
-      cb.disabled = true;
+      if (cb) cb.checked = false;
+      syncRowCheckboxState(row);
       setRowActions(row);
     });
     closeCancelModal();
@@ -2161,6 +2112,7 @@ td.actions { text-align: right; white-space: nowrap; }
 
   function onStatusTabSelect(tab) {
     if (!tab) return;
+    closeFilterOverlays();
     currentStatus = tab.dataset.status || 'all';
     syncingStatusFromTab = true;
     clearMultiSelect('msDeliveryStatus');
@@ -2224,22 +2176,28 @@ td.actions { text-align: right; white-space: nowrap; }
   });
 
   document.getElementById('btnBulkAssign').addEventListener('click', function () {
-    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    if (this.disabled) return;
+    var ids = getSelectedRows().filter(function (r) { return r.dataset.status === 'pending'; }).map(function (r) { return r.dataset.id; });
     if (ids.length) openAssignModal(ids, 'assign');
   });
 
   document.getElementById('btnBulkChangeDriver').addEventListener('click', function () {
-    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    if (this.disabled) return;
+    var ids = getSelectedRows().filter(function (r) { return r.dataset.status === 'assigned'; }).map(function (r) { return r.dataset.id; });
     if (ids.length) openChangeDriverModal(ids);
   });
 
   document.getElementById('btnBulkReassign').addEventListener('click', function () {
-    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    if (this.disabled) return;
+    var ids = getSelectedRows().filter(function (r) { return r.dataset.status === 'failed'; }).map(function (r) { return r.dataset.id; });
     if (ids.length) openAssignModal(ids, 'reassign');
   });
 
   document.getElementById('btnBulkCancel').addEventListener('click', function () {
-    var ids = getSelectedRows().map(function (r) { return r.dataset.id; });
+    if (this.disabled) return;
+    var ids = getSelectedRows().filter(function (r) {
+      return r.dataset.status === 'pending' || r.dataset.status === 'failed';
+    }).map(function (r) { return r.dataset.id; });
     if (ids.length) openCancelModal(ids);
   });
 
@@ -2356,119 +2314,10 @@ td.actions { text-align: right; white-space: nowrap; }
     showToast('Đã xuất ' + rows.length + ' bản ghi ra file Excel');
   }
 
-  function initDeliveryDateRangePicker() {
-    var wrap = document.getElementById('filterDeliveryDateWrap');
-    var popup = document.getElementById('deliveryDatePopup');
-    var fromInput = document.getElementById('filterDeliveryDateFrom');
-    var toInput = document.getElementById('filterDeliveryDateTo');
-    var grid = document.getElementById('calDaysGrid');
-    var title = document.getElementById('calMonthTitle');
-    var viewDate = new Date();
-    var pickStart = null;
-    var pickEnd = null;
-
-    function renderCalendar() {
-      var y = viewDate.getFullYear();
-      var m = viewDate.getMonth();
-      title.textContent = 'Tháng ' + (m + 1) + ' / ' + y;
-      var first = new Date(y, m, 1);
-      var startOffset = (first.getDay() + 6) % 7;
-      var daysInMonth = new Date(y, m + 1, 0).getDate();
-      var prevDays = new Date(y, m, 0).getDate();
-      grid.innerHTML = '';
-      for (var i = 0; i < 42; i++) {
-        var dayNum;
-        var cellDate;
-        var other = false;
-        if (i < startOffset) {
-          dayNum = prevDays - startOffset + i + 1;
-          cellDate = new Date(y, m - 1, dayNum);
-          other = true;
-        } else if (i >= startOffset + daysInMonth) {
-          dayNum = i - startOffset - daysInMonth + 1;
-          cellDate = new Date(y, m + 1, dayNum);
-          other = true;
-        } else {
-          dayNum = i - startOffset + 1;
-          cellDate = new Date(y, m, dayNum);
-        }
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'range-calendar-day' + (other ? ' is-other' : '');
-        btn.textContent = dayNum;
-        btn.dataset.iso = cellDate.toISOString();
-        if (pickStart && cellDate.toDateString() === pickStart.toDateString()) btn.classList.add('is-start');
-        if (pickEnd && cellDate.toDateString() === pickEnd.toDateString()) btn.classList.add('is-end');
-        if (pickStart && pickEnd) {
-          var min = pickStart < pickEnd ? pickStart : pickEnd;
-          var max = pickStart < pickEnd ? pickEnd : pickStart;
-          if (cellDate > min && cellDate < max) btn.classList.add('in-range');
-        }
-        btn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          var d = new Date(this.dataset.iso);
-          if (!pickStart || (pickStart && pickEnd)) {
-            pickStart = d;
-            pickEnd = null;
-          } else if (d < pickStart) {
-            pickEnd = pickStart;
-            pickStart = d;
-          } else {
-            pickEnd = d;
-          }
-          renderCalendar();
-        });
-        grid.appendChild(btn);
-      }
-    }
-
-    function openPopup() {
-      pickStart = parseFilterDate(fromInput.value);
-      pickEnd = parseFilterDate(toInput.value);
-      if (pickStart) viewDate = new Date(pickStart.getTime());
-      popup.classList.add('open');
-      renderCalendar();
-    }
-
-    function closePopup() {
-      popup.classList.remove('open');
-    }
-
-    wrap.addEventListener('click', function (e) {
-      if (e.target.closest('#deliveryDatePopup')) return;
-      openPopup();
-    });
-
-    document.getElementById('calPrevMonth').addEventListener('click', function (e) {
-      e.stopPropagation();
-      viewDate.setMonth(viewDate.getMonth() - 1);
-      renderCalendar();
-    });
-    document.getElementById('calNextMonth').addEventListener('click', function (e) {
-      e.stopPropagation();
-      viewDate.setMonth(viewDate.getMonth() + 1);
-      renderCalendar();
-    });
-    document.getElementById('calClear').addEventListener('click', function (e) {
-      e.stopPropagation();
-      pickStart = null;
-      pickEnd = null;
-      fromInput.value = '';
-      toInput.value = '';
-      renderCalendar();
-    });
-    document.getElementById('calApply').addEventListener('click', function (e) {
-      e.stopPropagation();
-      fromInput.value = pickStart ? formatFilterDate(pickStart) : '';
-      toInput.value = pickEnd ? formatFilterDate(pickEnd) : pickStart ? formatFilterDate(pickStart) : '';
-      closePopup();
-      applyFilters();
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!wrap.contains(e.target)) closePopup();
-    });
-  }
+  document.getElementById('filterDeliveryDateWrap').addEventListener('click', function () {
+    closeFilterOverlays('calendar');
+  }, true);
+  document.getElementById('filterDeliveryDateWrap').addEventListener('daterange:apply', applyFilters);
 
   document.getElementById('btnSearch').addEventListener('click', applyFilters);
   document.getElementById('btnExport').addEventListener('click', exportExcel);
@@ -2513,8 +2362,28 @@ td.actions { text-align: right; white-space: nowrap; }
     });
   }
 
-  initDeliveryDateRangePicker();
-  getRows().forEach(syncPaymentMethodDisplay);
+  document.querySelectorAll('.portal-query-filter .portal-multi-select').forEach(function (ms) {
+    ms.addEventListener('click', function (e) {
+      if (e.target.closest('.portal-multi-select__tag-remove')) return;
+      closeFilterOverlays('multiselect');
+      if (!e.target.closest('.portal-multi-select__option')) {
+        document.querySelectorAll('.portal-query-filter .portal-multi-select.is-open').forEach(function (other) {
+          if (other !== ms) other.classList.remove('is-open');
+        });
+      }
+      setTimeout(syncFilterOverlayState, 0);
+    });
+  });
+
+  document.querySelector('.list-section').addEventListener('click', function () {
+    closeFilterOverlays();
+  });
+
+  getRows().forEach(function (row) {
+    syncPaymentMethodDisplay(row);
+    syncRowCheckboxState(row);
+    setRowActions(row);
+  });
   updateBulkBar();
   applyFilters();
 })();
