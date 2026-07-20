@@ -1,0 +1,200 @@
+/* Date range picker — Ant Design RangePicker (2 tháng) */
+.portal-date-range--picker,
+.portal-date-range[data-range-picker-init="1"] {
+  cursor: pointer;
+}
+.portal-date-range--picker .portal-date-range__input {
+  cursor: pointer;
+  pointer-events: none;
+}
+
+/* Nút × trên ô lịch — đồng bộ Select allowClear */
+.portal-date-range__clear {
+  display: none;
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.portal-date-range__clear span {
+  display: block;
+  margin-top: -1px;
+  font-weight: 600;
+}
+.portal-date-range.has-value .portal-date-range__clear:not([hidden]) {
+  display: inline-flex;
+}
+.portal-date-range.has-value .portal-date-range__inner {
+  padding-right: 48px;
+}
+.portal-date-range__clear:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+.portal-date-range.has-value .portal-date-range__icon {
+  opacity: 0.35;
+}
+.portal-date-range.is-calendar-open {
+  z-index: 120;
+}
+.portal-date-range.is-calendar-open .portal-date-range__inner {
+  border-color: var(--portal-primary, #2b579a);
+  box-shadow: 0 0 0 2px rgba(43, 87, 154, 0.15);
+}
+
+.range-calendar-popup {
+  display: none;
+  position: fixed;
+  z-index: 1200;
+  background: #fff;
+  border: 1px solid var(--portal-border-strong, #d9d9d9);
+  border-radius: var(--portal-radius-dropdown, 8px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.04);
+  padding: 8px 12px 12px;
+  min-width: 552px;
+  box-sizing: border-box;
+}
+.range-calendar-popup.open { display: block; }
+
+.range-calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+.range-calendar-toolbar button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 4px 6px;
+  border-radius: 4px;
+  min-width: 24px;
+}
+.range-calendar-toolbar button:hover {
+  color: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.04);
+}
+.range-calendar-titles {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  min-width: 0;
+}
+.range-calendar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  text-align: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.range-calendar-panels {
+  display: flex;
+  gap: 12px;
+}
+.range-calendar-panel {
+  flex: 1 1 0;
+  min-width: 252px;
+}
+
+.range-calendar-weekdays,
+.range-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+}
+.range-calendar-weekdays span {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+  padding: 6px 0;
+  font-weight: 500;
+}
+.range-calendar-day {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  margin: 2px auto;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.range-calendar-day:hover:not(.is-other) {
+  background: rgba(43, 87, 154, 0.08);
+}
+.range-calendar-day.is-other {
+  color: rgba(0, 0, 0, 0.25);
+}
+.range-calendar-day.is-start,
+.range-calendar-day.is-end {
+  background: var(--portal-primary, #2b579a);
+  color: #fff;
+}
+.range-calendar-day.in-range {
+  background: rgba(43, 87, 154, 0.12);
+  color: var(--portal-primary, #2b579a);
+  border-radius: 0;
+}
+.range-calendar-day.is-start.in-range {
+  border-radius: 6px 0 0 6px;
+}
+.range-calendar-day.is-end.in-range {
+  border-radius: 0 6px 6px 0;
+}
+.range-calendar-day.is-start.is-end {
+  border-radius: 6px;
+}
+
+.range-calendar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--portal-border, #f0f0f0);
+}
+.range-calendar-clear {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--portal-primary, #2b579a);
+  padding: 0 4px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.range-calendar-clear:hover {
+  color: var(--portal-primary-hover, #1e3d6f);
+  background: rgba(43, 87, 154, 0.06);
+}
+.range-calendar-clear:active {
+  background: rgba(43, 87, 154, 0.12);
+}
