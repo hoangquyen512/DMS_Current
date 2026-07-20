@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="icon" type="image/png" href="/mobile/_shared/salesman-app-icon.png"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-CH04 â€” [APP] Chi tiáº¿t cá»­a hÃ ng (á»¨ng vá»‘n KD)</title>
+<link rel="stylesheet" href="../../_shared/app-chrome.css"/>
+<style>
+.enhance-tag {
+  font-size: 9px; font-weight: 700; color: #b45309;
+  background: #fef3c7; border: 1px solid #fcd34d; border-radius: 3px;
+  padding: 1px 5px; margin-left: 4px; vertical-align: middle;
+}
+.detail-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #fff; border-bottom: 1px solid var(--c-border); flex-shrink: 0; }
+.detail-hd .back { width: 36px; height: 36px; border: none; background: transparent; font-size: 22px; cursor: pointer; text-decoration: none; color: var(--c-text); display: flex; align-items: center; justify-content: center; }
+.detail-hd h1 { flex: 1; text-align: center; font-size: 17px; font-weight: 600; margin: 0; }
+.detail-hd .menu { width: 36px; text-align: center; font-size: 18px; color: var(--c-sub); }
+.detail-scroll { flex: 1; min-height: 0; overflow-y: auto; background: var(--neutral-50); padding-bottom: 16px; }
+.store-summary { margin: 12px; padding: 14px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); border-radius: 14px; border: 1px solid #bae6fd; text-align: center; }
+.store-summary .av { width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.store-summary .nm { font-size: 16px; font-weight: 700; }
+.store-summary .ph { font-size: 14px; color: var(--c-sub); margin-top: 4px; }
+.store-summary .ad { font-size: 12px; color: var(--c-muted); margin-top: 6px; line-height: 1.4; }
+.badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 12px 0; }
+.pill-badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--c-border); font-size: 11px; font-weight: 600; color: var(--c-sub); }
+.quick-actions { display: flex; gap: 12px; padding: 14px 16px; overflow-x: auto; background: #fff; border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); flex-shrink: 0; margin-top: 12px; scrollbar-width: none; -ms-overflow-style: none; }
+.quick-actions::-webkit-scrollbar { display: none; }
+.qa-item { flex: 0 0 auto; text-align: center; width: 64px; font-size: 10px; color: var(--c-sub); }
+.qa-item .ic { width: 44px; height: 44px; margin: 0 auto 4px; border-radius: 12px; background: var(--app-primary-light); color: var(--app-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.sec-block { margin: 12px 12px 0; background: #fff; border-radius: 12px; border: 1px solid var(--c-border); overflow: hidden; }
+.sec-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--neutral-100); }
+.sec-hd .ttl { font-size: 15px; font-weight: 600; color: var(--app-primary); border-left: 3px solid var(--app-primary); padding-left: 8px; }
+.sec-hd .edit { font-size: 16px; color: var(--c-muted); }
+.sec-warn { padding: 12px 14px; font-size: 13px; color: #ef4444; display: flex; align-items: center; gap: 6px; }
+.field-row { display: flex; justify-content: space-between; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--neutral-50); font-size: 13px; }
+.field-row:last-child { border-bottom: none; }
+.field-row .lbl { color: var(--c-muted); flex: 1.1; }
+.field-row .val { color: var(--c-text); font-weight: 500; text-align: right; flex: 1; }
+.field-row .val select { border: 1px solid var(--c-border); border-radius: 6px; padding: 4px 8px; font-size: 12px; max-width: 140px; }
+.sec-more { text-align: center; padding: 10px; font-size: 13px; color: var(--app-primary); font-weight: 500; }
+.dist-box { margin: 0 14px 10px; padding: 10px 12px; background: var(--neutral-50); border-radius: 8px; font-size: 12px; color: var(--c-sub); }
+.hint-bar { margin-top: 12px; font-size: 12px; text-align: center; }
+.hint-bar a { color: #60a5fa; }
+</style>
+</head>
+<body class="mockup-page app-hub">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar" style="background:#fff">
+      <span>15:15</span>
+      <span class="status-icons"><a class="status-portal-link" href="../../../web/main.html" title="DMS Portal">ðŸŒ</a><span>ðŸ“¶ ðŸ”‹ 80%</span></span>
+    </div>
+
+    <div class="detail-hd">
+      <a class="back" id="btn-back" href="MS-A-CH04-ung-von-kd-enhance.html" aria-label="Quay láº¡i">â†</a>
+      <h1>Cá»­a hÃ ng chÄƒm sÃ³c</h1>
+      <span class="menu">â˜°</span>
+    </div>
+
+    <div class="detail-scroll">
+      <div class="store-summary">
+        <div class="av">ðŸª</div>
+        <div class="nm">Hien Test QR Global Napas</div>
+        <div class="ph">0965225882 âŽ˜</div>
+        <div class="ad">34 HoÃ ng Viá»‡t, PhÆ°á»ng 4, Quáº­n TÃ¢n BÃ¬nh, TP.HCM</div>
+      </div>
+
+      <div class="badge-row">
+        <span class="pill-badge">ðŸ”· ECO</span>
+        <span class="pill-badge">ðŸªª CH Ä‘Ã£ eKYC</span>
+        <span class="pill-badge">ðŸŽ ECOPay</span>
+      </div>
+
+      <div class="quick-actions">
+        <div class="qa-item"><div class="ic">ðŸ–¼</div>HÃ¬nh áº£nh cá»­a hÃ ng</div>
+        <div class="qa-item"><div class="ic">ðŸ“Š</div>PhÃ¢n tÃ­ch cá»­a hÃ ng</div>
+        <div class="qa-item"><div class="ic">ðŸ“‹</div>Lá»‹ch sá»­ Ä‘Æ¡n hÃ ng</div>
+        <div class="qa-item"><div class="ic">ðŸŽ</div>CT trÆ°ng bÃ y</div>
+        <div class="qa-item"><div class="ic">ðŸ“</div>ÄÄƒng kÃ½ dá»‹ch vá»¥</div>
+      </div>
+
+      <div class="sec-block">
+        <div class="sec-hd"><span class="ttl">ThÃ´ng tin xuáº¥t hÃ³a Ä‘Æ¡n</span><span class="edit">âœŽ</span></div>
+        <div class="sec-warn">âš  Vui lÃ²ng cáº­p nháº­t thÃ´ng tin</div>
+      </div>
+
+      <div class="sec-block">
+        <div class="sec-hd"><span class="ttl">ThÃ´ng tin chung</span><span class="edit">âœŽ</span></div>
+        <div class="field-row"><span class="lbl">Sá»‘ Ä‘iá»‡n thoáº¡i</span><span class="val">0965225882</span></div>
+        <div class="field-row"><span class="lbl">NhÃ£n hÃ ng</span><span class="val"><select><option>HEINEKEN</option></select></span></div>
+        <div class="field-row"><span class="lbl">MÃ£ nhÃ£n hÃ ng</span><span class="val">â€”</span></div>
+        <div class="field-row"><span class="lbl">TÃªn cá»­a hÃ ng</span><span class="val">Hien Test QR Global Napas</span></div>
+        <div class="field-row enhance-new"><span class="lbl">á»¨ng vá»‘n kinh doanh <span class="enhance-tag">Má»šI</span></span><span class="val">CÃ³</span></div>
+        <div class="field-row enhance-new"><span class="lbl">Tráº¡ng thÃ¡i Ä‘Äƒng kÃ½ á»©ng vá»‘n kinh doanh <span class="enhance-tag">Má»šI</span></span><span class="val" style="color:var(--app-primary)">ÄÄƒng kÃ½ thÃ nh cÃ´ng</span></div>
+        <div class="sec-more">Xem ThÃªm â–¾</div>
+      </div>
+
+      <div class="sec-block">
+        <div class="sec-hd"><span class="ttl">ThÃ´ng tin khÃ¡c</span><span class="edit">âœŽ</span></div>
+        <div class="dist-box">NhÃ  phÃ¢n phá»‘i<br/><strong>NPP FV_TEST</strong></div>
+        <div class="field-row"><span class="lbl">ÄÆ¡n Ä‘áº§u tiÃªn (New)</span><span class="val">10/07/2026</span></div>
+        <div class="field-row"><span class="lbl">HoÃ n thÃ nh má»Ÿ Ä‘iá»ƒm</span><span class="val">ÄÃ£ cÃ i ECO</span></div>
+        <div class="sec-more">Xem ThÃªm â–¾</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hint-bar">
+  MS-A-CH04 Chi tiáº¿t Â·
+  <a href="MS-A-CH04-ung-von-kd-enhance.html">â† Viáº¿ng thÄƒm</a> Â·
+  <a href="MS-A-CH04-cham-soc.html">ChÄƒm sÃ³c</a>
+</div>
+
+<script src="../../_shared/mockup-fit.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var from = params.get('from');
+  var backMap = {
+    home: 'MS-A-CH04-ung-von-kd-enhance.html',
+    'cham-soc': 'MS-A-CH04-cham-soc.html',
+    ch03: 'MS-A-CH03-tac-vu-cua-hang.html',
+    vt01: '../../vieng-tham/chi-tiet-cua-hang/MS-A-VT01-chi-tiet-vieng-tham-cua-hang.html'
+  };
+  if (from && backMap[from]) {
+    document.getElementById('btn-back').setAttribute('href', backMap[from]);
+  }
+})();
+</script>
+</body>
+</html>

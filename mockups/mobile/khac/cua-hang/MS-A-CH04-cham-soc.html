@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="icon" type="image/png" href="/mobile/_shared/salesman-app-icon.png"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-CH04 â€” [APP] Cá»­a hÃ ng chÄƒm sÃ³c (á»¨ng vá»‘n KD)</title>
+<link rel="stylesheet" href="../../_shared/app-chrome.css"/>
+<style>
+.ch-icon-new {
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--c-border); background: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--c-sub);
+}
+.sub-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #fff; border-bottom: 1px solid var(--c-border); flex-shrink: 0; }
+.sub-hd .back { width: 36px; height: 36px; border: none; background: transparent; font-size: 22px; cursor: pointer; text-decoration: none; color: var(--c-text); display: flex; align-items: center; justify-content: center; }
+.sub-hd .ttl { flex: 1; text-align: center; font-size: 17px; font-weight: 600; }
+.sub-hd .home { width: 36px; text-align: center; font-size: 18px; text-decoration: none; }
+.store-tabs { display: flex; border-bottom: 1px solid var(--c-border); padding: 0 8px; background: #fff; flex-shrink: 0; }
+.store-tab { flex: 1; border: none; background: transparent; padding: 12px 8px; font-size: 14px; color: var(--c-sub); cursor: pointer; position: relative; }
+.store-tab.active { color: var(--app-primary); font-weight: 600; }
+.store-tab.active::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: 0; height: 3px; background: var(--app-primary); border-radius: 3px 3px 0 0; }
+.ch-search-row { display: flex; gap: 8px; padding: 10px 12px; background: #fff; flex-shrink: 0; }
+.ch-search { flex: 1; display: flex; align-items: center; gap: 8px; background: var(--neutral-50); border: 1px solid var(--c-border); border-radius: 999px; padding: 10px 14px; font-size: 13px; color: var(--c-muted); }
+.ch-filter-btn {
+  width: 40px; height: 40px; border: 1px solid var(--c-border); border-radius: 10px;
+  background: #fff; font-size: 17px; cursor: pointer; position: relative;
+  display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;
+}
+.ch-filter-btn.on::after { content: ""; position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--app-primary); border-radius: 50%; }
+.ch-card { display: block; margin: 8px 12px; padding: 12px; background: #fff; border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--shadow-sm); text-decoration: none; color: inherit; }
+.ch-card:active { border-color: var(--app-primary); }
+.ch-card-hd { display: flex; gap: 8px; align-items: flex-start; }
+.ch-card-hd .name { flex: 1; font-size: 15px; font-weight: 600; }
+.ch-card-hd .info-btn { margin-left: auto; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--c-border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--c-sub); cursor: pointer; text-decoration: none; }
+.ch-line { font-size: 12px; color: var(--c-sub); line-height: 1.45; margin-top: 4px; padding-left: 22px; }
+.ch-icons { display: flex; gap: 6px; margin-top: 8px; padding-left: 22px; align-items: center; }
+.ch-footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--neutral-100); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--c-sub); }
+.hint-bar { margin-top: 12px; font-size: 12px; text-align: center; }
+.hint-bar a { color: #60a5fa; }
+</style>
+</head>
+<body class="mockup-page app-hub">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar" style="background:#fff">
+      <span>15:15</span>
+      <span class="status-icons"><a class="status-portal-link" href="../../../web/main.html" title="DMS Portal">ðŸŒ</a><span>ðŸ“¶ ðŸ”‹ 80%</span></span>
+    </div>
+
+    <div class="sub-hd">
+      <a class="back" href="MS-A-CH04-ung-von-kd-enhance.html" aria-label="Quay láº¡i">â†</a>
+      <div class="ttl">Cá»­a hÃ ng</div>
+      <span class="home">ðŸ +</span>
+    </div>
+
+    <div class="store-tabs">
+      <button class="store-tab active" type="button">ChÄƒm sÃ³c</button>
+      <button class="store-tab" type="button">Má»Ÿ má»›i</button>
+      <button class="store-tab" type="button">KhÃ¡c tuyáº¿n</button>
+    </div>
+
+    <div class="ch-search-row">
+      <div class="ch-search">ðŸ” Nháº­p mÃ£, tÃªn, hoáº·c sá»‘ Ä‘iá»‡n thoáº¡i cá»­a hÃ ng</div>
+      <a class="ch-filter-btn on" href="MS-A-CH04-bo-loc-ung-von-kd.html?from=cham-soc" aria-label="Bá»™ lá»c" title="Bá»™ lá»c">â˜°</a>
+    </div>
+
+    <div class="scroll-area" style="background:var(--neutral-50);flex:1;min-height:0">
+      <a class="ch-card" href="MS-A-CH04-chi-tiet-cua-hang.html?from=cham-soc">
+        <div class="ch-card-hd">
+          <span class="visit-pin">ðŸ“</span>
+          <span class="name">Hien Test QR Global Napas</span>
+          <span class="info-btn">â“˜</span>
+        </div>
+        <div class="ch-line">0965225882</div>
+        <div class="ch-line">34 HoÃ ng Viá»‡t, PhÆ°á»ng 4, Quáº­n TÃ¢n BÃ¬nh, TP.HCM</div>
+        <div class="ch-icons"><span>ðŸ”·</span><span>ðŸªª</span><span>ðŸŽ</span><span class="ch-icon-new" title="á»¨ng vá»‘n KD">â‚«</span></div>
+        <div class="ch-footer"><span>(KPI) Trá»±c thuá»™c</span><span>finviet â€º</span></div>
+      </a>
+
+      <a class="ch-card" href="MS-A-CH04-chi-tiet-cua-hang.html?from=cham-soc">
+        <div class="ch-card-hd">
+          <span class="visit-pin">ðŸ“</span>
+          <span class="name">Anh ThÃ¡i</span>
+          <span class="info-btn">â“˜</span>
+        </div>
+        <div class="ch-line">0918765432</div>
+        <div class="ch-line">45 LÃª Há»“ng Phong, Ninh Kiá»u, Cáº§n ThÆ¡</div>
+        <div class="ch-icons"><span>ðŸ”·</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="hint-bar">
+  MS-A-CH04 ChÄƒm sÃ³c Â·
+  <a href="MS-A-CH04-ung-von-kd-enhance.html">â† Viáº¿ng thÄƒm</a> Â·
+  <a href="MS-A-CH04-bo-loc-ung-von-kd.html?from=cham-soc">Bá»™ lá»c</a>
+</div>
+
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>

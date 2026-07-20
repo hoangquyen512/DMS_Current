@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="icon" type="image/png" href="/mobile/_shared/salesman-app-icon.png"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-CH04 â€” [APP] Viáº¿ng thÄƒm (á»¨ng vá»‘n KD)</title>
+<link rel="stylesheet" href="../../_shared/app-chrome.css"/>
+<style>
+.ch-icon-new {
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--c-border); background: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--c-sub);
+}
+.filter-row-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 10px 16px; font-size: 14px; color: var(--c-sub);
+  background: var(--neutral-0); border: none; border-bottom: 1px solid var(--neutral-100);
+  cursor: pointer; font-family: inherit; text-decoration: none;
+}
+.filter-row-btn:active { background: var(--neutral-50); }
+.filter-row-l { display: flex; align-items: center; gap: 8px; }
+.filter-funnel {
+  width: 32px; height: 32px; font-size: 18px; color: var(--c-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.visit-meta-r .info-btn {
+  cursor: pointer; width: 22px; height: 22px; border-radius: 50%; text-decoration: none;
+  border: 1px solid var(--c-border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--c-sub);
+}
+.hint-bar { margin-top: 12px; font-size: 12px; text-align: center; }
+.hint-bar a { color: #60a5fa; }
+</style>
+</head>
+<body class="mockup-page app-hub">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar">
+      <span>15:15</span>
+      <span class="status-icons"><a class="status-portal-link" href="../../../web/main.html" title="DMS Portal">ðŸŒ</a><span>ðŸ“¶ ðŸ”‹ 80%</span></span>
+    </div>
+
+    <div class="visit-top">
+      <div class="visit-top-row">
+        <div class="route-bar"><span>10/07 - [KENH_PHAN_PHOI] Route demo</span><span>â€º</span></div>
+        <button class="icon-btn" type="button">ðŸ”</button>
+        <button class="icon-btn" type="button">ðŸ•</button>
+      </div>
+      <div class="map-tabs">
+        <button class="map-tab" type="button">Báº£n Ä‘á»“</button>
+        <button class="map-tab active" type="button">Danh sÃ¡ch</button>
+      </div>
+    </div>
+
+    <a class="filter-row-btn" href="MS-A-CH04-bo-loc-ung-von-kd.html?from=home" aria-label="Má»Ÿ bá»™ lá»c">
+      <span class="filter-row-l"><span>â˜°</span><span>Bá»™ lá»c</span></span>
+      <span class="filter-funnel">â·</span>
+    </a>
+
+    <div class="scroll-area" style="background:var(--neutral-50);flex:1;min-height:0">
+      <div class="section-hd">Tuyáº¿n hÃ´m nay (9/9)</div>
+
+      <div class="visit-card">
+        <div class="visit-card-hd">
+          <span class="visit-pin">ðŸ“</span>
+          <span class="visit-name">Táº¡p hÃ³a 783/8</span>
+          <div class="visit-meta-r">
+            <a class="info-btn" href="MS-A-CH04-chi-tiet-cua-hang.html?from=home" title="ThÃ´ng tin cá»­a hÃ ng">â“˜</a>
+            <span>818m</span>
+          </div>
+        </div>
+        <div class="visit-phone">0769707185</div>
+        <div class="visit-addr">783/8 CÃ¡ch Máº¡ng ThÃ¡ng TÃ¡m, PhÆ°á»ng 5, Quáº­n TÃ¢n BÃ¬nh, TP.HCM</div>
+        <div class="visit-icons">
+          <span title="ECO">ðŸ”·</span>
+          <span class="ch-icon-new" title="á»¨ng vá»‘n kinh doanh">â‚«</span>
+        </div>
+        <button class="btn-visit" type="button">Viáº¿ng thÄƒm</button>
+      </div>
+
+      <div class="visit-card">
+        <div class="visit-card-hd">
+          <span class="visit-pin">ðŸ“</span>
+          <span class="visit-name">HÃ¢n Gia</span>
+          <div class="visit-meta-r">
+            <a class="info-btn" href="MS-A-CH04-chi-tiet-cua-hang.html?from=home" title="ThÃ´ng tin cá»­a hÃ ng">â“˜</a>
+            <span>1.2km</span>
+          </div>
+        </div>
+        <div class="visit-phone">0903555666</div>
+        <div class="visit-addr">12 Nguyá»…n VÄƒn Cá»«, Ninh Kiá»u, Cáº§n ThÆ¡</div>
+        <div class="visit-icons"><span>ðŸ”·</span><span title="eKYC">ðŸªª</span></div>
+        <button class="btn-visit" type="button">Viáº¿ng thÄƒm</button>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" type="button"><span>ðŸ“</span>Viáº¿ng thÄƒm</button>
+      <button class="nav-item" type="button"><span>ðŸ“Š</span>BÃ¡o cÃ¡o</button>
+      <button class="nav-item" type="button"><span>ðŸ›’</span>ÄÆ¡n hÃ ng</button>
+      <a class="nav-item" href="MS-A-CH04-cham-soc.html" style="text-decoration:none"><span>âŠž</span>KhÃ¡c</a>
+    </nav>
+  </div>
+</div>
+
+<div class="hint-bar">
+  MS-A-CH04 Viáº¿ng thÄƒm Â·
+  <a href="MS-A-CH04-bo-loc-ung-von-kd.html?from=home">Bá»™ lá»c</a> Â·
+  <a href="MS-A-CH04-cham-soc.html">ChÄƒm sÃ³c</a> Â·
+  <a href="MS-A-CH04-chi-tiet-cua-hang.html?from=home">Chi tiáº¿t CH</a>
+</div>
+
+<script src="../../_shared/mockup-fit.js"></script>
+</body>
+</html>

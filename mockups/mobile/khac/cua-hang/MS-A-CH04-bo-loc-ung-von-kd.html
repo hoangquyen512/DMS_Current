@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="icon" type="image/png" href="/mobile/_shared/salesman-app-icon.png"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-CH04 â€” [APP] Bá»™ lá»c cá»­a hÃ ng (á»¨ng vá»‘n KD)</title>
+<link rel="stylesheet" href="../../_shared/app-chrome.css"/>
+<style>
+.enhance-new { box-shadow: inset 0 0 0 2px #f59e0b; background: #fffbeb !important; }
+.enhance-tag {
+  font-size: 9px; font-weight: 700; color: #b45309;
+  background: #fef3c7; border: 1px solid #fcd34d; border-radius: 3px;
+  padding: 1px 5px; margin-left: 4px;
+}
+.app-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; background: #fff;
+  border-bottom: 1px solid var(--neutral-200); flex-shrink: 0;
+}
+.app-header .back {
+  width: 36px; height: 36px; border: none; background: transparent;
+  font-size: 22px; cursor: pointer; color: var(--neutral-700);
+  display: flex; align-items: center; justify-content: center;
+}
+.app-header h1 { flex: 1; text-align: center; font-size: 17px; font-weight: 600; margin-right: 36px; }
+.filter-scroll { flex: 1; min-height: 0; overflow-y: auto; background: var(--neutral-50); padding: 12px 0 8px; }
+.filter-section { margin: 0 12px 12px; background: #fff; border-radius: 12px; border: 1px solid var(--neutral-200); overflow: hidden; }
+.filter-section.enhance-new { border-color: #f59e0b; }
+.filter-section-title {
+  padding: 12px 14px 8px; font-size: 14px; font-weight: 600; color: var(--neutral-900);
+  border-bottom: 1px solid var(--neutral-100);
+}
+.filter-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; font-size: 14px; color: var(--neutral-700);
+  border-bottom: 1px solid var(--neutral-50); cursor: pointer;
+}
+.filter-option:last-child { border-bottom: none; }
+.filter-option input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--app-primary); flex-shrink: 0; }
+.filter-note { margin: 0 16px 12px; font-size: 11px; color: var(--neutral-500); line-height: 1.45; }
+.filter-footer {
+  flex-shrink: 0; display: flex; gap: 10px;
+  padding: 12px 16px 20px; background: #fff; border-top: 1px solid var(--neutral-200);
+}
+.filter-footer button {
+  flex: 1; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--neutral-200); background: #fff;
+}
+.filter-footer .btn-apply { background: var(--app-primary); color: #fff; border-color: var(--app-primary); }
+.context-pill {
+  margin: 0 12px 10px; padding: 8px 12px; border-radius: 8px;
+  background: #e0f2fe; border: 1px solid #bae6fd; font-size: 12px; color: #0369a1;
+}
+.hint-bar { margin-top: 12px; font-size: 12px; text-align: center; }
+.hint-bar a { color: #60a5fa; }
+</style>
+</head>
+<body class="mockup-page app-hub">
+
+<div class="phone">
+  <div class="phone-screen" style="display:flex;flex-direction:column">
+    <div class="status-bar" style="background:#fff;color:var(--c-text)">
+      <span>15:15</span>
+      <span class="status-icons"><a class="status-portal-link" href="../../../web/main.html" title="DMS Portal">ðŸŒ</a><span>ðŸ“¶ ðŸ”‹ 80%</span></span>
+    </div>
+
+    <div class="app-header">
+      <button class="back" type="button" id="btn-back" aria-label="Quay láº¡i">â†</button>
+      <h1>Bá»™ lá»c</h1>
+    </div>
+
+    <div class="context-pill" id="ctx-from">Nguá»“n má»Ÿ: <strong>Viáº¿ng thÄƒm â€” Danh sÃ¡ch</strong></div>
+
+    <div class="filter-scroll">
+      <div class="filter-section">
+        <div class="filter-section-title">Loáº¡i tuyáº¿n</div>
+        <label class="filter-option"><input type="checkbox"/> Trong tuyáº¿n</label>
+        <label class="filter-option"><input type="checkbox"/> Ngoáº¡i tuyáº¿n</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">TÃ¬nh tráº¡ng viáº¿ng thÄƒm</div>
+        <label class="filter-option"><input type="checkbox"/> ChÆ°a viáº¿ng thÄƒm</label>
+        <label class="filter-option"><input type="checkbox"/> Äang viáº¿ng thÄƒm</label>
+        <label class="filter-option"><input type="checkbox"/> ÄÃ£ viáº¿ng thÄƒm</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">PhÃ¢n loáº¡i cá»­a hÃ ng</div>
+        <label class="filter-option"><input type="checkbox"/> Tiá»m nÄƒng</label>
+        <label class="filter-option"><input type="checkbox"/> KhÃ´ng tiá»m nÄƒng</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">HoÃ n thÃ nh má»Ÿ Ä‘iá»ƒm</div>
+        <label class="filter-option"><input type="checkbox"/> ÄÃ£ cÃ i app ECO</label>
+        <label class="filter-option"><input type="checkbox"/> ChÆ°a cÃ i app</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">TÃ¬nh tráº¡ng Active</div>
+        <label class="filter-option"><input type="checkbox"/> Cá»­a hÃ ng Ä‘Ã£ Active</label>
+        <label class="filter-option"><input type="checkbox"/> Cá»­a hÃ ng chÆ°a Active</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">TÃ¬nh tráº¡ng ReActive</div>
+        <label class="filter-option"><input type="checkbox"/> Cá»­a hÃ ng Ä‘Ã£ ReActive</label>
+        <label class="filter-option"><input type="checkbox"/> Cá»­a hÃ ng chÆ°a ReActive</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">TÃ i sáº£n</div>
+        <label class="filter-option"><input type="checkbox"/> CÃ³ tÃ i sáº£n</label>
+        <label class="filter-option"><input type="checkbox"/> KhÃ´ng cÃ³ tÃ i sáº£n</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">QR Ecopay</div>
+        <label class="filter-option"><input type="checkbox"/> ÄÃ£ gÃ¡n Ecopay</label>
+        <label class="filter-option"><input type="checkbox"/> ChÆ°a gÃ¡n Ecopay</label>
+      </div>
+
+      <div class="filter-section enhance-new">
+        <div class="filter-section-title">á»¨ng vá»‘n kinh doanh <span class="enhance-tag">Má»šI</span></div>
+        <label class="filter-option"><input type="checkbox" checked/> CÃ³</label>
+        <label class="filter-option"><input type="checkbox"/> KhÃ´ng</label>
+      </div>
+
+      <div class="filter-section enhance-new">
+        <div class="filter-section-title">Tráº¡ng thÃ¡i Ä‘Äƒng kÃ½ á»©ng vá»‘n kinh doanh <span class="enhance-tag">Má»šI</span></div>
+        <label class="filter-option"><input type="checkbox"/> ChÆ°a Ä‘Äƒng kÃ½</label>
+        <label class="filter-option"><input type="checkbox" checked/> ÄÄƒng kÃ½ thÃ nh cÃ´ng</label>
+        <label class="filter-option"><input type="checkbox"/> ÄÄƒng kÃ½ tháº¥t báº¡i</label>
+      </div>
+
+    </div>
+
+    <div class="filter-footer">
+      <button type="button" id="btn-reset">Äáº·t láº¡i</button>
+      <button type="button" class="btn-apply" id="btn-apply">Ãp dá»¥ng</button>
+    </div>
+  </div>
+</div>
+
+<div class="hint-bar">
+  MS-A-CH04 Bá»™ lá»c Â·
+  <a href="MS-A-CH04-ung-von-kd-enhance.html">â† Enhance flow</a>
+</div>
+
+<script src="../../_shared/mockup-fit.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var from = params.get('from') || 'home';
+  var labels = {
+    main: 'Viáº¿ng thÄƒm â€” Danh sÃ¡ch',
+    home: 'Viáº¿ng thÄƒm â€” Danh sÃ¡ch',
+    ch02: 'Cá»­a hÃ ng â€” ChÄƒm sÃ³c',
+    'cham-soc': 'Cá»­a hÃ ng â€” ChÄƒm sÃ³c',
+    'mo-moi': 'Cá»­a hÃ ng â€” Má»Ÿ má»›i',
+    'khac-tuyen': 'Cá»­a hÃ ng â€” KhÃ¡c tuyáº¿n'
+  };
+  var backs = {
+    main: '../../main.html',
+    home: 'MS-A-CH04-ung-von-kd-enhance.html',
+    ch02: 'MS-A-CH02-danh-sach-cua-hang.html',
+    'cham-soc': 'MS-A-CH04-cham-soc.html',
+    'mo-moi': 'MS-A-CH04-cham-soc.html',
+    'khac-tuyen': 'MS-A-CH04-cham-soc.html'
+  };
+  document.getElementById('ctx-from').innerHTML =
+    'Nguá»“n má»Ÿ: <strong>' + (labels[from] || labels.home) + '</strong>';
+
+  document.getElementById('btn-back').addEventListener('click', function () {
+    location.href = backs[from] || backs.home;
+  });
+  document.getElementById('btn-apply').addEventListener('click', function () {
+    location.href = backs[from] || backs.home;
+  });
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    document.querySelectorAll('.filter-option input').forEach(function (c) { c.checked = false; });
+  });
+})();
+</script>
+</body>
+</html>
