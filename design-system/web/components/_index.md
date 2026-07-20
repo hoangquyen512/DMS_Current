@@ -11,10 +11,10 @@
 | Breadcrumb | — | `.portal-breadcrumb` | ✅ |
 | Button | — | `.portal-btn--primary`, `--default` | ✅ |
 | Input / Search | — | `.portal-input-search-wrap`, `.portal-input` | ✅ |
-| Select | — | `.portal-select-wrap`, `.portal-select` | ✅ |
+| Select | `select.md` ⭐ | `.portal-select` + allowClear × (filter + Create/Edit) | ✅ |
 | Date đơn | — | `.portal-input-date-wrap` | ✅ |
-| Date range | `patterns/list-screen.md` | `.portal-date-range` | ✅ |
-| Multi-select | `patterns/list-screen.md` | `.portal-multi-select` | ✅ |
+| Date range | `date-range-picker.md` ⭐ | `.portal-date-range` + allowClear × | ✅ |
+| Multi-select | `multi-select.md` ⭐ | `.portal-multi-select` + `portal-mockup-widgets.js` | ✅ |
 | QueryFilter | `patterns/list-screen.md` | `.portal-query-filter` + `.portal-filter-grid--4` | ✅ |
 | ProTable | `patterns/list-screen.md` | `.portal-protable`, `.portal-table-alert` | ✅ |
 | Table checkbox col | — | `.col-check` (alias `.checkbox-col`) | ✅ |
@@ -23,8 +23,6 @@
 | Pagination | — | `.portal-pagination` | ✅ |
 | Table actions | — | `.portal-table-actions`, `.portal-icon-btn` | ✅ |
 | Copy cell | — | `.copy-cell`, `.copy-btn` | ✅ |
-| Date range | — | `.portal-date-range` | ✅ |
-| Multi-select | — | `.portal-multi-select` + `portal-mockup-widgets.js` | ✅ |
 | Legacy bridge | `README-COMPONENTS.md` | `.filter-card`, `.btn-primary`, `.table-container` | ✅ auto |
 
 Gallery: `mockups/web/components-gallery.html`
@@ -36,3 +34,6 @@ Gallery: `mockups/web/components-gallery.html`
 | 1.0 | 24/06/2026 | Từ portal dev live |
 | 1.1 | 24/06/2026 | Link COMPONENT-INVENTORY-LIVE.md |
 | 1.2 | 24/06/2026 | QueryFilter + ProTable + portal-mockup-bridge |
+| 1.3 | 17/07/2026 | Multi-select chuẩn Ant Design — `multi-select.md` + snippet template |
+| 1.4 | 17/07/2026 | Select one choice + Date range allowClear (nút ×) |
+| 1.5 | 20/07/2026 | Create/Edit Select allowClear — template CRUD + select snippet + gallery |
