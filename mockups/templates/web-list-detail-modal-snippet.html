@@ -1,0 +1,88 @@
+<!--
+  Snippet: Web List + Modal chi tiết
+  Pattern doc: design-system/web/patterns/list-detail-modal-pattern.md
+  Mockup mẫu: mockups/web/ho-tro-phan-mem/xu-ly-yeu-cau/MS-W-HT01-xu-ly-yeu-cau-onboarding-npp.html
+
+  Copy vào web-template.html sau portal-chrome.
+  body.portal-page — KHÔNG has-portal-switcher
+-->
+
+<!-- === FILTER: Mã yêu cầu only === -->
+<div class="portal-field">
+  <label class="portal-field__label" for="fCode">Tìm theo</label>
+  <div class="portal-field__control portal-input-search-wrap">
+    <input class="portal-input" id="fCode" type="text" placeholder="Mã yêu cầu hỗ trợ"/>
+  </div>
+</div>
+
+<!-- === FILTER: Date range — xem mockups/templates/web-date-range-picker-snippet.html === -->
+<div class="portal-field">
+  <label class="portal-field__label">Ngày tạo</label>
+  <div class="portal-field__control portal-date-range portal-date-range--picker" data-date-range-picker>
+    <div class="portal-date-range__inner">
+      <input class="portal-date-range__input" type="text" placeholder="Từ ngày" readonly aria-label="Từ ngày"/>
+      <span class="portal-date-range__sep" aria-hidden="true">—</span>
+      <input class="portal-date-range__input" type="text" placeholder="Đến ngày" readonly aria-label="Đến ngày"/>
+    </div>
+    <span class="portal-date-range__icon" aria-hidden="true"></span>
+  </div>
+</div>
+
+<!-- === FILTER: Staff select — placeholder (hidden, không dòng trống trên list) === -->
+<div class="portal-field">
+  <label class="portal-field__label">Nhân viên tiếp nhận</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select">
+      <option value="" selected hidden>Nhân viên tiếp nhận</option>
+      <option value="nv1">Mã — Tên NV</option>
+    </select>
+  </div>
+</div>
+
+<!-- === FILTER: Conditional — last in grid, show when Loại = Onboarding === -->
+<div class="portal-field" id="filterNppSigned">
+  <label class="portal-field__label">NPP đã ký xác nhận</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select">
+      <option value="" selected hidden>NPP đã ký xác nhận</option>
+      <option value="yes">Có</option>
+      <option value="no">Không</option>
+    </select>
+  </div>
+</div>
+
+<!-- === TABLE: NPP signed — non-onboarding = — === -->
+<td><span class="badge badge-dash">—</span></td>
+
+<!-- === TABLE: Custom column === -->
+<th>Tùy chỉnh</th>
+<td class="col-custom">
+  <button type="button" class="icon-btn" title="Chọn nhân viên tiếp nhận">👤</button>
+</td>
+
+<!-- === MODAL: Status + tooltip (hover) + Lý do từ chối (chỉ khi Từ chối) === -->
+<div class="status-with-tip">
+  <select id="dStatus" onchange="updateStatusUI()">...</select>
+  <span class="portal-tip-host" tabindex="-1">
+    <span class="portal-tip-icon">ⓘ</span>
+    <span class="portal-tip-bubble" role="tooltip"></span>
+  </span>
+</div>
+<div class="ff detail-block-hidden" id="dRejectBlock">
+  <label><span class="req">*</span>Lý do từ chối duyệt</label>
+  <select id="dRejectReason" disabled>...</select>
+</div>
+
+<!-- === MODAL footer: chỉ Thoát + Lưu === -->
+<button type="button" class="btn btn-secondary">Thoát</button>
+<button type="button" class="btn btn-primary">Lưu</button>
+
+<!-- === MODAL: Chat với người tạo === -->
+<div class="section-title">Trao đổi với người tạo phiếu</div>
+<div class="chat-section">
+  <div class="chat-msgs" id="dChatMsgs"></div>
+  <div class="chat-compose">
+    <input type="text" placeholder="Nhập nội dung trao đổi"/>
+    <button type="button" class="btn btn-primary">Gửi</button>
+  </div>
+</div>

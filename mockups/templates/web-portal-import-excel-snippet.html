@@ -1,0 +1,45 @@
+<!--
+  Snippet: Portal Import Excel (form NGANG — chuẩn /admin/users)
+  CSS: portal-components.css → .portal-modal--import, .portal-import-dropzone
+  Reference: MS-W-DL04 + design-system/web/patterns/portal-crud-list-modal-pattern.md
+-->
+<div class="portal-modal-overlay" id="importModal">
+  <div class="portal-modal portal-modal--import" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="portal-modal__hd">
+      <div class="portal-modal__hd-left">
+        <h2 class="portal-modal__title-with-icon" id="importModalTitle">
+          <svg class="portal-import-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3v10m0 0l3.5-3.5M12 13L8.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 16.5V18a2 2 0 002 2h10a2 2 0 002-2v-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          Import Excel
+        </h2>
+        <button type="button" class="portal-btn portal-btn--default portal-btn--dashed portal-btn--sm" id="btnDownloadImportTemplate">
+          <svg class="portal-import-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 4v10m0 0l3.5-3.5M12 14L8.5 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 17.5V19a2 2 0 002 2h10a2 2 0 002-2v-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          Lấy file mẫu
+        </button>
+      </div>
+      <button type="button" class="portal-icon-btn" id="importClose" title="Đóng">✕</button>
+    </div>
+    <div class="portal-modal__bd">
+      <div class="portal-alert portal-alert--error" id="importErrorList"></div>
+      <div class="portal-import-dropzone" id="importDropzone">
+        <svg class="portal-import-dropzone__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M10 18h28v20a3 3 0 01-3 3H13a3 3 0 01-3-3V18z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 18V14a8 8 0 0116 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M24 24v10m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="portal-import-dropzone__title">Chọn hoặc kéo file đến vị trí này</p>
+        <p class="portal-import-dropzone__hint">Hỗ trợ tải đơn lẻ từng file. Chỉ nhập những file theo đúng định dạng có sẵn.</p>
+        <p class="portal-import-dropzone__file" id="importFileName" hidden></p>
+        <input class="portal-import-dropzone__input" id="importFileInput" type="file" accept=".xlsx,.xls,.csv" aria-label="Chọn file import"/>
+      </div>
+    </div>
+    <div class="portal-modal__ft">
+      <button type="button" class="portal-btn portal-btn--primary" id="importSubmit" disabled>Tiến hành xử lý</button>
+    </div>
+  </div>
+</div>

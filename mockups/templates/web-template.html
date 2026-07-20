@@ -4,6 +4,59 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>[WEB] {MS-CODE} — {Tên màn hình}</title>
+<!--
+  ═══════════════════════════════════════════════════════════
+  QUY TẮC MOCKUP SELECT (bắt buộc)
+  ═══════════════════════════════════════════════════════════
+  • KHÔNG dùng option dạng "Tất cả", "Tất cả …", "-- Tất cả --"
+    trong mọi <select> (bộ lọc / form).
+  • KHÔNG dùng option trống `<option value=""></option>` (hiện dòng trống trên list).
+  • Placeholder = ĐÚNG TÊN TRƯỜNG (label), không dùng chữ "Chọn" chung:
+      <option value="" selected hidden>Khu vực</option>
+    Có default nghiệp vụ: `<option value="" hidden>Tên trường</option>` + option thật `selected`.
+  • Ngoại lệ: option là giá trị nghiệp vụ thật (vd: "Tất cả kỳ được chọn phải đạt").
+  • Select phải click được: icon/chevron `pointer-events: none`; không overlay chặn click.
+  • Cascade (Vùng → Khu vực → …): KHÔNG `disabled` cấp con — luôn click được;
+    khi chưa chọn cấp cha chỉ còn placeholder (= tên trường); JS nạp option khi có cha.
+  • Phần xổ xuống (dropdown panel) PHẢI bo tròn 8px (`--portal-radius-dropdown`):
+    dùng UI custom `.portal-select-ui__dropdown` / `.portal-multi-select__dropdown`
+    (native OS list KHÔNG style được). Tự bật qua `portal-mockup-widgets.js`
+    khi trang load `portal-chrome.js` + `portal-components.css`.
+  • allowClear (Select one choice): khi có placeholder value="" → nút × trên control;
+    click lại option đang chọn cũng bỏ chọn. Field bắt buộc: data-clearable="false".
+    Create/Edit: select tùy chọn bắt buộc allowClear (widget tự inject placeholder nếu thiếu).
+    Gán value JS: PortalMockupWidgets.setSelectValue(id, value).
+    Spec: design-system/web/components/select.md · Snippet: web-select-snippet.html
+  ═══════════════════════════════════════════════════════════
+  DATE RANGE (calendar) — bắt buộc khi lọc khoảng ngày
+  ═══════════════════════════════════════════════════════════
+  • Spec: design-system/web/components/date-range-picker.md
+  • Snippet: web-date-range-picker-snippet.html
+  • Markup: `.portal-date-range` + 2 input text readonly (Từ — Đến)
+  • allowClear: nút × trên ô khi đã có ngày (tự inject bởi portal-date-range-picker.js)
+  • Tự load qua portal-chrome.js
+  ═══════════════════════════════════════════════════════════
+  CHUẨN CRUD LIST + MODAL (⭐ MS-W-DL04 — bắt buộc [WEB])
+  ═══════════════════════════════════════════════════════════
+  • Pattern: design-system/web/patterns/portal-crud-list-modal-pattern.md
+  • Snippet: web-portal-crud-list-modal-snippet.html  ← đã có Create/Edit + Select ×
+  • Select Create/Edit: web-select-snippet.html (mục C)
+  • Import Excel (form NGANG): web-portal-import-excel-snippet.html
+  • Create / Edit / Detail = popup trên list — KHÔNG tách trang
+  • Select tùy chọn trong Create/Edit: placeholder value="" + nút ×
+  • Select bắt buộc (*): data-clearable="false"
+  • KHÔNG dashboard KPI mặc định
+  ═══════════════════════════════════════════════════════════
+  MULTI-SELECT (Select multi choice) — bắt buộc khi chọn nhiều
+  ═══════════════════════════════════════════════════════════
+  • Spec: design-system/web/components/multi-select.md
+  • Snippet: web-multi-select-snippet.html
+  • Class: `.portal-multi-select` + `portal-mockup-widgets.js`
+  • Dropdown PHẢI đánh dấu đã chọn (`.is-selected` + tick ✓)
+  • Ô tự giãn theo số tag — KHÔNG khóa height cố định
+  • CẤM tự viết `.multi-select` / checkbox list riêng cho filter Portal
+  ═══════════════════════════════════════════════════════════
+-->
 <style>
 /* ======= Design Tokens ======= */
 :root {
@@ -269,6 +322,87 @@ body {
     background-repeat: no-repeat;
     background-position: right 8px center;
     width: 100%;
+}
+
+/* Dropdown xổ xuống bo tròn 8px (custom panel — bắt buộc trong mockup portal) */
+.portal-select-ui { position: relative; width: 100%; min-width: 0; }
+.portal-select-ui__dropdown {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 4px);
+    z-index: 80;
+    max-height: 256px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+.portal-select-ui.is-open .portal-select-ui__dropdown { display: block; }
+.portal-select-ui__clear {
+    display: none;
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+.portal-select-ui.is-clearable.has-value .portal-select-ui__clear:not([hidden]) {
+    display: inline-flex;
+}
+.portal-select-ui.is-clearable.has-value > select {
+    padding-right: 48px;
+}
+.portal-select-ui__clear:hover { background: rgba(0, 0, 0, 0.45); }
+.portal-select-ui__option {
+    padding: 5px 12px;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(0,0,0,.88);
+    cursor: pointer;
+    border-radius: 4px;
+}
+.portal-select-ui__option:hover,
+.portal-select-ui__option.is-active { background: #f5f5f5; }
+.portal-select-ui__option.is-selected {
+    background: #e6f4ff;
+    color: #2b579a;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.portal-select-ui.is-clearable .portal-select-ui__option.is-selected::after {
+    content: '×';
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(43, 87, 154, 0.12);
+    color: #2b579a;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
 }
 
 .filter-select.active {
@@ -617,11 +751,10 @@ td.actions { text-align: right; white-space: nowrap; }
 /* hint (ẩn) */
 .hint { display: none; }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Typography: portal-fonts.css (system UI / Ant Design) — không dùng Inter -->
 <!-- {PORTAL_BASE}: đường dẫn tương đối lên mockups/web/ (depth 3 → ../../../) -->
 <link rel="stylesheet" href="{PORTAL_BASE}_shared/portal-chrome.css"/>
+<link rel="stylesheet" href="{PORTAL_BASE}_shared/portal-date-range-picker.css"/>
 </head>
 <body class="portal-page has-portal-switcher" data-portal-base="{PORTAL_BASE}">
 
@@ -698,15 +831,16 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
           </div>
           <div class="filter-field">
             <div class="filter-label">* Công ty</div>
-            <select class="filter-select">
-              <option value="">Tất cả công ty</option>
-              <option>FVC - Finviet</option>
+            <select class="filter-select" data-clearable="false">
+              <!-- * Công ty — bắt buộc, không allowClear -->
+              <option selected>FVC - Finviet</option>
+              <option>NPP HCM</option>
             </select>
           </div>
           <div class="filter-field">
             <div class="filter-label">Trạng thái</div>
             <select class="filter-select">
-              <option value="">Tất cả</option>
+              <option value="" selected hidden>Trạng thái</option>
               <option>Hoạt động</option>
               <option>Không hoạt động</option>
             </select>
@@ -716,19 +850,37 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
             <button class="btn btn-primary">🔍 Tìm kiếm</button>
           </div>
         </div>
-        <!-- Row 2: date range + more filters (nếu cần, xóa nếu không dùng) -->
+        <!-- Row 2: date range (portal-date-range-picker) + more filters -->
         <div class="filter-row">
           <div class="filter-field">
             <div class="filter-label">Ngày tạo</div>
-            <div style="display:flex;gap:4px;align-items:center;">
-              <input class="filter-input" placeholder="Từ ngày" type="text"/>
-              <span style="font-size:12px;color:var(--neutral-500);">→</span>
-              <input class="filter-input" placeholder="Đến ngày" type="text"/>
+            <div class="portal-date-range portal-date-range--picker filter-date-range" data-date-range-picker>
+              <div class="portal-date-range__inner">
+                <input class="portal-date-range__input filter-input" type="text" placeholder="Từ ngày" aria-label="Từ ngày" readonly/>
+                <span class="portal-date-range__sep" aria-hidden="true">—</span>
+                <input class="portal-date-range__input filter-input" type="text" placeholder="Đến ngày" aria-label="Đến ngày" readonly/>
+              </div>
+              <span class="portal-date-range__icon" aria-hidden="true"></span>
             </div>
           </div>
           <div class="filter-field">
-            <div class="filter-label">{Filter khác}</div>
-            <select class="filter-select"><option value="">Tất cả</option></select>
+            <div class="filter-label">Nhà phân phối</div>
+            <div class="portal-multi-select" id="msNppTemplate">
+              <div class="portal-multi-select__inner portal-multi-select__tags">
+                <span class="portal-multi-select__placeholder">Chọn nhà phân phối</span>
+              </div>
+              <span class="portal-multi-select__arrow"></span>
+              <ul class="portal-multi-select__dropdown">
+                <li class="portal-multi-select__option" data-value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</li>
+                <li class="portal-multi-select__option" data-value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</li>
+                <li class="portal-multi-select__option" data-value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</li>
+              </ul>
+              <select class="portal-multi-select__hidden" id="filterNppTemplate" multiple hidden>
+                <option value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</option>
+                <option value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</option>
+                <option value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -854,11 +1006,11 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
           </div>
           <div class="filter-field">
             <div class="filter-label">* Công ty</div>
-            <select class="filter-select"><option value="">Tất cả công ty</option></select>
+            <select class="filter-select"><option value="" selected hidden>Công ty</option></select>
           </div>
           <div class="filter-field">
             <div class="filter-label">Trạng thái</div>
-            <select class="filter-select"><option value="">Tất cả</option></select>
+            <select class="filter-select"><option value="" selected hidden>Trạng thái</option></select>
           </div>
           <div class="filter-actions">
             <button class="btn btn-secondary">🔄 Làm mới</button>
@@ -903,6 +1055,11 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 
 <!-- ================================================================ -->
 <!-- MÀN HÌNH 3: MODAL — ví dụ modal xác nhận                        -->
+<!-- QUY TẮC [WEB]: Tạo mới / Chỉnh sửa / Chi tiết = popup trên List -->
+<!--   Không tách trang riêng; deep-link ?create=1 | ?edit= | ?detail= -->
+<!--   Form Create/Edit + Select allowClear:                          -->
+<!--     → templates/web-portal-crud-list-modal-snippet.html         -->
+<!--     → templates/web-select-snippet.html (mục C)                 -->
 <!-- ================================================================ -->
 <div class="screen-wrapper" id="sw3">
 <div class="app">
@@ -972,5 +1129,6 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
 <script src="{PORTAL_BASE}menu-tree.js"></script>
 <script src="{PORTAL_BASE}_shared/portal-menu.js"></script>
 <script src="{PORTAL_BASE}_shared/portal-chrome.js"></script>
+<script src="{PORTAL_BASE}_shared/portal-date-range-picker.js"></script>
 </body>
 </html>

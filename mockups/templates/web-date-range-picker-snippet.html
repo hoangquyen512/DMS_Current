@@ -1,0 +1,62 @@
+<!--
+  WEB Date Range Picker — Template snippet
+  Spec: design-system/web/components/date-range-picker.md
+
+  BƯỚC 1 — CSS/JS tự load qua portal-chrome.js (không cần thêm script thủ công).
+  Chỉ cần markup .portal-date-range — click sẽ mở calendar popup bo tròn 8px.
+
+  BƯỚC 1b — (tuỳ chọn) link CSS nếu trang không dùng portal-chrome.js:
+-->
+<link rel="stylesheet" href="{PORTAL_BASE}_shared/portal-date-range-picker.css"/>
+
+<!--
+  BƯỚC 2 — Trong filter grid (portal-query-filter hoặc filter-card):
+  Chỉ cần class portal-date-range.
+  allowClear: khi đã có Từ/Đến ngày → hiện nút × trên ô (cùng style Select).
+-->
+<div class="portal-field">
+  <label class="portal-field__label" for="fDateFrom">Ngày tạo</label>
+  <div
+    class="portal-field__control portal-date-range"
+    id="fDateWrap"
+  >
+    <div class="portal-date-range__inner">
+      <input
+        class="portal-date-range__input"
+        id="fDateFrom"
+        type="text"
+        placeholder="Từ ngày"
+        aria-label="Từ ngày"
+        readonly
+      />
+      <span class="portal-date-range__sep" aria-hidden="true">—</span>
+      <input
+        class="portal-date-range__input"
+        id="fDateTo"
+        type="text"
+        placeholder="Đến ngày"
+        aria-label="Đến ngày"
+        readonly
+      />
+    </div>
+    <span class="portal-date-range__icon" aria-hidden="true"></span>
+    <!-- Nút × do portal-date-range-picker.js tự inject khi có giá trị -->
+  </div>
+</div>
+
+<!--
+  Demo có sẵn khoảng ngày (sẽ hiện nút ×):
+  value="01/06/2026" / value="15/06/2026" trên 2 input.
+-->
+
+<!--
+  BƯỚC 3 — Trước </body>: portal-chrome.js đã auto-load portal-date-range-picker.js.
+  Chỉ thêm script thủ công nếu trang KHÔNG dùng portal-chrome.js:
+-->
+<script src="{PORTAL_BASE}_shared/portal-date-range-picker.js"></script>
+
+<!--
+  TUỲ CHỌN — Lắng nghe sau Áp dụng / Xóa:
+  document.getElementById('fDateWrap').addEventListener('daterange:apply', function () { ... });
+  document.getElementById('fDateWrap').addEventListener('daterange:clear', function () { ... });
+-->

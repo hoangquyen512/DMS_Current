@@ -1,0 +1,47 @@
+<!--
+  WEB Multi-select (Select multi choice) — Template snippet
+  Spec: design-system/web/components/multi-select.md
+
+  BƯỚC 1 — CSS/JS tự load qua portal-chrome.js (không cần thêm script thủ công).
+  Chỉ cần markup .portal-multi-select — click mở dropdown, tag tự giãn, tick đã chọn.
+
+  BƯỚC 1b — (tuỳ chọn) nếu trang KHÔNG dùng portal-chrome.js:
+-->
+<link rel="stylesheet" href="{PORTAL_BASE}_shared/portal-components.css"/>
+<script src="{PORTAL_BASE}_shared/portal-mockup-widgets.js"></script>
+
+<!--
+  BƯỚC 2 — Trong filter grid (portal-query-filter) hoặc form modal:
+-->
+<div class="portal-field">
+  <label class="portal-field__label">Nhà phân phối</label>
+  <div class="portal-field__control portal-multi-select" id="msNpp">
+    <div class="portal-multi-select__inner portal-multi-select__tags">
+      <span class="portal-multi-select__placeholder">Chọn nhà phân phối</span>
+    </div>
+    <span class="portal-multi-select__arrow"></span>
+    <ul class="portal-multi-select__dropdown">
+      <li class="portal-multi-select__option" data-value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</li>
+      <li class="portal-multi-select__option" data-value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</li>
+      <li class="portal-multi-select__option" data-value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</li>
+    </ul>
+    <select class="portal-multi-select__hidden" id="filterNpp" multiple hidden>
+      <option value="NPP-HCM-01">NPP-HCM-01 — Finviet HCM</option>
+      <option value="NPP-HCM-02">NPP-HCM-02 — Finviet Bình Dương</option>
+      <option value="NPP-HN-01">NPP-HN-01 — Finviet Hà Nội</option>
+    </select>
+  </div>
+</div>
+
+<!--
+  BƯỚC 3 — API (tuỳ chọn):
+
+  PortalMockupWidgets.setMultiSelectValues('msNpp', ['NPP-HCM-01']);
+  PortalMockupWidgets.getMultiSelectValues('msNpp');
+  PortalMockupWidgets.clearMultiSelect('msNpp');
+  PortalMockupWidgets.setMultiSelectDisabled('msNpp', true);
+
+  document.getElementById('msNpp').addEventListener('portal-multiselect-change', function () {
+    // applyFilters();
+  });
+-->

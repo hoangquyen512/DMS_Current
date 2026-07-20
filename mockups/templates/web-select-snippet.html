@@ -1,0 +1,101 @@
+<!--
+  WEB Select (one choice) — Template snippet (⭐ copy-paste cho mockup mới)
+  Spec: design-system/web/components/select.md
+  CRUD form: web-portal-crud-list-modal-snippet.html
+
+  BƯỚC 1 — CSS/JS tự load qua portal-chrome.js (portal-mockup-widgets.js).
+  Không cần thêm script thủ công nếu trang đã có portal-chrome.
+
+  BƯỚC 1b — (tuỳ chọn) nếu trang KHÔNG dùng portal-chrome.js:
+-->
+<script src="{PORTAL_BASE}_shared/portal-mockup-widgets.js"></script>
+
+<!--
+  ═══════════════════════════════════════════════════════════
+  A. FILTER — tùy chọn (có nút × bỏ chọn sau khi chọn)
+  ═══════════════════════════════════════════════════════════
+-->
+<div class="portal-field">
+  <label class="portal-field__label" for="fStatus">Trạng thái</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select filter-select" id="fStatus">
+      <option value="" selected hidden>Trạng thái</option>
+      <option>Hoạt động</option>
+      <option>Không hoạt động</option>
+    </select>
+  </div>
+</div>
+
+<!--
+  ═══════════════════════════════════════════════════════════
+  B. FIELD BẮT BUỘC (* Công ty) — KHÔNG cho bỏ chọn
+  ═══════════════════════════════════════════════════════════
+-->
+<div class="portal-field">
+  <label class="portal-field__label" for="fCompany"><span class="req">*</span> Công ty</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select" id="fCompany" data-clearable="false">
+      <option value="FV" selected>Finviet</option>
+      <option value="BD">Công ty TNHH NPP Bình Dương</option>
+    </select>
+  </div>
+</div>
+
+<!--
+  ═══════════════════════════════════════════════════════════
+  C. CREATE / EDIT FORM — chuẩn thiết kế (bắt buộc cho mockup sau này)
+  • Tùy chọn → placeholder value="" + nút ×
+  • Bắt buộc → data-clearable="false"
+  • Gán value JS → PortalMockupWidgets.setSelectValue(id, value)
+  ═══════════════════════════════════════════════════════════
+-->
+
+<!-- C1. Create — * Công ty (bắt buộc, không ×) -->
+<div class="portal-field portal-field--full">
+  <label class="portal-field__label" for="createCompanyCode"><span class="req">*</span> Công ty</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select" id="createCompanyCode" data-clearable="false">
+      <option value="FV" selected>Finviet</option>
+    </select>
+  </div>
+</div>
+
+<!-- C2. Create — field tùy chọn (có ×) -->
+<div class="portal-field">
+  <label class="portal-field__label" for="createRouteId">Tuyến giao hàng</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select" id="createRouteId">
+      <option value="" selected hidden>Tuyến giao hàng</option>
+      <option value="TGH-001">Tuyến Q1 — Bến Nghé</option>
+      <option value="TGH-002">Tuyến Q1 — Tân Định</option>
+    </select>
+  </div>
+</div>
+
+<!-- C3. Edit — field tùy chọn (có ×; đồng bộ khi mở modal) -->
+<div class="portal-field">
+  <label class="portal-field__label" for="editRouteId">Tuyến giao hàng</label>
+  <div class="portal-field__control portal-select-wrap">
+    <select class="portal-select" id="editRouteId">
+      <option value="" selected hidden>Tuyến giao hàng</option>
+      <option value="TGH-001">Tuyến Q1 — Bến Nghé</option>
+      <option value="TGH-002">Tuyến Q1 — Tân Định</option>
+    </select>
+  </div>
+</div>
+
+<script>
+  // Khi mở Edit / cascade / Làm mới form:
+  // PortalMockupWidgets.setSelectValue('editRouteId', routeId);
+  // PortalMockupWidgets.syncFormSelectsClear(document.getElementById('editModal'));
+</script>
+
+<!--
+  Hành vi allowClear (tự động khi có option value=""):
+  - Nút × trên control khi đã chọn
+  - Click lại đúng option đang chọn trong dropdown → bỏ chọn
+  - Backspace / Delete khi focus → bỏ chọn
+  - Create/Edit: field tùy chọn tự enable; thiếu placeholder → widget inject
+  - Tắt: data-clearable="false"
+  - Class hỗ trợ: portal-select | filter-select | search-select | form-select
+-->

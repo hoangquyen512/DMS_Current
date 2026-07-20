@@ -1,0 +1,185 @@
+<!--
+  Snippet khung: Portal CRUD List + Modal (chuẩn hệ thống)
+  Pattern: design-system/web/patterns/portal-crud-list-modal-pattern.md
+  Reference: MS-W-DL04-danh-sach-nhan-vien-giao-hang.html
+  Select allowClear: design-system/web/components/select.md · web-select-snippet.html
+
+  Thay {BASE} = ../../../ (hoặc depth tương ứng lên mockups/web/)
+  Thay {TITLE}, {LIST_TITLE}, filter fields, table columns theo nghiệp vụ.
+
+  QUY TẮC SELECT Create/Edit (bắt buộc):
+  • Field tùy chọn → placeholder value="" + nút × (allowClear)
+  • Field bắt buộc (* Công ty…) → data-clearable="false"
+  • Gán value bằng JS → PortalMockupWidgets.setSelectValue(id, value)
+-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>[WEB] {MS-CODE} — {TITLE}</title>
+  <link rel="stylesheet" href="{BASE}_shared/portal-tokens.css"/>
+  <link rel="stylesheet" href="{BASE}_shared/portal-fonts.css"/>
+  <link rel="stylesheet" href="{BASE}_shared/portal-components.css"/>
+  <link rel="stylesheet" href="{BASE}_shared/portal-chrome.css"/>
+</head>
+<body class="portal-page" data-portal-base="{BASE}">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+<main class="portal-page-content" style="padding:20px 28px 40px;max-width:100%;">
+
+  <nav class="portal-breadcrumb">
+    <a href="{BASE}main.html">{Module}</a>
+    <span class="portal-breadcrumb__sep">/</span>
+    <span class="portal-breadcrumb__current">{TITLE}</span>
+  </nav>
+
+  <div class="portal-page-hd">
+    <h1 class="portal-page-title">{TITLE}</h1>
+    <!-- Bộ lọc nâng cao: auto qua portal-mockup-widgets nếu dùng CTTB pattern -->
+  </div>
+
+  <!-- QueryFilter -->
+  <div class="portal-card portal-query-filter">
+    <div class="portal-card__hd">Tìm kiếm theo</div>
+    <div class="portal-card__bd">
+      <div class="portal-filter-grid portal-filter-grid--4">
+        <!-- fields... (filter select tùy chọn cũng dùng allowClear) -->
+        <div class="portal-field">
+          <label class="portal-field__label" for="fStatus">Trạng thái</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fStatus">
+              <option value="" selected hidden>Trạng thái</option>
+              <option>Hoạt động</option>
+              <option>Không hoạt động</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="portal-query-actions">
+        <div class="portal-query-actions__inner">
+          <button type="button" class="portal-btn portal-btn--default" id="btnReset">Làm mới</button>
+          <button type="button" class="portal-btn portal-btn--primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ProTable — KHÔNG tab trạng thái, KHÔNG nút Làm mới trên list, KHÔNG dashboard KPI -->
+  <div class="portal-card portal-protable">
+    <div class="portal-protable__list-hd">
+      <h2 class="portal-protable__list-title">{LIST_TITLE}</h2>
+    </div>
+    <div class="portal-protable__list-actions">
+      <button type="button" class="portal-btn portal-btn--default" id="btnImport">Import Excel</button>
+      <button type="button" class="portal-btn portal-btn--default" id="btnExport">Export Excel</button>
+      <button type="button" class="portal-btn portal-btn--primary" id="btnCreate">+ Tạo mới</button>
+    </div>
+    <div class="portal-card__bd">
+      <div class="portal-table-wrap portal-table-wrap--flush">
+        <table class="portal-table portal-table--zebra">
+          <thead><!-- columns --></thead>
+          <tbody><!-- rows --></tbody>
+        </table>
+      </div>
+      <div class="portal-pagination"><span id="pageInfo">—</span></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ========== CREATE MODAL ========== -->
+<div class="portal-modal-overlay" id="createModal">
+  <div class="portal-modal portal-modal--wide" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+    <div class="portal-modal__hd">
+      <h2 class="portal-modal__title" id="createModalTitle">Tạo mới {đối tượng}</h2>
+      <button type="button" class="portal-icon-btn" id="createClose" title="Đóng">✕</button>
+    </div>
+    <div class="portal-modal__bd portal-form-horizontal">
+      <div class="portal-alert portal-alert--error" id="createErrorList"></div>
+      <form id="createForm" novalidate>
+        <div class="portal-form-grid">
+          <!-- * Công ty — BẮT BUỘC, không allowClear -->
+          <div class="portal-field portal-field--full">
+            <label class="portal-field__label" for="createCompanyCode"><span class="req">*</span> Công ty</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select" id="createCompanyCode" data-clearable="false">
+                <option value="FV" selected>Finviet</option>
+              </select>
+            </div>
+          </div>
+          <!-- Select TÙY CHỌN — có nút × (allowClear) -->
+          <div class="portal-field">
+            <label class="portal-field__label" for="createRouteId">Tuyến giao hàng</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select" id="createRouteId">
+                <option value="" selected hidden>Tuyến giao hàng</option>
+                <option value="TGH-001">Tuyến Q1 — Bến Nghé</option>
+                <option value="TGH-002">Tuyến Q1 — Tân Định</option>
+              </select>
+            </div>
+          </div>
+          <!-- Thêm field khác theo nghiệp vụ... -->
+        </div>
+      </form>
+    </div>
+    <div class="portal-modal__ft">
+      <button type="button" class="portal-btn portal-btn--default" id="createReset">Làm mới</button>
+      <button type="button" class="portal-btn portal-btn--primary" id="createSubmit">Đồng ý</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== EDIT MODAL ========== -->
+<div class="portal-modal-overlay" id="editModal">
+  <div class="portal-modal portal-modal--wide" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="portal-modal__hd">
+      <h2 class="portal-modal__title" id="editModalTitle">Chỉnh sửa {đối tượng}</h2>
+      <button type="button" class="portal-icon-btn" id="editClose" title="Đóng">✕</button>
+    </div>
+    <div class="portal-modal__bd portal-form-horizontal">
+      <div class="portal-alert portal-alert--error" id="editErrorList"></div>
+      <form id="editForm" novalidate>
+        <div class="portal-form-grid">
+          <div class="portal-field portal-field--full">
+            <label class="portal-field__label" for="editCompanyCode"><span class="req">*</span> Công ty</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select" id="editCompanyCode" data-clearable="false">
+                <option value="FV" selected>Finviet</option>
+              </select>
+            </div>
+          </div>
+          <div class="portal-field">
+            <label class="portal-field__label" for="editRouteId">Tuyến giao hàng</label>
+            <div class="portal-field__control portal-select-wrap">
+              <select class="portal-select" id="editRouteId">
+                <option value="" selected hidden>Tuyến giao hàng</option>
+                <option value="TGH-001">Tuyến Q1 — Bến Nghé</option>
+                <option value="TGH-002">Tuyến Q1 — Tân Định</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="portal-modal__ft">
+      <button type="button" class="portal-btn portal-btn--default" id="editCancel">Hủy</button>
+      <button type="button" class="portal-btn portal-btn--primary" id="editSubmit">Đồng ý</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL / IMPORT: copy web-portal-import-excel-snippet.html khi cần Import -->
+
+<script src="{BASE}menu-tree.js"></script>
+<script src="{BASE}_shared/portal-menu.js"></script>
+<script src="{BASE}_shared/portal-chrome.js"></script>
+<script src="{BASE}_shared/portal-mockup-widgets.js"></script>
+<script>
+  /* Khi mở Edit / cascade — đồng bộ nút × sau khi gán value */
+  // PortalMockupWidgets.setSelectValue('editRouteId', routeId);
+  // PortalMockupWidgets.syncFormSelectsClear(document.getElementById('editModal'));
+</script>
+</body>
+</html>
