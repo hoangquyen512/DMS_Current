@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[WEB] MS-W-HT01 — Xử lý yêu cầu</title>
+<link rel="stylesheet" href="../../_shared/portal-chrome.css"/>
+<link rel="stylesheet" href="../../_shared/portal-date-range-picker.css"/>
+<style>
+.page { padding: 0 28px 28px; max-width: 100%; }
+.page-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+}
+.page-title { font-size: 20px; font-weight: 700; color: var(--neutral-900, #111827); margin: 0; }
+.filter-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 24px;
+}
+@media (max-width: 1100px) { .filter-grid { grid-template-columns: repeat(2, 1fr); } }
+.filter-hidden { display: none !important; }
+.status-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--neutral-200, #E5E7EB); margin-bottom: 0; }
+.status-tab {
+  padding: 10px 16px; font-size: 13px; color: var(--neutral-500); cursor: pointer;
+  border: none; background: transparent; border-bottom: 2px solid transparent; font-weight: 500;
+}
+.status-tab.active { color: var(--primary-600, #2563EB); border-bottom-color: var(--primary-500, #3B82F6); }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+}
+.badge-init { background: #DBEAFE; color: #1D4ED8; }
+.badge-proc { background: #FEF3C7; color: #B45309; }
+.badge-done { background: #D1FAE5; color: #047857; }
+.badge-yes { background: #D1FAE5; color: #047857; }
+.badge-no { background: #F3F4F6; color: #6B7280; }
+.badge-dash { color: #9CA3AF; font-weight: 400; }
+a.link { color: var(--primary-500, #3B82F6); text-decoration: none; font-weight: 500; cursor: pointer; }
+a.link:hover { text-decoration: underline; }
+.col-custom { text-align: center; }
+.icon-btn {
+  width: 32px; height: 32px; border: 1px solid var(--neutral-200); border-radius: 6px;
+  background: #fff; cursor: pointer; font-size: 16px; line-height: 1;
+}
+.icon-btn:hover { background: var(--neutral-50); border-color: var(--primary-500); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,.45);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 72px 24px 24px; z-index: 2000; overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+body.modal-open .portal-page-body > .page { opacity: .35; pointer-events: none; }
+.modal {
+  background: #fff; border-radius: 10px; width: min(960px, 100%);
+  max-height: calc(100vh - 96px); display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,.2);
+}
+.modal-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; border-bottom: 1px solid var(--neutral-200); flex-shrink: 0;
+}
+.modal-head h2 { font-size: 16px; font-weight: 700; margin: 0; }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; min-height: 0; }
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px;
+  border-top: 1px solid var(--neutral-200); flex-shrink: 0;
+}
+.section-title {
+  font-size: 13px; font-weight: 600; color: var(--primary-600, #2563EB);
+  margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--neutral-100);
+}
+.section-title:first-child { margin-top: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.form-grid .full { grid-column: 1 / -1; }
+.ff label { display: block; font-size: 12px; color: var(--neutral-500); margin-bottom: 4px; }
+.ff label .req { color: #EF4444; margin-right: 2px; }
+.ff .val, .ff input, .ff select, .ff textarea {
+  width: 100%; min-height: 36px; border: 1px solid var(--neutral-200); border-radius: 6px;
+  padding: 8px 10px; font-size: 13px; background: var(--neutral-50); color: var(--neutral-700);
+}
+.ff input:not([readonly]), .ff select:not([disabled]), .ff textarea:not([readonly]) { background: #fff; }
+.ff textarea { min-height: 72px; resize: vertical; }
+.status-with-tip { display: flex; align-items: center; gap: 6px; }
+.status-with-tip select { flex: 1; }
+.portal-tip-host {
+  position: relative; flex-shrink: 0; width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: default; user-select: none;
+}
+.portal-tip-host .portal-tip-icon {
+  width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--neutral-300);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--neutral-500); pointer-events: none;
+}
+.portal-tip-host .portal-tip-bubble {
+  display: none; position: absolute; right: 0; top: calc(100% + 6px); z-index: 10;
+  width: min(320px, 70vw); padding: 10px 12px;
+  background: var(--neutral-900, #111827); color: #fff;
+  font-size: 12px; line-height: 1.45; font-weight: 400; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15); pointer-events: none;
+}
+.portal-tip-host .portal-tip-bubble::before {
+  content: ''; position: absolute; top: -5px; right: 8px;
+  border-left: 6px solid transparent; border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--neutral-900, #111827);
+}
+.portal-tip-host:hover .portal-tip-bubble,
+.portal-tip-host:focus-within .portal-tip-bubble { display: block; }
+.photo-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumb {
+  width: 64px; height: 64px; border-radius: 8px; background: #EFF6FF;
+  border: 1px solid #DBEAFE; display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.pdf-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 8px;
+}
+.pdf-row strong { font-size: 13px; }
+.pdf-row span { font-size: 12px; color: var(--neutral-500); }
+.detail-block-hidden { display: none !important; }
+
+/* Chat */
+.chat-section {
+  border: 2px solid var(--neutral-300, #D1D5DB); border-radius: 8px; overflow: hidden;
+  margin-top: 8px; background: #fff;
+  box-shadow: 0 1px 3px rgba(15,23,42,.06);
+}
+.chat-msgs {
+  max-height: 200px; overflow-y: auto; padding: 12px;
+  background: var(--neutral-100, #F3F4F6);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.chat-bubble {
+  max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 13px; line-height: 1.45;
+}
+.chat-bubble.admin { align-self: flex-start; background: #fff; border: 1px solid var(--neutral-300); }
+.chat-bubble.creator { align-self: flex-end; background: #BFDBFE; color: #1E3A8A; border: 1px solid #93C5FD; }
+.chat-bubble .meta { font-size: 10px; color: var(--neutral-500); margin-top: 4px; }
+.chat-compose {
+  display: flex; gap: 8px; padding: 10px 12px; background: #fff;
+  border-top: 2px solid var(--neutral-200);
+}
+.chat-compose input {
+  flex: 1; height: 36px; border: 1px solid var(--neutral-200); border-radius: 6px; padding: 0 10px; font-size: 13px;
+}
+.btn {
+  padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid transparent; display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-primary { background: var(--primary-500, #3B82F6); color: #fff; border-color: var(--primary-500); }
+.btn-secondary { background: #fff; color: var(--neutral-700); border-color: var(--neutral-200); }
+.btn-success { background: #10B981; color: #fff; border-color: #10B981; }
+</style>
+</head>
+<body class="portal-page" data-portal-base="../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+
+<nav class="portal-breadcrumb" style="padding:12px 28px 0">
+  <a href="../../main.html">Trang chủ</a> / Hỗ trợ phần mềm / Xử lý yêu cầu
+</nav>
+
+<div class="page">
+  <div class="page-hd">
+    <h1 class="page-title">Xử lý yêu cầu</h1>
+  </div>
+
+  <!-- Bộ lọc -->
+  <div class="portal-card portal-query-filter" style="margin-bottom:16px">
+    <div class="portal-card__hd">Tìm kiếm theo</div>
+    <div class="portal-card__bd">
+      <div class="portal-filter-grid portal-filter-grid--4 filter-grid">
+        <div class="portal-field">
+          <label class="portal-field__label" for="fCode">Tìm theo</label>
+          <div class="portal-field__control portal-input-search-wrap">
+            <input class="portal-input" id="fCode" type="text" placeholder="Mã yêu cầu hỗ trợ"/>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label" for="fType">Loại ticket</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fType" onchange="toggleNppSignedFilter()">
+              <option value="" hidden>Loại ticket</option>
+              <option value="onboarding" selected>Onboarding Nhà Phân Phối</option>
+              <option value="sales">Vấn đề bán hàng</option>
+              <option value="stock">Vấn đề tồn kho</option>
+            </select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label" for="fStatus">Trạng thái</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fStatus">
+              <option value="">Trạng thái</option>
+              <option>Khởi tạo</option>
+              <option>Đang xử lý</option>
+              <option>Đã giải quyết</option>
+              <option>Từ chối</option>
+            </select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label" for="fReceiver">Nhân viên tiếp nhận</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fReceiver">
+              <option value="" selected>Nhân viên tiếp nhận</option>
+              <option>0909090909 — Anh Thái sale111</option>
+              <option>0911222333 — Nguyễn Văn B</option>
+            </select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label" for="fCare">Nhân viên chăm sóc</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fCare">
+              <option value="" selected>Nhân viên chăm sóc</option>
+              <option>0909090909 — Anh Thái sale111</option>
+              <option>0988777666 — Trần Thị C</option>
+            </select>
+          </div>
+        </div>
+        <div class="portal-field">
+          <label class="portal-field__label">Ngày tạo</label>
+          <div class="portal-field__control portal-date-range portal-date-range--picker" id="fCreatedDateWrap" data-date-range-picker>
+            <div class="portal-date-range__inner">
+              <input class="portal-date-range__input" id="fCreatedFrom" type="text" value="01/07/2026" placeholder="Từ ngày" aria-label="Từ ngày" readonly/>
+              <span class="portal-date-range__sep" aria-hidden="true">—</span>
+              <input class="portal-date-range__input" id="fCreatedTo" type="text" value="10/07/2026" placeholder="Đến ngày" aria-label="Đến ngày" readonly/>
+            </div>
+            <span class="portal-date-range__icon" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="portal-field" id="filterNppSigned">
+          <label class="portal-field__label" for="fNppSigned">NPP đã ký xác nhận</label>
+          <div class="portal-field__control portal-select-wrap">
+            <select class="portal-select" id="fNppSigned">
+              <option value="" selected>NPP đã ký xác nhận</option>
+              <option value="yes">Có</option>
+              <option value="no">Không</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="portal-query-actions">
+        <div class="portal-query-actions__inner">
+          <button type="button" class="portal-btn portal-btn--default">Làm mới</button>
+          <button type="button" class="portal-btn portal-btn--primary">Tìm kiếm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bảng -->
+  <div class="portal-card portal-protable">
+    <div class="portal-protable__toolbar">
+      <div class="status-tabs" role="tablist">
+        <button class="status-tab active" type="button">Tất cả (3)</button>
+        <button class="status-tab" type="button">Khởi tạo (1)</button>
+        <button class="status-tab" type="button">Đang xử lý (1)</button>
+        <button class="status-tab" type="button">Đã giải quyết (0)</button>
+        <button class="status-tab" type="button">Từ chối (0)</button>
+      </div>
+    </div>
+    <div class="portal-card__bd" style="padding:0">
+      <div class="portal-table-wrap portal-table-wrap--flush">
+        <table class="portal-table portal-table--zebra">
+          <thead>
+            <tr>
+              <th>Mã công ty</th>
+              <th>Mã yêu cầu hỗ trợ</th>
+              <th>NPP</th>
+              <th>MST</th>
+              <th>Nhân viên chăm sóc</th>
+              <th>Loại ticket</th>
+              <th>Trạng thái</th>
+              <th>NPP đã ký xác nhận</th>
+              <th>File đã ký</th>
+              <th>Tùy chỉnh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>KENH_PHAN_PHOI_DEV</td>
+              <td><a class="link" onclick="openDetailModal('init')">KENH_PHAN_PHOI_DEV/TK7086750101</a></td>
+              <td>Hoàng Giang</td>
+              <td>1101125624</td>
+              <td>090 909 0909</td>
+              <td>Onboarding Nhà Phân Phối</td>
+              <td><span class="badge badge-init">Khởi tạo</span></td>
+              <td><span class="badge badge-no">Không</span></td>
+              <td>—</td>
+              <td class="col-custom"><button type="button" class="icon-btn" title="Chọn nhân viên tiếp nhận">👤</button></td>
+            </tr>
+            <tr>
+              <td>KENH_PHAN_PHOI_DEV</td>
+              <td><a class="link" onclick="openDetailModal('proc')">KENH_PHAN_PHOI_DEV/TK7086750098</a></td>
+              <td>Hoàng Giang</td>
+              <td>1101125624</td>
+              <td>090 909 0909</td>
+              <td>Onboarding Nhà Phân Phối</td>
+              <td><span class="badge badge-proc">Đang xử lý</span></td>
+              <td><span class="badge badge-yes">Có</span></td>
+              <td><a class="link">HD_signed.pdf</a></td>
+              <td class="col-custom"><button type="button" class="icon-btn" title="Chọn nhân viên tiếp nhận">👤</button></td>
+            </tr>
+            <tr>
+              <td>KENH_PHAN_PHOI_DEV</td>
+              <td><a class="link" onclick="openDetailModal('sales')">KENH_PHAN_PHOI_DEV/TK7086750079</a></td>
+              <td>Hân Gia</td>
+              <td>—</td>
+              <td>090 909 0909</td>
+              <td>Vấn đề bán hàng</td>
+              <td><span class="badge badge-init">Khởi tạo</span></td>
+              <td><span class="badge badge-dash">—</span></td>
+              <td>—</td>
+              <td class="col-custom"><button type="button" class="icon-btn" title="Chọn nhân viên tiếp nhận">👤</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="portal-pagination" style="padding:12px 16px">
+        <span>1–3 trên 3 yêu cầu hỗ trợ</span>
+        <span>10 / trang</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal chi tiết -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>Thông tin chi tiết</h2>
+      <button type="button" class="btn btn-secondary" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="section-title">Thông tin phiếu</div>
+      <div class="form-grid">
+        <div class="ff"><label><span class="req">*</span>Loại vấn đề</label><div class="val" id="dIssueType">Onboarding Nhà Phân Phối</div></div>
+        <div class="ff"><label><span class="req">*</span>Công ty</label><div class="val">(KENH_PHAN_PHOI_DEV) — Kênh Phân Phối</div></div>
+        <div class="ff"><label><span class="req">*</span>Nhân viên tạo</label><div class="val">0909090909 — Anh Thái sale111</div></div>
+        <div class="ff" id="dContentBlock"><label>Nội dung</label><div class="val" id="dContent">—</div></div>
+      </div>
+
+      <div id="dOnboardingBlock">
+        <div class="section-title">Thông tin Nhà Phân Phối</div>
+        <div class="form-grid">
+          <div class="ff"><label>NPP trực thuộc BUM/DDM</label><div class="val" id="dBum">Đỗ Xuân Nguyên</div></div>
+          <div class="ff"><label>NPP</label><div class="val" id="dNpp">Hoàng Giang</div></div>
+          <div class="ff"><label>Mã số thuế</label><div class="val" id="dMst">1101125624</div></div>
+          <div class="ff"><label>Người đại diện pháp luật</label><div class="val">Nguyễn Hoàng Giang</div></div>
+          <div class="ff"><label>SĐT nhận/gửi thông tin</label><div class="val">0986715923</div></div>
+          <div class="ff"><label>Email</label><div class="val">npphgla@gmail.com</div></div>
+        </div>
+        <div class="section-title">Tài khoản ngân hàng</div>
+        <div class="form-grid">
+          <div class="ff"><label>Ngân hàng</label><div class="val">Sacombank</div></div>
+          <div class="ff"><label>Chi nhánh</label><div class="val">Tân An Long An</div></div>
+          <div class="ff"><label>Số tài khoản</label><div class="val">070986715923</div></div>
+          <div class="ff"><label>Chủ tài khoản</label><div class="val">Nguyễn Hoàng Giang</div></div>
+        </div>
+        <div class="section-title">Kinh doanh</div>
+        <div class="form-grid">
+          <div class="ff full"><label>Ngành hàng</label><div class="val">Bia, Nước ngọt, Giải khát, Thực phẩm</div></div>
+          <div class="ff"><label>Khu vực giao hàng</label><div class="val">Long An</div></div>
+          <div class="ff"><label>Giá trị ĐH tối thiểu</label><div class="val">Dưới 1.000.000 VNĐ</div></div>
+          <div class="ff"><label>Doanh số ngành hàng NPP</label><div class="val">Trên 1.000.000.000 VNĐ</div></div>
+          <div class="ff full">
+            <label>Hình ảnh đính kèm</label>
+            <div class="photo-thumbs">
+              <div class="thumb" title="GPĐKKD">📄</div>
+              <div class="thumb" title="CMND mặt trước">🪪</div>
+              <div class="thumb" title="CMND mặt sau">🪪</div>
+              <div class="thumb" title="Ảnh NPP">🏪</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dContractBlock" class="detail-block-hidden">
+        <div class="section-title">Hợp đồng &amp; file đã ký</div>
+        <div class="form-grid">
+          <div class="ff"><label>NPP đã ký xác nhận</label><div class="val"><span class="badge badge-yes">Có</span></div></div>
+          <div class="ff full">
+            <label>PDF hệ thống gen</label>
+            <div class="pdf-row">
+              <span>📑</span>
+              <div><strong>HD_Onboarding_HoangGiang.pdf</strong><br/><span>Hợp đồng khung GPCN + MBHH</span></div>
+              <a class="link" style="margin-left:auto">Tải xuống</a>
+            </div>
+          </div>
+          <div class="ff full">
+            <label>File / ảnh NPP đã ký</label>
+            <div class="pdf-row">
+              <span>✅</span>
+              <div><strong>HD_signed_HoangGiang.pdf</strong><br/><span>Sales upload từ App — 09/07/2026 14:22</span></div>
+              <a class="link" style="margin-left:auto">Xem</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Xét duyệt</div>
+      <div class="form-grid">
+        <div class="ff">
+          <label><span class="req">*</span>Trạng thái</label>
+          <div class="status-with-tip">
+            <select id="dStatus" onchange="updateStatusUI()">
+              <option value="init">Khởi tạo</option>
+              <option value="proc">Đang xử lý</option>
+              <option value="done">Đã giải quyết</option>
+              <option value="rej">Từ chối</option>
+            </select>
+            <span class="portal-tip-host" id="dStatusTipWrap" tabindex="-1">
+              <span class="portal-tip-icon" aria-hidden="true">ⓘ</span>
+              <span class="portal-tip-bubble" id="dStatusTipText" role="tooltip"></span>
+            </span>
+          </div>
+        </div>
+        <div class="ff detail-block-hidden" id="dRejectBlock">
+          <label><span class="req">*</span>Lý do từ chối duyệt</label>
+          <select id="dRejectReason" disabled>
+            <option value="" selected hidden>Lý do từ chối duyệt</option>
+            <option>Thông tin NPP không hợp lệ</option>
+            <option>Thiếu hồ sơ / ảnh đính kèm</option>
+            <option>Trùng MST / NPP đã tồn tại</option>
+            <option>Khác</option>
+          </select>
+        </div>
+        <div class="ff full">
+          <label>Ghi chú xét duyệt</label>
+          <textarea id="dNote" placeholder="Nhập ghi chú (tuỳ chọn)"></textarea>
+        </div>
+      </div>
+
+      <div class="section-title">Trao đổi với người tạo phiếu</div>
+      <div class="chat-section">
+        <div class="chat-msgs" id="dChatMsgs"></div>
+        <div class="chat-compose">
+          <input type="text" id="dChatInput" placeholder="Nhập nội dung trao đổi"/>
+          <button type="button" class="btn btn-primary" onclick="sendDetailChat()">Gửi</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" onclick="closeDetailModal()">Thoát</button>
+      <button type="button" class="btn btn-primary" onclick="closeDetailModal()">Lưu</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script src="../../menu-tree.js"></script>
+<script src="../../_shared/portal-menu.js"></script>
+<script src="../../_shared/portal-chrome.js"></script>
+<script src="../../_shared/portal-date-range-picker.js"></script>
+<script>
+var STATUS_TIPS = {
+  proc: 'Chọn Đang xử lý → hệ thống gen PDF hợp đồng cho nhân viên xác nhận ký. Trạng thái vẫn Đang xử lý cho đến khi phiếu chuyển trạng thái → Đã giải quyết.',
+  done: 'Chọn Đã giải quyết = gửi dữ liệu phiếu + file đã ký sang CMS để tạo NPP.',
+  init: '',
+  rej: ''
+};
+var DETAIL_DATA = {
+  init: {
+    issueType: 'Onboarding Nhà Phân Phối', onboarding: true, contract: false,
+    status: 'init', npp: 'Hoàng Giang', mst: '1101125624',
+    chat: [{ who: 'creator', text: 'Đã gửi thông tin NPP, nhờ Admin kiểm tra.', time: '10/07/2026 10:45' }]
+  },
+  proc: {
+    issueType: 'Onboarding Nhà Phân Phối', onboarding: true, contract: true,
+    status: 'proc', npp: 'Hoàng Giang', mst: '1101125624',
+    chat: [
+      { who: 'admin', text: 'Hệ thống đã gen hợp đồng. Vui lòng in và ký với NPP.', time: '09/07/2026 09:30' },
+      { who: 'creator', text: 'Đã upload file đã ký.', time: '09/07/2026 14:22' }
+    ]
+  },
+  sales: {
+    issueType: 'Vấn đề bán hàng', onboarding: false, contract: false,
+    status: 'init', content: 'Bán hàng gian', npp: 'Hân Gia', mst: '—',
+    chat: [{ who: 'creator', text: 'Bán hàng gian tại cửa hàng Hân Gia.', time: '29/04/2026 22:04' }]
+  }
+};
+
+function toggleNppSignedFilter() {
+  var sel = document.getElementById('fType');
+  var box = document.getElementById('filterNppSigned');
+  box.classList.toggle('filter-hidden', sel.value !== 'onboarding');
+}
+
+function openDetailModal(key) {
+  var d = DETAIL_DATA[key];
+  if (!d) return;
+  document.getElementById('dIssueType').textContent = d.issueType;
+  document.getElementById('dNpp').textContent = d.npp;
+  document.getElementById('dMst').textContent = d.mst;
+  document.getElementById('dOnboardingBlock').classList.toggle('detail-block-hidden', !d.onboarding);
+  document.getElementById('dContractBlock').classList.toggle('detail-block-hidden', !d.contract);
+  document.getElementById('dContentBlock').style.display = d.onboarding ? 'none' : '';
+  document.getElementById('dContent').textContent = d.content || '—';
+  document.getElementById('dStatus').value = d.status;
+  document.getElementById('dNote').value = '';
+  renderDetailChat(d.chat);
+  updateStatusUI();
+  document.getElementById('detailModal').classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeDetailModal() {
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+function updateStatusUI() {
+  var v = document.getElementById('dStatus').value;
+  var tipWrap = document.getElementById('dStatusTipWrap');
+  var tipText = document.getElementById('dStatusTipText');
+  var rejectBlock = document.getElementById('dRejectBlock');
+  var rejectSelect = document.getElementById('dRejectReason');
+  var tip = STATUS_TIPS[v] || '';
+  if (tipWrap) tipWrap.style.display = tip ? 'inline-flex' : 'none';
+  if (tipText) tipText.textContent = tip;
+  var isRej = v === 'rej';
+  if (rejectBlock) rejectBlock.classList.toggle('detail-block-hidden', !isRej);
+  if (rejectSelect) {
+    rejectSelect.disabled = !isRej;
+    if (!isRej) rejectSelect.value = '';
+  }
+}
+
+function renderDetailChat(msgs) {
+  var box = document.getElementById('dChatMsgs');
+  box.innerHTML = (msgs || []).map(function (m) {
+    var cls = m.who === 'admin' ? 'admin' : 'creator';
+    return '<div class="chat-bubble ' + cls + '">' + m.text + '<div class="meta">' + m.time + '</div></div>';
+  }).join('');
+}
+
+function sendDetailChat() {
+  var input = document.getElementById('dChatInput');
+  var text = (input.value || '').trim();
+  if (!text) return;
+  var box = document.getElementById('dChatMsgs');
+  var now = new Date();
+  var t = ('0' + now.getDate()).slice(-2) + '/' + ('0' + (now.getMonth() + 1)).slice(-2) + '/' + now.getFullYear() + ' ' +
+    ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+  box.insertAdjacentHTML('beforeend', '<div class="chat-bubble admin">' + text + '<div class="meta">' + t + ' — Admin</div></div>');
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  toggleNppSignedFilter();
+  updateStatusUI();
+});
+</script>
+</body>
+</html>
