@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<title>Redirect — Chi tiết đơn giao hàng</title>
+<meta http-equiv="refresh" content="0;url=WEB-CP-B3-don-giao-hang-phan-bo.html"/>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('detail') || params.get('id') || '';
+  var status = params.get('status') || '';
+  // Deep-link cũ (?id=DLO-...&status=) → map sang data-id nếu biết; fallback mở list
+  var dloToId = {
+    'DLO-20260615-0042': '1',
+    'DLO-20260615-0041': '2',
+    'DLO-20260614-0038': '3',
+    'DLO-20260614-0035': '4',
+    'DLO-20260614-0032': '5',
+    'DLO-20260613-0028': '6',
+    'DLO-20260612-0020': '7',
+    'DLO-20260611-0015': '8',
+    'DLO-20260610-0010': '9',
+    'DLO-20260612-0018': '10'
+  };
+  var detailId = dloToId[id] || id;
+  var target = 'WEB-CP-B3-don-giao-hang-phan-bo.html';
+  if (detailId) target += '?detail=' + encodeURIComponent(detailId);
+  else if (status === 'partial') target += '?detail=10';
+  location.replace(target);
+})();
+</script>
+</head>
+<body>
+<p>Đang chuyển tới danh sách — Chi tiết mở dạng popup. <a href="WEB-CP-B3-don-giao-hang-phan-bo.html?detail=10">Mở danh sách</a></p>
+</body>
+</html>
