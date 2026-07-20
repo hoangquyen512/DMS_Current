@@ -1,9 +1,11 @@
 /**
- * Font chuẩn ecodms — đồng bộ Ant Design Pro Portal
- * Không dùng Inter; ưu tiên system UI (Segoe UI / Roboto) + Noto Sans fallback
+ * Font + typography chuẩn ecodms — đồng bộ Ant Design 5 / dms-portal-dev
+ * Đo live 16/07/2026 (/category/news/)
+ * Không dùng Inter; stack system UI (Segoe UI / Roboto) như Portal
  */
 html {
-  font-family: var(--font-sans);
+  font-family: var(--portal-font, var(--font-sans));
+  font-size: 16px; /* browser root — content dùng 14px qua body */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -15,12 +17,36 @@ input,
 select,
 textarea {
   font-family: inherit;
-  letter-spacing: var(--portal-letter-spacing, 0);
+  letter-spacing: normal;
+}
+
+/* Ép stack portal — ghi đè Inter / Arial trong <style> legacy của từng trang */
+body.portal-page,
+body.portal-page button,
+body.portal-page input,
+body.portal-page select,
+body.portal-page textarea,
+body.portal-page .btn,
+body.portal-page .filter-select,
+body.portal-page .filter-input,
+body.portal-page .filter-search,
+body.portal-page .portal-btn,
+body.portal-page .portal-input,
+body.portal-page .portal-select {
+  font-family: var(--portal-font) !important;
+  letter-spacing: normal;
+}
+
+body.portal-page {
+  font-size: var(--portal-font-size, 14px);
+  font-weight: 400;
+  line-height: var(--portal-line-height, 1.5715);
+  color: var(--portal-text);
 }
 
 .rich-dash {
-  font-family: var(--font-sans);
+  font-family: var(--portal-font);
   font-size: var(--portal-font-size);
   line-height: var(--portal-line-height);
-  letter-spacing: var(--portal-letter-spacing, 0);
+  letter-spacing: normal;
 }

@@ -48,17 +48,66 @@ body.portal-page .breadcrumb a {
   text-decoration: none;
 }
 body.portal-page .breadcrumb a:hover { color: var(--portal-primary); }
-body.portal-page .page-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--portal-text);
-  line-height: 1.4;
+body.portal-page .page-title,
+body.portal-page .portal-page-title,
+body.portal-page h1.page-title,
+body.portal-page h1.portal-page-title {
+  font-family: var(--portal-font) !important;
+  font-size: var(--portal-page-title-size, 20px) !important;
+  font-weight: var(--portal-page-title-weight, 600) !important;
+  color: var(--portal-text) !important;
+  line-height: 32px !important;
+  letter-spacing: normal;
   margin-bottom: var(--portal-space-sm);
 }
-body.portal-page .page-subtitle {
-  font-size: 12px;
-  color: var(--portal-text-tertiary);
+body.portal-page .page-subtitle,
+body.portal-page .portal-page-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--portal-text-secondary);
   margin-bottom: var(--portal-space-md);
+}
+
+/* Legacy inline: btn 13px/500 → Ant Design 14px/400 */
+body.portal-page .btn,
+body.portal-page button.btn,
+body.portal-page .btn-primary,
+body.portal-page .btn-secondary,
+body.portal-page .btn-default {
+  font-size: var(--portal-font-size, 14px) !important;
+  font-weight: 400 !important;
+  line-height: var(--portal-line-height-px, 22px) !important;
+}
+body.portal-page .filter-label,
+body.portal-page .search-label,
+body.portal-page .form-label-inline,
+body.portal-page .portal-field__label {
+  font-size: var(--portal-font-size, 14px) !important;
+  font-weight: 400 !important;
+  line-height: var(--portal-line-height-px, 22px) !important;
+  color: var(--portal-text);
+}
+body.portal-page .list-section-title,
+body.portal-page .portal-protable__list-title {
+  font-size: var(--portal-toolbar-title-size, 16px) !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  overflow: visible !important;
+  color: var(--portal-text);
+}
+body.portal-page table th,
+body.portal-page .portal-table thead th {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+}
+body.portal-page table td,
+body.portal-page .portal-table tbody td {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 22px !important;
+  color: var(--portal-text);
 }
 
 /* ── QueryFilter (legacy .filter-card) ── */
@@ -136,7 +185,8 @@ body.portal-page .search-select {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 32px;
+  height: var(--portal-control-height-filter, 41px);
+  min-height: var(--portal-control-height-filter, 41px);
   padding: 4px 11px;
   border: 1px solid var(--portal-border-strong);
   border-radius: var(--portal-radius-sm);
@@ -169,18 +219,36 @@ body.portal-page .filter-date-range .portal-date-range__inner {
   width: 100%;
   box-sizing: border-box;
 }
+body.portal-page .filter-date-range,
+body.portal-page .portal-date-range {
+  height: var(--portal-control-height-filter, 41px);
+  max-height: var(--portal-control-height-filter, 41px);
+}
+body.portal-page .filter-date-range .portal-date-range__inner,
+body.portal-page .portal-date-range .portal-date-range__inner {
+  height: var(--portal-control-height-filter, 41px);
+  min-height: var(--portal-control-height-filter, 41px);
+  max-height: var(--portal-control-height-filter, 41px);
+  padding-top: 4px;
+  padding-bottom: 4px;
+  box-sizing: border-box;
+}
 body.portal-page .portal-date-range .filter-input,
 body.portal-page .filter-date-range .filter-input {
-  height: 30px;
+  height: var(--portal-control-line-height, 30px);
   border: none;
   background: transparent;
   padding: 0 4px;
   text-align: left;
   width: auto;
   max-width: none;
+  min-height: 0;
 }
 body.portal-page .filter-select,
-body.portal-page .search-select {
+body.portal-page .search-select,
+body.portal-page .portal-select,
+body.portal-page select.filter-select,
+body.portal-page select.portal-select {
   appearance: none;
   -webkit-appearance: none;
   padding-right: 32px;
@@ -188,6 +256,32 @@ body.portal-page .search-select {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 10px 6px;
+  pointer-events: auto !important;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+body.portal-page .portal-select-wrap,
+body.portal-page .portal-field__control {
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+body.portal-page .portal-field:has(.portal-select-ui.is-open),
+body.portal-page .portal-field:has(.portal-multi-select.is-open),
+body.portal-page .portal-field__control.portal-multi-select.is-open,
+body.portal-page .portal-select-wrap:has(.portal-select-ui.is-open) {
+  z-index: 90;
+}
+body.portal-page .filter-select:has(> option[value=""]:checked),
+body.portal-page .portal-select:has(> option[value=""]:checked),
+body.portal-page .search-select:has(> option[value=""]:checked) {
+  color: var(--portal-text-tertiary);
+}
+body.portal-page .filter-select option,
+body.portal-page .portal-select option,
+body.portal-page .search-select option {
+  color: var(--portal-text);
 }
 body.portal-page textarea,
 body.portal-page .form-textarea,
@@ -243,17 +337,6 @@ body.portal-page .portal-query-actions {
   border-top: none;
   box-sizing: border-box;
 }
-body.portal-page .filter-date-range,
-body.portal-page .portal-date-range {
-  height: 32px;
-  max-height: 32px;
-}
-body.portal-page .filter-date-range .portal-date-range__inner,
-body.portal-page .portal-date-range .portal-date-range__inner {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
-}
 body.portal-page .topbar .company-badge,
 body.portal-page .topbar-actions .company-badge {
   display: none !important;
@@ -265,8 +348,8 @@ body.portal-page .btn {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 32px;
-  padding: 4px 15px;
+  height: var(--portal-control-height, 32px);
+  padding: 0 15px;
   border-radius: var(--portal-radius-sm);
   font-size: var(--portal-font-size);
   font-family: inherit;
@@ -275,6 +358,8 @@ body.portal-page .btn {
   border: 1px solid transparent;
   white-space: nowrap;
   transition: all 0.15s;
+  line-height: var(--portal-line-height-px, 22px);
+  box-sizing: border-box;
 }
 body.portal-page .btn-primary {
   background: var(--portal-primary);

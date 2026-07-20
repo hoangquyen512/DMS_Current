@@ -5,14 +5,17 @@
 @import url("portal-mockup-bridge.css");
 
 body.portal-page {
-    font-family: var(--font-sans);
-    font-size: 14px;
+    font-family: var(--portal-font, var(--font-sans));
+    font-size: var(--portal-font-size, 14px);
     font-weight: 400;
-    background: var(--neutral-100);
+    line-height: var(--portal-line-height, 1.5715);
+    letter-spacing: normal;
+    background: var(--portal-bg, var(--neutral-100));
     min-height: 100vh;
-    color: var(--neutral-700);
+    color: var(--portal-text);
     padding: 0 0 32px;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body.portal-page.has-portal-switcher { padding-top: 96px; }
@@ -152,6 +155,7 @@ body.portal-page.has-portal-switcher .portal-header { top: 48px; }
     border-color: rgba(255,255,255,0.55);
 }
 .header-app-link__glyph { font-size: 14px; line-height: 1; }
+.header-app-link__icon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; }
 .header-user-btn {
     font-size: 13px; font-weight: 400; color: white; padding: 5px 12px;
     border-radius: 4px; background: var(--user-orange); border: none; cursor: pointer;

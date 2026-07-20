@@ -2,6 +2,7 @@
  * [WEB] DMS Portal — Design tokens
  * Nguồn: dms-portal-dev.finviet.com.vn (Ant Design Pro / ecodms)
  * Quét: 24/06/2026 — Browser MCP live (dashboard + /category/news/)
+ * Đồng bộ kích thước: 16/07/2026 — đo lại /category/news/ (SSO)
  */
 :root {
   /* Brand Finviet / ecodms */
@@ -48,15 +49,37 @@
   /* Layout */
   --portal-header-h: 56px;
   /* Typography — Ant Design 5 / ecodms (dms-portal-dev.finviet.com.vn) */
-  --portal-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --portal-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --portal-font-size: 14px;
   --portal-line-height: 1.5715;
-  --portal-letter-spacing: 0;
+  --portal-line-height-px: 22px;
+  --portal-letter-spacing: normal;
+  --portal-page-title-size: 20px;
+  --portal-page-title-weight: 600;
+  --portal-toolbar-title-size: 16px;
+
+  /*
+   * Control heights — đo live 16/07/2026 (/category/news/)
+   * Button / control mặc định Ant Design 5: 32px
+   * QueryFilter (option-render-style portal): Input/Select/Picker = 41px
+   */
+  --portal-control-height: 32px;
+  --portal-control-height-filter: 41px;
+  --portal-control-line-height: 30px;
+  --portal-pagination-item-size: 24px;
+  --portal-table-cell-padding: 8px;
+  --portal-page-padding-x: 40px;
+  --portal-page-padding-bottom: 32px;
+  --portal-query-filter-padding: 24px;
 
   /* Radius & shadow */
   --portal-radius: 8px;
   --portal-radius-sm: 6px;
   --portal-radius-xs: 4px;
+  --portal-radius-filter-card: 6px;
+  /* Dropdown panel (select xổ xuống) — Ant Design 5 */
+  --portal-radius-dropdown: 8px;
+  --portal-shadow-dropdown: 0 6px 16px 0 rgba(0, 0, 0, 0.08);
   --portal-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
   --portal-shadow-menu: 0 6px 20px rgba(0, 0, 0, 0.28);
 

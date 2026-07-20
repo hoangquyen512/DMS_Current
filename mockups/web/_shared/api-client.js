@@ -63,5 +63,58 @@
     getUserProfile: function () {
       return request('/api/user/profile');
     },
+    getDeliveryStaff: function (query) {
+      var params = new URLSearchParams();
+      if (query) {
+        Object.keys(query).forEach(function (key) {
+          if (query[key] !== undefined && query[key] !== '' && query[key] !== null) {
+            params.set(key, query[key]);
+          }
+        });
+      }
+      var qs = params.toString();
+      return request('/api/delivery-staff' + (qs ? '?' + qs : ''));
+    },
+    getDeliveryStaffById: function (id) {
+      return request('/api/delivery-staff/' + encodeURIComponent(id));
+    },
+    getAvailableDrivers: function (query) {
+      var params = new URLSearchParams();
+      if (query) {
+        Object.keys(query).forEach(function (key) {
+          if (query[key]) params.set(key, query[key]);
+        });
+      }
+      var qs = params.toString();
+      return request('/api/delivery-staff/available-drivers' + (qs ? '?' + qs : ''));
+    },
+    createDeliveryStaff: function (body) {
+      return request('/api/delivery-staff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    },
+    updateDeliveryStaff: function (id, body) {
+      return request('/api/delivery-staff/' + encodeURIComponent(id), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    },
+    deactivateDeliveryStaff: function (id, body) {
+      return request('/api/delivery-staff/' + encodeURIComponent(id) + '/deactivate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body || {}),
+      });
+    },
+    activateDeliveryStaff: function (id, body) {
+      return request('/api/delivery-staff/' + encodeURIComponent(id) + '/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body || {}),
+      });
+    },
   };
 })(window);
