@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>[WEB] MS-W-BC01 — Báo cáo tồn kho hiện tại tài sản</title>
+  <link rel="stylesheet" href="../../../../_shared/portal-tokens.css"/>
+  <link rel="stylesheet" href="../../../../_shared/portal-components.css"/>
   <style>
     :root{
       --bg:#f5f7fb;
@@ -127,111 +129,6 @@
       cursor:not-allowed;
     }
 
-    .multi-select{
-      position:relative;
-      width:100%;
-    }
-    .multi-select-control{
-      min-height:38px;
-      border:1px solid #d1d5db;
-      border-radius:9px;
-      background:#fff;
-      padding:5px 34px 5px 8px;
-      display:flex;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:5px;
-      cursor:pointer;
-      position:relative;
-    }
-    .multi-select-control:after{
-      content:'▾';
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      color:#64748b;
-      font-size:12px;
-    }
-    .multi-select.open .multi-select-control{
-      border-color:var(--blue);
-      box-shadow:0 0 0 3px rgba(37,99,235,.12);
-    }
-    .multi-select.disabled .multi-select-control{
-      background:#f3f4f6;
-      color:#9ca3af;
-      cursor:not-allowed;
-    }
-    .multi-placeholder{
-      color:#9ca3af;
-      padding:4px 2px;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      max-width:100%;
-      background:#eff6ff;
-      color:#1d4ed8;
-      border:1px solid #bfdbfe;
-      border-radius:999px;
-      padding:4px 8px;
-      font-size:12px;
-      font-weight:700;
-    }
-    .tag-remove{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:14px;
-      height:14px;
-      border-radius:50%;
-      color:#1d4ed8;
-      cursor:pointer;
-      font-size:14px;
-      line-height:14px;
-      user-select:none;
-    }
-    .tag-remove:hover{
-      background:#dbeafe;
-    }
-    .multi-dropdown{
-      display:none;
-      position:absolute;
-      left:0;
-      right:0;
-      top:calc(100% + 4px);
-      background:#fff;
-      border:1px solid #d1d5db;
-      border-radius:10px;
-      box-shadow:0 12px 30px rgba(15,23,42,.12);
-      z-index:50;
-      max-height:280px;
-      overflow:auto;
-      padding:8px;
-    }
-    .multi-select.open .multi-dropdown{display:block}
-    .multi-search{
-      height:34px;
-      margin-bottom:8px;
-    }
-    .multi-option{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 6px;
-      border-radius:8px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .multi-option:hover{background:#f8fafc}
-    .multi-option input{
-      width:16px;
-      height:16px;
-      margin:0;
-      cursor:pointer;
-      flex:0 0 auto;
-    }
     .field-help{
       margin-top:6px;
       font-size:12px;
@@ -363,7 +260,7 @@
           <div class="form-item">
             <label><span class="required">*</span> Công ty</label>
             <select id="company">
-              <option value="">Chọn công ty</option>
+              <option value="" selected hidden>Công ty</option>
               <option value="FINVIET - KPP" selected>CN0002866 - FINVIET - Kênh Phân Phối</option>
               <option value="FINVIET - DVVT">CN0549163 - FINVIET - Dịch Vụ Viễn Thông</option>
             </select>
@@ -377,7 +274,7 @@
           <div class="form-item">
             <label>Nhóm tài sản</label>
             <select id="assetGroup">
-              <option value="">Tất cả</option>
+              <option value="" selected hidden>Nhóm tài sản</option>
               <option value="Tài sản định danh">Tài sản định danh</option>
               <option value="Tài sản không định danh">Tài sản không định danh</option>
             </select>
@@ -385,24 +282,30 @@
 
           <div class="form-item">
             <label>Loại tài sản</label>
-            <div class="multi-select" id="assetTypeMulti">
-              <div class="multi-select-control" tabindex="0" data-placeholder="Tất cả loại tài sản">
-                <span class="multi-placeholder">Tất cả loại tài sản</span>
+            <div class="portal-multi-select" id="assetTypeMulti">
+              <div class="portal-multi-select__inner portal-multi-select__tags">
+                <span class="portal-multi-select__placeholder">Chọn loại tài sản</span>
               </div>
-              <div class="multi-dropdown">
-                <input class="multi-search" type="text" placeholder="Tìm loại tài sản" />
-                <label class="multi-option"><input type="checkbox" value="Tủ lạnh" /> <span>Tủ lạnh</span></label>
-                <label class="multi-option"><input type="checkbox" value="Máy POS" /> <span>Máy POS</span></label>
-                <label class="multi-option"><input type="checkbox" value="Bảng hiệu cửa hàng" /> <span>Bảng hiệu cửa hàng</span></label>
-                <label class="multi-option"><input type="checkbox" value="Vật phẩm trưng bày" /> <span>Vật phẩm trưng bày</span></label>
-              </div>
+              <span class="portal-multi-select__arrow"></span>
+              <ul class="portal-multi-select__dropdown">
+                <li class="portal-multi-select__option" data-value="Tủ lạnh">Tủ lạnh</li>
+                <li class="portal-multi-select__option" data-value="Máy POS">Máy POS</li>
+                <li class="portal-multi-select__option" data-value="Bảng hiệu cửa hàng">Bảng hiệu cửa hàng</li>
+                <li class="portal-multi-select__option" data-value="Vật phẩm trưng bày">Vật phẩm trưng bày</li>
+              </ul>
+              <select class="portal-multi-select__hidden" id="filterAssetType" multiple hidden>
+                <option value="Tủ lạnh">Tủ lạnh</option>
+                <option value="Máy POS">Máy POS</option>
+                <option value="Bảng hiệu cửa hàng">Bảng hiệu cửa hàng</option>
+                <option value="Vật phẩm trưng bày">Vật phẩm trưng bày</option>
+              </select>
             </div>
           </div>
 
           <div class="form-item">
             <label>Loại đối tượng tồn kho</label>
             <select id="objectType">
-              <option value="">Tất cả</option>
+              <option value="" selected hidden>Loại đối tượng tồn kho</option>
               <option value="Công ty">Công ty</option>
               <option value="NPP">NPP</option>
               <option value="Nhân viên">Nhân viên</option>
@@ -412,29 +315,47 @@
 
           <div class="form-item">
             <label>Đối tượng tồn kho</label>
-            <div class="multi-select disabled" id="objectCodeMulti">
-              <div class="multi-select-control" tabindex="0" data-placeholder="Chọn Loại đối tượng tồn kho trước">
-                <span class="multi-placeholder">Chọn Loại đối tượng tồn kho trước</span>
+            <div class="portal-multi-select is-disabled" id="objectCodeMulti" aria-disabled="true">
+              <div class="portal-multi-select__inner portal-multi-select__tags">
+                <span class="portal-multi-select__placeholder">Chọn Loại đối tượng tồn kho trước</span>
               </div>
-              <div class="multi-dropdown">
-                <input class="multi-search" type="text" placeholder="Tìm đối tượng tồn kho" />
-                <label class="multi-option" data-type="Công ty"><input type="checkbox" value="CN0002866" /> <span>CN0002866 - FINVIET - Kênh Phân Phối</span></label>
-                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP001" /> <span>NPP001 - NPP Miền Nam</span></label>
-                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP002" /> <span>NPP002 - NPP Miền Đông</span></label>
-                <label class="multi-option" data-type="NPP"><input type="checkbox" value="NPP003" /> <span>NPP003 - NPP Tây Nam</span></label>
-                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV001" /> <span>NV001 - Nguyễn Văn A</span></label>
-                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV002" /> <span>NV002 - Trần Thị B</span></label>
-                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV003" /> <span>NV003 - Lê Văn C</span></label>
-                <label class="multi-option" data-type="Nhân viên"><input type="checkbox" value="NV004" /> <span>NV004 - Phạm Thị D</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH001" /> <span>CH001 - Tạp hóa Minh Anh</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH002" /> <span>CH002 - Cửa hàng An Phát</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH003" /> <span>CH003 - Siêu thị Mini Hòa Bình</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH004" /> <span>CH004 - Tạp hóa Thanh Tâm</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH005" /> <span>CH005 - Cửa hàng Phúc Lộc</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH006" /> <span>CH006 - Tạp hóa Cô Ba</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH007" /> <span>CH007 - Đại lý Nam Phương</span></label>
-                <label class="multi-option" data-type="Cửa hàng"><input type="checkbox" value="CH008" /> <span>CH008 - Cửa hàng Việt Hưng</span></label>
-              </div>
+              <span class="portal-multi-select__arrow"></span>
+              <ul class="portal-multi-select__dropdown">
+                <li class="portal-multi-select__option" data-type="Công ty" data-value="CN0002866">CN0002866 - FINVIET - Kênh Phân Phối</li>
+                <li class="portal-multi-select__option" data-type="NPP" data-value="NPP001">NPP001 - NPP Miền Nam</li>
+                <li class="portal-multi-select__option" data-type="NPP" data-value="NPP002">NPP002 - NPP Miền Đông</li>
+                <li class="portal-multi-select__option" data-type="NPP" data-value="NPP003">NPP003 - NPP Tây Nam</li>
+                <li class="portal-multi-select__option" data-type="Nhân viên" data-value="NV001">NV001 - Nguyễn Văn A</li>
+                <li class="portal-multi-select__option" data-type="Nhân viên" data-value="NV002">NV002 - Trần Thị B</li>
+                <li class="portal-multi-select__option" data-type="Nhân viên" data-value="NV003">NV003 - Lê Văn C</li>
+                <li class="portal-multi-select__option" data-type="Nhân viên" data-value="NV004">NV004 - Phạm Thị D</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH001">CH001 - Tạp hóa Minh Anh</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH002">CH002 - Cửa hàng An Phát</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH003">CH003 - Siêu thị Mini Hòa Bình</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH004">CH004 - Tạp hóa Thanh Tâm</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH005">CH005 - Cửa hàng Phúc Lộc</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH006">CH006 - Tạp hóa Cô Ba</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH007">CH007 - Đại lý Nam Phương</li>
+                <li class="portal-multi-select__option" data-type="Cửa hàng" data-value="CH008">CH008 - Cửa hàng Việt Hưng</li>
+              </ul>
+              <select class="portal-multi-select__hidden" id="filterObjectCode" multiple hidden>
+                <option value="CN0002866">CN0002866 - FINVIET - Kênh Phân Phối</option>
+                <option value="NPP001">NPP001 - NPP Miền Nam</option>
+                <option value="NPP002">NPP002 - NPP Miền Đông</option>
+                <option value="NPP003">NPP003 - NPP Tây Nam</option>
+                <option value="NV001">NV001 - Nguyễn Văn A</option>
+                <option value="NV002">NV002 - Trần Thị B</option>
+                <option value="NV003">NV003 - Lê Văn C</option>
+                <option value="NV004">NV004 - Phạm Thị D</option>
+                <option value="CH001">CH001 - Tạp hóa Minh Anh</option>
+                <option value="CH002">CH002 - Cửa hàng An Phát</option>
+                <option value="CH003">CH003 - Siêu thị Mini Hòa Bình</option>
+                <option value="CH004">CH004 - Tạp hóa Thanh Tâm</option>
+                <option value="CH005">CH005 - Cửa hàng Phúc Lộc</option>
+                <option value="CH006">CH006 - Tạp hóa Cô Ba</option>
+                <option value="CH007">CH007 - Đại lý Nam Phương</option>
+                <option value="CH008">CH008 - Cửa hàng Việt Hưng</option>
+              </select>
             </div>
             <div class="field-help" id="objectCodeHelp">Vui lòng chọn Loại đối tượng tồn kho trước.</div>
           </div>
@@ -753,146 +674,39 @@
     }
 
     function getMultiValues(multiId){
-      return Array.from(document.querySelectorAll(`#${multiId} input[type="checkbox"]:checked`)).map(input => input.value);
-    }
-
-    function renderMultiTags(multiId){
-      const multi = document.getElementById(multiId);
-      const control = multi.querySelector('.multi-select-control');
-      const checked = Array.from(multi.querySelectorAll('input[type="checkbox"]:checked'));
-      const placeholder = control.dataset.placeholder;
-
-      control.innerHTML = '';
-
-      if (checked.length === 0) {
-        const placeholderNode = document.createElement('span');
-        placeholderNode.className = 'multi-placeholder';
-        placeholderNode.textContent = placeholder;
-        control.appendChild(placeholderNode);
-        return;
-      }
-
-      checked.forEach(input => {
-        const text = input.closest('.multi-option').querySelector('span').textContent.trim();
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.dataset.value = input.value;
-        tag.innerHTML = `<span>${text}</span><span class="tag-remove" title="Xóa">×</span>`;
-        control.appendChild(tag);
-      });
+      return window.PortalMockupWidgets.getMultiSelectValues(multiId);
     }
 
     function clearMulti(multiId){
-      document.querySelectorAll(`#${multiId} input[type="checkbox"]`).forEach(input => {
-        input.checked = false;
-      });
-      renderMultiTags(multiId);
-    }
-
-    function closeAllMulti(exceptId){
-      document.querySelectorAll('.multi-select.open').forEach(multi => {
-        if (!exceptId || multi.id !== exceptId) {
-          multi.classList.remove('open');
-        }
-      });
-    }
-
-    function setupMultiSelect(multiId, afterChange){
-      const multi = document.getElementById(multiId);
-      const control = multi.querySelector('.multi-select-control');
-      const search = multi.querySelector('.multi-search');
-
-      control.addEventListener('click', event => {
-        const remove = event.target.closest('.tag-remove');
-
-        if (remove) {
-          event.stopPropagation();
-          const tag = remove.closest('.tag');
-          const checkbox = Array.from(multi.querySelectorAll('input[type="checkbox"]')).find(item => item.value === tag.dataset.value);
-          if (checkbox) checkbox.checked = false;
-          renderMultiTags(multiId);
-          if (typeof afterChange === 'function') afterChange();
-          return;
-        }
-
-        if (multi.classList.contains('disabled')) {
-          const help = document.getElementById('objectCodeHelp');
-          if (help) help.classList.add('show');
-          return;
-        }
-
-        closeAllMulti(multiId);
-        multi.classList.toggle('open');
-        if (multi.classList.contains('open')) {
-          search.value = '';
-          filterMultiOptions(multiId, '');
-          search.focus();
-        }
-      });
-
-      multi.querySelectorAll('.multi-option').forEach(option => {
-        option.addEventListener('click', event => {
-          event.stopPropagation();
-          const checkbox = option.querySelector('input[type="checkbox"]');
-          if (event.target !== checkbox) {
-            checkbox.checked = !checkbox.checked;
-          }
-          renderMultiTags(multiId);
-          if (typeof afterChange === 'function') afterChange();
-        });
-      });
-
-      search.addEventListener('click', event => event.stopPropagation());
-
-      search.addEventListener('input', () => {
-        filterMultiOptions(multiId, search.value.trim().toLowerCase());
-      });
-    }
-
-    function filterMultiOptions(multiId, keyword){
-      const multi = document.getElementById(multiId);
-      multi.querySelectorAll('.multi-option').forEach(option => {
-        const baseVisible = option.dataset.baseVisible !== 'false';
-        const textMatch = option.innerText.toLowerCase().includes(keyword);
-        option.style.display = baseVisible && textMatch ? 'flex' : 'none';
-      });
+      window.PortalMockupWidgets.clearMultiSelect(multiId);
     }
 
     function refreshObjectOptions(){
       const selectedType = objectType.value;
       const objectMulti = document.getElementById('objectCodeMulti');
-      const control = objectMulti.querySelector('.multi-select-control');
+      const placeholder = objectMulti.querySelector('.portal-multi-select__placeholder');
       const help = document.getElementById('objectCodeHelp');
 
-      objectMulti.classList.remove('open');
-      objectMulti.querySelectorAll('input[type="checkbox"]').forEach(input => {
-        input.checked = false;
-      });
+      clearMulti('objectCodeMulti');
 
       if (!selectedType) {
-        objectMulti.classList.add('disabled');
-        control.dataset.placeholder = 'Chọn Loại đối tượng tồn kho trước';
+        window.PortalMockupWidgets.setMultiSelectDisabled('objectCodeMulti', true);
+        if (placeholder) placeholder.textContent = 'Chọn Loại đối tượng tồn kho trước';
         if (help) help.classList.remove('show');
-
-        objectMulti.querySelectorAll('.multi-option').forEach(option => {
-          option.dataset.baseVisible = 'false';
+        objectMulti.querySelectorAll('.portal-multi-select__option').forEach(option => {
           option.style.display = 'none';
-          option.querySelector('input').disabled = true;
+          option.setAttribute('aria-disabled', 'true');
         });
       } else {
-        objectMulti.classList.remove('disabled');
-        control.dataset.placeholder = 'Tất cả đối tượng tồn kho';
+        window.PortalMockupWidgets.setMultiSelectDisabled('objectCodeMulti', false);
+        if (placeholder) placeholder.textContent = 'Chọn đối tượng tồn kho';
         if (help) help.classList.remove('show');
-
-        objectMulti.querySelectorAll('.multi-option').forEach(option => {
+        objectMulti.querySelectorAll('.portal-multi-select__option').forEach(option => {
           const visible = option.dataset.type === selectedType;
-          option.dataset.baseVisible = visible ? 'true' : 'false';
-          option.style.display = visible ? 'flex' : 'none';
-          option.querySelector('input').disabled = !visible;
+          option.style.display = visible ? '' : 'none';
+          option.setAttribute('aria-disabled', visible ? 'false' : 'true');
         });
       }
-
-      renderMultiTags('objectCodeMulti');
     }
 
     function getCellText(row){
@@ -964,14 +778,16 @@
       URL.revokeObjectURL(url);
     }
 
-    document.addEventListener('click', event => {
-      if (!event.target.closest('.multi-select')) {
-        closeAllMulti();
+    document.getElementById('objectCodeMulti').addEventListener('click', function () {
+      if (this.classList.contains('is-disabled')) {
+        const help = document.getElementById('objectCodeHelp');
+        if (help) help.classList.add('show');
       }
-    });
+    }, true);
 
-    setupMultiSelect('assetTypeMulti', applyFilter);
-    setupMultiSelect('objectCodeMulti', applyFilter);
+    ['assetTypeMulti', 'objectCodeMulti'].forEach(function (id) {
+      document.getElementById(id).addEventListener('portal-multiselect-change', applyFilter);
+    });
 
     objectType.addEventListener('change', () => {
       refreshObjectOptions();
@@ -984,9 +800,15 @@
     document.getElementById('resetBtn').addEventListener('click', resetFilter);
     document.getElementById('exportBtn').addEventListener('click', exportVisibleRows);
 
-    renderMultiTags('assetTypeMulti');
-    refreshObjectOptions();
-    applyFilter();
+    function bootMulti(){
+      if (!window.PortalMockupWidgets || !window.PortalMockupWidgets.getMultiSelectValues) {
+        setTimeout(bootMulti, 50);
+        return;
+      }
+      refreshObjectOptions();
+      applyFilter();
+    }
+    bootMulti();
   </script>
 <script src="../../../../menu-tree.js"></script>
 <script src="../../../../_shared/portal-menu.js"></script>
