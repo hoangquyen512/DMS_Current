@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="icon" type="image/png" href="_shared/salesman-app-icon.png"/>
 <title>[WEB] DMS Portal — Dashboard điều hành</title>
 <link rel="stylesheet" href="_shared/portal-tokens.css"/>
 <link rel="stylesheet" href="_shared/portal-fonts.css"/>
@@ -271,6 +272,7 @@ a { text-decoration: none; color: inherit; }
     border-color: rgba(255,255,255,0.55);
 }
 .header-app-link__glyph { font-size: 14px; line-height: 1; flex-shrink: 0; }
+.header-app-link__icon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; }
 
 .header-user-btn {
     display: flex;
@@ -339,7 +341,7 @@ a { text-decoration: none; color: inherit; }
     <nav class="nav-l1" id="navL1"></nav>
     <div class="header-right">
       <a class="header-app-link" href="../mobile/main.html" title="Mở Salesman App (mockup mobile)">
-        <span class="header-app-link__glyph" aria-hidden="true">📱</span>
+        <img class="header-app-link__icon" src="_shared/salesman-app-icon.png" alt="" aria-hidden="true"/>
         <span>Salesman App</span>
       </a>
       <span class="portal-tag portal-tag--orange">Công ty: FINVIET</span>
@@ -376,7 +378,7 @@ a { text-decoration: none; color: inherit; }
             <div class="portal-field field">
               <label class="portal-field__label" for="dashFilterCompany">* Công ty</label>
               <div class="portal-field__control portal-select-wrap">
-                <select class="portal-select control" id="dashFilterCompany">
+                <select class="portal-select control" id="dashFilterCompany" data-clearable="false">
                   <option selected>Công ty TNHH FINVIET</option>
                   <option>Công ty TNHH NPP HCM</option>
                   <option>Công ty TNHH NPP Bình Dương</option>
@@ -410,7 +412,7 @@ a { text-decoration: none; color: inherit; }
               <label class="portal-field__label" for="dashFilterNpp">Nhà phân phối</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select control" id="dashFilterNpp">
-                  <option>Tất cả NPP</option>
+                  <option value="" selected hidden>Nhà phân phối</option>
                   <option>NPP Bình Tân</option>
                   <option>NPP Thủ Đức</option>
                   <option>NPP Đà Nẵng</option>
@@ -421,7 +423,7 @@ a { text-decoration: none; color: inherit; }
               <label class="portal-field__label" for="dashFilterChannel">Kênh bán hàng</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select control" id="dashFilterChannel">
-                  <option>Tất cả kênh</option>
+                  <option value="" selected hidden>Kênh bán hàng</option>
                   <option>GT</option>
                   <option>MT</option>
                   <option>Online</option>
@@ -432,6 +434,7 @@ a { text-decoration: none; color: inherit; }
               <label class="portal-field__label" for="dashFilterGroup">Nhóm dashboard</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select control" id="dashFilterGroup">
+                  <option value="" selected hidden>Nhóm báo cáo</option>
                   <option>Tổng hợp</option>
                   <option>Bán hàng</option>
                   <option>Viếng thăm</option>
@@ -836,7 +839,7 @@ a { text-decoration: none; color: inherit; }
 </main>
 
 <button class="chat-fab" title="Hỗ trợ">💬</button>
-<div class="dev-bar">MAIN · Dashboard điều hành — <span id="api-health">API: …</span> — <a href="components-gallery.html">Component Gallery</a> · <a href="../mobile/main.html">Salesman App →</a></div>
+<div class="dev-bar">MAIN · Dashboard điều hành — <span id="api-health">API: …</span> — <a href="components-gallery.html">Component Gallery</a> · <a href="ho-tro-phan-mem/xu-ly-yeu-cau/MS-W-HT01-xu-ly-yeu-cau-onboarding-npp.html">HT01 Xử lý yêu cầu</a> · <a href="../mobile/main.html">Salesman App →</a></div>
 
 <script src="_shared/api-client.js"></script>
 <script src="_shared/portal-mockup-widgets.js"></script>

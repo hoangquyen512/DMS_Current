@@ -216,13 +216,19 @@
         "A":  ""
     },
     {
-        "C":  "Cấu hình khu vực giao hàng theo tuyến",
+        "C":  "Tuyến Giao Hàng",
         "D":  "",
         "B":  "",
         "A":  ""
     },
     {
         "C":  "Báo cáo đối soát tiền thu giao hàng",
+        "D":  "",
+        "B":  "",
+        "A":  ""
+    },
+    {
+        "C":  "Nhân viên giao hàng",
         "D":  "",
         "B":  "",
         "A":  ""
