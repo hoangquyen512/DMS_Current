@@ -23,7 +23,12 @@ mockups/
 ├── README.md              ← File này
 ├── templates/
 │   ├── mobile-template.html   ← Base template cho Salesman/Manager App
-│   └── web-template.html      ← Base template cho Portal HO/NPP
+│   ├── web-template.html      ← Base template cho Portal HO/NPP
+│   ├── web-date-range-picker-snippet.html  ← Date range calendar + allowClear ×
+│   ├── web-select-snippet.html             ← ⭐ Select one choice + allowClear × (filter + Create/Edit)
+│   ├── web-multi-select-snippet.html       ← ⭐ Select multi choice
+│   ├── web-portal-crud-list-modal-snippet.html  ← ⭐ CRUD list + Create/Edit popup + Select × (MS-W-DL04)
+│   └── web-portal-import-excel-snippet.html     ← Import Excel form ngang
 ├── mobile/                    ← Mockup Salesman App (main.html = entry 4 tab)
 │   ├── main.html
 │   ├── vieng-tham/
@@ -37,7 +42,22 @@ mockups/
     └── …/MS-WXX-ten-man-hinh.html
 ```
 
-**Component portal:** xem `web/_shared/README-COMPONENTS.md` và `design-system/web/patterns/list-screen.md`. Mọi trang con load `portal-chrome.css` → tự có visual Ant Design Pro (kể cả HTML class cũ).
+**Component portal:** xem `web/_shared/README-COMPONENTS.md` và `design-system/web/patterns/list-screen.md`.  
+**Chuẩn CRUD [WEB]:** `design-system/web/patterns/portal-crud-list-modal-pattern.md` (reference **MS-W-DL04**). Mọi trang con load `portal-chrome.css` → tự có visual Ant Design Pro (kể cả HTML class cũ).
+
+### Quy tắc Select (bắt buộc)
+
+- **Không** dùng option `Tất cả`, `Tất cả …`, `-- Tất cả --`.
+- **Không** dùng option trống `<option value=""></option>` (sẽ hiện dòng trống trên list).
+- **Placeholder = đúng tên trường** (label), ví dụ: `<option value="" selected hidden>Khu vực</option>` — không dùng chữ `Chọn` chung.
+- Có giá trị mặc định: placeholder chỉ `hidden` (không `selected`) + option thật `selected`.
+- Cascade (Vùng → Khu vực → …): **không** `disabled` cấp con — luôn click được; chưa chọn cha thì chỉ còn placeholder.
+- **Dropdown xổ xuống bo tròn 8px** (`--portal-radius-dropdown`): panel `.portal-select-ui__dropdown` / `.portal-multi-select__dropdown` + shadow Ant Design. Native OS list không style được — mockup dùng UI custom (tự bật qua `portal-chrome.js` → `portal-mockup-widgets.js`).
+- **allowClear (Select one choice):** có placeholder `value=""` → nút **×** trên control; click lại option đang chọn cũng bỏ chọn. Field bắt buộc: `data-clearable="false"`. **Create/Edit:** select tùy chọn bắt buộc có × (`form-select` cũng được enhance). Spec: `design-system/web/components/select.md` · Snippet: `templates/web-select-snippet.html`.
+- **Multi-select (chọn nhiều):** bắt buộc `.portal-multi-select` — tag trong ô, dropdown đánh dấu đã chọn (tick ✓), ô tự giãn. Spec: `design-system/web/components/multi-select.md` · Snippet: `templates/web-multi-select-snippet.html`. **CẤM** tự viết `.multi-select` riêng.
+- **Date range — calendar popup:** mọi `.portal-date-range` click mở lịch (bo tròn 8px). **allowClear:** nút **×** trên ô khi đã có ngày. Tự load qua `portal-chrome.js` → `portal-date-range-picker.js`. Spec: `design-system/web/components/date-range-picker.md`. Trang custom calendar: `data-date-range-custom="1"`.
+- Template: `templates/web-template.html` (comment đầu file).
+- Select phải click được (chevron `pointer-events: none`).
 
 ---
 
@@ -83,19 +103,29 @@ mockups/[platform]/[MS-code]-[ten-man-hinh].html
 
 ## 🎨 Multi-state trong 1 file
 
-Mỗi file HTML nên có 2-3 states hiển thị cạnh nhau:
+### [APP] Mobile — Full-flow (mặc định)
+
+- **Một khung phone** duy nhất; các màn (list → form → confirm…) là `.screen` ẩn/hiện **bên trong** `.phone-screen`.
+- User/reviewer **bấm Back, nút hành động, bottom sheet** như app thật — **không** dùng thanh tab dev trên đầu file.
+- Mẫu: `mobile/vieng-tham/dat-hang/MS-A-DH01-bang-gia-si-full-flow.html`
+
 ```html
-<!-- State 1: Default — có data -->
-<div class="phone">...</div>
-
-<!-- State 2: Empty state -->
-<div class="phone">...</div>
-
-<!-- State 3: Error (nếu cần) -->
-<div class="phone">...</div>
+<div class="phone">
+  <div class="phone-screen">
+    <div class="screen" id="scr-list">...</div>
+    <div class="screen active" id="scr-form">...</div>
+    <div class="screen" id="scr-confirm">...</div>
+  </div>
+</div>
 ```
 
-→ Mở file → thấy cả 3 states cùng lúc, dễ so sánh và review.
+### [WEB] Portal — Switcher bar
+
+Dùng `.switcher` + `.screen-wrapper` theo `templates/web-template.html` (một state hiển thị mỗi lần).
+
+### [APP] Gallery / so sánh layout (ngoại lệ)
+
+Chỉ `components-gallery.html` hoặc file gallery được ghi rõ mới xếp **nhiều phone cạnh nhau** để so component — **không** áp dụng cho mockup tính năng full-flow.
 
 ---
 

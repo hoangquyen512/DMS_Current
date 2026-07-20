@@ -24,8 +24,9 @@ Mỗi **Level 1** là một thư mục. Bên trong lồng tiếp theo **Level 2 
 |------|--------|
 | Giám sát → Định tuyến | `giam-sat/dinh-tuyen/` |
 | Giám sát → Giao hàng → Quản lý đơn giao hàng | `giam-sat/giao-hang/quan-ly-don-giao-hang/WEB-CP-B3-don-giao-hang-phan-bo.html` |
-| Giám sát → Giao hàng → Cấu hình khu vực theo tuyến | `giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen/WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html` |
+| Giám sát → Giao hàng → Tuyến Giao Hàng | `giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen/WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html` |
 | Giám sát → Giao hàng → Báo cáo đối soát tiền thu | `giam-sat/giao-hang/bao-cao-doi-soat-tien-thu-giao-hang/MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html` |
+| Giám sát → Giao hàng → Nhân viên giao hàng | `giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang/index.html` → `MS-W-DL04-danh-sach-nhan-vien-giao-hang.html` |
 | Danh mục → CTTB → Thông tin trả thưởng theo giai đoạn | `danh-muc/chuong-trinh-trung-bay/thong-tin-tra-thuong-theo-giai-doan/` |
 | Danh mục → Tài sản → Chuyển kho tài sản | `danh-muc/tai-san/chuyen-kho-tai-san/` |
 

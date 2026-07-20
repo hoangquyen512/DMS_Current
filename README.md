@@ -16,7 +16,7 @@ DMS_Salesman_mockup/
 ├── README.md                 ← File này
 ├── mockups/
 │   ├── README.md             ← Hướng dẫn Visily workflow
-│   ├── templates/            ← web-template.html, mobile-template.html
+│   ├── templates/            ← web-template.html, mobile-template.html, web-date-range-picker-snippet.html
 │   ├── mobile/               ← Mockup Salesman App
 │   └── web/                  ← Mockup DMS Portal (main.html = entry)
 ├── design-system/
@@ -48,6 +48,8 @@ cd DMS_Salesman_mockup
 ### Import vào Visily
 
 Xem chi tiết trong `mockups/README.md`.
+
+**[APP] Mobile full-flow:** một khung phone, điều hướng trong app — **không** tab switcher dev. Xem `mockups/mobile/_shared/MOCKUP-MOBILE-FULL-FLOW.md`.
 
 ---
 
