@@ -170,7 +170,35 @@
   </div>
 </div>
 
-<!-- DETAIL / IMPORT: copy web-portal-import-excel-snippet.html khi cần Import -->
+<!-- DETAIL: popup trên list — không tách trang (deep-link ?detail={id}) -->
+<div class="portal-modal-mask" id="detailModal" hidden>
+  <div class="portal-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" style="width:min(860px,96vw)">
+    <div class="portal-modal__hd">
+      <h2 class="portal-modal__title" id="detailTitle">Chi tiết</h2>
+      <button type="button" class="portal-modal__close" data-close-detail aria-label="Đóng">×</button>
+    </div>
+    <div class="portal-modal__bd">
+      <div class="portal-form-grid">
+        <div class="portal-field">
+          <div class="portal-label">Mã</div>
+          <div class="portal-readonly" id="dDetailCode">—</div>
+        </div>
+        <div class="portal-field">
+          <div class="portal-label">Trạng thái</div>
+          <div id="dDetailStatus">—</div>
+        </div>
+        <!-- Thêm field / bảng dòng hàng theo nghiệp vụ.
+             VD đơn giao hàng: cột Số lượng đặt + Số lượng đã giao (chỉ xem, đồng bộ App). -->
+      </div>
+    </div>
+    <div class="portal-modal__ft">
+      <button type="button" class="portal-btn portal-btn--default" data-close-detail>Đóng</button>
+      <!-- Thao tác ngữ cảnh: Chỉnh sửa / Đổi tài xế / Hoàn thành đơn hàng… -->
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT: copy web-portal-import-excel-snippet.html khi cần Import -->
 
 <script src="{BASE}menu-tree.js"></script>
 <script src="{BASE}_shared/portal-menu.js"></script>
