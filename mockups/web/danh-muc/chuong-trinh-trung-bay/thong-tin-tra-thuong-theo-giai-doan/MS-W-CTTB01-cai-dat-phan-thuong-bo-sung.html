@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
@@ -818,12 +818,14 @@ document.addEventListener('DOMContentLoaded', function(){
           <div class="filter-field">
             <div class="filter-label">Tab cấu hình</div>
             <select class="filter-select active">
-              <option>Hạn mức trưng bày</option>
+              <option value="" hidden>Tab cấu hình</option>
+              <option selected>Hạn mức trưng bày</option>
             </select>
           </div>
           <div class="filter-field">
             <div class="filter-label">Hạn mức đang xem</div>
             <select class="filter-select">
+              <option value="" selected hidden>Hạn mức đang xem</option>
               <option>HM-001 - Hạn mức Vàng</option>
               <option>HM-002 - Hạn mức Bạc</option>
             </select>
@@ -1340,14 +1342,14 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
           <div class="filter-field">
             <div class="filter-label">* Công ty</div>
             <select class="filter-select">
-              <option value="">Tất cả công ty</option>
+              <option value="" selected hidden>Công ty</option>
               <option>FVC - Finviet</option>
             </select>
           </div>
           <div class="filter-field">
             <div class="filter-label">Trạng thái</div>
             <select class="filter-select">
-              <option value="">Tất cả</option>
+              <option value="" selected hidden>Trạng thái</option>
               <option>Hoạt động</option>
               <option>Không hoạt động</option>
             </select>
@@ -1372,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', function(){ switchScreen(1); });
           </div>
           <div class="filter-field">
             <div class="filter-label">{Filter khác}</div>
-            <select class="filter-select"><option value="">Tất cả</option></select>
+            <select class="filter-select"><option value="" selected hidden>Ngày tạo — {Filter khác}</option></select>
           </div>
         </div>
       </div>

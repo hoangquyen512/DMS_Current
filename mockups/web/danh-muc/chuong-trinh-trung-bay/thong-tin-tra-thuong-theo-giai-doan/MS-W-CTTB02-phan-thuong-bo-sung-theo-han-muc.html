@@ -671,7 +671,11 @@ td.actions { text-align: right; white-space: nowrap; }
           </div>
           <div class="filter-field">
             <div class="filter-label">Loại trả thưởng</div>
-            <select class="filter-select"><option>Theo kỳ</option></select>
+            <select class="filter-select">
+              <option value="" hidden>Loại trả thưởng</option>
+              <option selected>Theo kỳ</option>
+              <option>Theo hạn mức</option>
+            </select>
           </div>
         </div>
       </div>
