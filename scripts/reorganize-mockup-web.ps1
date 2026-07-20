@@ -37,10 +37,15 @@ $fileFolderMap = @{
     'MS-W-DL02-cai-dat-vung-giao-hang-tai-xe.html'                    = 'giam-sat/giao-hang/cai-dat-vung-giao-hang-cho-tai-xe'
     'WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html'                          = 'giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen'
     'MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html'              = 'giam-sat/giao-hang/bao-cao-doi-soat-tien-thu-giao-hang'
+    'MS-W-DL04-danh-sach-nhan-vien-giao-hang.html'                    = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang'
+    'MS-W-DL04-tao-moi-nhan-vien-giao-hang.html'                      = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang'
+    'MS-W-DL04-chi-tiet-nhan-vien-giao-hang.html'                     = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang'
+    'MS-W-DL04-chinh-sua-nhan-vien-giao-hang.html'                    = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang'
     'US-AI-check-button-states.html'                                  = 'danh-muc/xac-minh/yeu-cau-xac-minh'
     'MS-W-BCNXT01-nhap-xuat-ton-tai-san.html'                         = 'danh-muc/tai-san/bao-cao-tai-san/bao-cao-nhap-xuat-ton-tai-san'
     'MS-W-BCKKTTTS01-bao-cao-kiem-ke-tinh-trang-tai-san.html'         = 'danh-muc/tai-san/bao-cao-tai-san/bao-cao-kiem-ke-tai-san'
     'MS-W-BCKTTKSP01-bao-cao-lich-su-kiem-tra-ton-kho-san-pham.html' = 'danh-muc/tai-san/bao-cao-tai-san/bao-cao-kiem-ke-tai-san'
+    'MS-W-HT01-xu-ly-yeu-cau-onboarding-npp.html'                     = 'ho-tro-phan-mem/xu-ly-yeu-cau'
 }
 
 $explicitHrefsById = @{
@@ -55,6 +60,9 @@ $explicitHrefsById = @{
     'quan-ly-don-giao-hang'                         = 'giam-sat/giao-hang/quan-ly-don-giao-hang/WEB-CP-B3-don-giao-hang-phan-bo.html'
     'cau-hinh-khu-vuc-giao-hang-theo-tuyen'         = 'giam-sat/giao-hang/cau-hinh-khu-vuc-giao-hang-theo-tuyen/WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html'
     'bao-cao-doi-soat-tien-thu-giao-hang'           = 'giam-sat/giao-hang/bao-cao-doi-soat-tien-thu-giao-hang/MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html'
+    'quan-ly-nhan-vien-giao-hang'                   = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang/index.html'
+    'nhan-vien-giao-hang'                           = 'giam-sat/giao-hang/quan-ly-nhan-vien-giao-hang/index.html'
+    'xu-ly-yeu-cau'                                 = 'ho-tro-phan-mem/xu-ly-yeu-cau/MS-W-HT01-xu-ly-yeu-cau-onboarding-npp.html'
 }
 
 function Ensure-Dir([string]$relPath) {

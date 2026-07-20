@@ -17,7 +17,7 @@ WEB_MAP = {
 
 BREADCRUMBS = {
     "WEB-CP-B3-don-giao-hang-phan-bo.html": ("Quản lý đơn giao hàng", "Quản lý đơn giao hàng"),
-    "WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html": ("Cấu hình khu vực giao hàng theo tuyến", "Cấu hình khu vực giao hàng theo Tuyến giao hàng"),
+    "WEB-CP-A4-cau-hinh-khu-vuc-tai-xe.html": ("Tuyến Giao Hàng", "Tuyến Giao Hàng"),
     "MS-W-DL03-bao-cao-doi-soat-tien-thu-giao-hang.html": ("Báo cáo đối soát tiền thu", "Báo cáo đối soát tiền thu giao hàng"),
 }
 
