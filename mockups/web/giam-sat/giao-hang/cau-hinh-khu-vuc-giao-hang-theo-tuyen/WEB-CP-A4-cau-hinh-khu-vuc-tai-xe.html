@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>[WEB] Cấu hình khu vực giao hàng theo Tuyến</title>
+<title>[WEB] Tuyến Giao Hàng</title>
 <style>
 :root {
     --primary-50: #EFF6FF; --primary-100: #DBEAFE; --primary-500: #3B82F6; --primary-600: #2563EB; --primary-700: #1D4ED8;
@@ -14,7 +14,7 @@
     --info-50: #F0F9FF; --info-100: #E0F2FE; --info-700: #0369A1;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; background: var(--neutral-100); min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--neutral-100); min-height: 100vh; }
 .app { display: flex; min-height: 100vh; }
 .main { flex: 1; background: var(--neutral-50); overflow-y: auto; }
 
@@ -284,9 +284,9 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
         <span class="portal-breadcrumb__sep">/</span>
         <a href="#">Giao hàng</a>
         <span class="portal-breadcrumb__sep">/</span>
-        <span class="portal-breadcrumb__current">Cấu hình khu vực giao hàng theo tuyến</span>
+        <span class="portal-breadcrumb__current">Tuyến Giao Hàng</span>
       </nav>
-      <h1 class="portal-page-title">Cấu hình khu vực giao hàng theo Tuyến giao hàng</h1>
+      <h1 class="portal-page-title">Tuyến Giao Hàng</h1>
 
       <div class="portal-card portal-query-filter">
         <div class="portal-card__hd">Tìm kiếm theo</div>
@@ -311,7 +311,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
               <label class="portal-field__label" for="filterStatus">Trạng thái tuyến</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select filter-select" id="filterStatus">
-                  <option value="">Tất cả</option>
+                  <option value="" selected hidden>Trạng thái tuyến</option>
                   <option value="active">Đang hoạt động</option>
                   <option value="inactive">Ngưng</option>
                 </select>
@@ -321,7 +321,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
               <label class="portal-field__label" for="filterDriverStatus">Gán tài xế</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select filter-select" id="filterDriverStatus">
-                  <option value="">Tất cả</option>
+                  <option value="" selected hidden>Gán tài xế</option>
                   <option value="has">Đã gán</option>
                   <option value="none">Chưa gán</option>
                 </select>
@@ -331,31 +331,31 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
               <label class="portal-field__label" for="filterRegion">Vùng</label>
               <div class="portal-field__control portal-select-wrap">
                 <select class="portal-select filter-select" id="filterRegion">
-                  <option value="">Tất cả vùng</option>
+                  <option value="" selected hidden>Vùng</option>
                 </select>
               </div>
             </div>
             <div class="portal-field">
               <label class="portal-field__label" for="filterArea">Khu vực</label>
               <div class="portal-field__control portal-select-wrap">
-                <select class="portal-select filter-select" id="filterArea" disabled>
-                  <option value="">Tất cả khu vực</option>
+                <select class="portal-select filter-select" id="filterArea">
+                  <option value="" selected hidden>Khu vực</option>
                 </select>
               </div>
             </div>
             <div class="portal-field">
               <label class="portal-field__label" for="filterProvince">Tỉnh / TP</label>
               <div class="portal-field__control portal-select-wrap">
-                <select class="portal-select filter-select" id="filterProvince" disabled>
-                  <option value="">Tất cả tỉnh/TP</option>
+                <select class="portal-select filter-select" id="filterProvince">
+                  <option value="" selected hidden>Tỉnh / TP</option>
                 </select>
               </div>
             </div>
             <div class="portal-field">
               <label class="portal-field__label" for="filterWard">Phường / Xã</label>
               <div class="portal-field__control portal-select-wrap">
-                <select class="portal-select filter-select" id="filterWard" disabled>
-                  <option value="">Tất cả phường/xã</option>
+                <select class="portal-select filter-select" id="filterWard">
+                  <option value="" selected hidden>Phường / Xã</option>
                 </select>
               </div>
             </div>
@@ -430,7 +430,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
         <div class="config-section-title">2. Gán tài xế cho tuyến</div>
         <div class="scope-field driver-field">
           <span class="scope-label">Tài xế</span>
-          <select class="scope-select" id="cfgDriver"><option value="">— Chưa gán —</option></select>
+          <select class="scope-select" id="cfgDriver"><option value="" selected hidden>— Chưa gán —</option></select>
         </div>
       </div>
 
@@ -450,7 +450,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
               </div>
               <div class="scope-field">
                 <span class="scope-label required">Khu vực</span>
-                <select class="scope-select" id="leftScopeArea" disabled><option value="">— Chọn vùng trước —</option></select>
+                <select class="scope-select" id="leftScopeArea" disabled><option value="" selected hidden>— Chọn vùng trước —</option></select>
               </div>
               <div class="scope-field">
                 <span class="scope-label required">Tỉnh / TP (nhiều)</span>
@@ -518,6 +518,7 @@ td.audit-cell { font-size: 12px; color: var(--neutral-600); white-space: nowrap;
 
 <div class="toast" id="toast"></div>
 
+<script src="../../../_shared/api-client.js"></script>
 <script>
 /* ========== DATA ========== */
 const TREE = {
@@ -547,7 +548,7 @@ const TREE = {
   }}
 };
 
-const DRIVERS = [
+let DRIVERS = [
   { id:'TX-001', name:'Nguyễn Văn Tài', phone:'0901 234 567', npp:'NPP-HCM-01', status:'active' },
   { id:'TX-002', name:'Trần Minh Đức', phone:'0902 345 678', npp:'NPP-HCM-01', status:'active' },
   { id:'TX-003', name:'Lê Hoàng Nam', phone:'0903 456 789', npp:'NPP-HCM-01', status:'active' },
@@ -555,6 +556,24 @@ const DRIVERS = [
   { id:'TX-005', name:'Võ Thanh Sơn', phone:'0905 678 901', npp:'NPP-HCM-02', status:'off' },
   { id:'TX-006', name:'Đỗ Minh Quân', phone:'0906 789 012', npp:'NPP-HCM-01', status:'active' }
 ];
+
+function loadDriversFromApi(cb) {
+  if (!window.DMS_API || !window.DMS_API.getDeliveryStaff) { if (cb) cb(); return; }
+  window.DMS_API.getDeliveryStaff({ status: 'ACTIVE' }).then(function (res) {
+    if (res.items && res.items.length) {
+      DRIVERS = res.items.map(function (s) {
+        return {
+          id: s.staffCode,
+          name: s.fullName,
+          phone: s.phone,
+          npp: s.distributorId,
+          status: s.allowReceiveOrder ? 'active' : 'off'
+        };
+      });
+    }
+    if (cb) cb();
+  }).catch(function () { if (cb) cb(); });
+}
 
 const ROUTES = [
   { id:'TGH-001', name:'Tuyến Q1 — Trung tâm', npp:'NPP-HCM-01', status:'active',
@@ -795,7 +814,7 @@ function handleTreeCheckToggle(key, checked, checkSet){
 
 function populateDriverSelect(driverId){
   var sel=el('cfgDriver');
-  sel.innerHTML='<option value="">— Chưa gán —</option>';
+  sel.innerHTML='<option value="" selected hidden>— Chưa gán —</option>';
   DRIVERS.forEach(function(d){
     var label=d.id+' — '+d.name+(d.status==='off'?' (Nghỉ)':'');
     sel.insertAdjacentHTML('beforeend','<option value="'+d.id+'">'+label+'</option>');
@@ -828,7 +847,7 @@ function initLeftScopeDefaults(){
   leftScope.region='MN'; leftScope.area='DNB'; leftScope.provinces=new Set(['HCM']);
   el('leftScopeRegion').value=leftScope.region;
   var areaSel=el('leftScopeArea');
-  areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+  areaSel.innerHTML='<option value="" selected hidden>— Chọn khu vực —</option>';
   Object.keys(TREE[leftScope.region].areas).forEach(function(k){
     areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[leftScope.region].areas[k].name+'</option>');
   });
@@ -926,10 +945,10 @@ function cascadeScopeArea(scope, regionSelectId, areaSelectId, provMultiId, prov
   var r=el(regionSelectId).value;
   scope.region=r; scope.area=''; scope.provinces.clear();
   var areaSel=el(areaSelectId);
-  areaSel.innerHTML='<option value="">— Chọn vùng trước —</option>';
+  areaSel.innerHTML='<option value="" selected hidden>— Chọn vùng trước —</option>';
   areaSel.disabled=!r;
   if(r){
-    areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+    areaSel.innerHTML='<option value="" selected hidden>— Chọn khu vực —</option>';
     Object.keys(TREE[r].areas).forEach(function(k){
       areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[k].name+'</option>');
     });
@@ -1006,7 +1025,7 @@ function initLeftScopeFromRoute(r){
   leftScope.region=region; leftScope.area=area; leftScope.provinces=provinces;
   el('leftScopeRegion').value=region;
   var areaSel=el('leftScopeArea');
-  areaSel.innerHTML='<option value="">— Chọn khu vực —</option>';
+  areaSel.innerHTML='<option value="" selected hidden>— Chọn khu vực —</option>';
   Object.keys(TREE[region].areas).forEach(function(k){
     areaSel.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[region].areas[k].name+'</option>');
   });
@@ -1249,7 +1268,7 @@ function renderRoutes(){
   });
   el('listTitle').textContent='Danh sách tuyến giao hàng ('+ROUTES.length+')';
 }
-renderRoutes();
+loadDriversFromApi(function () { renderRoutes(); });
 
 /* ========== FILTERS ========== */
 function populateRegionSelect(id){
@@ -1259,11 +1278,12 @@ populateRegionSelect('filterRegion');
 
 function cascadeMain(level){
   var r=el('filterRegion').value,a=el('filterArea').value,p=el('filterProvince').value;
-  if(level<=1){ var sA=el('filterArea'); sA.innerHTML='<option value="">Tất cả khu vực</option>'; sA.disabled=!r;
+  /* Placeholder = tên trường; KHÔNG disabled — luôn click được; cascade chỉ nạp option theo cấp cha */
+  if(level<=1){ var sA=el('filterArea'); sA.disabled=false; sA.innerHTML='<option value="" selected hidden>Khu vực</option>';
     if(r) Object.keys(TREE[r].areas).forEach(function(k){ sA.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[k].name+'</option>'); }); }
-  if(level<=2){ var sP=el('filterProvince'); sP.innerHTML='<option value="">Tất cả tỉnh/TP</option>'; sP.disabled=!(r&&a);
+  if(level<=2){ var sP=el('filterProvince'); sP.disabled=false; sP.innerHTML='<option value="" selected hidden>Tỉnh / TP</option>';
     if(r&&a) Object.keys(TREE[r].areas[a].provinces).forEach(function(k){ sP.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[a].provinces[k].name+'</option>'); }); }
-  if(level<=3){ var sW=el('filterWard'); sW.innerHTML='<option value="">Tất cả phường/xã</option>'; sW.disabled=!(r&&a&&p);
+  if(level<=3){ var sW=el('filterWard'); sW.disabled=false; sW.innerHTML='<option value="" selected hidden>Phường / Xã</option>';
     if(r&&a&&p) Object.keys(TREE[r].areas[a].provinces[p].wards).forEach(function(k){ sW.insertAdjacentHTML('beforeend','<option value="'+k+'">'+TREE[r].areas[a].provinces[p].wards[k].name+'</option>'); }); }
 }
 ['filterRegion','filterArea','filterProvince','filterWard'].forEach(function(id,i){
