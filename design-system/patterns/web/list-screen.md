@@ -1,5 +1,8 @@
 # Pattern: Màn hình Danh sách — Web Portal
 
+> **Chuẩn hệ thống hiện hành:** `design-system/web/patterns/portal-crud-list-modal-pattern.md` (⭐ MS-W-DL04).  
+> File này là bản mô tả cũ — khi gen mockup mới, ưu tiên pattern CRUD List + Modal.
+
 > Template — BA điền theo design system thực tế (từ Visily).
 
 ---
