@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-DL04 — Nhân viên giao hàng</title>
+    <link rel="stylesheet" href="../../../_shared/portal-tokens.css"/>
+    <link rel="stylesheet" href="../../../_shared/portal-fonts.css"/>
+    <link rel="stylesheet" href="../../../_shared/portal-components.css"/>
+    <link rel="stylesheet" href="../../../_shared/portal-chrome.css"/>
+    <link rel="stylesheet" href="_shared/delivery-staff.css"/>
+</head>
+<body class="portal-page" data-portal-base="../../../">
+<div id="portal-chrome-root"></div>
+<div class="portal-page-body">
+<main class="portal-page-content" style="padding:20px 28px 40px;max-width:100%;">
+
+    <nav class="portal-breadcrumb" aria-label="Breadcrumb">
+        <a href="../../../main.html">Giám sát</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <a href="#">Giao hàng</a>
+        <span class="portal-breadcrumb__sep">/</span>
+        <span class="portal-breadcrumb__current">Nhân viên giao hàng</span>
+    </nav>
+
+    <h1 class="portal-page-title">Nhân viên giao hàng</h1>
+
+    <div class="portal-card portal-query-filter">
+        <div class="portal-card__hd">Tìm kiếm theo</div>
+        <div class="portal-card__bd">
+            <div class="portal-filter-grid portal-filter-grid--4">
+                <div class="portal-field portal-field--span-2">
+                    <label class="portal-field__label" for="fKeyword">Từ khóa</label>
+                    <div class="portal-field__control portal-input-search-wrap">
+                        <input class="portal-input" id="fKeyword" type="text" placeholder="Tìm theo mã, tên, username, số điện thoại, email, biển số xe"/>
+                    </div>
+                </div>
+                <div class="portal-field">
+                    <label class="portal-field__label" for="fDistributor">Nhà phân phối</label>
+                    <div class="portal-field__control portal-select-wrap">
+                        <select class="portal-select" id="fDistributor">
+                            <option value="" selected hidden>Nhà phân phối</option>
+                            <option value="NPP-HCM-01">NPP HCM 01</option>
+                            <option value="NPP-HCM-02">NPP HCM 02</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="portal-field">
+                    <label class="portal-field__label" for="fRoute">Tuyến giao hàng</label>
+                    <div class="portal-field__control portal-select-wrap">
+                        <select class="portal-select" id="fRoute">
+                            <option value="" selected hidden>Tuyến giao hàng</option>
+                            <option value="TGH-001">Tuyến Q1 — Bến Nghé</option>
+                            <option value="TGH-002">Tuyến Q1 — Tân Định</option>
+                            <option value="TGH-003">Tuyến Đồng Nai — Biên Hòa</option>
+                            <option value="TGH-004">Tuyến Q3 — Tân Bình</option>
+                            <option value="TGH-005">Tuyến Q7 — Phú Mỹ Hưng</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="portal-field">
+                    <label class="portal-field__label" for="fStatus">Trạng thái hoạt động</label>
+                    <div class="portal-field__control portal-select-wrap">
+                        <select class="portal-select" id="fStatus">
+                            <option value="" selected hidden>Trạng thái hoạt động</option>
+                            <option value="ACTIVE">Đang hoạt động</option>
+                            <option value="INACTIVE">Ngưng hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="portal-field portal-field--span-2">
+                    <label class="portal-field__label">Ngày tạo</label>
+                    <div class="portal-field__control portal-date-range">
+                        <div class="portal-date-range__inner">
+                            <input class="portal-date-range__input" id="fFromDate" type="text" placeholder="Từ ngày" aria-label="Từ ngày"/>
+                            <span class="portal-date-range__sep" aria-hidden="true">→</span>
+                            <input class="portal-date-range__input" id="fToDate" type="text" placeholder="Đến ngày" aria-label="Đến ngày"/>
+                        </div>
+                        <span class="portal-date-range__icon" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="portal-query-actions">
+                <div class="portal-query-actions__inner">
+                    <button type="button" class="portal-btn portal-btn--default" id="btnReset">Làm mới</button>
+                    <button type="button" class="portal-btn portal-btn--primary" id="btnSearch">Tìm kiếm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portal-card portal-protable">
+        <div class="portal-protable__list-hd">
+            <h2 class="portal-protable__list-title">Danh sách nhân viên giao hàng</h2>
+        </div>
+        <div class="portal-protable__list-actions">
+            <button type="button" class="portal-btn portal-btn--default" id="btnImport" data-perm="DELIVERY_STAFF_IMPORT">Import Excel</button>
+            <button type="button" class="portal-btn portal-btn--default" id="btnExport" data-perm="DELIVERY_STAFF_EXPORT">Export Excel</button>
+            <button type="button" class="portal-btn portal-btn--primary" id="btnCreate" data-perm="DELIVERY_STAFF_CREATE">+ Tạo mới</button>
+        </div>
+        <div class="portal-card__bd">
+            <div class="portal-table-wrap portal-table-wrap--flush">
+                <table class="portal-table portal-table--zebra" id="staffTable">
+                    <thead>
+                        <tr>
+                            <th>Mã NVGH</th>
+                            <th>Tên nhân viên</th>
+                            <th>Số điện thoại</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>NPP</th>
+                            <th>Tuyến giao hàng</th>
+                            <th>Biển số</th>
+                            <th>Trạng thái</th>
+                            <th>Người tạo</th>
+                            <th>Ngày tạo</th>
+                            <th>Người cập nhật</th>
+                            <th>Ngày cập nhật</th>
+                            <th style="width:120px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffBody">
+                        <tr><td colspan="14"><div class="portal-empty">Đang tải dữ liệu…</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="portal-pagination">
+                <span id="pageInfo">—</span>
+                <div class="portal-pagination__pages" id="pageControls"></div>
+            </div>
+        </div>
+    </div>
+
+    <p style="margin-top:16px;font-size:12px;color:var(--portal-text-secondary)">
+        Reference UI: Giám sát → Giao hàng → Nhân viên giao hàng · Mockup: <code>MS-W-DL04</code> · Pattern: <code>MS-W-CTTB00</code>
+    </p>
+</main>
+</div>
+
+<div class="portal-modal-overlay" id="createModal">
+    <div class="portal-modal portal-modal--wide" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+        <div class="portal-modal__hd">
+            <h2 class="portal-modal__title" id="createModalTitle">Thêm nhân viên giao hàng</h2>
+            <button type="button" class="portal-icon-btn" id="createClose" title="Đóng">✕</button>
+        </div>
+        <div class="portal-modal__bd portal-form-horizontal">
+            <div class="portal-alert portal-alert--error" id="createErrorList"></div>
+            <form id="createForm" novalidate>
+                <div class="portal-form-grid">
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="createCompanyCode"><span class="req">*</span> Công ty</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="createCompanyCode" data-clearable="false">
+                                <option value="FV" selected>Finviet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createStaffCode">Mã nhân viên giao hàng</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createStaffCode" type="text" placeholder="Tự động sinh: TX-XXX" readonly style="background:var(--portal-bg)"/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createUsername"><span class="req">*</span> Username</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createUsername" type="text" placeholder="Nhập username đăng nhập" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createFullName"><span class="req">*</span> Họ tên</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createFullName" type="text" placeholder="Nhập vào họ tên" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createPhone"><span class="req">*</span> Số điện thoại</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createPhone" type="tel" placeholder="Nhập vào số điện thoại" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createEmail">Email</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createEmail" type="email" placeholder="Nhập vào địa chỉ mail"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label">Nhà phân phối</label>
+                        <div class="portal-field__control portal-multi-select" id="createDistributorMs">
+                            <div class="portal-multi-select__inner portal-multi-select__tags">
+                                <span class="portal-multi-select__placeholder">Chọn nhà phân phối</span>
+                            </div>
+                            <span class="portal-multi-select__arrow"></span>
+                            <ul class="portal-multi-select__dropdown">
+                                <li class="portal-multi-select__option" data-value="NPP-HCM-01">NPP HCM 01</li>
+                                <li class="portal-multi-select__option" data-value="NPP-HCM-02">NPP HCM 02</li>
+                            </ul>
+                            <select class="portal-multi-select__hidden" id="createDistributorIds" multiple hidden>
+                                <option value="NPP-HCM-01">NPP HCM 01</option>
+                                <option value="NPP-HCM-02">NPP HCM 02</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createRouteId">Tuyến giao hàng</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="createRouteId">
+                                <option value="" selected hidden>— Chọn tuyến —</option>
+                                <option value="TGH-001" data-name="Tuyến Q1 — Bến Nghé">Tuyến Q1 — Bến Nghé</option>
+                                <option value="TGH-002" data-name="Tuyến Q1 — Tân Định">Tuyến Q1 — Tân Định</option>
+                                <option value="TGH-003" data-name="Tuyến Đồng Nai — Biên Hòa">Tuyến Đồng Nai — Biên Hòa</option>
+                                <option value="TGH-004" data-name="Tuyến Q3 — Tân Bình">Tuyến Q3 — Tân Bình</option>
+                                <option value="TGH-005" data-name="Tuyến Q7 — Phú Mỹ Hưng">Tuyến Q7 — Phú Mỹ Hưng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="createLicensePlate">Biển số xe</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createLicensePlate" type="text" maxlength="20" placeholder="Nhập biển số xe"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="createAddress">Địa chỉ</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="createAddress" type="text" placeholder="Nhập địa chỉ"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="createNote">Ghi chú</label>
+                        <div class="portal-field__control">
+                            <textarea class="portal-input portal-textarea" id="createNote" maxlength="500" placeholder="Nhập ghi chú"></textarea>
+                            <div class="portal-field__counter"><span id="createNoteCount">0</span>/500</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="portal-modal__ft">
+            <button type="button" class="portal-btn portal-btn--default" id="createReset">Làm mới</button>
+            <button type="button" class="portal-btn portal-btn--primary" id="createSubmit">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<div class="portal-modal-overlay" id="editModal">
+    <div class="portal-modal portal-modal--wide" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="portal-modal__hd">
+            <h2 class="portal-modal__title" id="editModalTitle">Chỉnh sửa nhân viên giao hàng</h2>
+            <button type="button" class="portal-icon-btn" id="editClose" title="Đóng">✕</button>
+        </div>
+        <div class="portal-modal__bd portal-form-horizontal">
+            <div class="portal-alert portal-alert--error" id="editErrorList"></div>
+            <form id="editForm" novalidate>
+                <input type="hidden" id="editVersion"/>
+                <input type="hidden" id="editStaffCodeHidden"/>
+                <div class="portal-form-grid">
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="editCompanyCode"><span class="req">*</span> Công ty</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="editCompanyCode" data-clearable="false">
+                                <option value="FV" selected>Finviet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editStaffCode">Mã nhân viên giao hàng</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editStaffCode" type="text" readonly style="background:var(--portal-bg)"/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editUsername"><span class="req">*</span> Username</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editUsername" type="text" placeholder="Nhập username đăng nhập" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editFullName"><span class="req">*</span> Họ tên</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editFullName" type="text" placeholder="Nhập vào họ tên" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editPhone"><span class="req">*</span> Số điện thoại</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editPhone" type="tel" placeholder="Nhập vào số điện thoại" required/>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editEmail">Email</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editEmail" type="email" placeholder="Nhập vào địa chỉ mail"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label">Nhà phân phối</label>
+                        <div class="portal-field__control portal-multi-select" id="editDistributorMs">
+                            <div class="portal-multi-select__inner portal-multi-select__tags">
+                                <span class="portal-multi-select__placeholder">Chọn nhà phân phối</span>
+                            </div>
+                            <span class="portal-multi-select__arrow"></span>
+                            <ul class="portal-multi-select__dropdown">
+                                <li class="portal-multi-select__option" data-value="NPP-HCM-01">NPP HCM 01</li>
+                                <li class="portal-multi-select__option" data-value="NPP-HCM-02">NPP HCM 02</li>
+                            </ul>
+                            <select class="portal-multi-select__hidden" id="editDistributorIds" multiple hidden>
+                                <option value="NPP-HCM-01">NPP HCM 01</option>
+                                <option value="NPP-HCM-02">NPP HCM 02</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editRouteId">Tuyến giao hàng</label>
+                        <div class="portal-field__control portal-select-wrap">
+                            <select class="portal-select" id="editRouteId">
+                                <option value="" selected hidden>— Chọn tuyến —</option>
+                                <option value="TGH-001" data-name="Tuyến Q1 — Bến Nghé">Tuyến Q1 — Bến Nghé</option>
+                                <option value="TGH-002" data-name="Tuyến Q1 — Tân Định">Tuyến Q1 — Tân Định</option>
+                                <option value="TGH-003" data-name="Tuyến Đồng Nai — Biên Hòa">Tuyến Đồng Nai — Biên Hòa</option>
+                                <option value="TGH-004" data-name="Tuyến Q3 — Tân Bình">Tuyến Q3 — Tân Bình</option>
+                                <option value="TGH-005" data-name="Tuyến Q7 — Phú Mỹ Hưng">Tuyến Q7 — Phú Mỹ Hưng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="portal-field">
+                        <label class="portal-field__label" for="editLicensePlate">Biển số xe</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editLicensePlate" type="text" maxlength="20" placeholder="Nhập biển số xe"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="editAddress">Địa chỉ</label>
+                        <div class="portal-field__control">
+                            <input class="portal-input" id="editAddress" type="text" placeholder="Nhập địa chỉ"/>
+                        </div>
+                    </div>
+                    <div class="portal-field portal-field--full">
+                        <label class="portal-field__label" for="editNote">Ghi chú</label>
+                        <div class="portal-field__control">
+                            <textarea class="portal-input portal-textarea" id="editNote" maxlength="500" placeholder="Nhập ghi chú"></textarea>
+                            <div class="portal-field__counter"><span id="editNoteCount">0</span>/500</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="portal-modal__ft">
+            <button type="button" class="portal-btn portal-btn--default" id="editCancel">Hủy</button>
+            <button type="button" class="portal-btn portal-btn--primary" id="editSubmit">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<div class="portal-modal-overlay" id="detailModal">
+    <div class="portal-modal portal-modal--wide" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <div class="portal-modal__hd">
+            <h2 class="portal-modal__title" id="detailModalTitle">Chi tiết nhân viên giao hàng</h2>
+            <button type="button" class="portal-icon-btn" id="detailClose" title="Đóng">✕</button>
+        </div>
+        <div class="portal-modal__bd">
+            <div class="portal-section-title">Thông tin cơ bản</div>
+            <div class="portal-detail-grid" id="detailBasicInfo"></div>
+            <div class="portal-section-title">Thông tin phân công</div>
+            <div class="portal-detail-grid" id="detailAssignInfo"></div>
+        </div>
+        <div class="portal-modal__ft">
+            <button type="button" class="portal-btn portal-btn--default" id="detailCloseBtn">Đóng</button>
+            <button type="button" class="portal-btn portal-btn--primary" id="detailEditBtn" data-perm="DELIVERY_STAFF_UPDATE">Chỉnh sửa</button>
+        </div>
+    </div>
+</div>
+
+<div class="portal-modal-overlay" id="importModal">
+    <div class="portal-modal portal-modal--import" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+        <div class="portal-modal__hd">
+            <div class="portal-modal__hd-left">
+                <h2 class="portal-modal__title-with-icon" id="importModalTitle">
+                    <svg class="portal-import-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 3v10m0 0l3.5-3.5M12 13L8.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5 16.5V18a2 2 0 002 2h10a2 2 0 002-2v-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    Import Excel
+                </h2>
+                <button type="button" class="portal-btn portal-btn--default portal-btn--dashed portal-btn--sm" id="btnDownloadImportTemplate">
+                    <svg class="portal-import-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 4v10m0 0l3.5-3.5M12 14L8.5 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5 17.5V19a2 2 0 002 2h10a2 2 0 002-2v-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    Lấy file mẫu
+                </button>
+            </div>
+            <button type="button" class="portal-icon-btn" id="importClose" title="Đóng">✕</button>
+        </div>
+        <div class="portal-modal__bd">
+            <div class="portal-alert portal-alert--error" id="importErrorList"></div>
+            <div class="portal-field portal-field--full" style="margin-bottom:16px">
+                <label class="portal-field__label">Chế độ import</label>
+                <div class="portal-field__control" style="display:flex;gap:20px;padding-top:4px">
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                        <input type="radio" name="importMode" value="CREATE" checked/> Tạo mới
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                        <input type="radio" name="importMode" value="UPDATE"/> Chỉnh sửa
+                    </label>
+                </div>
+            </div>
+            <div class="portal-import-dropzone" id="importDropzone">
+                <svg class="portal-import-dropzone__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <path d="M10 18h28v20a3 3 0 01-3 3H13a3 3 0 01-3-3V18z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M16 18V14a8 8 0 0116 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M24 24v10m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p class="portal-import-dropzone__title">Chọn hoặc kéo file đến vị trí này</p>
+                <p class="portal-import-dropzone__hint">Hỗ trợ tải đơn lẻ từng file. Chỉ nhập những file theo đúng định dạng có sẵn.</p>
+                <p class="portal-import-dropzone__file" id="importFileName" hidden></p>
+                <input class="portal-import-dropzone__input" id="importFileInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" aria-label="Chọn file import"/>
+            </div>
+        </div>
+        <div class="portal-modal__ft">
+            <button type="button" class="portal-btn portal-btn--primary" id="importSubmit" disabled>Tiến hành xử lý</button>
+        </div>
+    </div>
+</div>
+
+<div class="portal-modal-overlay" id="confirmModal">
+    <div class="portal-modal" role="dialog" aria-modal="true">
+        <div class="portal-modal__hd">
+            <h2 class="portal-modal__title" id="confirmTitle">Xác nhận</h2>
+            <button type="button" class="portal-icon-btn" id="confirmClose" title="Đóng">✕</button>
+        </div>
+        <div class="portal-modal__bd" id="confirmBody"></div>
+        <div class="portal-modal__ft">
+            <button type="button" class="portal-btn portal-btn--default" id="confirmCancel">Hủy</button>
+            <button type="button" class="portal-btn portal-btn--primary" id="confirmOk">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<div class="portal-toast" id="toast"></div>
+
+<script src="../../../menu-tree.js"></script>
+<script src="../../../_shared/portal-menu.js"></script>
+<script src="../../../_shared/portal-chrome.js"></script>
+<script src="../../../_shared/portal-mockup-widgets.js"></script>
+<script src="../../../_shared/api-client.js"></script>
+<script src="_shared/delivery-staff-ui.js"></script>
+<script>
+(function () {
+  var UI = window.DeliveryStaffUI;
+  var currentPage = 1;
+  var pageSize = 20;
+  var allItems = [];
+  var confirmCallback = null;
+  var createFormDirty = false;
+  var editFormDirty = false;
+  var editStaffCode = null;
+  var detailStaffCode = null;
+  var editOriginalAssign = {};
+
+  function setModalOpen(open) {
+    document.body.classList.toggle('modal-open', open);
+  }
+
+  function clearMultiSelect(rootId) {
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.clearMultiSelect) {
+      window.PortalMockupWidgets.clearMultiSelect(rootId);
+      return;
+    }
+    var root = document.getElementById(rootId);
+    if (!root) return;
+    root.querySelectorAll('.portal-multi-select__tag').forEach(function (tag) { tag.remove(); });
+    var placeholder = root.querySelector('.portal-multi-select__placeholder');
+    if (placeholder) placeholder.style.display = '';
+    var hidden = root.querySelector('select.portal-multi-select__hidden');
+    if (hidden) Array.from(hidden.options).forEach(function (opt) { opt.selected = false; });
+  }
+
+  function setMultiSelectValues(rootId, values) {
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.setMultiSelectValues) {
+      window.PortalMockupWidgets.setMultiSelectValues(rootId, values);
+      return;
+    }
+    clearMultiSelect(rootId);
+    var root = document.getElementById(rootId);
+    if (!root || !values || !values.length) return;
+    var tagsWrap = root.querySelector('.portal-multi-select__tags') || root.querySelector('.portal-multi-select__inner');
+    var placeholder = root.querySelector('.portal-multi-select__placeholder');
+    var hidden = root.querySelector('select.portal-multi-select__hidden');
+    values.forEach(function (value) {
+      var opt = root.querySelector('.portal-multi-select__option[data-value="' + value + '"]');
+      var label = opt ? opt.textContent.trim() : value;
+      var tag = document.createElement('span');
+      tag.className = 'portal-multi-select__tag';
+      tag.setAttribute('data-value', value);
+      tag.innerHTML =
+        '<span class="portal-multi-select__tag-text">' + label + '</span>' +
+        '<button type="button" class="portal-multi-select__tag-remove" aria-label="Xóa">×</button>';
+      if (placeholder && placeholder.parentNode === tagsWrap) tagsWrap.insertBefore(tag, placeholder);
+      else tagsWrap.appendChild(tag);
+      if (hidden) {
+        Array.from(hidden.options).forEach(function (o) {
+          if (o.value === value) o.selected = true;
+        });
+      }
+    });
+    if (placeholder) placeholder.style.display = 'none';
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.syncMultiSelectOptions) {
+      window.PortalMockupWidgets.syncMultiSelectOptions(root);
+    }
+  }
+
+  function getMultiSelectValues(rootId) {
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.getMultiSelectValues) {
+      return window.PortalMockupWidgets.getMultiSelectValues(rootId);
+    }
+    var root = document.getElementById(rootId);
+    if (!root) return [];
+    return Array.from(root.querySelectorAll('.portal-multi-select__tag')).map(function (tag) {
+      return tag.getAttribute('data-value');
+    });
+  }
+
+  function getMultiSelectLabels(rootId) {
+    var root = document.getElementById(rootId);
+    if (!root) return [];
+    return Array.from(root.querySelectorAll('.portal-multi-select__tag')).map(function (tag) {
+      var text = tag.querySelector('.portal-multi-select__tag-text');
+      return text ? text.textContent.trim() : tag.getAttribute('data-value');
+    });
+  }
+
+  function resetCreateForm() {
+    var form = document.getElementById('createForm');
+    form.reset();
+    document.getElementById('createStaffCode').value = '';
+    document.getElementById('createNoteCount').textContent = '0';
+    document.getElementById('createErrorList').classList.remove('show');
+    document.getElementById('createErrorList').innerHTML = '';
+    clearMultiSelect('createDistributorMs');
+    createFormDirty = false;
+    if (window.PortalMockupWidgets && window.PortalMockupWidgets.syncFormSelectsClear) {
+      window.PortalMockupWidgets.syncFormSelectsClear(document.getElementById('createModal'));
+    }
+  }
+
+  function openCreateModal() {
+    resetCreateForm();
+    document.getElementById('createModal').classList.add('open');
+    setModalOpen(true);
+    setTimeout(function () { document.getElementById('createUsername').focus(); }, 100);
+  }
+
+  function closeCreateModal(force) {
+    if (!force && createFormDirty) {
+      openConfirm('Thoát form', '<p>Bạn có chắc muốn thoát? Dữ liệu chưa lưu sẽ mất.</p>', function () {
+        closeConfirm();
+        document.getElementById('createModal').classList.remove('open');
+        setModalOpen(false);
+        createFormDirty = false;
+      });
+      return;
+    }
+    document.getElementById('createModal').classList.remove('open');
+    setModalOpen(false);
+    createFormDirty = false;
+  }
+
+  async function submitCreateForm() {
+    var form = document.getElementById('createForm');
+    var data = UI.collectFormData(form);
+    data.distributorIds = getMultiSelectValues('createDistributorMs');
+    data.distributorNames = getMultiSelectLabels('createDistributorMs');
+    data.distributorId = data.distributorIds[0] || '';
+    data.distributorName = data.distributorNames.join(', ');
+    data = UI.trimFormData(data);
+    var errors = UI.validateForm(data);
+    var errEl = document.getElementById('createErrorList');
+    if (errors.length) {
+      errEl.innerHTML = errors.map(function (m) { return '<div>• ' + m + '</div>'; }).join('');
+      errEl.classList.add('show');
+      return;
+    }
+    errEl.classList.remove('show');
+    var btn = document.getElementById('createSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Đang lưu…';
+    try {
+      var result = await UI.createStaff(data);
+      showToast('Đã lưu nhân viên giao hàng thành công: ' + result.staffCode);
+      document.getElementById('createModal').classList.remove('open');
+      setModalOpen(false);
+      createFormDirty = false;
+      currentPage = 1;
+      loadData();
+    } catch (ex) {
+      errEl.innerHTML = '<div>• ' + ((ex.body && ex.body.message) || ex.message) + '</div>';
+      errEl.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Đồng ý';
+    }
+  }
+
+  async function openEditModal(staffCode) {
+    try {
+      var s = await UI.getStaff(staffCode);
+      if (!s) {
+        showToast('Không tìm thấy nhân viên giao hàng.', 'error');
+        return;
+      }
+      editStaffCode = s.staffCode;
+      document.getElementById('editModalTitle').textContent = 'Chỉnh sửa — ' + s.fullName;
+      document.getElementById('editStaffCodeHidden').value = s.staffCode;
+      document.getElementById('editStaffCode').value = s.staffCode;
+      document.getElementById('editCompanyCode').value = s.companyCode || 'FV';
+      document.getElementById('editUsername').value = UI.staffUsername(s);
+      document.getElementById('editFullName').value = s.fullName || '';
+      document.getElementById('editPhone').value = s.phone || '';
+      document.getElementById('editEmail').value = s.email || '';
+      document.getElementById('editAddress').value = s.address || '';
+      document.getElementById('editNote').value = s.note || '';
+      document.getElementById('editNoteCount').textContent = String((s.note || '').length);
+      var distIds = s.distributorIds && s.distributorIds.length
+        ? s.distributorIds
+        : (s.distributorId ? [s.distributorId] : []);
+      setMultiSelectValues('editDistributorMs', distIds);
+      var routeVal = (s.routeIds || [])[0] || '';
+      if (window.PortalMockupWidgets && window.PortalMockupWidgets.setSelectValue) {
+        window.PortalMockupWidgets.setSelectValue('editRouteId', routeVal);
+      } else {
+        document.getElementById('editRouteId').value = routeVal;
+      }
+      document.getElementById('editLicensePlate').value = s.licensePlate || '';
+      document.getElementById('editVersion').value = s.version || 1;
+      editOriginalAssign = {
+        distributorIds: distIds.slice(),
+        routeId: routeVal,
+      };
+      document.getElementById('editErrorList').classList.remove('show');
+      document.getElementById('editErrorList').innerHTML = '';
+      editFormDirty = false;
+      document.getElementById('editModal').classList.add('open');
+      setModalOpen(true);
+      if (window.PortalMockupWidgets && window.PortalMockupWidgets.syncFormSelectsClear) {
+        window.PortalMockupWidgets.syncFormSelectsClear(document.getElementById('editModal'));
+      }
+      setTimeout(function () { document.getElementById('editUsername').focus(); }, 100);
+    } catch (e) {
+      showToast(e.message || 'Không tải được dữ liệu chỉnh sửa.', 'error');
+    }
+  }
+
+  function closeEditModal(force) {
+    if (!force && editFormDirty) {
+      openConfirm('Thoát form', '<p>Bạn có chắc muốn thoát? Dữ liệu chưa lưu sẽ mất.</p>', function () {
+        closeConfirm();
+        document.getElementById('editModal').classList.remove('open');
+        setModalOpen(false);
+        editFormDirty = false;
+        editStaffCode = null;
+      });
+      return;
+    }
+    document.getElementById('editModal').classList.remove('open');
+    setModalOpen(false);
+    editFormDirty = false;
+    editStaffCode = null;
+  }
+
+  async function submitEditForm() {
+    var form = document.getElementById('editForm');
+    var data = UI.collectFormData(form);
+    data.distributorIds = getMultiSelectValues('editDistributorMs');
+    data.distributorNames = getMultiSelectLabels('editDistributorMs');
+    data.distributorId = data.distributorIds[0] || '';
+    data.distributorName = data.distributorNames.join(', ');
+    data = UI.trimFormData(data);
+    data.version = Number(document.getElementById('editVersion').value) || 1;
+    var errors = UI.validateForm(data, { excludeStaffCode: editStaffCode });
+    var errEl = document.getElementById('editErrorList');
+    if (errors.length) {
+      errEl.innerHTML = errors.map(function (m) { return '<div>• ' + m + '</div>'; }).join('');
+      errEl.classList.add('show');
+      return;
+    }
+    errEl.classList.remove('show');
+    var btn = document.getElementById('editSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Đang lưu…';
+    try {
+      await UI.updateStaff(editStaffCode, data);
+      showToast('Đã lưu nhân viên giao hàng thành công.');
+      document.getElementById('editModal').classList.remove('open');
+      setModalOpen(false);
+      editFormDirty = false;
+      editStaffCode = null;
+      loadData();
+    } catch (ex) {
+      errEl.innerHTML = '<div>• ' + ((ex.body && ex.body.message) || ex.message) + '</div>';
+      errEl.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Đồng ý';
+    }
+  }
+
+  function showToast(msg, type) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'portal-toast show portal-toast--' + (type || 'success');
+    setTimeout(function () { el.className = 'portal-toast'; }, 3500);
+  }
+
+  function resetImportDropzone() {
+    var zone = document.getElementById('importDropzone');
+    var nameEl = document.getElementById('importFileName');
+    var input = document.getElementById('importFileInput');
+    var submit = document.getElementById('importSubmit');
+    input.value = '';
+    nameEl.hidden = true;
+    nameEl.textContent = '';
+    zone.classList.remove('has-file', 'is-dragover');
+    submit.disabled = true;
+    submit.textContent = 'Tiến hành xử lý';
+    document.getElementById('importErrorList').classList.remove('show');
+    document.getElementById('importErrorList').innerHTML = '';
+  }
+
+  function setImportFile(file) {
+    var zone = document.getElementById('importDropzone');
+    var nameEl = document.getElementById('importFileName');
+    var submit = document.getElementById('importSubmit');
+    var errEl = document.getElementById('importErrorList');
+    var errors = UI.validateImportFile(file);
+    if (errors.length) {
+      errEl.innerHTML = errors.map(function (m) { return '<div>• ' + m + '</div>'; }).join('');
+      errEl.classList.add('show');
+      resetImportDropzone();
+      return;
+    }
+    errEl.classList.remove('show');
+    errEl.innerHTML = '';
+    nameEl.hidden = false;
+    nameEl.textContent = file.name;
+    zone.classList.add('has-file');
+    submit.disabled = false;
+  }
+
+  function openImportModal() {
+    resetImportDropzone();
+    document.getElementById('importModal').classList.add('open');
+    setModalOpen(true);
+  }
+
+  function closeImportModal() {
+    document.getElementById('importModal').classList.remove('open');
+    setModalOpen(false);
+    resetImportDropzone();
+  }
+
+  async function submitImport() {
+    var input = document.getElementById('importFileInput');
+    var file = input.files && input.files[0];
+    var errEl = document.getElementById('importErrorList');
+    var errors = UI.validateImportFile(file);
+    if (errors.length) {
+      errEl.innerHTML = errors.map(function (m) { return '<div>• ' + m + '</div>'; }).join('');
+      errEl.classList.add('show');
+      return;
+    }
+    errEl.classList.remove('show');
+    var btn = document.getElementById('importSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Đang xử lý…';
+    try {
+      var result = await UI.importStaffFromFile(file);
+      showToast(result.message || 'Import nhân viên giao hàng thành công.');
+      closeImportModal();
+      loadData();
+    } catch (ex) {
+      var msgs = (ex.messages && ex.messages.length) ? ex.messages : [((ex.body && ex.body.message) || ex.message)];
+      errEl.innerHTML = msgs.map(function (m) { return '<div>• ' + m + '</div>'; }).join('');
+      errEl.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Tiến hành xử lý';
+    }
+  }
+
+  function applyPermissions() {
+    document.querySelectorAll('[data-perm]').forEach(function (el) {
+      if (!UI.hasPermission(el.getAttribute('data-perm'))) el.style.display = 'none';
+    });
+  }
+
+  function getFilters() {
+    var q = { page: currentPage, pageSize: pageSize };
+    var kw = document.getElementById('fKeyword').value.trim();
+    if (kw) q.keyword = kw;
+    var dist = document.getElementById('fDistributor').value;
+    if (dist) q.distributorIds = dist;
+    var route = document.getElementById('fRoute').value;
+    if (route) q.routeIds = route;
+    var st = document.getElementById('fStatus').value;
+    if (st) q.status = st;
+    var from = document.getElementById('fFromDate').value;
+    if (from) q.fromDate = from;
+    var to = document.getElementById('fToDate').value;
+    if (to) q.toDate = to;
+    return q;
+  }
+
+  function updateSummary(s) {
+    // Tabs trạng thái đã bỏ — giữ hàm rỗng để tương thích gọi từ renderTable
+  }
+
+  function detailRow(label, value) {
+    return '<div class="portal-detail-label">' + label + '</div><div class="portal-detail-value">' + (value || '—') + '</div>';
+  }
+
+  async function openDetailModal(staffCode) {
+    try {
+      var s = await UI.getStaff(staffCode);
+      if (!s) {
+        showToast('Không tìm thấy nhân viên giao hàng.', 'error');
+        return;
+      }
+      detailStaffCode = s.staffCode;
+      document.getElementById('detailModalTitle').textContent = 'Chi tiết — ' + s.fullName;
+      var distDetail = (s.distributorNames && s.distributorNames.length)
+        ? s.distributorNames.join(', ')
+        : (s.distributorName || '—');
+      document.getElementById('detailBasicInfo').innerHTML =
+        detailRow('Công ty', s.companyName || 'Finviet') +
+        detailRow('Mã nhân viên giao hàng', s.staffCode) +
+        detailRow('Username', UI.staffUsername(s)) +
+        detailRow('Họ tên', s.fullName) +
+        detailRow('Số điện thoại', s.phone) +
+        detailRow('Email', s.email) +
+        detailRow('Địa chỉ', s.address) +
+        detailRow('Trạng thái hoạt động', '<span class="portal-tag ' + UI.statusTagClass(s.status) + '">' + UI.statusLabel(s.status) + '</span>') +
+        detailRow('Ghi chú', s.note);
+      document.getElementById('detailAssignInfo').innerHTML =
+        detailRow('Nhà phân phối', distDetail) +
+        detailRow('Tuyến giao hàng', (s.routeNames || []).join(', ')) +
+        detailRow('Biển số xe', s.licensePlate);
+      document.getElementById('detailModal').classList.add('open');
+      setModalOpen(true);
+    } catch (e) {
+      showToast(e.message || 'Không tải được chi tiết.', 'error');
+    }
+  }
+
+  function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+    setModalOpen(false);
+    detailStaffCode = null;
+  }
+
+  function buildBlockingOrdersHtml(staff) {
+    var orders = UI.getBlockingOrders(staff);
+    if (!orders.length) return '';
+    var rows = orders.map(function (o) {
+      return '<tr><td>' + o.id + '</td><td>' + (o.storeName || '—') + '</td><td>' + (o.statusLabel || '—') + '</td></tr>';
+    }).join('');
+    return '<p>Nhân viên <strong>' + staff.fullName + '</strong> đang có đơn hàng chưa hoàn tất. Hệ thống không cho phép ngưng hoạt động.</p>' +
+      '<div class="portal-table-wrap" style="margin-top:12px;max-height:220px;overflow:auto">' +
+      '<table class="portal-table portal-table--zebra"><thead><tr><th>Mã đơn</th><th>Cửa hàng</th><th>Trạng thái</th></tr></thead><tbody>' +
+      rows + '</tbody></table></div>';
+  }
+
+  function renderTable(data) {
+    var tbody = document.getElementById('staffBody');
+    allItems = data.items || [];
+    updateSummary(data.summary);
+
+    if (!allItems.length) {
+      tbody.innerHTML = '<tr><td colspan="14"><div class="portal-empty">Không tìm thấy nhân viên giao hàng phù hợp.</div></td></tr>';
+      document.getElementById('pageInfo').textContent = '0 kết quả';
+      return;
+    }
+
+    tbody.innerHTML = allItems.map(function (s) {
+      var routes = (s.routeNames || []).slice(0, 2).join(', ') +
+        ((s.routeNames || []).length > 2 ? ' +' + (s.routeNames.length - 2) : '');
+      var distLabel = (s.distributorNames && s.distributorNames.length)
+        ? s.distributorNames.join(', ')
+        : (s.distributorName || '—');
+      var actions = '<button type="button" class="portal-icon-btn" title="Xem chi tiết" data-action="detail" data-id="' + s.staffCode + '">👁</button>';
+      if (UI.hasPermission('DELIVERY_STAFF_UPDATE')) {
+        actions += '<button type="button" class="portal-icon-btn" title="Chỉnh sửa" data-action="edit" data-id="' + s.staffCode + '">✎</button>';
+      }
+      var canToggle = (s.status === 'ACTIVE' && UI.hasPermission('DELIVERY_STAFF_DEACTIVATE')) ||
+        (s.status === 'INACTIVE' && UI.hasPermission('DELIVERY_STAFF_ACTIVATE'));
+      var statusSwitch;
+      if (canToggle) {
+        statusSwitch = '<button type="button" class="portal-switch' + (s.status === 'ACTIVE' ? ' portal-switch--on' : '') +
+          '" data-action="toggle-status" data-id="' + s.staffCode +
+          '" aria-pressed="' + (s.status === 'ACTIVE' ? 'true' : 'false') + '" title="Trạng thái hoạt động"></button>';
+      } else {
+        statusSwitch = '<button type="button" class="portal-switch' + (s.status === 'ACTIVE' ? ' portal-switch--on' : '') +
+          '" disabled title="Trạng thái hoạt động"></button>';
+      }
+      return '<tr data-code="' + s.staffCode + '">' +
+        '<td><span class="copy-cell">' + s.staffCode + ' <button type="button" class="copy-btn" title="Sao chép">⎘</button></span></td>' +
+        '<td><a href="#" class="portal-table__link" data-action="detail" data-id="' + s.staffCode + '">' + s.fullName + '</a></td>' +
+        '<td>' + s.phone + '</td>' +
+        '<td>' + (s.email || '—') + '</td>' +
+        '<td>' + (UI.staffUsername(s) || '<span style="color:var(--portal-text-tertiary)">—</span>') + '</td>' +
+        '<td>' + distLabel + '</td>' +
+        '<td>' + (routes || '—') + '</td>' +
+        '<td>' + (s.licensePlate || '—') + '</td>' +
+        '<td style="text-align:center">' + statusSwitch + '</td>' +
+        '<td>' + (s.createdBy || '—') + '</td>' +
+        '<td>' + UI.formatDate(s.createdAt) + '</td>' +
+        '<td>' + (s.updatedBy || '—') + '</td>' +
+        '<td>' + UI.formatDate(s.updatedAt) + '</td>' +
+        '<td class="portal-table-actions">' + actions + '</td></tr>';
+    }).join('');
+
+    var pg = data.pagination || {};
+    var total = pg.total || allItems.length;
+    var from = (currentPage - 1) * pageSize + 1;
+    var to = Math.min(currentPage * pageSize, total);
+    document.getElementById('pageInfo').textContent = from + '-' + to + ' / tổng ' + total + ' nhân viên';
+
+    tbody.querySelectorAll('[data-action]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        handleAction(btn.getAttribute('data-action'), btn.getAttribute('data-id'));
+      });
+    });
+  }
+
+  async function loadData() {
+    try {
+      var data = await UI.listStaff(getFilters());
+      renderTable(data);
+    } catch (e) {
+      showToast(e.message || 'Không tải được dữ liệu.', 'error');
+    }
+  }
+
+  function openConfirm(title, body, callback, options) {
+    var opts = options || {};
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmBody').innerHTML = body;
+    confirmCallback = callback || null;
+    var okBtn = document.getElementById('confirmOk');
+    var cancelBtn = document.getElementById('confirmCancel');
+    if (opts.hideOk) {
+      okBtn.style.display = 'none';
+      cancelBtn.textContent = 'Đóng';
+    } else {
+      okBtn.style.display = '';
+      cancelBtn.textContent = 'Hủy';
+    }
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmModal').classList.remove('open');
+    confirmCallback = null;
+  }
+
+  async function handleAction(action, id) {
+    if (action === 'detail') {
+      openDetailModal(id);
+      return;
+    }
+    if (action === 'edit') {
+      openEditModal(id);
+      return;
+    }
+    if (action === 'toggle-status') {
+      var staff = allItems.find(function (s) { return s.staffCode === id; });
+      if (!staff) return;
+      if (staff.status === 'ACTIVE') {
+        var blockingHtml = buildBlockingOrdersHtml(staff);
+        if (blockingHtml) {
+          openConfirm('Không thể ngưng hoạt động', blockingHtml, null, { hideOk: true });
+          return;
+        }
+        openConfirm('Ngưng hoạt động', '<p>Bạn có chắc muốn ngưng hoạt động nhân viên <strong>' + staff.fullName + '</strong>?</p><p style="margin-top:8px;color:var(--portal-text-secondary)">Sau khi ngưng, nhân viên sẽ không hiển thị trong danh sách gán đơn.</p>', async function () {
+          try {
+            await UI.setStaffStatus(id, 'INACTIVE');
+            showToast('Đã ngưng hoạt động nhân viên giao hàng thành công.');
+            closeConfirm();
+            loadData();
+          } catch (e) {
+            showToast((e.body && e.body.message) || e.message, 'error');
+            closeConfirm();
+          }
+        });
+      } else {
+        try {
+          await UI.setStaffStatus(id, 'ACTIVE');
+          showToast('Đã kích hoạt lại nhân viên giao hàng thành công.');
+          loadData();
+        } catch (e) {
+          showToast((e.body && e.body.message) || e.message, 'error');
+        }
+      }
+    }
+  }
+
+  document.getElementById('btnSearch').addEventListener('click', function () { currentPage = 1; loadData(); });
+  document.getElementById('btnReset').addEventListener('click', function () {
+    ['fKeyword','fDistributor','fRoute','fStatus','fFromDate','fToDate'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    currentPage = 1;
+    loadData();
+  });
+  document.getElementById('btnExport').addEventListener('click', function () { UI.exportToCsv(allItems); });
+  document.getElementById('btnImport').addEventListener('click', openImportModal);
+  document.getElementById('importClose').addEventListener('click', closeImportModal);
+  document.getElementById('importModal').addEventListener('click', function (e) {
+    if (e.target === this) closeImportModal();
+  });
+  document.getElementById('btnDownloadImportTemplate').addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var mode = document.querySelector('input[name="importMode"]:checked');
+    UI.downloadImportTemplate(mode ? mode.value : 'CREATE');
+  });
+  document.getElementById('importFileInput').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (file) setImportFile(file);
+    else resetImportDropzone();
+  });
+  (function bindImportDropzone() {
+    var zone = document.getElementById('importDropzone');
+    ['dragenter', 'dragover'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.add('is-dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.remove('is-dragover');
+      });
+    });
+    zone.addEventListener('drop', function (e) {
+      var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!file) return;
+      var input = document.getElementById('importFileInput');
+      var dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      setImportFile(file);
+    });
+  })();
+  document.getElementById('importSubmit').addEventListener('click', submitImport);
+  document.getElementById('btnCreate').addEventListener('click', openCreateModal);
+  document.getElementById('createClose').addEventListener('click', function () { closeCreateModal(false); });
+  document.getElementById('createReset').addEventListener('click', resetCreateForm);
+  document.getElementById('createSubmit').addEventListener('click', submitCreateForm);
+  document.getElementById('createModal').addEventListener('click', function (e) {
+    if (e.target === this) closeCreateModal(false);
+  });
+  document.getElementById('createForm').addEventListener('input', function () { createFormDirty = true; });
+  document.getElementById('createForm').addEventListener('change', function () { createFormDirty = true; });
+  document.getElementById('createDistributorMs').addEventListener('portal-multiselect-change', function () {
+    createFormDirty = true;
+  });
+  document.getElementById('createNote').addEventListener('input', function () {
+    document.getElementById('createNoteCount').textContent = this.value.length;
+  });
+  document.getElementById('editClose').addEventListener('click', function () { closeEditModal(false); });
+  document.getElementById('editCancel').addEventListener('click', function () { closeEditModal(false); });
+  document.getElementById('editSubmit').addEventListener('click', submitEditForm);
+  document.getElementById('editModal').addEventListener('click', function (e) {
+    if (e.target === this) closeEditModal(false);
+  });
+  document.getElementById('editForm').addEventListener('input', function () { editFormDirty = true; });
+  document.getElementById('editForm').addEventListener('change', function () { editFormDirty = true; });
+  document.getElementById('editDistributorMs').addEventListener('portal-multiselect-change', function () {
+    editFormDirty = true;
+  });
+  document.getElementById('editNote').addEventListener('input', function () {
+    document.getElementById('editNoteCount').textContent = this.value.length;
+  });
+  document.getElementById('detailClose').addEventListener('click', closeDetailModal);
+  document.getElementById('detailCloseBtn').addEventListener('click', closeDetailModal);
+  document.getElementById('detailModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDetailModal();
+  });
+  document.getElementById('detailEditBtn').addEventListener('click', function () {
+    var code = detailStaffCode;
+    closeDetailModal();
+    if (code) openEditModal(code);
+  });
+  document.getElementById('confirmClose').addEventListener('click', closeConfirm);
+  document.getElementById('confirmCancel').addEventListener('click', closeConfirm);
+  document.getElementById('confirmOk').addEventListener('click', function () { if (confirmCallback) confirmCallback(); });
+  document.getElementById('confirmModal').addEventListener('click', function (e) { if (e.target === this) closeConfirm(); });
+
+  applyPermissions();
+  loadData().then(function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('create') === '1') {
+      openCreateModal();
+      history.replaceState(null, '', location.pathname);
+    } else if (params.get('edit')) {
+      openEditModal(params.get('edit'));
+      history.replaceState(null, '', location.pathname);
+    } else if (params.get('detail') || params.get('id')) {
+      openDetailModal(params.get('detail') || params.get('id'));
+      history.replaceState(null, '', location.pathname);
+    }
+  });
+})();
+</script>
+</body>
+</html>

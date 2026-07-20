@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WEB] MS-W-DL04 — Chỉnh sửa nhân viên giao hàng</title>
+    <script>
+      (function () {
+        var id = new URLSearchParams(location.search).get('id') || '';
+        location.replace('MS-W-DL04-danh-sach-nhan-vien-giao-hang.html?edit=' + encodeURIComponent(id));
+      })();
+    </script>
+</head>
+<body>
+    <p>Đang chuyển tới danh sách… <a id="fallback" href="MS-W-DL04-danh-sach-nhan-vien-giao-hang.html">Mở popup Chỉnh sửa</a></p>
+    <script>
+      var id = new URLSearchParams(location.search).get('id') || '';
+      document.getElementById('fallback').href = 'MS-W-DL04-danh-sach-nhan-vien-giao-hang.html?edit=' + encodeURIComponent(id);
+    </script>
+</body>
+</html>

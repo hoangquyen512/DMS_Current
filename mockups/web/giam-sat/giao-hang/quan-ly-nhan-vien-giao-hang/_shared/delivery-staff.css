@@ -1,0 +1,229 @@
+/**
+ * [WEB] MS-W-DL04 — chỉ bổ sung phần portal-components.css chưa có
+ * (modal xác nhận + toast). Mọi UI chính dùng class portal-*.
+ */
+.portal-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px 48px;
+  background: rgba(15, 23, 42, 0.45);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.portal-modal-overlay.open { display: flex; }
+#confirmModal { z-index: 2100; }
+.portal-modal {
+  background: var(--portal-surface, #fff);
+  border-radius: var(--portal-radius, 8px);
+  width: min(520px, 100%);
+  max-height: none;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  overflow: visible;
+  flex-shrink: 0;
+}
+.portal-modal--wide { width: min(960px, 100%); }
+.portal-modal--import { width: min(720px, calc(100vw - 48px)); }
+body.modal-open { overflow: hidden; }
+body.modal-open .portal-page-body { opacity: 0.35; pointer-events: none; }
+body.modal-open .portal-modal-overlay { pointer-events: auto; }
+
+.portal-form-horizontal .portal-field {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+}
+.portal-form-horizontal .portal-field__label {
+  width: 168px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 12px;
+  padding-top: 5px;
+  margin-bottom: 0;
+}
+.portal-form-horizontal .portal-field__control { flex: 1; min-width: 0; }
+/* Multi-select trong modal: dropdown không bị field bên dưới đè */
+.portal-modal .portal-field:has(.portal-multi-select.is-open),
+.portal-modal .portal-multi-select.is-open {
+  z-index: 120;
+  position: relative;
+}
+.portal-modal .portal-multi-select__dropdown {
+  z-index: 130;
+}
+.portal-form-horizontal .portal-form-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+}
+.portal-form-horizontal .portal-form-grid .portal-field--full { grid-column: 1 / -1; }
+.portal-modal__hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--portal-border, #f0f0f0);
+  flex-shrink: 0;
+}
+.portal-modal__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--portal-text);
+}
+.portal-modal__bd {
+  padding: 20px;
+  overflow: visible;
+  flex: none;
+  font-size: var(--portal-font-size, 14px);
+  color: var(--portal-text);
+  line-height: 1.5715;
+}
+.portal-modal__ft {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--portal-border, #f0f0f0);
+  flex-shrink: 0;
+}
+
+.portal-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3000;
+  display: none;
+  min-width: 260px;
+  max-width: 380px;
+  border-radius: var(--portal-radius-sm, 6px);
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.portal-toast.show { display: block; }
+.portal-toast--success { background: #389e0d; }
+.portal-toast--error { background: var(--portal-error-text, #ff4d4f); }
+.portal-toast--warn { background: #d48806; }
+
+.portal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+.portal-form-grid .portal-field--full { grid-column: 1 / -1; }
+.portal-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--portal-primary, #2b579a);
+  margin: 20px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--portal-border, #f0f0f0);
+}
+.portal-section-title:first-child { margin-top: 0; }
+.portal-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--portal-border, #f0f0f0);
+}
+.portal-alert {
+  border-radius: var(--portal-radius-sm, 6px);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: none;
+}
+.portal-alert.show { display: block; }
+.portal-alert--error {
+  background: var(--portal-error-bg, #fff2f0);
+  border: 1px solid #ffccc7;
+  color: var(--portal-error-text, #ff4d4f);
+}
+.portal-alert--warn {
+  background: var(--portal-warning-bg, #fffbe6);
+  border: 1px solid #ffe58f;
+  color: #d48806;
+}
+.portal-detail-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px 20px;
+  font-size: 14px;
+}
+.portal-detail-label { color: var(--portal-text-secondary); }
+.portal-detail-value { color: var(--portal-text); font-weight: 500; }
+.portal-history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--portal-border, #f0f0f0);
+  font-size: 14px;
+}
+.portal-history-item:last-child { border-bottom: none; }
+.portal-history-meta {
+  font-size: 12px;
+  color: var(--portal-text-tertiary);
+  margin-top: 4px;
+}
+.portal-page-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.portal-page-header-row .portal-page-title { margin-bottom: 4px; }
+.portal-page-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--portal-text-secondary);
+}
+.portal-summary-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.portal-summary-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius);
+  box-shadow: var(--portal-shadow-card);
+  padding: 14px 16px;
+}
+.portal-summary-card__label {
+  font-size: 13px;
+  color: var(--portal-text-secondary);
+}
+.portal-summary-card__value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--portal-text);
+  margin-top: 6px;
+  line-height: 1.2;
+}
+.portal-summary-card__note {
+  font-size: 12px;
+  color: var(--portal-text-tertiary);
+  margin-top: 4px;
+}
+.portal-summary-card--success .portal-summary-card__value { color: var(--portal-success-text); }
+.portal-summary-card--warning .portal-summary-card__value { color: var(--portal-warning-text); }
+.portal-table td .portal-switch { margin: 0 auto; display: block; }
+
+@media (max-width: 1100px) {
+  .portal-summary-row { grid-template-columns: repeat(2, 1fr); }
+  .portal-form-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .portal-summary-row { grid-template-columns: 1fr; }
+  .portal-detail-grid { grid-template-columns: 1fr; }
+}
