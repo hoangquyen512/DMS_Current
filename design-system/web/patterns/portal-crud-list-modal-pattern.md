@@ -79,8 +79,23 @@ Tiêu đề `.portal-protable__list-title`: `line-height: 1.5` (không cắt ch�
 ## 4. Popup Detail
 
 - Chỉ **xem**: thông tin cơ bản + khối nghiệp vụ liên quan
-- Footer: **Đóng** | **Chỉnh sửa** (mở edit modal)
+- Footer: **Đóng** | thao tác ngữ cảnh (nếu có: Chỉnh sửa / Đổi tài xế / Hoàn thành…)
 - **Không** nhồi dashboard / đơn đang gán / lịch sử trừ khi BA yêu cầu
+- Deep-link: `?detail={id}` trên **cùng file list** — không tách trang chi tiết
+
+### 4.1 Biến thể — Chi tiết đơn giao hàng (có dòng sản phẩm)
+
+Áp dụng khi đối tượng có bảng dòng hàng / số lượng giao:
+
+| Quy tắc | Chi tiết |
+|---------|----------|
+| Layout | Popup rộng (`.portal-modal--wide` hoặc modal list ~860px) trên **file danh sách** |
+| Không tách trang | File `*-chi-tiet-*` chỉ **redirect** `?detail={id}` về list |
+| Cột số lượng | Bảng SP luôn có **Số lượng đặt** + **Số lượng đã giao** (đồng bộ App, **chỉ xem** trên Portal) |
+| Trạng thái Giao hàng 1 phần | Footer / thao tác dòng: **Đổi tài xế** (giữ trạng thái) + **Hoàn thành đơn hàng** (giữ SL đã giao → Hoàn thành). **Không** cho Hủy |
+| Mở chi tiết | Click mã đơn / tên cửa hàng / nút Chi tiết |
+
+Reference: `mockups/web/giam-sat/giao-hang/quan-ly-don-giao-hang/WEB-CP-B3-don-giao-hang-phan-bo.html` (`#detailModal`).
 
 ## 5. Popup Import Excel (form ngang)
 
@@ -117,9 +132,11 @@ Sau khi mở: `history.replaceState` xóa query.
 
 - [ ] Portal chrome + breadcrumb
 - [ ] Bộ lọc nâng cao
-- [ ] Create / Edit / Detail = popup (không chuyển trang)
+- [ ] Create / Edit / Detail = popup (không chuyển trang); deep-link `?detail=`
 - [ ] Select Create/Edit: tùy chọn có nút ×; bắt buộc `data-clearable="false"`
 - [ ] Import (nếu có) = form ngang chuẩn
 - [ ] Không KPI dashboard mặc định
 - [ ] `portal-*` only; multi-select / select dropdown không bị cắt
 - [ ] Title list không mất chân chữ
+- [ ] Bulk action: bắt buộc chọn **cùng một trạng thái** (lẫn trạng thái → disable action + cảnh báo)
+- [ ] (Đơn giao hàng) Detail popup có **Số lượng đã giao** chỉ xem; partial = Đổi TX + Hoàn thành, không Hủy
