@@ -46,33 +46,124 @@
             min-height: 100vh;
             background: var(--neutral-50);
             color: var(--neutral-900);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             letter-spacing: 0;
         }
 
-        .pay-split-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .dashboard-scroll {
+            width: 100%;
             margin-bottom: 14px;
+            overflow: visible;
         }
 
-        .pay-split-card {
-            border: 1px solid var(--neutral-200);
-            border-radius: 8px;
-            background: white;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .dashboard-track {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2.35fr) minmax(0, 1fr) minmax(0, 1fr);
+            align-items: stretch;
             gap: 12px;
+            width: 100%;
         }
 
-        .pay-split-card.eco { border-color: var(--primary-100); background: linear-gradient(135deg, var(--primary-50), white); }
-        .pay-split-card.cash { border-color: var(--success-100); background: linear-gradient(135deg, var(--success-50), white); }
-        .pay-split-name { font-size: 12px; font-weight: 700; color: var(--neutral-500); text-transform: uppercase; letter-spacing: .3px; }
-        .pay-split-value { margin-top: 4px; font-size: 18px; font-weight: 800; color: var(--neutral-900); }
-        .pay-split-meta { font-size: 12px; color: var(--neutral-500); text-align: right; }
+        .dashboard-track .report-card {
+            min-width: 0;
+            max-width: none;
+            height: 100%;
+        }
+
+        .dashboard-track .paid-panel {
+            min-width: 0;
+            max-width: none;
+        }
+
+        .dashboard-track .report-value {
+            font-size: clamp(16px, 1.35vw, 20px);
+        }
+
+        .dashboard-track .report-label,
+        .dashboard-track .report-note {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .paid-panel__body {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            min-width: 0;
+        }
+
+        .paid-panel__block {
+            display: flex;
+            align-items: stretch;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .paid-panel__block--collected {
+            flex: 1.65 1 0;
+            padding-right: 14px;
+        }
+
+        .paid-panel__block--debt {
+            flex: 1 1 0;
+            padding-left: 14px;
+            border-left: 1px solid var(--neutral-200);
+        }
+
+        .paid-panel__block--debt .paid-panel__total {
+            flex: 1 1 auto;
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .paid-panel__total {
+            flex: 0 0 38%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            padding-right: 14px;
+            border-right: 1px solid var(--neutral-200);
+        }
+
+        .paid-panel__split {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .paid-split-item {
+            display: grid;
+            grid-template-columns: minmax(88px, 1fr) auto auto;
+            gap: 8px 10px;
+            align-items: baseline;
+            min-width: 0;
+        }
+
+        .paid-split-item .report-label {
+            margin: 0;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .paid-split-item .report-value {
+            margin: 0;
+            font-size: clamp(12px, 1vw, 14px);
+            font-weight: 700;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .paid-split-item .report-note {
+            margin: 0;
+            -webkit-line-clamp: 1;
+            text-align: right;
+            white-space: nowrap;
+        }
 
         .pagination {
             display: flex;
@@ -309,34 +400,34 @@
             resize: vertical;
         }
 
-        .report-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
         .report-card {
-            padding: 14px;
+            padding: 12px 14px;
         }
 
         .report-label {
             color: var(--neutral-500);
             font-size: 12px;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .report-value {
-            margin-top: 8px;
+            margin-top: 6px;
             color: var(--neutral-900);
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
+            white-space: nowrap;
         }
 
         .report-note {
             margin-top: 4px;
             color: var(--neutral-500);
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .report-card.good .report-value {
@@ -554,9 +645,10 @@
             background: var(--primary-500);
         }
 
-        .dot.cod {
-            background: var(--warning-700);
-        }
+        .dot.cash { background: var(--success-700); }
+        .dot.bank { background: var(--info-700); }
+        .dot.debt { background: var(--warning-700); }
+        .dot.cod { background: var(--success-700); }
 
         .modal-backdrop {
             position: fixed;
@@ -728,19 +820,66 @@
 
         .detail-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 16px;
         }
 
-        .detail-card,
-        .compare-card {
+        .detail-section {
+            margin-bottom: 16px;
+            padding: 14px 16px;
             border: 1px solid var(--neutral-200);
             border-radius: 8px;
             background: white;
         }
 
+        .detail-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .detail-section-title {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--neutral-100);
+            color: var(--neutral-800);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .detail-field__label {
+            margin-bottom: 4px;
+            color: var(--neutral-500);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .detail-field__value {
+            color: var(--neutral-900);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        .detail-field__value.money {
+            font-weight: 800;
+        }
+
+        .detail-field__value.money.bad {
+            color: var(--error-700);
+        }
+
+        .detail-field__value.money.good {
+            color: var(--success-700);
+        }
+
+        .detail-field--span-2 {
+            grid-column: 1 / -1;
+        }
+
         .detail-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            background: white;
             padding: 12px;
         }
 
@@ -756,40 +895,6 @@
             color: var(--neutral-900);
             font-size: 14px;
             font-weight: 800;
-        }
-
-        .compare-card {
-            margin-bottom: 14px;
-            overflow: hidden;
-        }
-
-        .compare-row {
-            display: grid;
-            grid-template-columns: 180px repeat(3, 1fr);
-            border-bottom: 1px solid var(--neutral-100);
-        }
-
-        .compare-row:last-child {
-            border-bottom: 0;
-        }
-
-        .compare-cell {
-            padding: 10px 12px;
-            border-right: 1px solid var(--neutral-100);
-            color: var(--neutral-800);
-            font-size: 13px;
-        }
-
-        .compare-cell:last-child {
-            border-right: 0;
-        }
-
-        .compare-head {
-            background: var(--neutral-50);
-            color: var(--neutral-500);
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
         }
 
         .form-grid {
@@ -825,8 +930,7 @@
 
         @media (max-width: 1100px) {
             .filter-row,
-            .filter-row + .filter-row,
-            .report-grid {
+            .filter-row + .filter-row {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
@@ -841,8 +945,45 @@
                 grid-template-columns: 1fr;
             }
 
-            .compare-row {
-                grid-template-columns: 140px repeat(3, minmax(150px, 1fr));
+            .detail-field--span-2 {
+                grid-column: auto;
+            }
+
+            .dashboard-track {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .dashboard-track .paid-panel {
+                grid-column: 1 / -1;
+            }
+
+            .paid-panel__body {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .paid-panel__block {
+                flex-direction: row;
+            }
+
+            .paid-panel__block--collected {
+                padding-right: 0;
+            }
+
+            .paid-panel__block--debt {
+                padding-left: 0;
+                padding-top: 12px;
+                border-left: none;
+                border-top: 1px solid var(--neutral-200);
+            }
+
+            .paid-panel__total {
+                flex: 0 0 38%;
+                width: auto;
+                padding-right: 14px;
+                padding-bottom: 0;
+                border-right: 1px solid var(--neutral-200);
+                border-bottom: none;
             }
         }
 
@@ -861,8 +1002,7 @@
             }
 
             .filter-row,
-            .filter-row + .filter-row,
-            .report-grid {
+            .filter-row + .filter-row {
                 grid-template-columns: 1fr;
             }
         }
@@ -895,7 +1035,7 @@
                     <div class="portal-field">
                         <label class="portal-field__label" for="companyFilter">* Công ty</label>
                         <div class="portal-field__control portal-select-wrap">
-                            <select class="portal-select filter-select" id="companyFilter">
+                            <select class="portal-select filter-select" id="companyFilter" data-clearable="false">
                                 <option selected>Công ty TNHH NPP HCM</option>
                                 <option>Công ty TNHH NPP Bình Dương</option>
                             </select>
@@ -904,16 +1044,16 @@
                     <div class="portal-field portal-field--span-2">
                         <label class="portal-field__label" for="searchInput">Tìm kiếm</label>
                         <div class="portal-field__control portal-input-search-wrap">
-                            <input class="portal-input filter-input" id="searchInput" placeholder="Mã DLO, mã CH, cửa hàng, mã GD, tài xế" type="text"/>
+                            <input class="portal-input filter-input" id="searchInput" placeholder="Mã đơn giao hàng, mã CH, cửa hàng, mã GD, tài xế" type="text"/>
                         </div>
                     </div>
                     <div class="portal-field portal-field--span-2">
                         <label class="portal-field__label">Thời gian</label>
                         <div class="portal-field__control portal-date-range">
                             <div class="portal-date-range__inner">
-                                <input class="portal-date-range__input filter-input" id="fromDate" type="date" value="2026-06-01" aria-label="Từ ngày"/>
+                                <input class="portal-date-range__input filter-input" id="fromDate" type="text" value="01/06/2026" placeholder="Từ ngày" aria-label="Từ ngày" readonly/>
                                 <span class="portal-date-range__sep" aria-hidden="true">—</span>
-                                <input class="portal-date-range__input filter-input" id="toDate" type="date" value="2026-06-16" aria-label="Đến ngày"/>
+                                <input class="portal-date-range__input filter-input" id="toDate" type="text" value="16/06/2026" placeholder="Đến ngày" aria-label="Đến ngày" readonly/>
                             </div>
                             <span class="portal-date-range__icon" aria-hidden="true"></span>
                         </div>
@@ -922,7 +1062,7 @@
                         <label class="portal-field__label" for="driverFilter">Tài xế</label>
                         <div class="portal-field__control portal-select-wrap">
                             <select class="portal-select filter-select" id="driverFilter">
-                                <option value="">Tất cả</option>
+                                <option value="" selected hidden>Tài xế</option>
                                 <option>TX001 - Nguyễn Văn Tài</option>
                                 <option>TX006 - Lê Thanh Tùng</option>
                                 <option>TX014 - Trần Minh Khoa</option>
@@ -933,9 +1073,11 @@
                         <label class="portal-field__label" for="methodFilter">Phương thức thu</label>
                         <div class="portal-field__control portal-select-wrap">
                             <select class="portal-select filter-select" id="methodFilter">
-                                <option value="">Tất cả</option>
-                                <option value="EcoPay QR">EcoPay QR</option>
+                                <option value="" selected hidden>Phương thức thu</option>
+                                <option value="QR Code">QR Code</option>
                                 <option value="Tiền mặt">Tiền mặt</option>
+                                <option value="Chuyển khoản">Chuyển khoản</option>
+                                <option value="Nợ tiền">Nợ tiền</option>
                             </select>
                         </div>
                     </div>
@@ -943,7 +1085,7 @@
                         <label class="portal-field__label" for="statusFilter">Trạng thái đối soát</label>
                         <div class="portal-field__control portal-select-wrap">
                             <select class="portal-select filter-select" id="statusFilter">
-                                <option value="">Tất cả</option>
+                                <option value="" selected hidden>Trạng thái đối soát</option>
                                 <option>Đã khớp</option>
                                 <option>Chênh lệch</option>
                                 <option>Chờ đối soát</option>
@@ -954,7 +1096,7 @@
                         <label class="portal-field__label" for="sourceFilter">Nguồn đơn hàng</label>
                         <div class="portal-field__control portal-select-wrap">
                             <select class="portal-select filter-select" id="sourceFilter">
-                                <option value="">Tất cả</option>
+                                <option value="" selected hidden>Nguồn đơn hàng</option>
                                 <option>Ecom</option>
                                 <option>Merchant</option>
                                 <option>DMS</option>
@@ -966,7 +1108,7 @@
                         <label class="portal-field__label" for="diffFilter">Mức chênh lệch</label>
                         <div class="portal-field__control portal-select-wrap">
                             <select class="portal-select filter-select" id="diffFilter">
-                                <option value="">Tất cả</option>
+                                <option value="" selected hidden>Mức chênh lệch</option>
                                 <option value="has-diff">Có chênh lệch</option>
                                 <option value="no-diff">Không chênh lệch</option>
                             </select>
@@ -982,9 +1124,10 @@
             </div>
         </div>
 
-        <section class="report-grid" aria-label="Chỉ số đối soát">
+        <section class="dashboard-scroll" aria-label="Chỉ số đối soát">
+            <div class="dashboard-track">
             <div class="report-card">
-                <div class="report-label">Tổng đơn giao</div>
+                <div class="report-label">Tổng đơn giao hàng</div>
                 <div class="report-value" id="statOrders">0</div>
                 <div class="report-note">Đơn hoàn tất giao hàng</div>
             </div>
@@ -993,10 +1136,40 @@
                 <div class="report-value" id="statExpected">0đ</div>
                 <div class="report-note">Theo đơn giao hàng</div>
             </div>
-            <div class="report-card good">
-                <div class="report-label">Tiền đã thu</div>
-                <div class="report-value" id="statPaid">0đ</div>
-                <div class="report-note">EcoPay tự khớp · COD sau ghi nhận nộp tiền</div>
+            <div class="report-card paid-panel" aria-label="Tiền đã thu và tiền nợ">
+                <div class="paid-panel__body">
+                    <div class="paid-panel__block paid-panel__block--collected">
+                        <div class="paid-panel__total">
+                            <div class="report-label">Tổng tiền đã thu</div>
+                            <div class="report-value" id="statPaid">0đ</div>
+                            <div class="report-note">QR Code · Tiền mặt · Chuyển khoản</div>
+                        </div>
+                        <div class="paid-panel__split">
+                            <div class="paid-split-item">
+                                <div class="report-label">QR Code</div>
+                                <div class="report-value" id="statQr">0đ</div>
+                                <div class="report-note" id="statQrCount">0 đơn</div>
+                            </div>
+                            <div class="paid-split-item">
+                                <div class="report-label">Tiền mặt</div>
+                                <div class="report-value" id="statCash">0đ</div>
+                                <div class="report-note" id="statCashCount">0 đơn</div>
+                            </div>
+                            <div class="paid-split-item">
+                                <div class="report-label">Chuyển khoản</div>
+                                <div class="report-value" id="statBank">0đ</div>
+                                <div class="report-note" id="statBankCount">0 đơn</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="paid-panel__block paid-panel__block--debt">
+                        <div class="paid-panel__total">
+                            <div class="report-label">Tổng tiền nợ</div>
+                            <div class="report-value" id="statDebt">0đ</div>
+                            <div class="report-note" id="statDebtCount">0 đơn</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="report-card bad">
                 <div class="report-label">Chênh lệch</div>
@@ -1008,22 +1181,6 @@
                 <div class="report-value" id="statPending">0</div>
                 <div class="report-note">Chờ kế toán xác nhận</div>
             </div>
-        </section>
-
-        <section class="pay-split-bar" aria-label="Phân bổ theo phương thức thu">
-            <div class="pay-split-card eco">
-                <div>
-                    <div class="pay-split-name">EcoPay QR</div>
-                    <div class="pay-split-value" id="statEcoPay">0đ</div>
-                </div>
-                <div class="pay-split-meta" id="statEcoCount">0 đơn</div>
-            </div>
-            <div class="pay-split-card cash">
-                <div>
-                    <div class="pay-split-name">Tiền mặt</div>
-                    <div class="pay-split-value" id="statCash">0đ</div>
-                </div>
-                <div class="pay-split-meta" id="statCashCount">0 đơn</div>
             </div>
         </section>
 
@@ -1046,7 +1203,7 @@
             <div class="portal-protable__list-hd table-head">
                 <h2 class="portal-protable__list-title table-title">Danh sách đơn giao cần đối soát</h2>
                 <div class="portal-protable__list-actions header-actions">
-                    <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="codRecordBtn">Ghi nhận thu COD</button>
+                    <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="codRecordBtn">Ghi nhận thu tiền mặt</button>
                     <button class="portal-btn portal-btn--default btn btn-secondary" type="button" id="exportBtn">Xuất Excel</button>
                     <button class="portal-btn portal-btn--primary btn btn-primary" type="button" id="bulkReconcileBtn" disabled>Chốt đối soát</button>
                 </div>
@@ -1057,7 +1214,7 @@
                     <thead>
                         <tr>
                             <th class="checkbox-col"><input type="checkbox" id="selectAll"></th>
-                            <th>Mã đơn giao</th>
+                            <th>Mã đơn giao hàng</th>
                             <th>Mã CH</th>
                             <th>Cửa hàng</th>
                             <th>PXK/HD</th>
@@ -1073,7 +1230,8 @@
                         </tr>
                     </thead>
                     <tbody id="reportBody">
-                        <tr data-id="DLO-20260616-003" data-store-code="CH-HCM-1190" data-pxk="" data-store="Tạp hoá Ông Năm" data-phone="0987654321" data-driver="TX001 - Nguyễn Văn Tài" data-source="DMS" data-route="Tuyến Qin Test CKS" data-method="EcoPay QR" data-expected="1120000" data-paid="1120000" data-status="Đã khớp" data-transaction="EP-202606160944881" data-time="16/06/2026 09:44" data-owner="Kế toán giao hàng" data-note="Webhook EcoPay khớp tiền cần thu.">
+                        <!-- QR Code — đã khớp -->
+                        <tr data-id="DLO-20260616-003" data-store-code="CH-HCM-1190" data-pxk="" data-store="Tạp hoá Ông Năm" data-phone="0987654321" data-driver="TX001 - Nguyễn Văn Tài" data-source="DMS" data-route="Tuyến Qin Test CKS" data-method="QR Code" data-expected="1120000" data-paid="1120000" data-status="Đã khớp" data-transaction="QR-202606160944881" data-time="16/06/2026 09:44" data-note="Thanh toán QR Code khớp tiền cần thu.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260616-003</div><div class="code-sub">Hoàn tất 09:44</div></td>
                             <td><span class="cell-main">CH-HCM-1190</span></td>
@@ -1081,15 +1239,33 @@
                             <td><span class="cell-sub">—</span></td>
                             <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div><div class="cell-sub">Tuyến Qin Test CKS</div></td>
                             <td><span class="badge badge-neutral">DMS</span></td>
-                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>QR Code</span></td>
                             <td><span class="money">1.120.000đ</span></td>
                             <td><span class="money good">1.120.000đ</span></td>
                             <td><span class="money">0đ</span></td>
-                            <td><div class="cell-main">EP-202606160944881</div><div class="cell-sub">16/06/2026 09:44</div></td>
+                            <td><div class="cell-main">QR-202606160944881</div><div class="cell-sub">16/06/2026 09:44</div></td>
                             <td><span class="badge badge-success">Đã khớp</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
-                        <tr data-id="DLO-20260615-021" data-store-code="CH-HCM-4412" data-pxk="" data-store="CH Minh Phát" data-phone="0901234567" data-driver="TX001 - Nguyễn Văn Tài" data-source="Ecom" data-route="HCM Trung tâm" data-method="EcoPay QR" data-expected="8750000" data-paid="8750000" data-status="Đã khớp" data-transaction="EP-20260615882104" data-time="15/06/2026 16:20" data-owner="Kế toán giao hàng" data-note="Thanh toán EcoPay QR thành công.">
+                        <!-- QR Code — chênh lệch thiếu -->
+                        <tr data-id="DLO-20260616-019" data-store-code="CH-HCM-5502" data-pxk="" data-store="Siêu thị mini An Bình" data-phone="0911887766" data-driver="TX001 - Nguyễn Văn Tài" data-source="Ecom" data-route="HCM Trung tâm" data-method="QR Code" data-expected="2450000" data-paid="2000000" data-driver-claim="2450000" data-status="Chênh lệch" data-transaction="QR-202606161425991" data-time="16/06/2026 14:25" data-note="Khách quét QR chỉ thanh toán 2.000.000đ — thiếu 450.000đ so với đơn giao hàng.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-019</div><div class="code-sub">Hoàn tất 14:25</div></td>
+                            <td><span class="cell-main">CH-HCM-5502</span></td>
+                            <td><div class="cell-main">Siêu thị mini An Bình</div><div class="cell-sub">45 Nguyễn Trãi, Q.5</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div><div class="cell-sub">HCM Trung tâm</div></td>
+                            <td><span class="badge badge-info">Ecom</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>QR Code</span></td>
+                            <td><span class="money">2.450.000đ</span></td>
+                            <td><span class="money good">2.000.000đ</span></td>
+                            <td><span class="money bad">450.000đ</span></td>
+                            <td><div class="cell-main">QR-202606161425991</div><div class="cell-sub">16/06/2026 14:25</div></td>
+                            <td><span class="badge badge-error">Chênh lệch</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- QR Code — đã khớp lớn -->
+                        <tr data-id="DLO-20260615-021" data-store-code="CH-HCM-4412" data-pxk="" data-store="CH Minh Phát" data-phone="0901234567" data-driver="TX001 - Nguyễn Văn Tài" data-source="Ecom" data-route="HCM Trung tâm" data-method="QR Code" data-expected="8750000" data-paid="8750000" data-status="Đã khớp" data-transaction="QR-20260615882104" data-time="15/06/2026 16:20" data-note="Thanh toán QR Code thành công.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260615-021</div><div class="code-sub">Hoàn tất 16:20</div></td>
                             <td><span class="cell-main">CH-HCM-4412</span></td>
@@ -1097,15 +1273,16 @@
                             <td><span class="cell-sub">—</span></td>
                             <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div><div class="cell-sub">HCM Trung tâm</div></td>
                             <td><span class="badge badge-info">Ecom</span></td>
-                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>QR Code</span></td>
                             <td><span class="money">8.750.000đ</span></td>
                             <td><span class="money good">8.750.000đ</span></td>
                             <td><span class="money">0đ</span></td>
-                            <td><div class="cell-main">EP-20260615882104</div><div class="cell-sub">15/06/2026 16:20</div></td>
+                            <td><div class="cell-main">QR-20260615882104</div><div class="cell-sub">15/06/2026 16:20</div></td>
                             <td><span class="badge badge-success">Đã khớp</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
-                        <tr data-id="DLO-20260614-008" data-store-code="CH-HCM-3301" data-pxk="" data-store="Tạp hoá Cô Lan" data-phone="0912345678" data-driver="TX006 - Lê Thanh Tùng" data-source="Merchant" data-method="Tiền mặt" data-expected="890000" data-paid="0" data-reconciled="false" data-driver-claim="890000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="14/06/2026 11:05" data-note="Tài xế đã giao và xác nhận thu tiền mặt — chờ NV nộp tiền về NPP để chốt đối soát.">
+                        <!-- Tiền mặt — chờ đối soát -->
+                        <tr data-id="DLO-20260614-008" data-store-code="CH-HCM-3301" data-pxk="" data-store="Tạp hoá Cô Lan" data-phone="0912345678" data-driver="TX006 - Lê Thanh Tùng" data-source="Merchant" data-method="Tiền mặt" data-expected="890000" data-paid="0" data-reconciled="false" data-driver-claim="890000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="14/06/2026 11:05" data-note="Tài xế đã giao và xác nhận thu tiền mặt — chờ nộp tiền về NPP.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260614-008</div><div class="code-sub">Hoàn tất 11:05</div></td>
                             <td><span class="cell-main">CH-HCM-3301</span></td>
@@ -1113,7 +1290,7 @@
                             <td><span class="cell-sub">—</span></td>
                             <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
                             <td><span class="badge badge-neutral">Merchant</span></td>
-                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="method-pill"><span class="dot cash"></span>Tiền mặt</span></td>
                             <td><span class="money">890.000đ</span></td>
                             <td><span class="money">0đ</span></td>
                             <td><span class="money bad">890.000đ</span></td>
@@ -1121,7 +1298,8 @@
                             <td><span class="badge badge-warning">Chờ đối soát</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
-                        <tr data-id="DLO-20260616-012" data-store-code="CH-HCM-7720" data-pxk="PXK-240616-9011" data-store="Bách hóa Tân Thành" data-phone="0938123456" data-driver="TX014 - Trần Minh Khoa" data-source="OCR" data-method="Tiền mặt" data-expected="1450000" data-paid="0" data-reconciled="false" data-driver-claim="1450000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="16/06/2026 15:25" data-note="Đơn OCR thu COD, chờ tài xế nộp tiền cuối ca.">
+                        <!-- Tiền mặt — chờ đối soát OCR -->
+                        <tr data-id="DLO-20260616-012" data-store-code="CH-HCM-7720" data-pxk="PXK-240616-9011" data-store="Bách hóa Tân Thành" data-phone="0938123456" data-driver="TX014 - Trần Minh Khoa" data-source="OCR" data-method="Tiền mặt" data-expected="1450000" data-paid="0" data-reconciled="false" data-driver-claim="1450000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="16/06/2026 15:25" data-note="Đơn OCR thu tiền mặt, chờ tài xế nộp tiền cuối ca.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260616-012</div><div class="code-sub">Hoàn tất 15:25</div></td>
                             <td><span class="cell-main">CH-HCM-7720</span></td>
@@ -1129,7 +1307,7 @@
                             <td><span class="cell-main">PXK-240616-9011</span></td>
                             <td><div class="cell-main">TX014 - Trần Minh Khoa</div></td>
                             <td><span class="badge badge-neutral">OCR</span></td>
-                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="method-pill"><span class="dot cash"></span>Tiền mặt</span></td>
                             <td><span class="money">1.450.000đ</span></td>
                             <td><span class="money">0đ</span></td>
                             <td><span class="money bad">1.450.000đ</span></td>
@@ -1137,7 +1315,8 @@
                             <td><span class="badge badge-warning">Chờ đối soát</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
-                        <tr data-id="DLO-20260615-018" data-store-code="CH-HCM-2281" data-pxk="" data-store="CH Hương Quỳnh" data-phone="0909911222" data-driver="TX006 - Lê Thanh Tùng" data-source="Ecom" data-method="Tiền mặt" data-expected="620000" data-paid="0" data-reconciled="false" data-driver-claim="620000" data-status="Chờ đối soát" data-transaction="Chưa nộp tiền" data-time="15/06/2026 17:40" data-note="Khách thanh toán tiền mặt khi nhận hàng.">
+                        <!-- Tiền mặt — chênh lệch nộp thiếu -->
+                        <tr data-id="DLO-20260615-018" data-store-code="CH-HCM-2281" data-pxk="" data-store="CH Hương Quỳnh" data-phone="0909911222" data-driver="TX006 - Lê Thanh Tùng" data-source="Ecom" data-method="Tiền mặt" data-expected="620000" data-paid="500000" data-reconciled="true" data-driver-claim="620000" data-status="Chênh lệch" data-transaction="BN-TM-150618" data-time="15/06/2026 17:40" data-note="Tài xế nộp 500.000đ — thiếu 120.000đ so với xác nhận thu tại điểm giao.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260615-018</div><div class="code-sub">Hoàn tất 17:40</div></td>
                             <td><span class="cell-main">CH-HCM-2281</span></td>
@@ -1145,15 +1324,33 @@
                             <td><span class="cell-sub">—</span></td>
                             <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
                             <td><span class="badge badge-info">Ecom</span></td>
-                            <td><span class="method-pill"><span class="dot cod"></span>Tiền mặt</span></td>
+                            <td><span class="method-pill"><span class="dot cash"></span>Tiền mặt</span></td>
                             <td><span class="money">620.000đ</span></td>
-                            <td><span class="money">0đ</span></td>
-                            <td><span class="money bad">620.000đ</span></td>
-                            <td><div class="cell-main">Chưa nộp tiền</div><div class="cell-sub">Chờ NV nộp tiền</div></td>
-                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><span class="money good">500.000đ</span></td>
+                            <td><span class="money bad">120.000đ</span></td>
+                            <td><div class="cell-main">BN-TM-150618</div><div class="cell-sub">15/06/2026 17:40</div></td>
+                            <td><span class="badge badge-error">Chênh lệch</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
-                        <tr data-id="DLO-20260616-010" data-store-code="" data-pxk="PXK-240615-7721" data-store="CH Lan Anh" data-phone="0909887766" data-driver="TX001 - Nguyễn Văn Tài" data-source="OCR" data-method="EcoPay QR" data-expected="8450000" data-paid="8450000" data-status="Đã khớp" data-transaction="EP-202606160832771" data-time="16/06/2026 08:32" data-note="Thanh toán EcoPay QR thành công — giao hàng hoàn tất.">
+                        <!-- Tiền mặt — đã khớp sau ghi nhận -->
+                        <tr data-id="DLO-20260613-007" data-store-code="CH-HCM-1108" data-pxk="" data-store="Tạp hoá Bé Na" data-phone="0977123456" data-driver="TX014 - Trần Minh Khoa" data-source="DMS" data-method="Tiền mặt" data-expected="380000" data-paid="380000" data-reconciled="true" data-driver-claim="380000" data-status="Đã khớp" data-transaction="BN-TM-130707" data-time="13/06/2026 10:15" data-note="Đã ghi nhận nộp tiền mặt đầy đủ.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260613-007</div><div class="code-sub">Hoàn tất 10:15</div></td>
+                            <td><span class="cell-main">CH-HCM-1108</span></td>
+                            <td><div class="cell-main">Tạp hoá Bé Na</div><div class="cell-sub">22 Pasteur, Q.1</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX014 - Trần Minh Khoa</div></td>
+                            <td><span class="badge badge-neutral">DMS</span></td>
+                            <td><span class="method-pill"><span class="dot cash"></span>Tiền mặt</span></td>
+                            <td><span class="money">380.000đ</span></td>
+                            <td><span class="money good">380.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><div class="cell-main">BN-TM-130707</div><div class="cell-sub">13/06/2026 10:15</div></td>
+                            <td><span class="badge badge-success">Đã khớp</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Chuyển khoản — đã khớp -->
+                        <tr data-id="DLO-20260616-010" data-store-code="" data-pxk="PXK-240615-7721" data-store="CH Lan Anh" data-phone="0909887766" data-driver="TX001 - Nguyễn Văn Tài" data-source="OCR" data-method="Chuyển khoản" data-expected="8450000" data-paid="8450000" data-status="Đã khớp" data-transaction="CK-VCB-160832771" data-time="16/06/2026 08:32" data-note="Chuyển khoản khớp số tiền đơn giao hàng.">
                             <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
                             <td><div class="code-main">DLO-20260616-010</div><div class="code-sub">Hoàn tất 08:32</div></td>
                             <td><span class="cell-sub">—</span></td>
@@ -1161,19 +1358,121 @@
                             <td><span class="cell-main">PXK-240615-7721</span></td>
                             <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div></td>
                             <td><span class="badge badge-neutral">OCR</span></td>
-                            <td><span class="method-pill"><span class="dot"></span>EcoPay QR</span></td>
+                            <td><span class="method-pill"><span class="dot bank"></span>Chuyển khoản</span></td>
                             <td><span class="money">8.450.000đ</span></td>
                             <td><span class="money good">8.450.000đ</span></td>
                             <td><span class="money">0đ</span></td>
-                            <td><div class="cell-main">EP-202606160832771</div><div class="cell-sub">16/06/2026 08:32</div></td>
+                            <td><div class="cell-main">CK-VCB-160832771</div><div class="cell-sub">16/06/2026 08:32</div></td>
                             <td><span class="badge badge-success">Đã khớp</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Chuyển khoản — chênh lệch thừa -->
+                        <tr data-id="DLO-20260616-022" data-store-code="CH-HCM-8810" data-pxk="PXK-240616-2201" data-store="Đại lý Phước Thành" data-phone="0933556677" data-driver="TX006 - Lê Thanh Tùng" data-source="Merchant" data-method="Chuyển khoản" data-expected="3200000" data-paid="3500000" data-driver-claim="3200000" data-status="Chênh lệch" data-transaction="CK-TCB-161612002" data-time="16/06/2026 16:12" data-note="Khách chuyển dư 300.000đ so với tiền cần thu trên đơn giao hàng.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-022</div><div class="code-sub">Hoàn tất 16:12</div></td>
+                            <td><span class="cell-main">CH-HCM-8810</span></td>
+                            <td><div class="cell-main">Đại lý Phước Thành</div><div class="cell-sub">78 Cách Mạng Tháng 8, Q.10</div></td>
+                            <td><span class="cell-main">PXK-240616-2201</span></td>
+                            <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
+                            <td><span class="badge badge-neutral">Merchant</span></td>
+                            <td><span class="method-pill"><span class="dot bank"></span>Chuyển khoản</span></td>
+                            <td><span class="money">3.200.000đ</span></td>
+                            <td><span class="money good">3.500.000đ</span></td>
+                            <td><span class="money bad">300.000đ</span></td>
+                            <td><div class="cell-main">CK-TCB-161612002</div><div class="cell-sub">16/06/2026 16:12</div></td>
+                            <td><span class="badge badge-error">Chênh lệch</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Chuyển khoản — chờ đối soát -->
+                        <tr data-id="DLO-20260615-033" data-store-code="CH-HCM-6621" data-pxk="" data-store="CH Thanh Bình" data-phone="0902445566" data-driver="TX014 - Trần Minh Khoa" data-source="DMS" data-method="Chuyển khoản" data-expected="1780000" data-paid="0" data-driver-claim="1780000" data-status="Chờ đối soát" data-transaction="Chưa có mã GD" data-time="15/06/2026 09:50" data-note="Tài xế xác nhận khách đã chuyển khoản — chưa thấy giao dịch trên sao kê.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260615-033</div><div class="code-sub">Hoàn tất 09:50</div></td>
+                            <td><span class="cell-main">CH-HCM-6621</span></td>
+                            <td><div class="cell-main">CH Thanh Bình</div><div class="cell-sub">15 Hai Bà Trưng, Q.1</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX014 - Trần Minh Khoa</div></td>
+                            <td><span class="badge badge-neutral">DMS</span></td>
+                            <td><span class="method-pill"><span class="dot bank"></span>Chuyển khoản</span></td>
+                            <td><span class="money">1.780.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">1.780.000đ</span></td>
+                            <td><div class="cell-main">Chưa có mã GD</div><div class="cell-sub">Chờ đối chiếu sao kê</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Nợ tiền — chờ đối soát -->
+                        <tr data-id="DLO-20260616-025" data-store-code="CH-HCM-3340" data-pxk="" data-store="Tạp hoá Ông Tư" data-phone="0988112233" data-driver="TX001 - Nguyễn Văn Tài" data-source="Merchant" data-method="Nợ tiền" data-expected="960000" data-paid="0" data-driver-claim="0" data-status="Chờ đối soát" data-transaction="Ghi nợ CH" data-time="16/06/2026 11:40" data-note="Cửa hàng ghi nợ toàn bộ — chờ kế toán xác nhận công nợ trên đơn giao hàng.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-025</div><div class="code-sub">Hoàn tất 11:40</div></td>
+                            <td><span class="cell-main">CH-HCM-3340</span></td>
+                            <td><div class="cell-main">Tạp hoá Ông Tư</div><div class="cell-sub">9 Lê Lợi, Q.1</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div></td>
+                            <td><span class="badge badge-neutral">Merchant</span></td>
+                            <td><span class="method-pill"><span class="dot debt"></span>Nợ tiền</span></td>
+                            <td><span class="money">960.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">960.000đ</span></td>
+                            <td><div class="cell-main">Ghi nợ CH</div><div class="cell-sub">Chờ xác nhận công nợ</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Nợ tiền — chênh lệch (trả một phần) -->
+                        <tr data-id="DLO-20260614-041" data-store-code="CH-HCM-9901" data-pxk="PXK-240614-4102" data-store="CH Kim Ngân" data-phone="0912778899" data-driver="TX006 - Lê Thanh Tùng" data-source="Ecom" data-method="Nợ tiền" data-expected="2150000" data-paid="1000000" data-driver-claim="1000000" data-status="Chênh lệch" data-transaction="NỢ-PARTIAL-14041" data-time="14/06/2026 16:55" data-note="Khách trả một phần 1.000.000đ, còn nợ 1.150.000đ trên đơn giao hàng.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260614-041</div><div class="code-sub">Hoàn tất 16:55</div></td>
+                            <td><span class="cell-main">CH-HCM-9901</span></td>
+                            <td><div class="cell-main">CH Kim Ngân</div><div class="cell-sub">101 Võ Văn Tần, Q.3</div></td>
+                            <td><span class="cell-main">PXK-240614-4102</span></td>
+                            <td><div class="cell-main">TX006 - Lê Thanh Tùng</div></td>
+                            <td><span class="badge badge-info">Ecom</span></td>
+                            <td><span class="method-pill"><span class="dot debt"></span>Nợ tiền</span></td>
+                            <td><span class="money">2.150.000đ</span></td>
+                            <td><span class="money good">1.000.000đ</span></td>
+                            <td><span class="money bad">1.150.000đ</span></td>
+                            <td><div class="cell-main">NỢ-PARTIAL-14041</div><div class="cell-sub">14/06/2026 16:55</div></td>
+                            <td><span class="badge badge-error">Chênh lệch</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- Nợ tiền — chênh lệch đầy đủ (chưa thu) -->
+                        <tr data-id="DLO-20260615-050" data-store-code="CH-HCM-2210" data-pxk="" data-store="Bách hóa Hồng Phúc" data-phone="0903667788" data-driver="TX014 - Trần Minh Khoa" data-source="OCR" data-method="Nợ tiền" data-expected="540000" data-paid="0" data-driver-claim="0" data-status="Chênh lệch" data-transaction="NỢ-FULL-15050" data-time="15/06/2026 13:20" data-note="Ghi nợ toàn bộ — chưa thu được khoản nào, cần theo dõi công nợ.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260615-050</div><div class="code-sub">Hoàn tất 13:20</div></td>
+                            <td><span class="cell-main">CH-HCM-2210</span></td>
+                            <td><div class="cell-main">Bách hóa Hồng Phúc</div><div class="cell-sub">33 Điện Biên Phủ, Q.Bình Thạnh</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX014 - Trần Minh Khoa</div></td>
+                            <td><span class="badge badge-neutral">OCR</span></td>
+                            <td><span class="method-pill"><span class="dot debt"></span>Nợ tiền</span></td>
+                            <td><span class="money">540.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">540.000đ</span></td>
+                            <td><div class="cell-main">NỢ-FULL-15050</div><div class="cell-sub">15/06/2026 13:20</div></td>
+                            <td><span class="badge badge-error">Chênh lệch</span></td>
+                            <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
+                        </tr>
+                        <!-- QR Code — chờ đối soát (chưa có GD) -->
+                        <tr data-id="DLO-20260616-028" data-store-code="CH-HCM-4419" data-pxk="" data-store="CH Ngọc Mai" data-phone="0977001122" data-driver="TX001 - Nguyễn Văn Tài" data-source="DMS" data-method="QR Code" data-expected="730000" data-paid="0" data-driver-claim="730000" data-status="Chờ đối soát" data-transaction="Chưa có mã GD" data-time="16/06/2026 17:05" data-note="Tài xế xác nhận khách quét QR — hệ thống chưa nhận webhook thanh toán.">
+                            <td class="checkbox-col"><input class="row-check" type="checkbox"></td>
+                            <td><div class="code-main">DLO-20260616-028</div><div class="code-sub">Hoàn tất 17:05</div></td>
+                            <td><span class="cell-main">CH-HCM-4419</span></td>
+                            <td><div class="cell-main">CH Ngọc Mai</div><div class="cell-sub">67 Nguyễn Đình Chiểu, Q.3</div></td>
+                            <td><span class="cell-sub">—</span></td>
+                            <td><div class="cell-main">TX001 - Nguyễn Văn Tài</div></td>
+                            <td><span class="badge badge-neutral">DMS</span></td>
+                            <td><span class="method-pill"><span class="dot"></span>QR Code</span></td>
+                            <td><span class="money">730.000đ</span></td>
+                            <td><span class="money">0đ</span></td>
+                            <td><span class="money bad">730.000đ</span></td>
+                            <td><div class="cell-main">Chưa có mã GD</div><div class="cell-sub">Chờ webhook QR</div></td>
+                            <td><span class="badge badge-warning">Chờ đối soát</span></td>
                             <td><div class="row-actions"><button class="btn btn-text" type="button" data-action="detail">Chi tiết</button></div></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="pagination">
-                <span id="pageInfo">Hiển thị 1–6 / 6 đơn</span>
+                <span id="pageInfo">Hiển thị 1–14 / 14 đơn</span>
                 <div class="page-btns">
                     <button class="page-btn" type="button" disabled>‹</button>
                     <button class="page-btn active" type="button">1</button>
@@ -1188,15 +1487,15 @@
         <section class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="codModalTitle">
             <div class="modal-header">
                 <div>
-                    <div class="modal-title" id="codModalTitle">Ghi nhận thu COD</div>
-                    <div class="modal-subtitle">Danh sách đơn COD chờ ghi nhận nộp tiền — sắp xếp theo thời gian giao. Nhập trực tiếp trên từng dòng, lưu một hoặc nhiều đơn cùng lúc.</div>
+                    <div class="modal-title" id="codModalTitle">Ghi nhận thu tiền mặt</div>
+                    <div class="modal-subtitle">Danh sách đơn tiền mặt chờ ghi nhận nộp tiền — sắp xếp theo thời gian giao. Nhập trực tiếp trên từng dòng, lưu một hoặc nhiều đơn cùng lúc.</div>
                 </div>
                 <button class="modal-close" type="button" id="closeCodModal">×</button>
             </div>
             <div class="modal-body">
                 <div class="cod-modal-summary">
                     <div class="cod-summary-card">
-                        <div class="cod-summary-label">Đơn COD</div>
+                        <div class="cod-summary-label">Đơn tiền mặt</div>
                         <div class="cod-summary-value" id="codOrderCount">0</div>
                     </div>
                     <div class="cod-summary-card">
@@ -1232,67 +1531,88 @@
                 <button class="modal-close" type="button" id="closeModal">×</button>
             </div>
             <div class="modal-body">
-                <div class="detail-grid">
-                    <div class="detail-card">
-                        <div class="detail-label">Đơn giao</div>
-                        <div class="detail-value" id="detailOrder">-</div>
+                <section class="detail-section" aria-label="Thông tin đơn giao hàng">
+                    <div class="detail-section-title">Thông tin đơn giao hàng</div>
+                    <div class="detail-grid">
+                        <div class="detail-field">
+                            <div class="detail-field__label">Mã đơn giao hàng</div>
+                            <div class="detail-field__value" id="detailOrder">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Trạng thái đối soát</div>
+                            <div class="detail-field__value" id="detailStatus">—</div>
+                        </div>
+                        <div class="detail-field detail-field--span-2">
+                            <div class="detail-field__label">Cửa hàng</div>
+                            <div class="detail-field__value" id="detailStore">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Tài xế</div>
+                            <div class="detail-field__value" id="detailDriver">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Nguồn đơn hàng</div>
+                            <div class="detail-field__value" id="detailSource">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Phương thức thu</div>
+                            <div class="detail-field__value" id="detailMethod">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">PXK/HD</div>
+                            <div class="detail-field__value" id="detailPxk">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Thời gian hoàn tất giao</div>
+                            <div class="detail-field__value" id="detailTime">—</div>
+                        </div>
                     </div>
-                    <div class="detail-card">
-                        <div class="detail-label">Cửa hàng</div>
-                        <div class="detail-value" id="detailStore">-</div>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-label">Tài xế</div>
-                        <div class="detail-value" id="detailDriver">-</div>
-                    </div>
-                </div>
+                </section>
 
-                <div class="compare-card">
-                    <div class="compare-row compare-head">
-                        <div class="compare-cell">Hạng mục</div>
-                        <div class="compare-cell">DMS</div>
-                        <div class="compare-cell">Tài xế xác nhận</div>
-                        <div class="compare-cell">Thanh toán/biên nhận</div>
+                <section class="detail-section" aria-label="Đối soát tiền thu">
+                    <div class="detail-section-title">Đối soát tiền thu</div>
+                    <div class="detail-grid">
+                        <div class="detail-field">
+                            <div class="detail-field__label">Tiền phải thu</div>
+                            <div class="detail-field__value money" id="detailExpected">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Tài xế xác nhận thu</div>
+                            <div class="detail-field__value money" id="detailDriverClaim">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Tiền đã thu</div>
+                            <div class="detail-field__value money" id="detailPaid">—</div>
+                        </div>
+                        <div class="detail-field">
+                            <div class="detail-field__label">Chênh lệch</div>
+                            <div class="detail-field__value money" id="detailDiff">—</div>
+                        </div>
+                        <div class="detail-field detail-field--span-2">
+                            <div class="detail-field__label">Mã giao dịch / biên nhận</div>
+                            <div class="detail-field__value" id="detailTransaction">—</div>
+                        </div>
                     </div>
-                    <div class="compare-row">
-                        <div class="compare-cell">Số tiền</div>
-                        <div class="compare-cell money" id="compareExpected">-</div>
-                        <div class="compare-cell money" id="compareDriverPaid">-</div>
-                        <div class="compare-cell money" id="comparePaid">-</div>
-                    </div>
-                    <div class="compare-row">
-                        <div class="compare-cell">Mã tham chiếu</div>
-                        <div class="compare-cell" id="compareOrder">-</div>
-                        <div class="compare-cell" id="compareMethod">-</div>
-                        <div class="compare-cell" id="compareTransaction">-</div>
-                    </div>
-                    <div class="compare-row">
-                        <div class="compare-cell">Kết quả</div>
-                        <div class="compare-cell" id="compareStatus">-</div>
-                        <div class="compare-cell" id="compareDiff">-</div>
-                        <div class="compare-cell" id="compareTime">-</div>
-                    </div>
-                </div>
+                </section>
 
-                <div class="form-grid">
-                    <label class="form-field">
-                        <span class="form-label">Kết quả xử lý</span>
-                        <select class="form-select" id="resolveResult">
-                            <option>Chờ kiểm tra lại</option>
-                            <option>Ghi nhận đã khớp</option>
-                            <option>Tài xế bổ sung tiền thiếu</option>
-                            <option>Hoàn tiền phần nộp dư</option>
-                        </select>
-                    </label>
-                    <label class="form-field full">
-                        <span class="form-label">PXK/HD</span>
-                        <input class="form-input" id="detailPxk" readonly value="—">
-                    </label>
-                    <label class="form-field full">
-                        <span class="form-label">Ghi chú đối soát</span>
-                        <textarea class="form-textarea" id="resolveNote" placeholder="Nhập ghi chú xử lý chênh lệch..."></textarea>
-                    </label>
-                </div>
+                <section class="detail-section" aria-label="Xử lý đối soát">
+                    <div class="detail-section-title">Xử lý đối soát</div>
+                    <div class="form-grid">
+                        <label class="form-field full">
+                            <span class="form-label">Kết quả xử lý</span>
+                            <select class="form-select" id="resolveResult">
+                                <option>Chờ kiểm tra lại</option>
+                                <option>Ghi nhận đã khớp</option>
+                                <option>Tài xế bổ sung tiền thiếu</option>
+                                <option>Hoàn tiền phần nộp dư</option>
+                            </select>
+                        </label>
+                        <label class="form-field full">
+                            <span class="form-label">Ghi chú đối soát</span>
+                            <textarea class="form-textarea" id="resolveNote" placeholder="Nhập ghi chú xử lý chênh lệch..."></textarea>
+                        </label>
+                    </div>
+                </section>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" id="cancelModal">Đóng</button>
@@ -1326,11 +1646,8 @@
         }
 
         function getDisplayPaid(row) {
-            if (row.dataset.method === 'Tiền mặt') {
-                return row.dataset.reconciled === 'true' ? Number(row.dataset.paid || 0) : 0;
-            }
-            if (row.dataset.method === 'EcoPay QR') {
-                return row.dataset.status === 'Đã khớp' ? Number(row.dataset.expected || 0) : 0;
+            if (row.dataset.method === 'Tiền mặt' && row.dataset.reconciled !== 'true') {
+                return 0;
             }
             return Number(row.dataset.paid || 0);
         }
@@ -1408,23 +1725,36 @@
         function updateStats() {
             const list = visibleRows();
             const expected = list.reduce(function (sum, row) { return sum + Number(row.dataset.expected || 0); }, 0);
-            const paid = list.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
             const diffTotal = list.reduce(function (sum, row) { return sum + getRowDiff(row); }, 0);
             const pending = list.filter(function (row) { return row.dataset.status !== 'Đã khớp'; }).length;
-            const ecoRows = list.filter(function (row) { return row.dataset.method === 'EcoPay QR'; });
-            const cashRows = list.filter(function (row) { return row.dataset.method === 'Tiền mặt'; });
-            const ecoPaid = ecoRows.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
-            const cashPaid = cashRows.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
+
+            function byMethod(name) {
+                return list.filter(function (row) { return row.dataset.method === name; });
+            }
+            function sumPaid(methodRows) {
+                return methodRows.reduce(function (sum, row) { return sum + getDisplayPaid(row); }, 0);
+            }
+
+            const qrRows = byMethod('QR Code');
+            const cashRows = byMethod('Tiền mặt');
+            const bankRows = byMethod('Chuyển khoản');
+            const debtRows = byMethod('Nợ tiền');
+            const paidCollected = sumPaid(qrRows) + sumPaid(cashRows) + sumPaid(bankRows);
+            const paidDebt = sumPaid(debtRows);
 
             document.getElementById('statOrders').textContent = list.length;
             document.getElementById('statExpected').textContent = money(expected);
-            document.getElementById('statPaid').textContent = money(paid);
+            document.getElementById('statPaid').textContent = money(paidCollected);
             document.getElementById('statDiff').textContent = money(diffTotal);
             document.getElementById('statPending').textContent = pending;
-            document.getElementById('statEcoPay').textContent = money(ecoPaid);
-            document.getElementById('statCash').textContent = money(cashPaid);
-            document.getElementById('statEcoCount').textContent = ecoRows.length + ' đơn';
+            document.getElementById('statQr').textContent = money(sumPaid(qrRows));
+            document.getElementById('statCash').textContent = money(sumPaid(cashRows));
+            document.getElementById('statBank').textContent = money(sumPaid(bankRows));
+            document.getElementById('statDebt').textContent = money(paidDebt);
+            document.getElementById('statQrCount').textContent = qrRows.length + ' đơn';
             document.getElementById('statCashCount').textContent = cashRows.length + ' đơn';
+            document.getElementById('statBankCount').textContent = bankRows.length + ' đơn';
+            document.getElementById('statDebtCount').textContent = debtRows.length + ' đơn';
             document.getElementById('pageInfo').textContent = 'Hiển thị 1–' + list.length + ' / ' + list.length + ' đơn';
         }
 
@@ -1515,7 +1845,7 @@
             const list = document.getElementById('codFormList');
 
             if (!codTargetRows.length) {
-                list.innerHTML = '<div class="cod-empty">Không còn đơn COD chờ ghi nhận nộp tiền trong kỳ đang xem.</div>';
+                list.innerHTML = '<div class="cod-empty">Không còn đơn tiền mặt chờ ghi nhận nộp tiền trong kỳ đang xem.</div>';
                 updateCodInputSummary();
                 codModal.classList.add('show');
                 return;
@@ -1580,7 +1910,7 @@
             closeCodModal();
             applyFilters();
             if (saved > 0) {
-                showToast('Đã ghi nhận thu COD cho ' + saved + ' đơn.');
+                showToast('Đã ghi nhận thu tiền mặt cho ' + saved + ' đơn.');
             } else {
                 showToast('Vui lòng nhập số tiền thu tại ít nhất một dòng.');
             }
@@ -1592,21 +1922,25 @@
             const paid = getDisplayPaid(row);
             const rowDiff = getRowDiff(row);
             const driverClaim = Number(row.dataset.driverClaim || expected);
+            const paidClass = paid > 0 ? 'money good' : 'money';
+            const diffClass = rowDiff > 0 ? 'money bad' : 'money';
 
             document.getElementById('modalTitle').textContent = 'Chi tiết đối soát ' + row.dataset.id;
             document.getElementById('detailOrder').textContent = row.dataset.id;
             document.getElementById('detailStore').textContent = row.dataset.store + (row.dataset.storeCode ? ' · ' + row.dataset.storeCode : '');
-            document.getElementById('detailDriver').textContent = row.dataset.driver;
-            document.getElementById('detailPxk').value = row.dataset.pxk || '—';
-            document.getElementById('compareExpected').textContent = money(expected);
-            document.getElementById('compareDriverPaid').textContent = money(driverClaim);
-            document.getElementById('comparePaid').textContent = money(paid);
-            document.getElementById('compareOrder').textContent = row.dataset.id;
-            document.getElementById('compareMethod').textContent = row.dataset.method;
-            document.getElementById('compareTransaction').textContent = row.dataset.transaction;
-            document.getElementById('compareStatus').innerHTML = '<span class="' + badgeClass(row.dataset.status) + '">' + row.dataset.status + '</span>';
-            document.getElementById('compareDiff').innerHTML = rowDiff > 0 ? '<span class="money bad">' + money(rowDiff) + '</span>' : '<span class="money">0đ</span>';
-            document.getElementById('compareTime').textContent = row.dataset.time;
+            document.getElementById('detailDriver').textContent = row.dataset.driver || '—';
+            document.getElementById('detailSource').textContent = row.dataset.source || '—';
+            document.getElementById('detailMethod').textContent = row.dataset.method || '—';
+            document.getElementById('detailPxk').textContent = row.dataset.pxk || '—';
+            document.getElementById('detailTime').textContent = row.dataset.time || '—';
+            document.getElementById('detailStatus').innerHTML = '<span class="' + badgeClass(row.dataset.status) + '">' + row.dataset.status + '</span>';
+            document.getElementById('detailExpected').textContent = money(expected);
+            document.getElementById('detailDriverClaim').textContent = money(driverClaim);
+            document.getElementById('detailPaid').className = 'detail-field__value ' + paidClass;
+            document.getElementById('detailPaid').textContent = money(paid);
+            document.getElementById('detailDiff').className = 'detail-field__value ' + diffClass;
+            document.getElementById('detailDiff').textContent = money(rowDiff);
+            document.getElementById('detailTransaction').textContent = row.dataset.transaction || '—';
             document.getElementById('resolveNote').value = row.dataset.note || '';
             modal.classList.add('show');
         }
@@ -1634,7 +1968,7 @@
             if (closable.length > 0) {
                 showToast('Đã chốt đối soát ' + closable.length + ' đơn.');
             } else {
-                showToast('Vui lòng ghi nhận thu COD trước khi chốt đối soát.');
+                showToast('Vui lòng ghi nhận thu tiền mặt trước khi chốt đối soát.');
             }
         }
 
