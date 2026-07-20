@@ -644,6 +644,9 @@ body {
 .product-name { font-weight: 500; color: var(--c-text); margin-bottom: 2px; }
 .product-sku { font-size: 11px; color: var(--c-muted); font-family: 'SF Mono', Consolas, monospace; margin-bottom: 2px; }
 .product-qty { color: var(--c-sub); font-size: 12px; }
+.product-qty-delivered { font-size: 12px; color: var(--c-sub); margin-top: 2px; }
+.product-qty-delivered strong.partial { color: #B45309; }
+.product-qty-delivered strong.done { color: var(--c-green-dk); }
 .product-price { font-weight: 600; color: var(--c-text); white-space: nowrap; }
 
 .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 14px; }
@@ -1424,7 +1427,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <button class="chip active" type="button" data-filter="all">Tất cả <span class="cnt">5</span></button>
             <button class="chip" type="button" data-filter="wait">Chưa giao <span class="cnt">2</span></button>
             <button class="chip" type="button" data-filter="delivering">Đang giao <span class="cnt">1</span></button>
-            <button class="chip" type="button" data-filter="partial">Giao một phần <span class="cnt">1</span></button>
+            <button class="chip" type="button" data-filter="partial">Giao hàng 1 phần <span class="cnt">1</span></button>
             <button class="chip" type="button" data-filter="delivered">Hoàn thành <span class="cnt">1</span></button>
             <button class="chip" type="button" data-filter="failed">Thất bại <span class="cnt">0</span></button>
           </div>
@@ -1508,7 +1511,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="delivery-card-head">
               <span class="delivery-card-pin"><i class="ti ti-map-pin"></i></span>
               <div class="delivery-card-title-wrap">
-                <div class="delivery-card-title">Tạp hoá Cô Lan <span class="badge badge-partial">Giao một phần</span></div>
+                <div class="delivery-card-title">Tạp hoá Cô Lan <span class="badge badge-partial">Giao hàng 1 phần</span></div>
                 <div class="delivery-card-meta">DLO-20260616-007</div>
               </div>
               <div class="delivery-card-side"><div class="delivery-distance">5.1 km</div></div>
@@ -1962,14 +1965,17 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         </div>
         <div class="status-chips-wrap rp-chips-wrap" id="rpStatusChipsWrap">
           <div class="filter-chips" id="rpChipsRow1">
-            <button class="chip active" type="button" data-rp-filter="all">Tất cả <span class="cnt">6</span></button>
+            <button class="chip active" type="button" data-rp-filter="all">Tất cả <span class="cnt">7</span></button>
             <button class="chip" type="button" data-rp-filter="wait">Chưa giao <span class="cnt">1</span></button>
             <button class="chip" type="button" data-rp-filter="delivering">Đang giao <span class="cnt">1</span></button>
+          </div>
+          <div class="filter-chips" id="rpChipsRow2" style="padding-top:8px;">
+            <button class="chip" type="button" data-rp-filter="partial">Giao hàng 1 phần <span class="cnt">1</span></button>
             <button class="chip" type="button" data-rp-filter="delivered">Hoàn thành <span class="cnt">3</span></button>
             <button class="chip" type="button" data-rp-filter="failed">Thất bại <span class="cnt">1</span></button>
           </div>
         </div>
-        <div class="rp-list-head" id="rpListHead">Danh sách đơn giao hàng (6)</div>
+        <div class="rp-list-head" id="rpListHead">Danh sách đơn giao hàng (7)</div>
         <div id="rpOrderList">
           <article class="rp-card" data-status="delivered" data-date="2026-06-16" data-order="DLO-20260616-003" data-source="DMS" data-pay-method="qr" data-store-code="CH-HCM-1190" data-phone="0987654321" data-search="dlo-20260616-003 tap hoa ong nam 0987654321 ch-hcm-1190">
             <div class="rp-card-head">
@@ -1986,6 +1992,14 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             </div>
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0901234567</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>Ecom</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">18.750.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
+          </article>
+          <article class="rp-card" data-status="partial" data-date="2026-06-12" data-order="DLO-20260612-0018" data-source="DMS" data-pay-method="unpaid" data-store-code="CH-LA-018" data-phone="0909887766" data-search="dlo-20260612-0018 sieu thi lan anh 0909887766 ch-la-018">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">DLO-20260612-0018</div><div class="rp-card-store">Siêu thị Lan Anh</div></div>
+              <span class="badge badge-partial">Giao hàng 1 phần</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 12/06/2026</span><span><i class="ti ti-phone"></i> 0909887766</span></div>
+            <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">2.180.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
           </article>
           <article class="rp-card" data-status="wait" data-date="2026-06-16" data-order="DLO-20260616-001" data-source="DMS" data-pay-method="unpaid" data-store-code="CH-HCM-8821" data-phone="0328839644" data-search="dlo-20260616-001 hao sua store 0328839644 ch-hcm-8821">
             <div class="rp-card-head">
@@ -2203,6 +2217,10 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="info-row"><span class="info-label">Tên CH</span><span class="info-value" id="rpDetStoreName">Tạp hoá Ông Năm</span></div>
           <div class="info-row"><span class="info-label">SĐT</span><span class="info-value" id="rpDetPhone">0987654321</span></div>
           <div class="info-row"><span class="info-label">Địa chỉ</span><span class="info-value" id="rpDetAddress">88 Cách Mạng Tháng 8, P. 6, Q. 3, TP.HCM</span></div>
+        </div>
+        <div class="info-card" id="rpDetProductCard" style="display:none;">
+          <div class="info-card-title" id="rpDetProductTitle">Danh sách sản phẩm</div>
+          <div class="product-list" id="rpDetProductList"></div>
         </div>
         <div class="delivery-note-ocr" id="rpDetNote" style="margin:12px 16px;">
           <strong>Ghi chú</strong>
@@ -3309,7 +3327,7 @@ function devToggleConfig(key){
 
   function getStatusLabel(status){
     if(status === 'delivering') return 'Đang giao';
-    if(status === 'partial') return 'Giao một phần';
+    if(status === 'partial') return 'Giao hàng 1 phần';
     if(status === 'delivered') return 'Hoàn thành';
     if(status === 'failed') return 'Thất bại';
     if(status === 'cancelled') return 'Đã hủy';
@@ -5333,6 +5351,7 @@ function devToggleConfig(key){
   var rpStatusLabels = {
     wait: { text: 'Chưa giao', cls: 'badge badge-wait' },
     delivering: { text: 'Đang giao', cls: 'badge badge-delivering' },
+    partial: { text: 'Giao hàng 1 phần', cls: 'badge badge-partial' },
     delivered: { text: 'Hoàn thành', cls: 'badge badge-delivered' },
     failed: { text: 'Thất bại', cls: 'badge badge-failed' }
   };
@@ -5348,6 +5367,17 @@ function devToggleConfig(key){
       amount: '18.750.000 đ', storeCode: 'CH-HCM-4412', storeName: 'CH Minh Phát',
       phone: '0901234567', address: '120 Lý Tự Trọng, P. Bến Thành, Q. 1, TP.HCM',
       note: 'Đang giao — đã chụp ảnh xác nhận đến cửa hàng.'
+    },
+    'DLO-20260612-0018': {
+      status: 'partial', date: '12/06/2026', source: 'DMS', so: 'SO-DMS-88650', pxk: '—',
+      amount: '2.180.000 đ', storeCode: 'CH-LA-018', storeName: 'Siêu thị Lan Anh',
+      phone: '0909887766', address: '28 Phan Xích Long, P. 7, Q. Phú Nhuận, TP.HCM',
+      note: 'Đã giao một phần hàng lúc 14:32. Phần còn lại chờ giao tiếp.',
+      products: [
+        { sku: 'SKU-TH-SUA180', name: 'Sữa tươi TH 180ml', unit: 'Thùng', ordered: 20, delivered: 12, price: '800.000 đ' },
+        { sku: 'SKU-OR-133G', name: 'Bánh quy Oreo 133g', unit: 'Gói', ordered: 30, delivered: 18, price: '750.000 đ' },
+        { sku: 'SKU-TP-CAM1L', name: 'Nước cam Tropicana 1L', unit: 'Chai', ordered: 12, delivered: 12, price: '630.000 đ' }
+      ]
     },
     'DLO-20260616-001': {
       status: 'wait', date: '16/06/2026', source: 'DMS', so: 'SO-20260615-8821', pxk: '—',
@@ -5384,7 +5414,7 @@ function devToggleConfig(key){
     var state = rpReportState.orders;
     var cards = document.querySelectorAll('#rpOrderList .rp-card');
     var q = rpNormSearch(state.search);
-    var all = 0, wait = 0, delivering = 0, delivered = 0, failed = 0;
+    var all = 0, wait = 0, delivering = 0, partial = 0, delivered = 0, failed = 0;
     cards.forEach(function(card){
       if(!rpItemInDateRange(card, state.fromIso, state.toIso)) return;
       if(!rpMatchSource(card, state.source)) return;
@@ -5394,6 +5424,7 @@ function devToggleConfig(key){
       var st = card.dataset.status;
       if(st === 'wait') wait++;
       else if(st === 'delivering') delivering++;
+      else if(st === 'partial') partial++;
       else if(st === 'delivered') delivered++;
       else if(st === 'failed') failed++;
     });
@@ -5404,6 +5435,7 @@ function devToggleConfig(key){
       if(f === 'all') cnt.textContent = all;
       else if(f === 'wait') cnt.textContent = wait;
       else if(f === 'delivering') cnt.textContent = delivering;
+      else if(f === 'partial') cnt.textContent = partial;
       else if(f === 'delivered') cnt.textContent = delivered;
       else if(f === 'failed') cnt.textContent = failed;
     });
@@ -5427,6 +5459,25 @@ function devToggleConfig(key){
     document.getElementById('rpDetPhone').textContent = d.phone;
     document.getElementById('rpDetAddress').textContent = d.address;
     document.getElementById('rpDetNoteText').textContent = d.note;
+    var productCard = document.getElementById('rpDetProductCard');
+    var productList = document.getElementById('rpDetProductList');
+    if(productCard && productList){
+      if(d.products && d.products.length){
+        productCard.style.display = 'block';
+        document.getElementById('rpDetProductTitle').textContent = 'Danh sách sản phẩm (' + d.products.length + ' mặt hàng)';
+        productList.innerHTML = d.products.map(function(p){
+          var deliveredCls = p.delivered >= p.ordered ? 'done' : 'partial';
+          return '<div class="product-item"><div class="product-info"><div class="product-name">'+p.name+'</div>'+
+            '<div class="product-sku">'+p.sku+' · '+p.unit+'</div>'+
+            '<div class="product-qty">SL đặt: '+p.ordered+'</div>'+
+            '<div class="product-qty-delivered">SL đã giao: <strong class="'+deliveredCls+'">'+p.delivered+'</strong></div>'+
+            '</div><div class="product-price">'+p.price+'</div></div>';
+        }).join('');
+      } else {
+        productCard.style.display = 'none';
+        productList.innerHTML = '';
+      }
+    }
     goTo('reportdetail');
   }
 
