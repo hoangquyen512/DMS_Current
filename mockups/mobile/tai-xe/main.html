@@ -167,6 +167,44 @@ body {
 .list-search:focus { border-color: var(--c-primary); box-shadow: 0 0 0 3px var(--c-primary-ring); background: var(--c-surface); }
 .list-search::placeholder { color: var(--c-muted); }
 
+.rp-search-toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px 0; background: var(--c-surface);
+}
+.rp-search-toolbar .list-search { flex: 1; min-width: 0; }
+.rp-filter-btn {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border: 1px solid var(--c-border2); border-radius: var(--r-sm);
+  background: var(--c-surface); color: var(--c-primary); font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative; box-shadow: var(--shadow);
+}
+.rp-filter-btn:active { background: var(--c-primary-lt); transform: scale(.97); }
+.rp-filter-btn.has-active::after {
+  content: ''; position: absolute; top: 7px; right: 7px;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--c-primary);
+  border: 1.5px solid var(--c-surface);
+}
+.rp-filter-sheet.bottom-sheet { max-height: 88%; }
+.rp-filter-section { margin-bottom: 18px; }
+.rp-filter-section:last-child { margin-bottom: 4px; }
+.rp-filter-label {
+  font-size: 11px; font-weight: 700; color: var(--c-sub);
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px;
+}
+.rp-filter-date-row {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;
+}
+.rp-filter-date {
+  text-align: left; padding: 10px 12px; border-radius: var(--r-sm);
+  border: 1px solid var(--c-border2); background: var(--c-bg); cursor: pointer;
+}
+.rp-filter-date__lbl { display: block; font-size: 10px; color: var(--c-muted); margin-bottom: 2px; }
+.rp-filter-date__val { display: block; font-size: 13px; font-weight: 600; color: var(--c-text); }
+.rp-filter-date-sep { font-size: 12px; color: var(--c-muted); font-weight: 600; }
+.rp-filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rp-filter-chips .chip { cursor: pointer; }
+
 .content { flex: 1; overflow-y: auto; overflow-x: hidden; background: var(--c-bg); -webkit-overflow-scrolling: touch; }
 .content::-webkit-scrollbar { display: none; }
 .content.pad-nav { padding-bottom: 72px; }
@@ -263,6 +301,12 @@ body {
   margin: 0 16px 8px; padding: 10px 12px; border-radius: var(--r-sm);
   background: var(--c-bg); border: 1px solid var(--c-border); font-size: 12px; color: var(--c-sub); line-height: 1.45;
 }
+#viewBasicDelivery .basic-photo-card { margin: 10px 16px 0; }
+#viewBasicDelivery .basic-photo-card .info-card-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+#viewBasicDelivery .basic-photo-opt {
+  font-size: 11px; font-weight: 500; color: var(--c-muted); text-transform: none; letter-spacing: 0;
+}
+#viewBasicDelivery .basic-photo-card .photo-grid { padding-top: 8px; padding-bottom: 12px; }
 
 .delivery-card-head { display: flex; align-items: flex-start; gap: 8px; padding: 14px 14px 0; }
 .delivery-card {
@@ -285,6 +329,14 @@ body {
   font-size: 11px; color: var(--c-sub); margin-top: 6px;
   display: flex; align-items: flex-start; gap: 4px; line-height: 1.35;
 }
+/* Config: ẩn công nợ ngoài danh sách khi SHOW_DEBT_ON_LIST = off */
+.config-hide-debt .delivery-debt,
+.config-hide-debt .delivery-debt-tagbar { display: none !important; }
+/* Config: ẩn tab OCR khi ENABLE_DRIVER_OCR = off */
+.config-hide-ocr .nav-item[data-nav="ocr"] { display: none !important; }
+/* Config: ẩn toggle + nhãn Basic/Advance khi mode do Portal cấu hình */
+.config-hide-mode-toggle #mainDriverModeToggle { display: none !important; }
+.config-hide-mode-labels .driver-mode-tag { display: none !important; }
 .delivery-debt i { font-size: 12px; margin-top: 1px; flex-shrink: 0; color: var(--c-primary); }
 .delivery-debt strong { color: var(--c-text); font-weight: 600; }
 .delivery-debt.is-warn strong { color: #B45309; }
@@ -914,6 +966,40 @@ body {
 .rp-card-foot strong { color: var(--c-sub); font-weight: 600; }
 .rp-card-amt { font-size: 14px; font-weight: 700; color: var(--c-text); }
 
+/* Nhóm thu tiền — 1 khách, nhiều đơn */
+.rp-pay-group {
+  margin: 0 16px 10px; border-radius: var(--r); background: var(--c-surface);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow); overflow: hidden;
+}
+.rp-pay-group__head {
+  padding: 12px 14px; border-bottom: 1px solid var(--c-border);
+  background: linear-gradient(145deg, var(--c-primary-lt) 0%, var(--c-surface) 85%);
+}
+.rp-pay-group__store { font-size: 15px; font-weight: 700; color: var(--c-text); }
+.rp-pay-group__sub {
+  margin-top: 4px; font-size: 12px; color: var(--c-sub); line-height: 1.4;
+  display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center;
+}
+.rp-pay-group__sub i { font-size: 13px; vertical-align: -2px; }
+.rp-pay-group__badge-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.rp-pay-group__orders { padding: 4px 0; }
+.rp-pay-group__order-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid var(--c-border); font-size: 12px;
+}
+.rp-pay-group__order-row:last-child { border-bottom: none; }
+.rp-pay-group__order-code {
+  font-family: 'SF Mono', Consolas, monospace; font-weight: 600; color: var(--c-primary); font-size: 11px;
+}
+.rp-pay-group__order-meta { margin-top: 2px; color: var(--c-muted); font-size: 11px; }
+.rp-pay-group__order-amt { font-size: 13px; font-weight: 700; color: var(--c-text); white-space: nowrap; }
+.rp-pay-group__total {
+  padding: 11px 14px; background: var(--c-green-lt); border-top: 1px solid rgba(16,185,129,.2);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.rp-pay-group__total-lbl { font-size: 12px; font-weight: 700; color: var(--c-green-dk); }
+.rp-pay-group__total-val { font-size: 15px; font-weight: 800; color: var(--c-green-dk); }
+
 /* ===== Dashboard báo cáo giao hàng (APP) ===== */
 .rp-dash-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 16px 0; }
 .rp-kpi-card {
@@ -983,6 +1069,23 @@ body {
 }
 .rp-pay-total-lbl { font-size: 12px; font-weight: 700; color: var(--c-green-dk); display: flex; align-items: center; gap: 6px; }
 .rp-pay-total-val { font-size: 15px; font-weight: 800; color: var(--c-green-dk); }
+.rp-debt-panel {
+  margin: 0 16px 12px; border-radius: var(--r); background: var(--c-surface);
+  border: 1px solid #FDBA74; box-shadow: var(--shadow); overflow: hidden;
+}
+.rp-debt-panel__inner {
+  padding: 14px 14px; display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(145deg, #FFFAEB 0%, #FFFFFF 72%);
+}
+.rp-debt-panel__icon {
+  width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+  background: #FEF3C7; color: #B45309;
+}
+.rp-debt-panel__main { flex: 1; min-width: 0; }
+.rp-debt-panel__lbl { font-size: 12px; font-weight: 600; color: #92400E; }
+.rp-debt-panel__sub { font-size: 11px; color: var(--c-muted); margin-top: 2px; }
+.rp-debt-panel__val { font-size: 16px; font-weight: 800; color: #C2410C; flex-shrink: 0; }
 .rp-menu-list { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px; }
 .rp-menu-item {
   display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
@@ -1312,17 +1415,6 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="sum-item"><div class="sum-num" id="dashCountTotal">5</div><div class="sum-lbl">Hôm nay</div></div>
           <div class="sum-item"><div class="sum-num" id="dashCountDelivering">1</div><div class="sum-lbl">Đang giao</div></div>
           <div class="sum-item"><div class="sum-num" id="dashCountDone">1</div><div class="sum-lbl">Hoàn thành</div></div>
-        </div>
-        <div class="dashboard-money" id="dashboardMoney">
-          <div class="dm-item">
-            <div class="dm-val dm-val--collect" id="dashToCollect" title="Số tiền phải thu hôm nay">21.556.000 đ</div>
-            <div class="dm-lbl">Phải thu hôm nay</div>
-          </div>
-          <div class="dm-divider" aria-hidden="true"></div>
-          <div class="dm-item">
-            <div class="dm-val dm-val--ok" id="dashCollected" title="Số tiền đã thu">1.654.000 đ</div>
-            <div class="dm-lbl">Đã thu</div>
-          </div>
         </div>
         <div class="list-search-wrap">
           <input class="list-search" id="listSearch" type="text" placeholder="Tìm mã CH, tên CH, SĐT, mã đơn giao hàng"/>
@@ -1768,7 +1860,18 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-kpi-amt" id="rpKpiUndeliveredAmt">22.090.000 đ</div>
           </div>
         </div>
-        <div class="rp-section-hd"><i class="ti ti-wallet"></i> Tổng thu theo PTTT</div>
+        <div class="dashboard-money" id="dashboardMoney" style="margin:12px 16px 0;border-radius:var(--r);border:1px solid var(--c-border);box-shadow:var(--shadow);">
+          <div class="dm-item">
+            <div class="dm-val dm-val--collect" id="dashToCollect" title="Số tiền phải thu hôm nay">21.556.000 đ</div>
+            <div class="dm-lbl">Phải thu hôm nay</div>
+          </div>
+          <div class="dm-divider" aria-hidden="true"></div>
+          <div class="dm-item">
+            <div class="dm-val dm-val--ok" id="dashCollected" title="Số tiền đã thu">1.654.000 đ</div>
+            <div class="dm-lbl">Đã thu</div>
+          </div>
+        </div>
+        <div class="rp-section-hd" style="margin-top:16px;"><i class="ti ti-wallet"></i> Tổng thu theo PTTT</div>
         <div class="rp-pay-panel">
           <div class="rp-pay-hd">Tiền đã thu theo phương thức</div>
           <div class="rp-pay-row">
@@ -1798,18 +1901,19 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
               <div class="rp-pay-amt-val">8.750.000 đ</div>
             </div>
           </div>
-          <div class="rp-pay-row">
-            <div class="rp-pay-icon debt" aria-hidden="true"><i class="ti ti-report-money"></i></div>
-            <div class="rp-pay-main">
-              <div class="rp-pay-method">Công nợ khả dụng</div>
-            </div>
-            <div class="rp-pay-amt">
-              <div class="rp-pay-amt-val">0 đ</div>
-            </div>
-          </div>
           <div class="rp-pay-total">
             <div class="rp-pay-total-lbl"><i class="ti ti-sum"></i> Tổng đã thu</div>
             <div class="rp-pay-total-val">13.150.000 đ</div>
+          </div>
+        </div>
+        <div class="rp-debt-panel" id="rpDebtTotalPanel">
+          <div class="rp-debt-panel__inner">
+            <div class="rp-debt-panel__icon" aria-hidden="true"><i class="ti ti-receipt"></i></div>
+            <div class="rp-debt-panel__main">
+              <div class="rp-debt-panel__lbl">Tổng tiền nợ</div>
+              <div class="rp-debt-panel__sub">Ghi nợ khi giao hàng trong kỳ</div>
+            </div>
+            <div class="rp-debt-panel__val" id="rpDebtTotalVal">890.000 đ</div>
           </div>
         </div>
         <div class="rp-section-hd"><i class="ti ti-list-details"></i> Báo cáo chi tiết</div>
@@ -1823,18 +1927,10 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
           </button>
           <button class="rp-menu-item" type="button" data-go="reportpay">
-            <div class="rp-menu-icon green"><i class="ti ti-qrcode"></i></div>
+            <div class="rp-menu-icon green"><i class="ti ti-wallet"></i></div>
             <div class="rp-menu-body">
-              <div class="rp-menu-title">Thanh toán Ecopay</div>
-              <div class="rp-menu-desc">Giao dịch QR · đối soát thu tiền không tiền mặt</div>
-            </div>
-            <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
-          </button>
-          <button class="rp-menu-item" type="button" data-go="reportperf">
-            <div class="rp-menu-icon amber"><i class="ti ti-chart-line"></i></div>
-            <div class="rp-menu-body">
-              <div class="rp-menu-title">Hiệu suất giao hàng</div>
-              <div class="rp-menu-desc">Tỷ lệ hoàn thành · thời gian giao trung bình</div>
+              <div class="rp-menu-title">Báo cáo chi tiết thu tiền</div>
+              <div class="rp-menu-desc">QR Ecopay · Tiền mặt · Chuyển khoản · Nợ tiền</div>
             </div>
             <span class="rp-menu-arrow"><i class="ti ti-chevron-right"></i></span>
           </button>
@@ -1856,10 +1952,14 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
           <h1>Đơn giao hàng chi tiết</h1>
-          <div class="step">01/06/2026 – 16/06/2026</div>
+          <div class="step" id="rpOrdersDateRange">01/06/2026 – 16/06/2026</div>
         </div>
       </div>
       <div class="content pad-footer">
+        <div class="rp-search-toolbar">
+          <input class="list-search" id="rpOrdersSearch" type="search" placeholder="Mã, tên, SĐT CH, mã đơn giao hàng" autocomplete="off"/>
+          <button class="rp-filter-btn" type="button" id="btnRpOrdersFilter" aria-label="Bộ lọc" title="Bộ lọc"><i class="ti ti-filter"></i></button>
+        </div>
         <div class="status-chips-wrap rp-chips-wrap" id="rpStatusChipsWrap">
           <div class="filter-chips" id="rpChipsRow1">
             <button class="chip active" type="button" data-rp-filter="all">Tất cả <span class="cnt">6</span></button>
@@ -1871,7 +1971,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         </div>
         <div class="rp-list-head" id="rpListHead">Danh sách đơn giao hàng (6)</div>
         <div id="rpOrderList">
-          <article class="rp-card" data-status="delivered" data-date="2026-06-16" data-order="DLO-20260616-003">
+          <article class="rp-card" data-status="delivered" data-date="2026-06-16" data-order="DLO-20260616-003" data-source="DMS" data-pay-method="qr" data-store-code="CH-HCM-1190" data-phone="0987654321" data-search="dlo-20260616-003 tap hoa ong nam 0987654321 ch-hcm-1190">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260616-003</div><div class="rp-card-store">Tạp hoá Ông Năm</div></div>
               <span class="badge badge-delivered">Hoàn thành</span>
@@ -1879,7 +1979,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0987654321</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">1.120.000 đ</span><span class="delivery-pay-status is-paid">Đã thanh toán</span></span></div>
           </article>
-          <article class="rp-card" data-status="delivering" data-date="2026-06-16" data-order="DLO-20260616-004">
+          <article class="rp-card" data-status="delivering" data-date="2026-06-16" data-order="DLO-20260616-004" data-source="Ecom" data-pay-method="unpaid" data-store-code="CH-HCM-4412" data-phone="0901234567" data-search="dlo-20260616-004 ch minh phat 0901234567 ch-hcm-4412">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260616-004</div><div class="rp-card-store">CH Minh Phát</div></div>
               <span class="badge badge-delivering">Đang giao</span>
@@ -1887,7 +1987,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0901234567</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>Ecom</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">18.750.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
           </article>
-          <article class="rp-card" data-status="wait" data-date="2026-06-16" data-order="DLO-20260616-001">
+          <article class="rp-card" data-status="wait" data-date="2026-06-16" data-order="DLO-20260616-001" data-source="DMS" data-pay-method="unpaid" data-store-code="CH-HCM-8821" data-phone="0328839644" data-search="dlo-20260616-001 hao sua store 0328839644 ch-hcm-8821">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260616-001</div><div class="rp-card-store">Hào Sữa Store</div></div>
               <span class="badge badge-wait">Chưa giao</span>
@@ -1895,7 +1995,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026</span><span><i class="ti ti-phone"></i> 0328839644</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>DMS</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">2.450.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
           </article>
-          <article class="rp-card" data-status="delivered" data-date="2026-06-15" data-order="DLO-20260615-021">
+          <article class="rp-card" data-status="delivered" data-date="2026-06-15" data-order="DLO-20260615-021" data-source="Ecom" data-pay-method="transfer" data-store-code="CH-HCM-4412" data-phone="0901234567" data-search="dlo-20260615-021 ch minh phat 0901234567 ch-hcm-4412">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260615-021</div><div class="rp-card-store">CH Minh Phát</div></div>
               <span class="badge badge-delivered">Hoàn thành</span>
@@ -1903,7 +2003,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 15/06/2026</span><span><i class="ti ti-phone"></i> 0901234567</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>Ecom</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">8.750.000 đ</span><span class="delivery-pay-status is-paid">Đã thanh toán</span></span></div>
           </article>
-          <article class="rp-card" data-status="failed" data-date="2026-06-14" data-order="DLO-20260614-008">
+          <article class="rp-card" data-status="failed" data-date="2026-06-14" data-order="DLO-20260614-008" data-source="Merchant" data-pay-method="debt" data-store-code="CH-HCM-3301" data-phone="0912345678" data-search="dlo-20260614-008 tap hoa co lan 0912345678 ch-hcm-3301">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260614-008</div><div class="rp-card-store">Tạp hoá Cô Lan</div></div>
               <span class="badge badge-failed">Thất bại</span>
@@ -1911,7 +2011,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
             <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 14/06/2026</span><span><i class="ti ti-phone"></i> 0912345678</span></div>
             <div class="rp-card-foot"><span>Nguồn: <strong>Merchant</strong></span><span class="rp-card-amt-wrap"><span class="rp-card-amt">890.000 đ</span><span class="delivery-pay-status is-unpaid">Chưa thanh toán</span></span></div>
           </article>
-          <article class="rp-card" data-status="delivered" data-date="2026-06-13" data-order="DLO-20260613-055">
+          <article class="rp-card" data-status="delivered" data-date="2026-06-13" data-order="DLO-20260613-055" data-source="DMS" data-pay-method="cash" data-store-code="CH-HCM-5520" data-phone="0905112233" data-search="dlo-20260613-055 sieu thi mai anh 0905112233 ch-hcm-5520">
             <div class="rp-card-head">
               <div><div class="rp-card-code">DLO-20260613-055</div><div class="rp-card-store">Siêu thị Mai Anh</div></div>
               <span class="badge badge-delivered">Hoàn thành</span>
@@ -1929,66 +2029,116 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       </div>
     </div>
 
-    <!-- ===== VIEW: BC chi tiết — Thanh toán Ecopay ===== -->
+    <!-- ===== VIEW: BC chi tiết — Báo cáo chi tiết thu tiền ===== -->
     <div class="view" id="viewReportPay">
       <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
       <div class="detail-header">
         <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
-          <h1>Thanh toán Ecopay</h1>
-          <div class="step">01/06/2026 – 16/06/2026</div>
+          <h1>Báo cáo chi tiết thu tiền</h1>
+          <div class="step" id="rpPayDateRange">01/06/2026 – 16/06/2026</div>
         </div>
       </div>
       <div class="content pad-footer">
-        <div class="rp-perf-grid" style="padding-top:12px;">
-          <div class="rp-perf-box"><div class="n">1</div><div class="l">Giao dịch thành công</div></div>
-          <div class="rp-perf-box"><div class="n" style="color:var(--c-green-dk);">1.120.000 đ</div><div class="l">Tổng đã thu</div></div>
+        <div class="rp-search-toolbar">
+          <input class="list-search" id="rpPaySearch" type="search" placeholder="Mã, tên, SĐT CH, mã đơn giao hàng" autocomplete="off"/>
+          <button class="rp-filter-btn" type="button" id="btnRpPayFilter" aria-label="Bộ lọc" title="Bộ lọc"><i class="ti ti-filter"></i></button>
         </div>
-        <div class="rp-list-head">Giao dịch QR Ecopay</div>
-        <article class="rp-card" style="cursor:default;">
-          <div class="rp-card-head">
-            <div><div class="rp-card-code">ECO-20260616-8841</div><div class="rp-card-store">Tạp hoá Ông Năm</div></div>
-            <span class="badge badge-delivered">Thành công</span>
+        <div class="rp-perf-grid" style="padding-top:12px;">
+          <div class="rp-perf-box"><div class="n" style="color:var(--c-green-dk);">13.150.000 đ</div><div class="l">Tổng đã thu</div></div>
+          <div class="rp-perf-box"><div class="n" style="color:#C2410C;">890.000 đ</div><div class="l">Tổng tiền nợ</div></div>
+        </div>
+        <div class="status-chips-wrap rp-chips-wrap" style="padding-top:4px;">
+          <div class="filter-chips" id="rpPayChips">
+            <button class="chip active" type="button" data-rp-pay="all">Tất cả</button>
+            <button class="chip" type="button" data-rp-pay="qr">QR Ecopay</button>
+            <button class="chip" type="button" data-rp-pay="cash">Tiền mặt</button>
+            <button class="chip" type="button" data-rp-pay="transfer">Chuyển khoản</button>
+            <button class="chip" type="button" data-rp-pay="debt">Nợ tiền</button>
           </div>
-          <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026 09:44</span><span><i class="ti ti-link"></i> DLO-20260616-003</span></div>
-          <div class="rp-card-foot"><span>Mã ref: <strong>FPV882910</strong></span><span class="rp-card-amt">1.120.000 đ</span></div>
-        </article>
-        <div class="bottom-msg">Đã hết thông tin</div>
-      </div>
-    </div>
+        </div>
+        <div class="rp-list-head">Danh sách giao dịch thu tiền</div>
+        <div id="rpPayList">
+          <!-- Ví dụ: 1 khách thu tiền nhiều đơn trong cùng lần giao -->
+          <article class="rp-pay-group" data-rp-pay="cash" data-date="2026-06-16" data-source="DMS" data-store-code="CH-HCM-8821" data-phone="0328839644" data-search="tm-20260616-5582 hao sua store 0328839644 ch-hcm-8821 dlo-20260616-001 dlo-20260616-015 dlo-20260616-018">
+            <div class="rp-pay-group__head">
+              <div class="rp-pay-group__badge-row">
+                <div>
+                  <div class="rp-pay-group__store">Hào Sữa Store</div>
+                  <div class="rp-pay-group__sub">
+                    <span><i class="ti ti-phone"></i> 0328839644</span>
+                    <span><i class="ti ti-calendar"></i> 16/06/2026 14:20</span>
+                  </div>
+                </div>
+                <span class="badge badge-wait">Tiền mặt</span>
+              </div>
+              <div class="rp-pay-group__sub" style="margin-top:8px;">
+                <span><i class="ti ti-receipt"></i> Mã thu: <strong style="color:var(--c-text);">TM-20260616-5582</strong></span>
+                <span><i class="ti ti-package"></i> Thu gộp <strong style="color:var(--c-text);">3 đơn</strong> tại điểm giao</span>
+              </div>
+            </div>
+            <div class="rp-pay-group__orders">
+              <div class="rp-pay-group__order-row">
+                <div>
+                  <div class="rp-pay-group__order-code">DLO-20260616-001</div>
+                  <div class="rp-pay-group__order-meta">PXK-09126 · Giao đủ</div>
+                </div>
+                <div class="rp-pay-group__order-amt">2.450.000 đ</div>
+              </div>
+              <div class="rp-pay-group__order-row">
+                <div>
+                  <div class="rp-pay-group__order-code">DLO-20260616-015</div>
+                  <div class="rp-pay-group__order-meta">SO-240615-8820 · Giao đủ</div>
+                </div>
+                <div class="rp-pay-group__order-amt">1.850.000 đ</div>
+              </div>
+              <div class="rp-pay-group__order-row">
+                <div>
+                  <div class="rp-pay-group__order-code">DLO-20260616-018</div>
+                  <div class="rp-pay-group__order-meta">Giao một phần · còn nợ 320.000 đ</div>
+                </div>
+                <div class="rp-pay-group__order-amt">680.000 đ</div>
+              </div>
+            </div>
+            <div class="rp-pay-group__total">
+              <span class="rp-pay-group__total-lbl"><i class="ti ti-sum"></i> Tổng thu tại cửa hàng</span>
+              <span class="rp-pay-group__total-val">4.980.000 đ</span>
+            </div>
+          </article>
 
-    <!-- ===== VIEW: BC chi tiết — Hiệu suất giao hàng ===== -->
-    <div class="view" id="viewReportPerf">
-      <div class="status-bar"><span>9:41</span><div class="status-right"><a class="status-portal-link" href="/main.html" title="DMS Portal" aria-label="Mở DMS Portal"><i class="ti ti-world"></i></a><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>
-      <div class="detail-header">
-        <button class="back" type="button" data-go="report"><i class="ti ti-arrow-left"></i></button>
-        <div class="hdr-center">
-          <h1>Hiệu suất giao hàng</h1>
-          <div class="step">01/06/2026 – 16/06/2026</div>
+          <article class="rp-card" data-rp-pay="qr" data-date="2026-06-16" data-source="DMS" data-store-code="CH-HCM-1190" data-phone="0987654321" data-search="eco-20260616-8841 tap hoa ong nam 0987654321 ch-hcm-1190 dlo-20260616-003" style="cursor:default;">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">ECO-20260616-8841</div><div class="rp-card-store">Tạp hoá Ông Năm</div></div>
+              <span class="badge badge-delivered">QR Ecopay</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026 09:44</span><span><i class="ti ti-link"></i> DLO-20260616-003</span></div>
+            <div class="rp-card-foot"><span>Mã ref: <strong>FPV882910</strong></span><span class="rp-card-amt">1.120.000 đ</span></div>
+          </article>
+          <article class="rp-card" data-rp-pay="cash" data-date="2026-06-15" data-source="Merchant" data-store-code="CH-HCM-3301" data-phone="0912345678" data-search="tm-20260615-2201 tap hoa co lan 0912345678 ch-hcm-3301 dlo-20260616-007" style="cursor:default;">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">TM-20260615-2201</div><div class="rp-card-store">Tạp hoá Cô Lan</div></div>
+              <span class="badge badge-wait">Tiền mặt</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 15/06/2026 17:40</span><span><i class="ti ti-link"></i> DLO-20260616-007</span></div>
+            <div class="rp-card-foot"><span>Thu tại điểm giao</span><span class="rp-card-amt">3.280.000 đ</span></div>
+          </article>
+          <article class="rp-card" data-rp-pay="transfer" data-date="2026-06-16" data-source="Ecom" data-store-code="CH-HCM-7710" data-phone="0909887766" data-search="ck-vcb-160832771 ch lan anh 0909887766 ch-hcm-7710 dlo-20260616-010" style="cursor:default;">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">CK-VCB-160832771</div><div class="rp-card-store">CH Lan Anh</div></div>
+              <span class="badge badge-delivering">Chuyển khoản</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 16/06/2026 08:32</span><span><i class="ti ti-link"></i> DLO-20260616-010</span></div>
+            <div class="rp-card-foot"><span>Ngân hàng: <strong>VCB</strong></span><span class="rp-card-amt">8.750.000 đ</span></div>
+          </article>
+          <article class="rp-card" data-rp-pay="debt" data-date="2026-06-14" data-source="DMS" data-store-code="CH-HCM-9902" data-phone="0933445566" data-search="no-20260614-3301 bach hoa tan thanh 0933445566 ch-hcm-9902 dlo-20260616-012" style="cursor:default;">
+            <div class="rp-card-head">
+              <div><div class="rp-card-code">NỢ-20260614-3301</div><div class="rp-card-store">Bách hóa Tân Thành</div></div>
+              <span class="badge badge-partial">Nợ tiền</span>
+            </div>
+            <div class="rp-card-meta"><span><i class="ti ti-calendar"></i> 14/06/2026 15:25</span><span><i class="ti ti-link"></i> DLO-20260616-012</span></div>
+            <div class="rp-card-foot"><span>Ghi nợ toàn bộ đơn</span><span class="rp-card-amt" style="color:#C2410C;">890.000 đ</span></div>
+          </article>
         </div>
-      </div>
-      <div class="content pad-footer">
-        <div class="rp-perf-grid" style="padding-top:12px;">
-          <div class="rp-perf-box"><div class="n" style="color:var(--c-green-dk);">50%</div><div class="l">Tỷ lệ hoàn thành</div></div>
-          <div class="rp-perf-box"><div class="n">3/6</div><div class="l">Đơn hoàn thành</div></div>
-          <div class="rp-perf-box"><div class="n">28 phút</div><div class="l">TG giao TB</div></div>
-          <div class="rp-perf-box"><div class="n" style="color:#B45309;">1</div><div class="l">Đơn thất bại</div></div>
-        </div>
-        <div class="rp-list-head">Theo ngày</div>
-        <article class="rp-card" style="cursor:default;">
-          <div class="rp-card-head">
-            <div><div class="rp-card-store">16/06/2026</div><div class="rp-card-meta" style="margin-top:4px;">2 đơn · 1 hoàn thành</div></div>
-            <span class="badge badge-delivering">50%</span>
-          </div>
-          <div class="rp-card-foot"><span>Đang giao: <strong>1</strong></span><span>Chưa giao: <strong>1</strong></span></div>
-        </article>
-        <article class="rp-card" style="cursor:default;">
-          <div class="rp-card-head">
-            <div><div class="rp-card-store">15/06/2026</div><div class="rp-card-meta" style="margin-top:4px;">1 đơn · 1 hoàn thành</div></div>
-            <span class="badge badge-delivered">100%</span>
-          </div>
-          <div class="rp-card-foot"><span>Thất bại: <strong>0</strong></span><span>TG TB: <strong>32 phút</strong></span></div>
-        </article>
         <div class="bottom-msg">Đã hết thông tin</div>
       </div>
     </div>
@@ -2235,7 +2385,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="handle-common-reason hidden" id="handleCommonReasonSection">
             <label for="commonReasonSelect">* Lý do giao thiếu / không giao</label>
             <select class="common-reason-select" id="commonReasonSelect">
-              <option value="">— Chọn lý do —</option>
+              <option value="" selected hidden>— Chọn lý do —</option>
             </select>
             <div class="handle-common-note hidden" id="commonReasonNoteWrap">
               <label for="commonReasonNote" style="margin-top:10px;">* Ghi chú lý do</label>
@@ -2484,7 +2634,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
         <button class="back" type="button" data-go="list"><i class="ti ti-arrow-left"></i></button>
         <div class="hdr-center">
           <h1>Giao hàng</h1>
-          <div class="step" id="basicStepLabel">Basic · Thu tiền &amp; xác nhận</div>
+          <div class="step" id="basicStepLabel" data-label-basic="Basic · Thu tiền &amp; xác nhận" data-label-plain="Thu tiền &amp; xác nhận">Basic · Thu tiền &amp; xác nhận</div>
         </div>
       </div>
       <div class="content pad-footer">
@@ -2596,6 +2746,19 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
           <div class="info-card-title">Thông tin đơn hàng</div>
           <div id="basicOrderBody"></div>
         </div>
+        <div class="info-card basic-photo-card" id="basicPhotoCard">
+          <div class="info-card-title">
+            <span>Ảnh giao hàng</span>
+            <span class="basic-photo-opt">Tuỳ chọn · tối đa 5</span>
+          </div>
+          <div class="photo-grid" id="basicPhotoGrid">
+            <div class="photo-slot" data-slot="0"><i class="ti ti-camera cam"></i>Chụp ảnh</div>
+            <div class="photo-slot" data-slot="1"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="2"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="3"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+            <div class="photo-slot" data-slot="4"><i class="ti ti-camera cam"></i>Thêm ảnh</div>
+          </div>
+        </div>
       </div>
       <div class="partial-banner hidden" id="basicPartialBanner">
         Đơn đang giao một phần — phần chưa giao sẽ được xử lý tiếp theo quy trình NPP.
@@ -2654,6 +2817,56 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- Bộ lọc báo cáo chi tiết (Đơn giao hàng / Thu tiền) -->
+    <div class="sheet-layer" id="rpFilterSheet">
+      <div class="bottom-sheet rp-filter-sheet" role="dialog" aria-labelledby="rpFilterSheetTitle">
+        <div class="sheet-header">
+          <div class="sheet-title" id="rpFilterSheetTitle">Bộ lọc</div>
+          <button class="sheet-close" type="button" id="closeRpFilterSheet" aria-label="Đóng">✕</button>
+        </div>
+        <div class="sheet-body">
+          <div class="rp-filter-section">
+            <div class="rp-filter-label">Thời gian</div>
+            <div class="rp-filter-date-row">
+              <button class="rp-filter-date" type="button" id="rpFilterFromBtn">
+                <span class="rp-filter-date__lbl">Từ ngày</span>
+                <span class="rp-filter-date__val" id="rpFilterFromVal">01/06/2026</span>
+              </button>
+              <span class="rp-filter-date-sep">–</span>
+              <button class="rp-filter-date" type="button" id="rpFilterToBtn">
+                <span class="rp-filter-date__lbl">Đến ngày</span>
+                <span class="rp-filter-date__val" id="rpFilterToVal">16/06/2026</span>
+              </button>
+            </div>
+          </div>
+          <div class="rp-filter-section">
+            <div class="rp-filter-label">Nguồn đơn hàng</div>
+            <div class="rp-filter-chips" id="rpFilterSourceChips">
+              <button class="chip active" type="button" data-rp-src="all">Tất cả</button>
+              <button class="chip" type="button" data-rp-src="DMS">DMS</button>
+              <button class="chip" type="button" data-rp-src="OCR">OCR</button>
+              <button class="chip" type="button" data-rp-src="Ecom">Ecom</button>
+              <button class="chip" type="button" data-rp-src="Merchant">Merchant</button>
+            </div>
+          </div>
+          <div class="rp-filter-section">
+            <div class="rp-filter-label">Phương thức thu tiền</div>
+            <div class="rp-filter-chips" id="rpFilterPayChips">
+              <button class="chip active" type="button" data-rp-paym="all">Tất cả</button>
+              <button class="chip" type="button" data-rp-paym="qr">QR Ecopay</button>
+              <button class="chip" type="button" data-rp-paym="cash">Tiền mặt</button>
+              <button class="chip" type="button" data-rp-paym="transfer">Chuyển khoản</button>
+              <button class="chip" type="button" data-rp-paym="debt">Nợ tiền</button>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <button class="btn-delivery secondary" type="button" id="rpFilterReset">Đặt lại</button>
+          <button class="btn-delivery" type="button" id="rpFilterApply">Áp dụng</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Xác nhận từ chối nhận đơn -->
     <div class="confirm-layer" id="rejectConfirmLayer">
@@ -2867,8 +3080,37 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     </div>
   </div>
 </div>
-<div class="dev-bar">TÀI XẾ main · <a href="../main.html#khac">Salesman</a> · <a href="MS-A-DL03-ocr-don-giao-hang.html">DL03</a></div>
+<div class="dev-bar">
+  TÀI XẾ main · <a href="../main.html#khac">Salesman</a> · <a href="MS-A-DL03-ocr-don-giao-hang.html">DL03</a>
+  <span style="margin-left:12px;font-size:10px;opacity:.6;">[ Portal config: </span>
+  <button type="button" onclick="devToggleConfig('DRIVER_APP_MODE')" style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;" id="devBtnMode">Mode: Advance</button>
+  <button type="button" onclick="devToggleConfig('SHOW_DEBT_ON_LIST')" style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;" id="devBtnDebt">Công nợ: Bật</button>
+  <button type="button" onclick="devToggleConfig('ENABLE_DRIVER_OCR')" style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;" id="devBtnOcr">OCR: Bật</button>
+  <span style="font-size:10px;opacity:.6;"> ]</span>
+</div>
+<script>
+// Dev helper: giả lập thay đổi config từ portal
+function devToggleConfig(key){
+  var DPC = window.DriverPortalConfig;
+  var cfg = DPC ? DPC.load() : {DRIVER_APP_MODE:true,SHOW_DEBT_ON_LIST:true,ENABLE_DRIVER_OCR:true};
+  cfg[key] = !cfg[key];
+  if (DPC) DPC.save(cfg, { updatedAt: DPC.formatDateTime(new Date()), updatedBy: 'Dev bar' });
+  else localStorage.setItem('dms_portal_config', JSON.stringify(cfg));
+  location.reload();
+}
+(function initDevBar(){
+  var DPC = window.DriverPortalConfig;
+  var cfg = DPC ? DPC.load() : {DRIVER_APP_MODE:true,SHOW_DEBT_ON_LIST:true,ENABLE_DRIVER_OCR:true};
+  var btnMode = document.getElementById('devBtnMode');
+  var btnDebt = document.getElementById('devBtnDebt');
+  var btnOcr  = document.getElementById('devBtnOcr');
+  if(btnMode) btnMode.textContent = 'Mode: ' + (cfg.DRIVER_APP_MODE ? 'Advance' : 'Basic');
+  if(btnDebt) btnDebt.textContent = 'Công nợ: ' + (cfg.SHOW_DEBT_ON_LIST ? 'Bật' : 'Tắt');
+  if(btnOcr)  btnOcr.textContent  = 'OCR: ' + (cfg.ENABLE_DRIVER_OCR ? 'Bật' : 'Tắt');
+})();
+</script>
 
+<script src="../_shared/driver-portal-config.js"></script>
 <script src="../_shared/payment-mixed-validation.js"></script>
 <script src="../_shared/mixed-payment.js"></script>
 <script src="../_shared/delivery-order-logic.js"></script>
@@ -2900,6 +3142,41 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   var deliveryOrderStore = {};
   var DRIVER_UI_MODE_KEY = 'dms_driver_ui_mode';
   var driverUIMode = localStorage.getItem(DRIVER_UI_MODE_KEY) || 'basic';
+  var DPC = window.DriverPortalConfig;
+  var portalConfig = DPC ? DPC.load() : {
+    DRIVER_APP_MODE: true,
+    SHOW_DEBT_ON_LIST: true,
+    ENABLE_DRIVER_OCR: true
+  };
+
+  function applyPortalConfig(){
+    if (DPC) portalConfig = DPC.load();
+    var phone = document.getElementById('phoneScreen');
+    if(!phone) return;
+    phone.classList.toggle('config-hide-ocr', !portalConfig.ENABLE_DRIVER_OCR);
+    phone.classList.toggle('config-hide-debt', !portalConfig.SHOW_DEBT_ON_LIST);
+    var modeFromPortal = portalConfig.DRIVER_APP_MODE ? 'advanced' : 'basic';
+    driverUIMode = modeFromPortal;
+    localStorage.setItem(DRIVER_UI_MODE_KEY, driverUIMode);
+    phone.classList.add('config-hide-mode-toggle');
+    phone.classList.toggle('config-hide-mode-labels', !portalConfig.DRIVER_APP_MODE);
+    syncDriverModeUI();
+    document.querySelectorAll('#orderCards .delivery-card').forEach(syncCardDebtDisplay);
+    if(!portalConfig.ENABLE_DRIVER_OCR){
+      var activeNav = document.querySelector('.bottom-nav .nav-item.active');
+      if(activeNav && activeNav.dataset.nav === 'ocr') goTo('list');
+    }
+  }
+
+  function onPortalConfigChanged(){
+    applyPortalConfig();
+    showToast('Đã cập nhật cấu hình từ Portal');
+  }
+
+  window.addEventListener('storage', function(e){
+    if (e.key === (DPC && DPC.STORAGE_KEY) || e.key === 'dms_portal_config') onPortalConfigChanged();
+  });
+  window.addEventListener('dms-portal-config-changed', onPortalConfigChanged);
   var currentDeliverySession = null;
   var handleQtyState = {};
   var handleSearchQuery = '';
@@ -3819,10 +4096,13 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
 
   function setupBasicDeliveryView(){
     if(!activeDeliveryCard) return;
+    syncModeDisplayLabels();
     var prepaid = isPrepaidOrder();
     document.getElementById('basicPrepaidNotice').classList.toggle('hidden', !prepaid);
     document.getElementById('basicPaySection').classList.toggle('hidden', prepaid);
     document.getElementById('btnBasicRegenQr').style.display = prepaid ? 'none' : '';
+    photoCount = 0;
+    updatePhotoUI();
     renderBasicOrderInfo();
     syncBasicPartialUI();
     renderDebtWarning(activeDeliveryCard, 'basicDebtWarn');
@@ -4314,7 +4594,6 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     report: document.getElementById('viewReport'),
     reportorders: document.getElementById('viewReportOrders'),
     reportpay: document.getElementById('viewReportPay'),
-    reportperf: document.getElementById('viewReportPerf'),
     reportdetail: document.getElementById('viewReportDetail'),
     other: document.getElementById('viewOther'),
     info: document.getElementById('viewInfo'),
@@ -4334,11 +4613,38 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     return driverUIMode === 'advanced';
   }
 
+  function isPortalLockedBasicMode(){
+    return portalConfig && portalConfig.DRIVER_APP_MODE === false;
+  }
+
+  function syncModeDisplayLabels(){
+    var phone = document.getElementById('phoneScreen');
+    var hideBasicLabels = isPortalLockedBasicMode();
+    if(phone) phone.classList.toggle('config-hide-mode-labels', hideBasicLabels);
+    var step = document.getElementById('basicStepLabel');
+    if(step){
+      step.textContent = hideBasicLabels
+        ? (step.getAttribute('data-label-plain') || 'Thu tiền & xác nhận')
+        : (step.getAttribute('data-label-basic') || 'Basic · Thu tiền & xác nhận');
+    }
+    document.querySelectorAll('.driver-mode-tag').forEach(function(el){
+      if(hideBasicLabels){
+        el.style.display = 'none';
+        return;
+      }
+      el.style.display = '';
+      el.textContent = isDriverBasicMode() ? 'Basic' : 'Advance';
+      el.classList.toggle('is-advanced', isDriverAdvancedMode());
+    });
+  }
+
   function setDriverUIMode(mode){
     driverUIMode = mode === 'advanced' ? 'advanced' : 'basic';
     localStorage.setItem(DRIVER_UI_MODE_KEY, driverUIMode);
     syncDriverModeUI();
-    showToast('Đã chuyển chế độ giao hàng · ' + (isDriverBasicMode() ? 'Basic' : 'Advance'));
+    if(!isPortalLockedBasicMode()){
+      showToast('Đã chuyển chế độ giao hàng · ' + (isDriverBasicMode() ? 'Basic' : 'Advance'));
+    }
   }
 
   function syncDriverModeUI(){
@@ -4347,10 +4653,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       phone.classList.toggle('driver-mode-basic', isDriverBasicMode());
       phone.classList.toggle('driver-mode-advanced', isDriverAdvancedMode());
     }
-    document.querySelectorAll('.driver-mode-tag').forEach(function(el){
-      el.textContent = isDriverBasicMode() ? 'Basic' : 'Advance';
-      el.classList.toggle('is-advanced', isDriverAdvancedMode());
-    });
+    syncModeDisplayLabels();
     var toggle = document.getElementById('driverModeToggleInput');
     if(toggle) toggle.checked = isDriverBasicMode();
     document.querySelectorAll('#orderCards .delivery-card').forEach(updateCardActions);
@@ -4816,18 +5119,29 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   }
 
   function updatePhotoUI(){
-    var slots = document.querySelectorAll('#photoGrid .photo-slot');
-    slots.forEach(function(slot, i){
+    var slotHtmlEmpty = function(i){
+      return i === 0
+        ? '<i class="ti ti-camera cam"></i>Chụp ảnh'
+        : '<i class="ti ti-camera cam"></i>Thêm ảnh';
+    };
+    document.querySelectorAll('#photoGrid .photo-slot, #basicPhotoGrid .photo-slot').forEach(function(slot){
+      var i = parseInt(slot.dataset.slot, 10) || 0;
       if(i < photoCount){
         slot.classList.add('filled');
         slot.innerHTML = photoOverlayHtml();
       } else {
         slot.classList.remove('filled');
-        slot.innerHTML = (i === 0 ? '<i class="ti ti-camera cam"></i>Chụp ảnh' : '<i class="ti ti-camera cam"></i>Thêm ảnh');
+        slot.innerHTML = slotHtmlEmpty(i);
       }
     });
-    document.getElementById('btnToPayment').disabled = photoCount < 1;
-    document.getElementById('donePhotoCount').textContent = photoCount + ' ảnh · GPS ✓';
+    var btnPay = document.getElementById('btnToPayment');
+    if(btnPay) btnPay.disabled = photoCount < 1;
+    var doneEl = document.getElementById('donePhotoCount');
+    if(doneEl){
+      doneEl.textContent = photoCount > 0
+        ? (photoCount + ' ảnh · GPS ✓')
+        : 'Không chụp ảnh';
+    }
   }
 
   function addPhoto(){
@@ -4955,8 +5269,67 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   });
 
   /* ===== Báo cáo đơn giao hàng ===== */
-  var rpFromIso = '2026-06-01';
-  var rpToIso = '2026-06-16';
+  var RP_FILTER_DEFAULT = {
+    fromIso: '2026-06-01', toIso: '2026-06-16',
+    fromDisplay: '01/06/2026', toDisplay: '16/06/2026',
+    source: 'all', payMethod: 'all', search: ''
+  };
+
+  function rpCloneFilter(src){
+    var o = {};
+    Object.keys(src).forEach(function(k){ o[k] = src[k]; });
+    return o;
+  }
+
+  var rpReportState = {
+    orders: rpCloneFilter(RP_FILTER_DEFAULT),
+    pay: rpCloneFilter(RP_FILTER_DEFAULT)
+  };
+  var rpFilterCtx = 'orders';
+  var rpFilterDraft = null;
+
+  function rpNormSearch(s){
+    if(!s) return '';
+    return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
+  function rpItemInDateRange(el, fromIso, toIso){
+    var d = el.dataset.date || '';
+    return d >= fromIso && d <= toIso;
+  }
+
+  function rpMatchSource(el, src){
+    if(src === 'all') return true;
+    return (el.dataset.source || '') === src;
+  }
+
+  function rpMatchPayMethod(el, pm){
+    if(pm === 'all') return true;
+    var val = el.dataset.rpPay || el.dataset.payMethod || '';
+    return val === pm;
+  }
+
+  function rpMatchSearch(el, q){
+    if(!q) return true;
+    return (el.dataset.search || '').indexOf(q) >= 0;
+  }
+
+  function rpHasActiveFilter(state){
+    var d = RP_FILTER_DEFAULT;
+    return state.source !== 'all' || state.payMethod !== 'all'
+      || state.fromIso !== d.fromIso || state.toIso !== d.toIso;
+  }
+
+  function syncRpFilterBtn(btnId, state){
+    var btn = document.getElementById(btnId);
+    if(btn) btn.classList.toggle('has-active', rpHasActiveFilter(state));
+  }
+
+  function syncRpDateRangeLabel(elId, state){
+    var el = document.getElementById(elId);
+    if(el) el.textContent = state.fromDisplay + ' – ' + state.toDisplay;
+  }
+
   var rpStatusLabels = {
     wait: { text: 'Chưa giao', cls: 'badge badge-wait' },
     delivering: { text: 'Đang giao', cls: 'badge badge-delivering' },
@@ -5003,15 +5376,20 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   };
 
   function rpCardInDateRange(card){
-    var d = card.dataset.date || '';
-    return d >= rpFromIso && d <= rpToIso;
+    var state = rpReportState.orders;
+    return rpItemInDateRange(card, state.fromIso, state.toIso);
   }
 
   function updateRpChipCounts(){
+    var state = rpReportState.orders;
     var cards = document.querySelectorAll('#rpOrderList .rp-card');
+    var q = rpNormSearch(state.search);
     var all = 0, wait = 0, delivering = 0, delivered = 0, failed = 0;
     cards.forEach(function(card){
-      if(!rpCardInDateRange(card)) return;
+      if(!rpItemInDateRange(card, state.fromIso, state.toIso)) return;
+      if(!rpMatchSource(card, state.source)) return;
+      if(!rpMatchPayMethod(card, state.payMethod)) return;
+      if(!rpMatchSearch(card, q)) return;
       all++;
       var st = card.dataset.status;
       if(st === 'wait') wait++;
@@ -5053,14 +5431,19 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   }
 
   function applyRpFilters(){
+    var state = rpReportState.orders;
     var chip = document.querySelector('#rpStatusChipsWrap .chip.active');
     var f = chip ? chip.dataset.rpFilter : 'all';
+    var q = rpNormSearch(state.search);
     var cards = document.querySelectorAll('#rpOrderList .rp-card');
     var visible = 0;
     cards.forEach(function(card){
-      var inRange = rpCardInDateRange(card);
+      var inRange = rpItemInDateRange(card, state.fromIso, state.toIso);
       var matchStatus = f === 'all' || card.dataset.status === f;
-      var show = inRange && matchStatus;
+      var matchSource = rpMatchSource(card, state.source);
+      var matchPay = rpMatchPayMethod(card, state.payMethod);
+      var matchSearch = rpMatchSearch(card, q);
+      var show = inRange && matchStatus && matchSource && matchPay && matchSearch;
       card.style.display = show ? 'block' : 'none';
       if(show) visible++;
     });
@@ -5068,6 +5451,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     document.getElementById('rpBottomMsg').style.display = visible ? 'block' : 'none';
     document.getElementById('rpEmpty').style.display = visible ? 'none' : 'block';
     document.getElementById('rpOrderList').style.display = visible ? 'block' : 'none';
+    syncRpFilterBtn('btnRpOrdersFilter', state);
     updateRpChipCounts();
   }
 
@@ -5086,6 +5470,18 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     openReportDetail(card.dataset.order);
   });
 
+  var rpOrdersSearch = document.getElementById('rpOrdersSearch');
+  if(rpOrdersSearch){
+    rpOrdersSearch.addEventListener('input', function(){
+      rpReportState.orders.search = this.value;
+      applyRpFilters();
+    });
+  }
+
+  document.getElementById('btnRpOrdersFilter').addEventListener('click', function(){
+    openRpFilterSheet('orders');
+  });
+
   document.getElementById('rpFromDate').addEventListener('click', function(){
     showToast('Chọn Từ ngày');
   });
@@ -5093,8 +5489,159 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     showToast('Chọn Đến ngày');
   });
 
+  syncRpDateRangeLabel('rpOrdersDateRange', rpReportState.orders);
+  syncRpFilterBtn('btnRpOrdersFilter', rpReportState.orders);
   updateRpChipCounts();
   applyRpFilters();
+
+  var rpPayChips = document.getElementById('rpPayChips');
+  var applyRpPayFilters;
+  if (rpPayChips) {
+    function syncRpPayChipsUI(){
+      var pm = rpReportState.pay.payMethod;
+      rpPayChips.querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('active', c.dataset.rpPay === pm);
+      });
+    }
+
+    applyRpPayFilters = function(){
+      var state = rpReportState.pay;
+      var q = rpNormSearch(state.search);
+      var items = document.querySelectorAll('#rpPayList .rp-card, #rpPayList .rp-pay-group');
+      items.forEach(function(el){
+        var inRange = rpItemInDateRange(el, state.fromIso, state.toIso);
+        var matchPay = rpMatchPayMethod(el, state.payMethod);
+        var matchSource = rpMatchSource(el, state.source);
+        var matchSearch = rpMatchSearch(el, q);
+        var show = inRange && matchPay && matchSource && matchSearch;
+        el.style.display = show ? 'block' : 'none';
+      });
+      syncRpFilterBtn('btnRpPayFilter', state);
+    };
+
+    rpPayChips.addEventListener('click', function(e){
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      rpReportState.pay.payMethod = chip.dataset.rpPay;
+      syncRpPayChipsUI();
+      chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      applyRpPayFilters();
+    });
+
+    var rpPaySearch = document.getElementById('rpPaySearch');
+    if(rpPaySearch){
+      rpPaySearch.addEventListener('input', function(){
+        rpReportState.pay.search = this.value;
+        applyRpPayFilters();
+      });
+    }
+
+    document.getElementById('btnRpPayFilter').addEventListener('click', function(){
+      openRpFilterSheet('pay');
+    });
+
+    syncRpDateRangeLabel('rpPayDateRange', rpReportState.pay);
+    syncRpFilterBtn('btnRpPayFilter', rpReportState.pay);
+    syncRpPayChipsUI();
+    applyRpPayFilters();
+  }
+
+  /* Bộ lọc nâng cao — sheet dùng chung 2 báo cáo chi tiết */
+  var rpFilterSheet = document.getElementById('rpFilterSheet');
+  var rpDatePresets = [
+    { fromIso: '2026-06-01', toIso: '2026-06-16', fromDisplay: '01/06/2026', toDisplay: '16/06/2026' },
+    { fromIso: '2026-06-13', toIso: '2026-06-16', fromDisplay: '13/06/2026', toDisplay: '16/06/2026' },
+    { fromIso: '2026-06-16', toIso: '2026-06-16', fromDisplay: '16/06/2026', toDisplay: '16/06/2026' }
+  ];
+  var rpDatePresetIdx = 0;
+
+  function syncRpFilterSheetFromDraft(){
+    if(!rpFilterDraft) return;
+    document.getElementById('rpFilterFromVal').textContent = rpFilterDraft.fromDisplay;
+    document.getElementById('rpFilterToVal').textContent = rpFilterDraft.toDisplay;
+    document.querySelectorAll('#rpFilterSourceChips .chip').forEach(function(c){
+      c.classList.toggle('active', c.dataset.rpSrc === rpFilterDraft.source);
+    });
+    document.querySelectorAll('#rpFilterPayChips .chip').forEach(function(c){
+      c.classList.toggle('active', c.dataset.rpPaym === rpFilterDraft.payMethod);
+    });
+  }
+
+  function openRpFilterSheet(ctx){
+    rpFilterCtx = ctx;
+    rpFilterDraft = rpCloneFilter(rpReportState[ctx]);
+    document.getElementById('rpFilterSheetTitle').textContent = ctx === 'orders'
+      ? 'Lọc đơn giao hàng' : 'Lọc thu tiền';
+    syncRpFilterSheetFromDraft();
+    rpFilterSheet.classList.add('open');
+  }
+
+  function closeRpFilterSheet(){
+    rpFilterSheet.classList.remove('open');
+  }
+
+  document.getElementById('closeRpFilterSheet').addEventListener('click', closeRpFilterSheet);
+  rpFilterSheet.addEventListener('click', function(e){
+    if(e.target === rpFilterSheet) closeRpFilterSheet();
+  });
+
+  document.getElementById('rpFilterSourceChips').addEventListener('click', function(e){
+    var chip = e.target.closest('.chip');
+    if(!chip || !rpFilterDraft) return;
+    document.querySelectorAll('#rpFilterSourceChips .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    rpFilterDraft.source = chip.dataset.rpSrc;
+  });
+
+  document.getElementById('rpFilterPayChips').addEventListener('click', function(e){
+    var chip = e.target.closest('.chip');
+    if(!chip || !rpFilterDraft) return;
+    document.querySelectorAll('#rpFilterPayChips .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    rpFilterDraft.payMethod = chip.dataset.rpPaym;
+  });
+
+  document.getElementById('rpFilterReset').addEventListener('click', function(){
+    rpFilterDraft = rpCloneFilter(RP_FILTER_DEFAULT);
+    syncRpFilterSheetFromDraft();
+  });
+
+  document.getElementById('rpFilterApply').addEventListener('click', function(){
+    if(!rpFilterDraft) return;
+    rpReportState[rpFilterCtx] = rpCloneFilter(rpFilterDraft);
+    rpReportState[rpFilterCtx].search = rpFilterCtx === 'orders'
+      ? (document.getElementById('rpOrdersSearch').value || '')
+      : (document.getElementById('rpPaySearch').value || '');
+    if(rpFilterCtx === 'orders'){
+      syncRpDateRangeLabel('rpOrdersDateRange', rpReportState.orders);
+      applyRpFilters();
+    } else {
+      syncRpDateRangeLabel('rpPayDateRange', rpReportState.pay);
+      if(rpPayChips){
+        rpPayChips.querySelectorAll('.chip').forEach(function(c){
+          c.classList.toggle('active', c.dataset.rpPay === rpReportState.pay.payMethod);
+        });
+      }
+      if(typeof applyRpPayFilters === 'function') applyRpPayFilters();
+    }
+    closeRpFilterSheet();
+    showToast('Đã áp dụng bộ lọc');
+  });
+
+  function rpCycleFilterDate(which){
+    if(!rpFilterDraft) return;
+    rpDatePresetIdx = (rpDatePresetIdx + 1) % rpDatePresets.length;
+    var p = rpDatePresets[rpDatePresetIdx];
+    rpFilterDraft.fromIso = p.fromIso;
+    rpFilterDraft.toIso = p.toIso;
+    rpFilterDraft.fromDisplay = p.fromDisplay;
+    rpFilterDraft.toDisplay = p.toDisplay;
+    syncRpFilterSheetFromDraft();
+    showToast(which === 'from' ? 'Chọn Từ ngày' : 'Chọn Đến ngày');
+  }
+
+  document.getElementById('rpFilterFromBtn').addEventListener('click', function(){ rpCycleFilterDate('from'); });
+  document.getElementById('rpFilterToBtn').addEventListener('click', function(){ rpCycleFilterDate('to'); });
 
   /* ===== OCR Logic (MS-A-DL03) ===== */
   var ocrSheet = document.getElementById('ocrSheet');
@@ -5887,6 +6434,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
       document.getElementById('doneStoreName').textContent = activeDeliveryCard.dataset.storeName || '—';
     }
     updateDeliveryFlowUI();
+    updatePhotoUI();
     currentDeliverySession = null;
     if(activeDeliveryCard){
       activeDeliveryCard.dataset.deliveryConfirmed = '';
@@ -6353,6 +6901,11 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
     if(!slot || slot.classList.contains('filled')) return;
     addPhoto();
   });
+  document.getElementById('basicPhotoGrid').addEventListener('click', function(e){
+    var slot = e.target.closest('.photo-slot');
+    if(!slot || slot.classList.contains('filled')) return;
+    addPhoto();
+  });
   document.getElementById('btnAddPhoto').addEventListener('click', addPhoto);
 
   document.getElementById('btnToPayment').addEventListener('click', function(){
@@ -6577,6 +7130,8 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   });
 
   document.getElementById('driverModeToggleInput').addEventListener('change', function(){
+    /* Mode do Portal quản lý — toggle đã ẩn; bỏ qua nếu user vẫn trigger */
+    if (document.getElementById('phoneScreen').classList.contains('config-hide-mode-toggle')) return;
     setDriverUIMode(this.checked ? 'basic' : 'advanced');
   });
 
@@ -6713,7 +7268,7 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   ['payCashInput','payQrInput','payTransferInput','payCreditInput',
    'basicPayCashInput','basicPayQrInput','basicPayTransferInput','basicPayCreditInput'
   ].forEach(bindPaymentMoneyInputBlur);
-  syncDriverModeUI();
+  applyPortalConfig(); // apply config từ portal trước syncDriverModeUI
   document.querySelectorAll('#orderCards .delivery-card').forEach(function(c){
     syncCardBadge(c);
     syncCardDebtDisplay(c);
@@ -6724,8 +7279,6 @@ textarea.edit-field { resize: vertical; min-height: 56px; text-align: left; }
   if (location.hash === '#report') { goTo('report'); }
   else if (location.hash === '#ocr') { goTo('ocr'); }
   else if (location.hash === '#other' || location.hash === '#khac') { goTo('other'); }
-  else if (location.hash === '#advanced') { setDriverUIMode('advanced'); }
-  else if (location.hash === '#basic') { setDriverUIMode('basic'); }
 })();
 </script>
 <script src="../_shared/mockup-links.js"></script>
