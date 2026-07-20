@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="icon" type="image/png" href="/mobile/_shared/salesman-app-icon.png"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS-A-HT01 â€” [APP] Onboarding NhÃ  PhÃ¢n Phá»‘i</title>
+<link rel="stylesheet" href="../../_shared/mockup-shell.css"/>
+<style>
+.screen { display: none; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; position: relative; }
+.screen.active { display: flex; }
+.status-bar { background: var(--neutral-0); color: var(--c-text, #1A141F); }
+
+.ht-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; min-height: 48px;
+  background: var(--neutral-0); flex-shrink: 0;
+  border-bottom: 1px solid var(--neutral-100);
+}
+.ht-header .back {
+  width: 32px; height: 32px; border: none; background: transparent;
+  font-size: 22px; color: var(--c-text, #1A141F); cursor: pointer; line-height: 1;
+}
+.ht-header .title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: var(--c-text, #1A141F); }
+.ht-header .icon-btn {
+  width: 32px; height: 32px; border: none; background: transparent;
+  font-size: 18px; color: var(--c-sub, #8B97A1); cursor: pointer;
+}
+
+.create-banner {
+  margin: 16px 16px 12px; padding: 14px 16px;
+  background: linear-gradient(135deg, #17629E 0%, #009ADD 100%);
+  border-radius: 12px; color: #fff;
+  display: flex; align-items: center; gap: 12px;
+}
+.create-banner .txt { flex: 1; }
+.create-banner .txt strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.create-banner .txt span { font-size: 12px; opacity: .9; }
+.create-banner .btn-tao {
+  background: #fff; color: #009ADD; border: none;
+  padding: 8px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer;
+}
+
+.ticket-card {
+  margin: 0 16px 12px; padding: 14px;
+  background: var(--neutral-0); border-radius: 12px;
+  border: 1px solid var(--neutral-100);
+  box-shadow: 0 1px 3px rgba(15,23,42,.04);
+  cursor: pointer;
+}
+.ticket-card .row-top {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;
+}
+.ticket-card .code { font-size: 14px; font-weight: 700; color: var(--c-text, #1A141F); }
+.ticket-card .time { font-size: 11px; color: var(--neutral-500); white-space: nowrap; }
+.ticket-card .sub { font-size: 12px; color: var(--neutral-500); margin-bottom: 8px; word-break: break-all; }
+.ticket-card .meta { font-size: 12px; color: var(--neutral-700); margin-top: 4px; }
+.ticket-card .meta b { font-weight: 500; color: var(--neutral-500); }
+.badge-row {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+}
+.ticket-card .badge-row { margin: 8px 0 4px; }
+.ticket-card .view-detail {
+  text-align: right; margin-top: 10px;
+  font-size: 13px; color: var(--app-primary, #009ADD); font-weight: 600;
+}
+
+/* ===== MÃ n chat / trao Ä‘á»•i admin ===== */
+.chat-screen-body {
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--neutral-100); min-height: 0;
+}
+.chat-summary-wrap { padding: 16px 16px 10px; flex-shrink: 0; }
+.summary-card {
+  background: #fff; border-radius: 12px; padding: 14px 14px 12px;
+  border: 1px solid var(--neutral-100);
+  box-shadow: 0 1px 4px rgba(15,23,42,.06);
+  border-left: 4px solid var(--app-primary, #009ADD);
+  cursor: pointer;
+}
+.summary-card .row-top {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px;
+}
+.summary-card .code { font-size: 14px; font-weight: 700; color: var(--c-text, #1A141F); line-height: 1.35; }
+.summary-card .time { font-size: 11px; color: var(--neutral-500); white-space: nowrap; }
+.summary-card .sub { font-size: 12px; color: var(--neutral-500); margin-bottom: 8px; word-break: break-all; }
+.summary-card .badge-row { margin: 0 0 4px; }
+.summary-card .view-detail { margin-top: 8px; }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 8px 16px 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.chat-bubble {
+  max-width: 82%; padding: 10px 12px; border-radius: 12px;
+  font-size: 13px; line-height: 1.45;
+}
+.chat-bubble.admin {
+  align-self: flex-start; background: #fff;
+  border: 1px solid var(--neutral-200); color: var(--neutral-800);
+  border-bottom-left-radius: 4px;
+}
+.chat-bubble.me {
+  align-self: flex-end; background: var(--app-primary-light, #E4EFF8);
+  color: var(--app-primary-darker, #17629E);
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble .meta { font-size: 10px; color: var(--neutral-500); margin-top: 4px; text-align: right; }
+.chat-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--neutral-400); font-size: 13px; padding: 24px;
+}
+
+.chat-composer {
+  flex-shrink: 0; padding: 10px 12px 14px;
+  background: #fff; border-top: 1px solid var(--neutral-200);
+  display: flex; align-items: center; gap: 8px;
+}
+.chat-composer input {
+  flex: 1; border: 1px solid var(--neutral-200); border-radius: 22px;
+  padding: 10px 14px; font-size: 14px; outline: none; background: #fff;
+}
+.chat-composer .btn-send {
+  width: 40px; height: 40px; border: none; border-radius: 50%;
+  background: var(--app-primary, #009ADD); color: #fff;
+  font-size: 16px; cursor: pointer; flex-shrink: 0;
+}
+.chat-info-btn {
+  flex-shrink: 0; padding: 8px 16px 12px; background: #fff;
+  border-top: 1px solid var(--neutral-100);
+}
+.chat-info-btn button {
+  width: 100%; height: 44px; border: 1px solid var(--neutral-200);
+  border-radius: 10px; background: var(--neutral-50);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 13px; color: var(--neutral-700); cursor: pointer;
+}
+.chat-info-btn .ico {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--app-primary, #009ADD); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+
+/* Bottom sheet thÃ´ng tin phiáº¿u */
+.info-sheet-panel {
+  max-height: 85%; min-height: 0; overflow: hidden;
+  padding-bottom: 12px;
+}
+.info-sheet-scroll {
+  flex: 1; min-height: 0; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding-right: 2px; margin-right: -2px;
+}
+.info-sheet-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; flex-shrink: 0;
+}
+.info-sheet-head h3 { font-size: 16px; font-weight: 700; margin: 0; }
+.info-sheet-head .close-btn {
+  width: 32px; height: 32px; border: none; background: transparent;
+  font-size: 20px; color: var(--neutral-500); cursor: pointer;
+}
+.info-block { margin-bottom: 14px; }
+.info-block .label { font-size: 12px; color: var(--neutral-500); margin-bottom: 4px; }
+.info-block .value { font-size: 14px; color: var(--c-text); font-weight: 500; }
+.info-section-title {
+  padding: 8px 0 4px; font-size: 13px; font-weight: 600;
+  color: var(--app-primary, #009ADD);
+}
+.info-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
+}
+.info-chips .chip {
+  display: inline-flex; padding: 4px 8px; border-radius: 999px;
+  font-size: 12px; background: var(--app-primary-light, #E4EFF8);
+  color: var(--app-primary, #009ADD);
+}
+.info-divider { height: 1px; background: var(--neutral-100); margin: 12px 0; }
+.info-attach-empty {
+  padding: 20px; text-align: center; color: var(--neutral-400);
+  font-size: 13px; background: var(--neutral-50); border-radius: 8px;
+}
+.info-attach-section { margin-top: 4px; }
+.info-attach-group { margin-bottom: 12px; }
+.info-attach-group:last-child { margin-bottom: 0; }
+.info-attach-group .grp-label {
+  font-size: 12px; color: var(--neutral-500); margin-bottom: 6px;
+}
+.info-attach-grid {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.info-thumb {
+  width: 72px; height: 72px; border-radius: 8px;
+  border: 1px solid var(--neutral-200);
+  background: var(--neutral-50);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 22px; overflow: hidden; cursor: pointer;
+}
+.info-thumb .thumb-cap {
+  font-size: 9px; color: var(--neutral-500); margin-top: 2px; max-width: 64px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.info-thumb.doc { background: linear-gradient(135deg, #E4EFF8, #C8E4F5); }
+.info-thumb.id { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
+.info-thumb.store { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
+.info-thumb.photo { background: linear-gradient(135deg, #F3E8FF, #E9D5FF); }
+.info-note-btn {
+  width: 100%; height: 48px; margin-top: 8px; flex-shrink: 0;
+  border: 1px solid var(--neutral-200); border-radius: 10px;
+  background: var(--neutral-50); display: flex; align-items: center;
+  justify-content: center; gap: 8px; font-size: 13px; color: var(--neutral-700);
+  cursor: pointer;
+}
+.info-note-btn .ico {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--app-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-init { background: #DBEAFE; color: #1D4ED8; }
+.badge-proc { background: #FEF3C7; color: #B45309; }
+.badge-done { background: #D1FAE5; color: #047857; }
+.badge-rej { background: #FEE2E2; color: #B91C1C; }
+.badge-upload {
+  background: #ECFDF5; color: #047857;
+  border: 1px solid #A7F3D0;
+}
+.badge-upload-wait {
+  background: #FFF7ED; color: #C2410C;
+  border: 1px solid #FED7AA;
+}
+
+.hero-illu {
+  text-align: center; padding: 16px 16px 8px;
+  background: linear-gradient(180deg, #d4edf9 0%, #F4F5F6 100%);
+}
+.hero-illu .illus { font-size: 48px; line-height: 1; margin-bottom: 8px; }
+.hero-illu p { font-size: 12px; color: var(--neutral-600); padding: 0 12px; line-height: 1.4; }
+
+.form-body { flex: 1; overflow-y: auto; background: var(--neutral-50); padding-bottom: 88px; }
+.field {
+  background: var(--neutral-0); margin: 0; padding: 12px 16px;
+  border-bottom: 1px solid var(--neutral-100);
+}
+.field label {
+  display: block; font-size: 12px; color: var(--neutral-500); margin-bottom: 6px;
+}
+.field label .req { color: #CC3B29; margin-right: 2px; }
+.field .control {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 14px; color: var(--c-text, #1A141F); min-height: 24px; cursor: pointer;
+}
+.field .control .placeholder { color: var(--neutral-500); }
+.field .control .chev { color: var(--neutral-400, #98A2B3); }
+.field input, .field textarea {
+  width: 100%; border: none; outline: none; background: transparent;
+  font-size: 14px; color: var(--c-text, #1A141F); font-family: inherit;
+  -webkit-appearance: none; appearance: none;
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--neutral-500); }
+.field textarea { min-height: 72px; resize: vertical; }
+.field-group-title {
+  padding: 12px 16px 6px; font-size: 13px; font-weight: 600;
+  color: var(--app-primary, #009ADD); background: var(--neutral-50);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 8px; border-radius: 999px; font-size: 12px;
+  background: var(--app-primary-light, #E4EFF8); color: var(--app-primary, #009ADD);
+}
+
+.photo-row {
+  display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 0 4px;
+}
+.photo-slot {
+  width: 72px; height: 72px; border-radius: 10px;
+  border: 1.5px dashed var(--neutral-300);
+  background: var(--neutral-50);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--neutral-500); gap: 4px; cursor: pointer;
+}
+.photo-slot.filled {
+  border-style: solid; border-color: var(--app-primary);
+  background: var(--app-primary-light, #E4EFF8); color: var(--app-primary);
+  font-size: 22px;
+}
+
+.footer-cta {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 12px 16px 20px; background: var(--neutral-0);
+  border-top: 1px solid var(--neutral-100);
+}
+.btn-primary {
+  width: 100%; height: 48px; border: none; border-radius: 12px;
+  background: var(--app-primary, #009ADD); color: #fff;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+}
+
+.detail-block {
+  background: var(--neutral-0); margin: 10px 16px; padding: 14px;
+  border-radius: 12px; border: 1px solid var(--neutral-100);
+}
+.detail-block h3 {
+  font-size: 13px; font-weight: 600; color: var(--app-primary);
+  margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--neutral-100);
+}
+.dl-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 6px 0; font-size: 13px;
+}
+.dl-row .k { color: var(--neutral-500); flex-shrink: 0; }
+.dl-row .v { color: var(--c-text, #1A141F); text-align: right; font-weight: 500; }
+
+.pdf-box {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; background: var(--neutral-50); border-radius: 10px;
+  border: 1px solid var(--neutral-200); margin-top: 8px;
+}
+.pdf-box .ico { font-size: 28px; }
+.pdf-box .info { flex: 1; min-width: 0; }
+.pdf-box .info strong { display: block; font-size: 13px; }
+.pdf-box .info span { font-size: 11px; color: var(--neutral-500); }
+.pdf-box .link { font-size: 12px; color: var(--app-primary); font-weight: 600; white-space: nowrap; }
+
+.upload-zone {
+  margin-top: 10px; padding: 16px; text-align: center;
+  border: 1.5px dashed var(--app-primary); border-radius: 12px;
+  background: var(--app-primary-light, #E4EFF8);
+  font-size: 13px; color: var(--app-primary); cursor: pointer;
+}
+.upload-zone .hint { font-size: 11px; color: var(--neutral-600); margin-top: 4px; }
+
+/* Bottom sheets */
+.sheet {
+  position: absolute; inset: 0; background: rgba(0,0,0,.4);
+  display: none; align-items: flex-end; z-index: 30;
+}
+.sheet.open { display: flex; }
+.sheet-panel {
+  width: 100%; background: #fff; border-radius: 16px 16px 0 0;
+  padding: 12px 16px 24px; max-height: 78%;
+  display: flex; flex-direction: column;
+}
+.sheet-handle {
+  width: 36px; height: 4px; border-radius: 999px; background: var(--neutral-200);
+  margin: 0 auto 10px;
+}
+.sheet-panel h3 { font-size: 16px; text-align: center; margin-bottom: 10px; }
+.sheet-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--neutral-50); border: 1px solid var(--neutral-200);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+}
+.sheet-search input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-size: 14px; font-family: inherit;
+}
+.sheet-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.sheet-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 4px; border-bottom: 1px solid var(--neutral-100);
+  font-size: 14px; cursor: pointer;
+}
+.sheet-item.active { color: var(--app-primary); font-weight: 600; }
+.sheet-item .check { color: var(--app-primary); }
+.sheet-actions { display: flex; gap: 10px; margin-top: 12px; }
+.sheet-actions button {
+  flex: 1; height: 44px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.sheet-actions .reset { border: 1px solid var(--neutral-200); background: #fff; color: var(--neutral-700); }
+.sheet-actions .apply { border: none; background: var(--app-primary); color: #fff; }
+
+.tree-node { border-bottom: 1px solid var(--neutral-100); }
+.tree-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 4px; font-size: 14px; cursor: pointer;
+}
+.tree-row .toggle {
+  width: 22px; height: 22px; border: none; background: transparent;
+  font-size: 12px; color: var(--neutral-500); cursor: pointer;
+}
+.tree-row .box {
+  width: 18px; height: 18px; border: 1.5px solid var(--neutral-300);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; flex-shrink: 0;
+}
+.tree-row .box.on { background: var(--app-primary); border-color: var(--app-primary); }
+.tree-row .box.partial {
+  background: var(--app-primary); border-color: var(--app-primary);
+}
+.tree-row .box.partial::after {
+  content: ''; width: 8px; height: 2px; background: #fff; border-radius: 1px;
+}
+.tree-children { display: none; padding-left: 28px; }
+.tree-node.open > .tree-children { display: block; }
+.tree-children .tree-row { font-size: 13px; color: var(--neutral-700); }
+
+.filter-panel select {
+  width: 100%; height: 40px; border: 1px solid var(--neutral-200);
+  border-radius: 8px; padding: 0 10px; font-size: 14px; background: #fff;
+}
+.filter-panel .f-row { margin-bottom: 12px; }
+.filter-panel label { font-size: 12px; color: var(--neutral-500); display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body class="mockup-page">
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar">
+      <span>10:58</span>
+      <span class="status-icons">
+        <a class="status-portal-link" href="../../../web/main.html" title="DMS Portal">ðŸŒ</a>
+        <span>ðŸ“¶ ðŸ”‹ 100%</span>
+      </span>
+    </div>
+
+    <!-- ===== S1: Danh sÃ¡ch Há»— trá»£ ===== -->
+    <div class="screen active" id="s-list">
+      <div class="ht-header">
+        <button class="back" type="button" onclick="location.href='../../main.html#khac'" title="Back">â†</button>
+        <div class="title">Há»— trá»£ khÃ¡ch hÃ ng</div>
+        <button class="icon-btn" type="button" onclick="openSheet('filterSheet')" title="Bá»™ lá»c">ðŸ”½</button>
+      </div>
+      <div class="content" style="flex:1;overflow-y:auto;background:var(--neutral-50)">
+        <div class="create-banner">
+          <div class="txt">
+            <strong>Táº¡o yÃªu cáº§u há»— trá»£</strong>
+            <span>Há»— trá»£ khÃ¡ch hÃ ng nhanh chÃ³ng, tiá»‡n lá»£i.</span>
+          </div>
+          <button class="btn-tao" type="button" onclick="go('s-create')">Táº¡o</button>
+        </div>
+
+        <div class="ticket-card" onclick="openDetail('onboarding-init')">
+          <div class="row-top">
+            <div class="code">KPP/TK7086750101 â€” HoÃ ng Giang</div>
+            <span class="time">10:45 - 10/07/2026</span>
+          </div>
+          <div class="sub">KENH_PHAN_PHOI_DEV/TK7086750101</div>
+          <div class="badge-row">
+            <span class="badge badge-init">Khá»Ÿi táº¡o</span>
+          </div>
+          <div class="meta"><b>Loáº¡i váº¥n Ä‘á»:</b> Onboarding NhÃ  PhÃ¢n Phá»‘i</div>
+          <div class="meta"><b>NgÆ°á»i táº¡o:</b> 0909090909 â€” Anh ThÃ¡i sale111</div>
+        </div>
+
+        <div class="ticket-card" onclick="openDetail('onboarding-proc')">
+          <div class="row-top">
+            <div class="code">KPP/TK7086750098 â€” HoÃ ng Giang</div>
+            <span class="time">09:12 - 09/07/2026</span>
+          </div>
+          <div class="sub">KENH_PHAN_PHOI_DEV/TK7086750098</div>
+          <div class="badge-row">
+            <span class="badge badge-proc">Äang xá»­ lÃ½</span>
+            <span class="badge badge-upload">â¬† Upload há»£p Ä‘á»“ng</span>
+          </div>
+          <div class="meta"><b>Loáº¡i váº¥n Ä‘á»:</b> Onboarding NhÃ  PhÃ¢n Phá»‘i</div>
+          <div class="meta"><b>NgÆ°á»i táº¡o:</b> 0909090909 â€” Anh ThÃ¡i sale111</div>
+        </div>
+
+        <div class="ticket-card" onclick="openDetail('onboarding-proc-wait')">
+          <div class="row-top">
+            <div class="code">KPP/TK7086750095 â€” Minh PhÃ¡t</div>
+            <span class="time">16:20 - 08/07/2026</span>
+          </div>
+          <div class="sub">KENH_PHAN_PHOI_DEV/TK7086750095</div>
+          <div class="badge-row">
+            <span class="badge badge-proc">Äang xá»­ lÃ½</span>
+            <span class="badge badge-upload-wait">â³ Chá» upload há»£p Ä‘á»“ng</span>
+          </div>
+          <div class="meta"><b>Loáº¡i váº¥n Ä‘á»:</b> Onboarding NhÃ  PhÃ¢n Phá»‘i</div>
+          <div class="meta"><b>NgÆ°á»i táº¡o:</b> 0909090909 â€” Anh ThÃ¡i sale111</div>
+        </div>
+
+        <div class="ticket-card" onclick="openDetail('sales')">
+          <div class="row-top">
+            <div class="code">KPPST0392292062 â€” HÃ¢n Gia</div>
+            <span class="time">22:04 - 29/04/2026</span>
+          </div>
+          <div class="sub">KENH_PHAN_PHOI_DEV/TK7086750079</div>
+          <div class="badge-row">
+            <span class="badge badge-init">Khá»Ÿi táº¡o</span>
+          </div>
+          <div class="meta"><b>Loáº¡i váº¥n Ä‘á»:</b> Váº¥n Ä‘á» bÃ¡n hÃ ng</div>
+          <div class="meta"><b>NgÆ°á»i táº¡o:</b> 0909090909 â€” Anh ThÃ¡i sale111</div>
+        </div>
+      </div>
+
+      <div class="sheet" id="filterSheet" onclick="if(event.target===this)closeSheet('filterSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Bá»™ lá»c nÃ¢ng cao</h3>
+          <div class="f-row">
+            <label>Loáº¡i váº¥n Ä‘á»</label>
+            <select>
+              <option>Táº¥t cáº£</option>
+              <option selected>Onboarding NhÃ  PhÃ¢n Phá»‘i</option>
+              <option>Váº¥n Ä‘á» bÃ¡n hÃ ng</option>
+              <option>Váº¥n Ä‘á» tá»“n kho</option>
+              <option>Váº¥n Ä‘á» khÃ¡c</option>
+            </select>
+          </div>
+          <div class="f-row">
+            <label>Tráº¡ng thÃ¡i</label>
+            <select>
+              <option>Táº¥t cáº£</option>
+              <option>Khá»Ÿi táº¡o</option>
+              <option>Äang xá»­ lÃ½</option>
+              <option>ÄÃ£ giáº£i quyáº¿t</option>
+              <option>Tá»« chá»‘i</option>
+            </select>
+          </div>
+          <div class="sheet-actions">
+            <button class="reset" type="button" onclick="closeSheet('filterSheet')">Äáº·t láº¡i</button>
+            <button class="apply" type="button" onclick="closeSheet('filterSheet')">Ãp dá»¥ng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== S2: Táº¡o yÃªu cáº§u â€” Onboarding ===== -->
+    <div class="screen" id="s-create">
+      <div class="ht-header">
+        <button class="back" type="button" onclick="go('s-list')">â†</button>
+        <div class="title">Táº¡o yÃªu cáº§u há»— trá»£</div>
+        <span style="width:32px"></span>
+      </div>
+      <div class="form-body">
+        <div class="field" onclick="openSheet('typeSheet')">
+          <label><span class="req">*</span>Loáº¡i váº¥n Ä‘á»</label>
+          <div class="control">
+            <span id="typeValue">Onboarding NhÃ  PhÃ¢n Phá»‘i</span>
+            <span class="chev">â€º</span>
+          </div>
+        </div>
+
+        <!-- LÃ½ do: áº¨N vá»›i Onboarding; hiá»‡n vá»›i loáº¡i khÃ¡c -->
+        <div class="field" id="reasonField" style="display:none" onclick="openSheet('reasonSheet')">
+          <label><span class="req">*</span>LÃ½ do</label>
+          <div class="control">
+            <span id="reasonValue" class="placeholder">Chá»n lÃ½ do</span>
+            <span class="chev">â€º</span>
+          </div>
+        </div>
+
+        <div id="onboardingFields">
+          <div class="field-group-title">ThÃ´ng tin NhÃ  PhÃ¢n Phá»‘i</div>
+
+          <div class="field">
+            <label><span class="req">*</span>NPP trá»±c thuá»™c BUM/DDM</label>
+            <input type="text" value="Äá»— XuÃ¢n NguyÃªn" placeholder="Nháº­p NPP trá»±c thuá»™c BUM/DDM"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>NPP</label>
+            <input type="text" value="HoÃ ng Giang" placeholder="Nháº­p tÃªn NPP"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>MÃ£ sá»‘ thuáº¿</label>
+            <input type="text" value="1101125624" placeholder="Nháº­p mÃ£ sá»‘ thuáº¿" inputmode="numeric"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>NgÆ°á»i Ä‘áº¡i diá»‡n phÃ¡p luáº­t</label>
+            <input type="text" value="Nguyá»…n HoÃ ng Giang" placeholder="Nháº­p ngÆ°á»i Ä‘áº¡i diá»‡n"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>SÄT nháº­n/gá»­i thÃ´ng tin</label>
+            <input type="text" value="0986715923" placeholder="Nháº­p sá»‘ Ä‘iá»‡n thoáº¡i" inputmode="tel"/>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" value="npphgla@gmail.com" placeholder="Nháº­p email"/>
+          </div>
+
+          <div class="field-group-title">TÃ i khoáº£n ngÃ¢n hÃ ng</div>
+          <div class="field">
+            <label><span class="req">*</span>NgÃ¢n hÃ ng</label>
+            <input type="text" value="Sacombank" placeholder="Nháº­p tÃªn ngÃ¢n hÃ ng"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>Chi nhÃ¡nh</label>
+            <input type="text" value="TÃ¢n An Long An" placeholder="Nháº­p chi nhÃ¡nh ngÃ¢n hÃ ng"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>Sá»‘ tÃ i khoáº£n</label>
+            <input type="text" value="070986715923" placeholder="Nháº­p sá»‘ tÃ i khoáº£n" inputmode="numeric"/>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>Chá»§ tÃ i khoáº£n</label>
+            <input type="text" value="Nguyá»…n HoÃ ng Giang" placeholder="Nháº­p chá»§ tÃ i khoáº£n"/>
+          </div>
+
+          <div class="field-group-title">Kinh doanh</div>
+          <div class="field" onclick="openSheet('industrySheet')">
+            <label><span class="req">*</span>NgÃ nh hÃ ng</label>
+            <div class="control">
+              <span id="industryValue">Bia, NÆ°á»›c ngá»t, Giáº£i khÃ¡t, Thá»±c pháº©m</span>
+              <span class="chev">â€º</span>
+            </div>
+            <div class="chips" id="industryChips">
+              <span class="chip">Bia</span>
+              <span class="chip">NÆ°á»›c ngá»t</span>
+              <span class="chip">Giáº£i khÃ¡t</span>
+              <span class="chip">Thá»±c pháº©m</span>
+            </div>
+          </div>
+          <div class="field" onclick="openSheet('regionSheet')">
+            <label><span class="req">*</span>Khu vá»±c giao hÃ ng</label>
+            <div class="control">
+              <span id="regionValue">Long An</span>
+              <span class="chev">â€º</span>
+            </div>
+            <div class="chips" id="regionChips">
+              <span class="chip">Long An</span>
+            </div>
+          </div>
+          <div class="field" onclick="openSheet('minOrderSheet')">
+            <label><span class="req">*</span>GiÃ¡ trá»‹ Ä‘Æ¡n hÃ ng tá»‘i thiá»ƒu</label>
+            <div class="control">
+              <span id="minOrderValue">DÆ°á»›i 1.000.000 VNÄ</span>
+              <span class="chev">â€º</span>
+            </div>
+          </div>
+          <div class="field" onclick="openSheet('revenueSheet')">
+            <label><span class="req">*</span>Doanh sá»‘ ngÃ nh hÃ ng NPP</label>
+            <div class="control">
+              <span id="revenueValue">TrÃªn 1.000.000.000 VNÄ</span>
+              <span class="chev">â€º</span>
+            </div>
+          </div>
+
+          <div class="field-group-title">HÃ¬nh áº£nh Ä‘Ã­nh kÃ¨m</div>
+          <div class="field">
+            <label><span class="req">*</span>Chá»¥p hÃ¬nh GPÄKKD</label>
+            <div class="photo-row">
+              <div class="photo-slot filled">ðŸ“„</div>
+              <div class="photo-slot">ðŸ“· ThÃªm</div>
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>Chá»¥p hÃ¬nh CMND/CCCD</label>
+            <div class="photo-row">
+              <div class="photo-slot filled">ðŸªª</div>
+              <div class="photo-slot filled">ðŸªª</div>
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="req">*</span>Chá»¥p hÃ¬nh NPP</label>
+            <div class="photo-row">
+              <div class="photo-slot filled">ðŸª</div>
+              <div class="photo-slot">ðŸ“· ThÃªm</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form loáº¡i khÃ¡c (demo khi Ä‘á»•i loáº¡i) -->
+        <div id="otherFields" style="display:none">
+          <div class="field" onclick="openSheet('storeSheet')">
+            <label><span class="req">*</span>Cá»­a hÃ ng</label>
+            <div class="control"><span class="placeholder">Chá»n cá»­a hÃ ng</span><span class="chev">â€º</span></div>
+          </div>
+          <div class="field">
+            <label>Ná»™i dung</label>
+            <textarea placeholder="MÃ´ táº£ váº¥n Ä‘á» cáº§n há»— trá»£"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="footer-cta">
+        <button class="btn-primary" type="button" onclick="go('s-list')">Gá»­i</button>
+      </div>
+
+      <!-- Sheet: Loáº¡i váº¥n Ä‘á» -->
+      <div class="sheet" id="typeSheet" onclick="if(event.target===this)closeSheet('typeSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Chá»n loáº¡i váº¥n Ä‘á»</h3>
+          <div class="sheet-search"><span>ðŸ”</span><input type="text" placeholder="TÃ¬m loáº¡i váº¥n Ä‘á»"/></div>
+          <div class="sheet-list">
+            <div class="sheet-item" onclick="selectType('Váº¥n Ä‘á» tá»“n kho', false)">Váº¥n Ä‘á» tá»“n kho</div>
+            <div class="sheet-item" onclick="selectType('Váº¥n Ä‘á» bÃ¡n hÃ ng', false)">Váº¥n Ä‘á» bÃ¡n hÃ ng</div>
+            <div class="sheet-item active" onclick="selectType('Onboarding NhÃ  PhÃ¢n Phá»‘i', true)">
+              Onboarding NhÃ  PhÃ¢n Phá»‘i <span class="check">âœ“</span>
+            </div>
+            <div class="sheet-item" onclick="selectType('Váº¥n Ä‘á» khÃ¡c', false)">Váº¥n Ä‘á» khÃ¡c</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet: LÃ½ do (loáº¡i khÃ¡c) -->
+      <div class="sheet" id="reasonSheet" onclick="if(event.target===this)closeSheet('reasonSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Chá»n lÃ½ do</h3>
+          <div class="sheet-list">
+            <div class="sheet-item" onclick="pickSimple('reasonValue','Sai tá»“n kho','reasonSheet')">Sai tá»“n kho</div>
+            <div class="sheet-item" onclick="pickSimple('reasonValue','KhÃ´ng lÃªn Ä‘Æ¡n','reasonSheet')">KhÃ´ng lÃªn Ä‘Æ¡n</div>
+            <div class="sheet-item" onclick="pickSimple('reasonValue','KhÃ¡c','reasonSheet')">KhÃ¡c</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet: NgÃ nh hÃ ng (tree) -->
+      <div class="sheet" id="industrySheet" onclick="if(event.target===this)closeSheet('industrySheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Chá»n ngÃ nh hÃ ng</h3>
+          <div class="sheet-search"><span>ðŸ”</span><input type="text" placeholder="TÃ¬m ngÃ nh hÃ ng"/></div>
+          <div class="sheet-list">
+            <div class="tree-node open">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¼</button>
+                <span class="box on" onclick="toggleParentBox(this)">âœ“</span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">Äá»“ uá»‘ng</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box on" onclick="toggleChildBox(this)">âœ“</span><span>Bia</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box on" onclick="toggleChildBox(this)">âœ“</span><span>NÆ°á»›c ngá»t</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box on" onclick="toggleChildBox(this)">âœ“</span><span>Giáº£i khÃ¡t</span></div>
+              </div>
+            </div>
+            <div class="tree-node open">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¼</button>
+                <span class="box partial" onclick="toggleParentBox(this)"></span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">Thá»±c pháº©m</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box on" onclick="toggleChildBox(this)">âœ“</span><span>Thá»±c pháº©m khÃ´</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Thá»±c pháº©m tÆ°Æ¡i</span></div>
+              </div>
+            </div>
+            <div class="tree-node">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¶</button>
+                <span class="box" onclick="toggleParentBox(this)"></span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">HÃ ng tiÃªu dÃ¹ng</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>ChÄƒm sÃ³c cÃ¡ nhÃ¢n</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Gia dá»¥ng</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-actions">
+            <button class="reset" type="button" onclick="closeSheet('industrySheet')">Há»§y</button>
+            <button class="apply" type="button" onclick="applyIndustry()">XÃ¡c nháº­n</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet: Khu vá»±c giao hÃ ng (tree vÃ¹ng/khu vá»±c) -->
+      <div class="sheet" id="regionSheet" onclick="if(event.target===this)closeSheet('regionSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Chá»n khu vá»±c giao hÃ ng</h3>
+          <div class="sheet-search"><span>ðŸ”</span><input type="text" placeholder="TÃ¬m vÃ¹ng / khu vá»±c"/></div>
+          <div class="sheet-list">
+            <div class="tree-node open">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¼</button>
+                <span class="box partial" onclick="toggleParentBox(this)"></span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">Miá»n Nam</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box on" onclick="toggleChildBox(this)">âœ“</span><span>Long An</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Tiá»n Giang</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Há»“ ChÃ­ Minh</span></div>
+              </div>
+            </div>
+            <div class="tree-node">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¶</button>
+                <span class="box" onclick="toggleParentBox(this)"></span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">Miá»n Trung</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>ÄÃ  Náºµng</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Huáº¿</span></div>
+              </div>
+            </div>
+            <div class="tree-node">
+              <div class="tree-row">
+                <button class="toggle" type="button" onclick="toggleTree(this)">â–¶</button>
+                <span class="box" onclick="toggleParentBox(this)"></span>
+                <span onclick="toggleParentBox(this.previousElementSibling)">Miá»n Báº¯c</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>HÃ  Ná»™i</span></div>
+                <div class="tree-row"><span class="toggle"></span><span class="box" onclick="toggleChildBox(this)"></span><span>Háº£i PhÃ²ng</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-actions">
+            <button class="reset" type="button" onclick="closeSheet('regionSheet')">Há»§y</button>
+            <button class="apply" type="button" onclick="applyRegion()">XÃ¡c nháº­n</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet: GiÃ¡ trá»‹ ÄH tá»‘i thiá»ƒu -->
+      <div class="sheet" id="minOrderSheet" onclick="if(event.target===this)closeSheet('minOrderSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>GiÃ¡ trá»‹ Ä‘Æ¡n hÃ ng tá»‘i thiá»ƒu</h3>
+          <div class="sheet-list">
+            <div class="sheet-item active" onclick="pickSimple('minOrderValue','DÆ°á»›i 1.000.000 VNÄ','minOrderSheet')">DÆ°á»›i 1.000.000 VNÄ <span class="check">âœ“</span></div>
+            <div class="sheet-item" onclick="pickSimple('minOrderValue','DÆ°á»›i 5.000.000 VNÄ','minOrderSheet')">DÆ°á»›i 5.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('minOrderValue','DÆ°á»›i 10.000.000 VNÄ','minOrderSheet')">DÆ°á»›i 10.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('minOrderValue','DÆ°á»›i 100.000.000 VNÄ','minOrderSheet')">DÆ°á»›i 100.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('minOrderValue','DÆ°á»›i 500.000.000 VNÄ','minOrderSheet')">DÆ°á»›i 500.000.000 VNÄ</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet: Doanh sá»‘ -->
+      <div class="sheet" id="revenueSheet" onclick="if(event.target===this)closeSheet('revenueSheet')">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <h3>Doanh sá»‘ ngÃ nh hÃ ng NPP</h3>
+          <div class="sheet-list">
+            <div class="sheet-item" onclick="pickSimple('revenueValue','TrÃªn 5.000.000 VNÄ','revenueSheet')">TrÃªn 5.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('revenueValue','TrÃªn 10.000.000 VNÄ','revenueSheet')">TrÃªn 10.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('revenueValue','TrÃªn 100.000.000 VNÄ','revenueSheet')">TrÃªn 100.000.000 VNÄ</div>
+            <div class="sheet-item" onclick="pickSimple('revenueValue','TrÃªn 500.000.000 VNÄ','revenueSheet')">TrÃªn 500.000.000 VNÄ</div>
+            <div class="sheet-item active" onclick="pickSimple('revenueValue','TrÃªn 1.000.000.000 VNÄ','revenueSheet')">TrÃªn 1.000.000.000 VNÄ <span class="check">âœ“</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== S4: YÃªu cáº§u há»— trá»£ â€” Chat vá»›i Admin ===== -->
+    <div class="screen" id="s-detail-chat">
+      <div class="ht-header">
+        <button class="back" type="button" onclick="go('s-list')">â†</button>
+        <div class="title">YÃªu cáº§u há»— trá»£</div>
+        <span style="width:32px"></span>
+      </div>
+      <div class="chat-screen-body">
+        <div class="chat-summary-wrap">
+          <div class="summary-card" onclick="openSheet('ticketInfoSheet')">
+            <div class="row-top">
+              <div class="code" id="chatSummaryCode">KPPST0392292062 â€” HÃ¢n Gia</div>
+              <span class="time" id="chatSummaryTime">22:04 - 29/04/2026</span>
+            </div>
+            <div class="sub" id="chatSummarySub">KENH_PHAN_PHOI_DEV/TK7086750079</div>
+            <div class="badge-row" id="chatSummaryBadges">
+              <span class="badge badge-init">Khá»Ÿi táº¡o</span>
+            </div>
+            <div class="view-detail" onclick="event.stopPropagation();openSheet('ticketInfoSheet')">Xem chi tiáº¿t</div>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-empty" id="chatEmpty">ChÆ°a cÃ³ trao Ä‘á»•i. Nháº­p ná»™i dung bÃªn dÆ°á»›i Ä‘á»ƒ gá»­i Admin.</div>
+        </div>
+
+        <div class="chat-composer">
+          <input type="text" id="chatInput" placeholder="Nháº­p cÃ¢u tráº£ lá»i" onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="btn-send" type="button" onclick="sendChat()" title="Gá»­i">âž¤</button>
+        </div>
+      </div>
+
+      <!-- Bottom sheet: ThÃ´ng tin phiáº¿u -->
+      <div class="sheet" id="ticketInfoSheet" onclick="if(event.target===this)closeSheet('ticketInfoSheet')">
+        <div class="sheet-panel info-sheet-panel" onclick="event.stopPropagation()">
+          <div class="sheet-handle"></div>
+          <div class="info-sheet-head">
+            <h3>ThÃ´ng tin phiáº¿u</h3>
+            <button class="close-btn" type="button" onclick="closeSheet('ticketInfoSheet')">Ã—</button>
+          </div>
+
+          <div class="info-sheet-scroll">
+          <div class="summary-card" style="margin-bottom:14px;cursor:default;border-left-width:4px">
+            <div class="row-top">
+              <div class="code" id="infoSheetCode">KPPST0392292062 â€” HÃ¢n Gia</div>
+              <span class="time" id="infoSheetTime">22:04 - 29/04/2026</span>
+            </div>
+            <div class="sub" id="infoSheetSub">KENH_PHAN_PHOI_DEV/TK7086750079</div>
+            <div class="badge-row" id="infoSheetBadges">
+              <span class="badge badge-init">Khá»Ÿi táº¡o</span>
+            </div>
+          </div>
+
+          <div id="infoSheetBody">
+            <div class="info-block">
+              <div class="label">Loáº¡i váº¥n Ä‘á»</div>
+              <div class="value" id="infoIssueType">Váº¥n Ä‘á» bÃ¡n hÃ ng</div>
+            </div>
+            <div class="info-block" id="infoContentBlock">
+              <div class="label">Ná»™i dung</div>
+              <div class="value" id="infoContent">BÃ¡n hÃ ng gian</div>
+            </div>
+          </div>
+
+          <div id="infoOnboardingExtra" style="display:none"></div>
+
+          <div id="infoAttachWrap" style="display:none">
+            <div class="info-divider"></div>
+            <div class="info-block">
+              <div class="label" id="infoAttachLabel" style="font-weight:600;color:var(--c-text)">Táº­p tin Ä‘Ã­nh kÃ¨m</div>
+              <div id="infoAttach"></div>
+            </div>
+          </div>
+
+          <div id="infoProcExtra" style="display:none">
+            <div class="info-divider"></div>
+            <div class="info-block">
+              <div class="label" style="font-weight:600;color:var(--c-text)">Há»£p Ä‘á»“ng há»‡ thá»‘ng gen</div>
+              <div class="pdf-box" style="margin-top:8px">
+                <div class="ico">ðŸ“‘</div>
+                <div class="info">
+                  <strong>HD_Onboarding_HoangGiang.pdf</strong>
+                  <span>Há»£p Ä‘á»“ng khung GPCN + MBHH</span>
+                </div>
+                <span class="link">Táº£i / In</span>
+              </div>
+            </div>
+            <div class="info-block">
+              <div class="label" style="font-weight:600;color:var(--c-text)">NPP Ä‘Ã£ kÃ½ xÃ¡c nháº­n</div>
+              <div class="upload-zone" style="margin-top:8px" onclick="this.innerHTML='âœ… ÄÃ£ upload: HD_signed.pdf<br><span class=hint>Chá» Admin gá»­i CMS</span>'">
+                ðŸ“· / ðŸ“„ Upload áº£nh hoáº·c PDF Ä‘Ã£ kÃ½
+                <div class="hint">JPG, PNG, PDF</div>
+              </div>
+            </div>
+          </div>
+
+          </div><!-- /.info-sheet-scroll -->
+
+          <button class="info-note-btn" type="button" onclick="closeSheet('ticketInfoSheet');document.getElementById('chatInput').focus()">
+            <span class="ico">ðŸ’¬</span>
+            Ghi chÃº xÃ©t duyá»‡t
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+var TICKETS = {
+  'sales': {
+    code: 'KPPST0392292062 â€” HÃ¢n Gia',
+    sub: 'KENH_PHAN_PHOI_DEV/TK7086750079',
+    time: '22:04 - 29/04/2026',
+    badges: '<span class="badge badge-init">Khá»Ÿi táº¡o</span>',
+    issueType: 'Váº¥n Ä‘á» bÃ¡n hÃ ng',
+    content: 'BÃ¡n hÃ ng gian',
+    onboarding: false,
+    proc: false,
+    messages: [],
+    attachments: null
+  },
+  'onboarding-init': {
+    code: 'KPP/TK7086750101 â€” HoÃ ng Giang',
+    sub: 'KENH_PHAN_PHOI_DEV/TK7086750101',
+    time: '10:45 - 10/07/2026',
+    badges: '<span class="badge badge-init">Khá»Ÿi táº¡o</span>',
+    issueType: 'Onboarding NhÃ  PhÃ¢n Phá»‘i',
+    content: '',
+    onboarding: true,
+    proc: false,
+    onboardingData: {
+      bumDdm: 'Äá»— XuÃ¢n NguyÃªn',
+      npp: 'HoÃ ng Giang',
+      mst: '1101125624',
+      legalRep: 'Nguyá»…n HoÃ ng Giang',
+      phone: '0986715923',
+      email: 'npphgla@gmail.com',
+      bank: 'Sacombank',
+      branch: 'TÃ¢n An Long An',
+      accountNo: '070986715923',
+      accountHolder: 'Nguyá»…n HoÃ ng Giang',
+      industries: ['Bia', 'NÆ°á»›c ngá»t', 'Giáº£i khÃ¡t', 'Thá»±c pháº©m'],
+      regions: ['Long An'],
+      minOrder: 'DÆ°á»›i 1.000.000 VNÄ',
+      revenue: 'TrÃªn 1.000.000.000 VNÄ'
+    },
+    messages: [
+      { from: 'admin', text: 'Phiáº¿u Ä‘Ã£ tiáº¿p nháº­n. Vui lÃ²ng kiá»ƒm tra thÃ´ng tin NPP.', time: '10:50 - 10/07/2026' }
+    ],
+    attachments: [
+      { label: 'GPÄKKD', type: 'doc', items: [{ icon: 'ðŸ“„', cap: 'GPÄKKD' }] },
+      { label: 'CMND/CCCD', type: 'id', items: [{ icon: 'ðŸªª', cap: 'Máº·t trÆ°á»›c' }, { icon: 'ðŸªª', cap: 'Máº·t sau' }] },
+      { label: 'áº¢nh NPP', type: 'store', items: [{ icon: 'ðŸª', cap: 'Máº·t tiá»n' }] }
+    ]
+  },
+  'onboarding-proc': {
+    code: 'KPP/TK7086750098 â€” HoÃ ng Giang',
+    sub: 'KENH_PHAN_PHOI_DEV/TK7086750098',
+    time: '09:12 - 09/07/2026',
+    badges: '<span class="badge badge-proc">Äang xá»­ lÃ½</span><span class="badge badge-upload">â¬† Upload há»£p Ä‘á»“ng</span>',
+    issueType: 'Onboarding NhÃ  PhÃ¢n Phá»‘i',
+    content: '',
+    onboarding: true,
+    proc: true,
+    onboardingData: {
+      bumDdm: 'Äá»— XuÃ¢n NguyÃªn',
+      npp: 'HoÃ ng Giang',
+      mst: '1101125624',
+      legalRep: 'Nguyá»…n HoÃ ng Giang',
+      phone: '0986715923',
+      email: 'npphgla@gmail.com',
+      bank: 'Sacombank',
+      branch: 'TÃ¢n An Long An',
+      accountNo: '070986715923',
+      accountHolder: 'Nguyá»…n HoÃ ng Giang',
+      industries: ['Bia', 'NÆ°á»›c ngá»t', 'Giáº£i khÃ¡t', 'Thá»±c pháº©m'],
+      regions: ['Long An'],
+      minOrder: 'DÆ°á»›i 1.000.000 VNÄ',
+      revenue: 'TrÃªn 1.000.000.000 VNÄ'
+    },
+    messages: [
+      { from: 'admin', text: 'Há»‡ thá»‘ng Ä‘Ã£ gen há»£p Ä‘á»“ng. Vui lÃ²ng in, kÃ½ vá»›i NPP vÃ  upload file Ä‘Ã£ kÃ½.', time: '09:30 - 09/07/2026' }
+    ],
+    attachments: [
+      { label: 'GPÄKKD', type: 'doc', items: [{ icon: 'ðŸ“„', cap: 'GPÄKKD' }] },
+      { label: 'CMND/CCCD', type: 'id', items: [{ icon: 'ðŸªª', cap: 'Máº·t trÆ°á»›c' }, { icon: 'ðŸªª', cap: 'Máº·t sau' }] },
+      { label: 'áº¢nh NPP', type: 'store', items: [{ icon: 'ðŸª', cap: 'Máº·t tiá»n' }, { icon: 'ðŸª', cap: 'Kho hÃ ng' }] }
+    ]
+  },
+  'onboarding-proc-wait': {
+    code: 'KPP/TK7086750095 â€” Minh PhÃ¡t',
+    sub: 'KENH_PHAN_PHOI_DEV/TK7086750095',
+    time: '16:20 - 08/07/2026',
+    badges: '<span class="badge badge-proc">Äang xá»­ lÃ½</span><span class="badge badge-upload-wait">â³ Chá» upload há»£p Ä‘á»“ng</span>',
+    issueType: 'Onboarding NhÃ  PhÃ¢n Phá»‘i',
+    content: '',
+    onboarding: true,
+    proc: true,
+    onboardingData: {
+      bumDdm: 'Tráº§n VÄƒn BÃ¬nh',
+      npp: 'Minh PhÃ¡t',
+      mst: '0312456789',
+      legalRep: 'LÃª Minh PhÃ¡t',
+      phone: '0912345678',
+      email: 'minhphat.npp@gmail.com',
+      bank: 'Vietcombank',
+      branch: 'Chi nhÃ¡nh Báº¿n Tre',
+      accountNo: '0123456789012',
+      accountHolder: 'LÃª Minh PhÃ¡t',
+      industries: ['Bia', 'NÆ°á»›c ngá»t'],
+      regions: ['Tiá»n Giang', 'Báº¿n Tre'],
+      minOrder: 'DÆ°á»›i 5.000.000 VNÄ',
+      revenue: 'TrÃªn 500.000.000 VNÄ'
+    },
+    messages: [],
+    attachments: [
+      { label: 'GPÄKKD', type: 'doc', items: [{ icon: 'ðŸ“„', cap: 'GPÄKKD' }] },
+      { label: 'CMND/CCCD', type: 'id', items: [{ icon: 'ðŸªª', cap: 'Máº·t trÆ°á»›c' }, { icon: 'ðŸªª', cap: 'Máº·t sau' }] },
+      { label: 'áº¢nh NPP', type: 'store', items: [{ icon: 'ðŸª', cap: 'Máº·t tiá»n' }] }
+    ]
+  }
+};
+var currentTicketKey = 'sales';
+
+function openDetail(key) {
+  currentTicketKey = key;
+  var t = TICKETS[key];
+  document.getElementById('chatSummaryCode').textContent = t.code;
+  document.getElementById('chatSummarySub').textContent = t.sub;
+  document.getElementById('chatSummaryTime').textContent = t.time;
+  document.getElementById('chatSummaryBadges').innerHTML = t.badges;
+  document.getElementById('infoSheetCode').textContent = t.code;
+  document.getElementById('infoSheetSub').textContent = t.sub;
+  document.getElementById('infoSheetTime').textContent = t.time;
+  document.getElementById('infoSheetBadges').innerHTML = t.badges;
+  document.getElementById('infoIssueType').textContent = t.issueType;
+  document.getElementById('infoContent').textContent = t.content;
+  document.getElementById('infoContentBlock').style.display = t.onboarding ? 'none' : '';
+  renderOnboardingDetail(t);
+  document.getElementById('infoProcExtra').style.display = t.proc ? '' : 'none';
+  renderInfoAttachments(t);
+  renderChatMessages(t.messages);
+  document.getElementById('chatInput').value = '';
+  go('s-detail-chat');
+}
+
+function infoDetailRow(label, value, chips) {
+  var body = chips && chips.length
+    ? '<div class="info-chips">' + chips.map(function (c) {
+        return '<span class="chip">' + c + '</span>';
+      }).join('') + '</div>'
+    : '<div class="value">' + (value || 'â€”') + '</div>';
+  return '<div class="info-block"><div class="label">' + label + '</div>' + body + '</div>';
+}
+
+function renderOnboardingDetail(t) {
+  var el = document.getElementById('infoOnboardingExtra');
+  if (!t.onboarding || !t.onboardingData) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  var d = t.onboardingData;
+  el.style.display = '';
+  el.innerHTML =
+    '<div class="info-divider"></div>' +
+    '<div class="info-section-title">ThÃ´ng tin NhÃ  PhÃ¢n Phá»‘i</div>' +
+    infoDetailRow('NPP trá»±c thuá»™c BUM/DDM', d.bumDdm) +
+    infoDetailRow('NPP', d.npp) +
+    infoDetailRow('MÃ£ sá»‘ thuáº¿', d.mst) +
+    infoDetailRow('NgÆ°á»i Ä‘áº¡i diá»‡n phÃ¡p luáº­t', d.legalRep) +
+    infoDetailRow('SÄT nháº­n/gá»­i thÃ´ng tin', d.phone) +
+    infoDetailRow('Email', d.email || 'â€”') +
+    '<div class="info-section-title">TÃ i khoáº£n ngÃ¢n hÃ ng</div>' +
+    infoDetailRow('NgÃ¢n hÃ ng', d.bank) +
+    infoDetailRow('Chi nhÃ¡nh', d.branch) +
+    infoDetailRow('Sá»‘ tÃ i khoáº£n', d.accountNo) +
+    infoDetailRow('Chá»§ tÃ i khoáº£n', d.accountHolder) +
+    '<div class="info-section-title">Kinh doanh</div>' +
+    infoDetailRow('NgÃ nh hÃ ng', '', d.industries) +
+    infoDetailRow('Khu vá»±c giao hÃ ng', '', d.regions) +
+    infoDetailRow('GiÃ¡ trá»‹ Ä‘Æ¡n hÃ ng tá»‘i thiá»ƒu', d.minOrder) +
+    infoDetailRow('Doanh sá»‘ ngÃ nh hÃ ng NPP', d.revenue);
+}
+
+function renderInfoAttachments(t) {
+  var wrap = document.getElementById('infoAttachWrap');
+  var el = document.getElementById('infoAttach');
+  var labelEl = document.getElementById('infoAttachLabel');
+  wrap.style.display = '';
+  if (!t.attachments || !t.attachments.length) {
+    if (labelEl) labelEl.textContent = 'Táº­p tin Ä‘Ã­nh kÃ¨m';
+    el.innerHTML = '<div class="info-attach-empty">KhÃ´ng cÃ³ táº­p tin Ä‘Ã­nh kÃ¨m</div>';
+    return;
+  }
+  if (labelEl) labelEl.textContent = 'HÃ¬nh áº£nh Ä‘Ã­nh kÃ¨m';
+  el.innerHTML = '<div class="info-attach-section">' + t.attachments.map(function (grp) {
+    var thumbs = grp.items.map(function (item) {
+      return '<div class="info-thumb ' + grp.type + '" title="Xem áº£nh">' +
+        item.icon + '<span class="thumb-cap">' + item.cap + '</span></div>';
+    }).join('');
+    return '<div class="info-attach-group"><div class="grp-label">' + grp.label + '</div>' +
+      '<div class="info-attach-grid">' + thumbs + '</div></div>';
+  }).join('') + '</div>';
+}
+
+function renderChatMessages(messages) {
+  var box = document.getElementById('chatMessages');
+  if (!messages || !messages.length) {
+    box.innerHTML = '<div class="chat-empty" id="chatEmpty">ChÆ°a cÃ³ trao Ä‘á»•i. Nháº­p ná»™i dung bÃªn dÆ°á»›i Ä‘á»ƒ gá»­i Admin.</div>';
+    return;
+  }
+  box.innerHTML = messages.map(function (m) {
+    var cls = m.from === 'me' ? 'me' : 'admin';
+    return '<div class="chat-bubble ' + cls + '">' + m.text + '<div class="meta">' + m.time + '</div></div>';
+  }).join('');
+}
+
+function sendChat() {
+  var input = document.getElementById('chatInput');
+  var text = (input.value || '').trim();
+  if (!text) return;
+  var t = TICKETS[currentTicketKey];
+  var now = new Date();
+  var time = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2) + ' - ' +
+    ('0' + now.getDate()).slice(-2) + '/' + ('0' + (now.getMonth() + 1)).slice(-2) + '/' + now.getFullYear();
+  t.messages.push({ from: 'me', text: text, time: time });
+  renderChatMessages(t.messages);
+  input.value = '';
+  input.focus();
+}
+
+function openSheet(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function selectType(name, isOnboarding) {
+  document.getElementById('typeValue').textContent = name;
+  document.getElementById('onboardingFields').style.display = isOnboarding ? '' : 'none';
+  document.getElementById('otherFields').style.display = isOnboarding ? 'none' : '';
+  document.getElementById('reasonField').style.display = isOnboarding ? 'none' : '';
+  closeSheet('typeSheet');
+}
+function pickSimple(valueId, text, sheetId) {
+  var el = document.getElementById(valueId);
+  el.textContent = text;
+  el.classList.remove('placeholder');
+  closeSheet(sheetId);
+}
+function toggleTree(btn) {
+  var node = btn.closest('.tree-node');
+  node.classList.toggle('open');
+  btn.textContent = node.classList.contains('open') ? 'â–¼' : 'â–¶';
+}
+function setBoxState(box, state) {
+  box.classList.remove('on', 'partial');
+  if (state === 'on') {
+    box.classList.add('on');
+    box.textContent = 'âœ“';
+  } else if (state === 'partial') {
+    box.classList.add('partial');
+    box.textContent = '';
+  } else {
+    box.textContent = '';
+  }
+}
+function syncParentBox(node) {
+  var parentBox = node.querySelector(':scope > .tree-row > .box');
+  var childBoxes = node.querySelectorAll('.tree-children .box');
+  if (!parentBox || !childBoxes.length) return;
+  var allOn = true;
+  var anyOn = false;
+  childBoxes.forEach(function (c) {
+    if (c.classList.contains('on')) anyOn = true;
+    else allOn = false;
+  });
+  if (allOn) setBoxState(parentBox, 'on');
+  else if (anyOn) setBoxState(parentBox, 'partial');
+  else setBoxState(parentBox, 'off');
+  if (anyOn) node.classList.add('open');
+}
+function toggleParentBox(box) {
+  var node = box.closest('.tree-node');
+  var selectAll = !box.classList.contains('on');
+  setBoxState(box, selectAll ? 'on' : 'off');
+  node.querySelectorAll('.tree-children .box').forEach(function (child) {
+    setBoxState(child, selectAll ? 'on' : 'off');
+  });
+  if (selectAll) node.classList.add('open');
+}
+function toggleChildBox(box) {
+  var on = !box.classList.contains('on');
+  setBoxState(box, on ? 'on' : 'off');
+  syncParentBox(box.closest('.tree-node'));
+}
+function toggleBox(box) {
+  toggleChildBox(box);
+}
+function collectChecked(sheetId) {
+  var labels = [];
+  document.querySelectorAll('#' + sheetId + ' .tree-children .box.on').forEach(function (b) {
+    var label = b.nextElementSibling;
+    if (label) labels.push(label.textContent.trim());
+  });
+  return labels;
+}
+function renderChips(containerId, items) {
+  var el = document.getElementById(containerId);
+  el.innerHTML = items.map(function (t) { return '<span class="chip">' + t + '</span>'; }).join('');
+}
+function applyIndustry() {
+  var items = collectChecked('industrySheet');
+  if (!items.length) items = ['Bia', 'NÆ°á»›c ngá»t', 'Giáº£i khÃ¡t', 'Thá»±c pháº©m'];
+  document.getElementById('industryValue').textContent = items.join(', ');
+  renderChips('industryChips', items);
+  closeSheet('industrySheet');
+}
+function applyRegion() {
+  var items = collectChecked('regionSheet');
+  if (!items.length) items = ['Long An'];
+  document.getElementById('regionValue').textContent = items.join(', ');
+  renderChips('regionChips', items);
+  closeSheet('regionSheet');
+}
+</script>
+</body>
+</html>
